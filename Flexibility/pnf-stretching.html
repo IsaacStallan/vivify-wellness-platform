@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNF Stretching - Vivify</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* PNF Stretching specific styles */
+        .stretching-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .stretching-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .stretching-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-heading {
+            text-align: center;
+            color: #f39c12;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .benefits-container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .benefits-container h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .science-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .science-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .science-section p {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .technique-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .technique-container h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .technique-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: technique-counter;
+        }
+
+        .technique-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 3rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .technique-list li::before {
+            content: counter(technique-counter);
+            counter-increment: technique-counter;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 25px;
+            height: 25px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .stretches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .stretch-card {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .stretch-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .stretch-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stretch-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .stretch-details p {
+            color: #ddd;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .stretch-meta {
+            display: flex;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .warning-box {
+            background-color: #33292a;
+            border-left: 4px solid #e74c3c;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .warning-box h4 {
+            color: #e74c3c;
+            margin-top: 0;
+        }
+
+        .warning-box p {
+            color: #ddd;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        .routine-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .routine-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .routine-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .routine-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .routine-details {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .routine-details h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .routine-details ul {
+            color: #ddd;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .routine-details li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .stretching-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stretches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stretch-card {
+                grid-template-columns: 1fr;
+            }
+
+            .stretch-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wellness Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" class="active" aria-label="Flexibility Training Page">Flexibility</a>
+                                <a href="../endurance.html" aria-label="Endurance Training Page">Endurance</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="stretching-hero">
+            <h1>PNF Stretching</h1>
+            <p>An advanced flexibility technique that utilizes neuromuscular principles to achieve greater ranges of motion</p>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <h2 class="section-heading">What is PNF Stretching?</h2>
+            <p>Proprioceptive Neuromuscular Facilitation (PNF) stretching is an advanced flexibility technique that combines passive stretching with isometric contractions to achieve greater gains in range of motion. Originally developed as a rehabilitation method in the 1940s, PNF has since become a valuable tool for athletes, dancers, and fitness enthusiasts seeking to maximize flexibility.</p>
+            <p>PNF stretching works by taking advantage of proprioceptors—specialized sensory receptors in your muscles and tendons that detect changes in length and tension. By alternating between contraction and relaxation, PNF techniques can override the body's protective stretch reflex, allowing for deeper stretching than conventional methods.</p>
+            <p>For students involved in athletics, dance, or those recovering from injuries, PNF techniques offer an effective approach to improving flexibility when practiced correctly and safely. This page will guide you through the science, techniques, and applications of PNF stretching.</p>
+        </section>
+
+        <!-- Benefits Section -->
+        <div class="benefits-container">
+            <h3>Benefits of PNF Stretching</h3>
+            <ul class="benefits-list">
+                <li><strong>Enhanced Flexibility Gains:</strong> PNF typically produces greater increases in range of motion compared to static stretching alone.</li>
+                <li><strong>Improved Muscular Strength:</strong> The isometric contractions involved in PNF can help maintain or increase strength while improving flexibility.</li>
+                <li><strong>Better Neuromuscular Efficiency:</strong> PNF techniques improve the communication between your nervous system and muscles.</li>
+                <li><strong>Reduced Muscle Tension:</strong> The alternating contraction and relaxation can effectively release chronic muscle tension.</li>
+                <li><strong>Functional Flexibility:</strong> PNF stretching develops flexibility that translates more effectively to functional movement patterns.</li>
+                <li><strong>Rehabilitation Support:</strong> PNF is particularly valuable for injury recovery and rehabilitation protocols.</li>
+                <li><strong>Improved Performance:</strong> Athletes often experience enhanced performance through the increased range of motion and improved neural control.</li>
+                <li><strong>Efficient Time Investment:</strong> While requiring more focus than passive stretching, PNF often produces more significant results in less time.</li>
+            </ul>
+        </div>
+
+        <!-- Science Behind PNF -->
+        <div class="science-section">
+            <h3>The Science Behind PNF</h3>
+            <p>PNF stretching relies on several neurophysiological mechanisms that influence muscle tension and flexibility:</p>
+            
+            <p><strong>Autogenic Inhibition:</strong> When a muscle contracts isometrically and then relaxes, the Golgi tendon organs (GTOs) signal the muscle to relax through a process called autogenic inhibition. This is a protective mechanism that helps prevent muscle and tendon damage, and PNF utilizes this reflex to achieve deeper stretches.</p>
+            
+            <p><strong>Reciprocal Inhibition:</strong> When one muscle contracts, the opposing muscle group (antagonist) is signaled to relax. Some PNF techniques leverage this principle by activating the opposing muscle group to facilitate greater relaxation and stretching of the target muscle.</p>
+            
+            <p><strong>Gate Control Theory:</strong> The nervous system can only process a limited amount of sensory information at once. By introducing a strong sensory input (like the isometric contraction in PNF), other sensations (like stretch discomfort) may be reduced, allowing for greater stretch tolerance.</p>
+            
+            <p><strong>Stress Relaxation:</strong> Tissues held at a constant length over time will gradually relax, allowing for increased range of motion. PNF combines this principle with the neurological aspects above for enhanced flexibility gains.</p>
+        </div>
+
+        <!-- PNF Techniques -->
+        <div class="technique-container">
+            <h3>Common PNF Techniques</h3>
+            <p>There are several PNF stretching methods, each with specific protocols. The three most commonly used techniques are:</p>
+            
+            <ul class="technique-list">
+                <li>
+                    <strong>Contract-Relax (CR):</strong> In this technique, you first position the target muscle in a stretched position. You then contract the muscle isometrically against resistance (pushing against an unmovable force) for 5-10 seconds, followed by a brief relaxation phase. Finally, you move into a deeper stretch and hold for 10-30 seconds.
+                </li>
+                <li>
+                    <strong>Hold-Relax (HR):</strong> Similar to Contract-Relax, but begins with the muscle in a position of limitation. After the isometric contraction and relaxation, you passively move the joint further into the range of motion.
+                </li>
+                <li>
+                    <strong>Contract-Relax-Antagonist-Contract (CRAC):</strong> This advanced technique adds an additional step. After the contract and relax phases, you actively contract the opposing muscle group (antagonist) while moving into the deeper stretch. This utilizes reciprocal inhibition for even greater flexibility gains.
+                </li>
+            </ul>
+            
+            <p>The most common protocol involves contracting the muscle at about 20-50% of maximum force (not full intensity), holding for 5-10 seconds, relaxing for 2-3 seconds, then stretching further for 10-30 seconds. This cycle is typically repeated 2-4 times per muscle group.</p>
+        </div>
+
+        <!-- Key PNF Stretches -->
+        <h2 class="section-heading">Key PNF Stretches</h2>
+        <div class="stretches-grid">
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" alt="Hamstring PNF">
+                </div>
+                <div class="stretch-details">
+                    <h3>Hamstring PNF Stretch</h3>
+                    <p>A partner-assisted stretch targeting the hamstrings using the contract-relax method.</p>
+                    <p><strong>How to perform:</strong> Lie on your back with one leg extended and the other raised toward the ceiling. Your partner provides resistance as you push your raised leg against their hand for 6-10 seconds. Relax, then your partner gently pushes your leg further into the stretch. Hold for 20-30 seconds, then repeat 2-3 times.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Intermediate</span>
+                        <span>Partner Required: Yes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1571019613576-2b22c76fd955?auto=format&fit=crop&w=600&q=80" alt="Hip Flexor PNF">
+                </div>
+                <div class="stretch-details">
+                    <h3>Hip Flexor PNF Stretch</h3>
+                    <p>Targets the hip flexors and quadriceps using the CRAC method to increase hip extension.</p>
+                    <p><strong>How to perform:</strong> Assume a lunge position with your back knee on the ground. Contract your back leg's quad by pushing down into the floor for 7-10 seconds. Relax, then contract your glutes (antagonist) to push your hip forward into a deeper stretch. Hold for 20-30 seconds, then repeat 2-3 times.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Intermediate</span>
+                        <span>Partner Required: No</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1581093450021-a7360e9a6b5?auto=format&fit=crop&w=600&q=80" alt="Shoulder PNF">
+                </div>
+                <div class="stretch-details">
+                    <h3>Shoulder PNF Stretch</h3>
+                    <p>Improves shoulder mobility using the hold-relax technique, beneficial for students with tight shoulders from studying.</p>
+                    <p><strong>How to perform:</strong> Stand with your right arm across your body at shoulder height. Use your left hand to apply gentle pressure above the elbow. Push your right arm against this resistance for 6-8 seconds. Relax, then use your left hand to gently pull the arm further across your body. Hold for 20 seconds, then repeat on the other side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner-Intermediate</span>
+                        <span>Partner Required: No</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1593164842264-0820ab39e724?auto=format&fit=crop&w=600&q=80" alt="Chest PNF">
+                </div>
+                <div class="stretch-details">
+                    <h3>Chest/Pectoral PNF Stretch</h3>
+                    <p>Targets the chest muscles that often tighten during prolonged studying or computer work.</p>
+                    <p><strong>How to perform:</strong> Stand in a doorway with one arm extended and elbow bent at 90°. Press your forearm against the doorframe for 8-10 seconds at moderate intensity. Relax, then step forward to deepen the stretch. Hold for 20-30 seconds, then repeat 2-3 times before switching sides.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner-Intermediate</span>
+                        <span>Partner Required: No</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Box -->
+        <div class="warning-box">
+            <h4>Important Safety Considerations</h4>
+            <p>PNF stretching is an advanced technique that requires proper understanding and execution. Always consider these safety guidelines:</p>
+            <p>• Never force a stretch beyond comfortable limits—stretching should not cause pain</p>
+            <p>• Use moderate force during contractions (20-50% of maximum effort) rather than all-out effort</p>
+            <p>• Ensure proper warm-up before PNF stretching; cold muscles are more prone to injury</p>
+            <p>• If you have recent injuries, joint instability, or certain medical conditions, consult a healthcare professional before attempting PNF techniques</p>
+            <p>• When using partner-assisted PNF, communication is essential to prevent overstretching</p>
+        </div>
+
+        <!-- Sample Routines -->
+        <section class="routine-section">
+            <h2 class="section-heading">PNF Stretching Routines</h2>
+            
+            <div class="routine-card">
+                <h3>Post-Training PNF Routine</h3>
+                <p>An effective routine to perform after workouts when muscles are warm and receptive to deeper stretching.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 15-20 minutes</li>
+                        <li><strong>Frequency:</strong> 2-3 times per week</li>
+                        <li><strong>Protocol:</strong> Contract-Relax (CR) technique</li>
+                        <li><strong>For each stretch:</strong>
+                            <ul>
+                                <li>Move to initial stretch position</li>
+                                <li>Contract target muscle at 30% force for 6-8 seconds</li>
+                                <li>Relax for 2-3 seconds</li>
+                                <li>Move to a deeper stretch for 20-30 seconds</li>
+                                <li>Repeat 2-3 times per muscle group</li>
+                            </ul>
+                        </li>
+                        <li><strong>Target Areas:</strong> Hamstrings, quadriceps, hip flexors, chest, shoulders, lower back, calves</li>
+                        <li><strong>Equipment:</strong> Exercise mat, towel or strap for assistance</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>Partner PNF Session</h3>
+                <p>A comprehensive partner-assisted routine ideal for athletes or students in physical education programs.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 30 minutes</li>
+                        <li><strong>Frequency:</strong> Once per week</li>
+                        <li><strong>Protocol:</strong> Hold-Relax (HR) technique</li>
+                        <li><strong>Process:</strong>
+                            <ul>
+                                <li>Partner moves limb to point of mild tension</li>
+                                <li>Subject performs isometric contraction against partner's resistance for 7-10 seconds</li>
+                                <li>Brief relaxation (2-3 seconds)</li>
+                                <li>Partner moves limb to new range of motion</li>
+                                <li>Hold for 20-30 seconds</li>
+                                <li>Repeat 3 times per muscle group</li>
+                            </ul>
+                        </li>
+                        <li><strong>Focus Areas:</strong> Major muscle groups with emphasis on sport-specific requirements</li>
+                        <li><strong>Communication:</strong> Establish clear verbal cues between partners (e.g., "contract," "relax," "stretching")</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>Self-PNF for Students</h3>
+                <p>A solo routine targeting areas commonly tight from studying and sedentary behavior, designed to be performed without a partner.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 10-15 minutes</li>
+                        <li><strong>Frequency:</strong> 2-3 times per week</li>
+                        <li><strong>Protocol:</strong> Modified Contract-Relax technique for solo practice</li>
+                        <li><strong>Key Stretches:</strong>
+                            <ul>
+                                <li>Seated hamstring stretch with towel assistance</li>
+                                <li>Doorway chest stretch</li>
+                                <li>Standing quadriceps stretch with wall support</li>
+                                <li>Cross-body shoulder stretch</li>
+                                <li>Seated hip stretch</li>
+                                <li>Neck stretches</li>
+                            </ul>
+                        </li>
+                        <li><strong>Environment:</strong> Quiet space with minimal distractions to maintain focus</li>
+                        <li><strong>Props Needed:</strong> Towel or yoga strap, wall or doorway for support</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+<script src="/pwa-install.js"></script>
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+</body>
+</html>

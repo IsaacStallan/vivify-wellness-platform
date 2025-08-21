@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Compassion Assessment - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        .assessment-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1513159446162-54eb8bdaa79b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .assessment-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .assessment-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .section-subtitle {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .disclaimer-box {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid #e67e22;
+        }
+
+        .disclaimer-box h3 {
+            color: #e67e22;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .disclaimer-box h3 i {
+            margin-right: 10px;
+        }
+
+        .compassion-benefits {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 5px solid #e67e22;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-item {
+            background-color: rgba(230, 126, 34, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .benefit-icon {
+            color: #e67e22;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .assessment-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #e67e22;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-title {
+            color: #e67e22;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .answer-option {
+            background-color: #333;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer-option:hover {
+            background-color: #444;
+            border-color: #e67e22;
+        }
+
+        .answer-option.selected {
+            background-color: rgba(230, 126, 34, 0.2);
+            border-color: #e67e22;
+        }
+
+        .answer-option input[type="radio"] {
+            margin-right: 1rem;
+        }
+
+        .assessment-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+
+        .btn-primary {
+            background-color: #e67e22;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #d35400;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            display: none;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .score-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #e67e22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #e67e22;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background-color: #d35400;
+            transform: scale(1.05);
+        }
+
+        .warning-card {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .warning-card h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .emergency-button {
+            background-color: #e74c3c;
+            color: white;
+            margin: 0.5rem;
+        }
+
+        .emergency-button:hover {
+            background-color: #c0392b;
+        }
+
+        .self-compassion-tips {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 5px solid #e67e22;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tip-card {
+            background-color: rgba(230, 126, 34, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .tip-card h4 {
+            color: #e67e22;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .tip-card h4 i {
+            margin-right: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .assessment-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .assessment-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wellness Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                                <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="assessment-hero">
+            <h1><i class="fas fa-heart"></i> Self-Compassion Assessment</h1>
+            <p>Discover how you treat yourself during difficult times and learn strategies to develop a kinder, more supportive inner voice.</p>
+            <a href="#assessment-start" class="cta-button">Start Assessment</a>
+        </section>
+
+        <!-- Important Disclaimer -->
+        <section class="content-section">
+            <div class="disclaimer-box">
+                <h3><i class="fas fa-info-circle"></i> About This Assessment</h3>
+                <p><strong>This assessment helps you understand your current level of self-compassion and self-care practices.</strong></p>
+                <p>Your responses are completely confidential and will help generate personalized recommendations for developing greater self-kindness. This tool is designed to support your wellbeing and personal growth, not to diagnose any conditions.</p>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="content-section">
+            <h2 class="section-title">Understanding Self-Compassion</h2>
+            <p class="intro-text">
+                Self-compassion involves treating yourself with the same kindness you would show a good friend during difficult times. It consists of three main components: self-kindness (being gentle with yourself), common humanity (recognizing that suffering is part of the human experience), and mindfulness (observing your emotions without judgment). This assessment explores how you currently respond to personal challenges, setbacks, and mistakes. Taking about 6 minutes to complete, it will provide insights into your self-compassion levels and offer practical strategies for developing a more supportive relationship with yourself.
+            </p>
+        </section>
+
+        <!-- Benefits of Self-Compassion -->
+        <section class="content-section">
+            <div class="compassion-benefits">
+                <h2><i class="fas fa-heart"></i> Why Self-Compassion Matters for Students</h2>
+                <p>Research shows that self-compassion is one of the most powerful tools for building resilience, reducing anxiety, and maintaining motivation through academic challenges.</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Reduced Anxiety & Stress</h4>
+                        <p>Self-compassion helps break the cycle of self-criticism that often amplifies stress and anxiety, creating a calmer mental environment for learning.</p>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h4>Increased Motivation</h4>
+                        <p>Contrary to self-criticism, self-compassion actually increases intrinsic motivation and helps you bounce back from setbacks more quickly.</p>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>Better Learning from Mistakes</h4>
+                        <p>When you respond to mistakes with kindness rather than harsh judgment, you create psychological safety that promotes growth and learning.</p>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <h4>Improved Mental Health</h4>
+                        <p>Self-compassion is strongly linked to lower rates of depression, greater emotional resilience, and higher overall life satisfaction.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Self-Compassion Tips -->
+        <section class="content-section">
+            <div class="self-compassion-tips">
+                <h2><i class="fas fa-lightbulb"></i> Quick Self-Compassion Practices</h2>
+                <p>Here are some simple techniques you can use right now to start treating yourself with greater kindness:</p>
+                
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4><i class="fas fa-pause"></i> The Self-Compassion Break</h4>
+                        <p>When struggling, place your hand on your heart and say: "This is a moment of suffering. Suffering is part of life. May I be kind to myself right now."</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-user-friends"></i> Talk to Yourself Like a Friend</h4>
+                        <p>Ask yourself: "What would I say to a friend in this situation?" Then offer yourself the same compassionate words and understanding.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-hands"></i> Loving Touch</h4>
+                        <p>Place your hand on your heart, stroke your arm, or give yourself a gentle hug. Physical touch activates the care system in your brain.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-pen"></i> Write a Compassionate Letter</h4>
+                        <p>Write yourself a letter about a struggle you're facing, using the same tone you'd use with a dear friend who was experiencing similar difficulties.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Assessment Section -->
+        <section id="assessment-start" class="content-section">
+            <div class="assessment-container">
+                <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">18</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="questionsContainer">
+                    <!-- Questions will be dynamically loaded here -->
+                </div>
+
+                <div class="assessment-buttons">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+                    <button class="btn btn-primary" id="submitBtn" onclick="calculateResults()" style="display: none;">See Results</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="content-section">
+            <div class="results-section" id="resultsSection">
+                <h2 class="section-subtitle">Your Self-Compassion Results</h2>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <span id="totalScore">0%</span>
+                    </div>
+                    <h3 id="scoreCategory">Loading...</h3>
+                    <p id="scoreDescription">Loading...</p>
+                </div>
+                
+                <div id="resultDescription"></div>
+                <div id="recommendations"></div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="restartAssessment()" class="cta-button">Take Assessment Again</button>
+                    <a href="self-compassion.html" class="cta-button">Learn More About Self-Compassion</a>
+                    <a href="guided-meditation-compassion.html" class="cta-button">Try Self-Compassion Meditation</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        // Self-Compassion Assessment Questions
+        const questions = [
+            {
+                text: "When I fail at something important to me, I tend to:",
+                options: [
+                    { text: "Be understanding and patient with myself", value: 4 },
+                    { text: "Try to be kind but still feel disappointed", value: 3 },
+                    { text: "Feel frustrated but move on fairly quickly", value: 2 },
+                    { text: "Be quite hard on myself and dwell on it", value: 1 },
+                    { text: "Be extremely self-critical and harsh", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm going through a difficult time, I tend to:",
+                options: [
+                    { text: "Treat myself with care and understanding", value: 4 },
+                    { text: "Be somewhat supportive of myself", value: 3 },
+                    { text: "Focus mainly on solving the problem", value: 2 },
+                    { text: "Be impatient and frustrated with myself", value: 1 },
+                    { text: "Be very self-critical and blame myself", value: 0 }
+                ]
+            },
+            {
+                text: "When I notice my flaws and inadequacies, I:",
+                options: [
+                    { text: "Accept them as part of being human", value: 4 },
+                    { text: "Try to accept them while working on improvement", value: 3 },
+                    { text: "Feel neutral about them most of the time", value: 2 },
+                    { text: "Feel disappointed and frustrated", value: 1 },
+                    { text: "Feel ashamed and want to hide them", value: 0 }
+                ]
+            },
+            {
+                text: "When something painful happens, I try to:",
+                options: [
+                    { text: "Approach my feelings with curiosity and kindness", value: 4 },
+                    { text: "Acknowledge the pain and be gentle with myself", value: 3 },
+                    { text: "Deal with it practically without much emotion", value: 2 },
+                    { text: "Push through and ignore the painful feelings", value: 1 },
+                    { text: "Get overwhelmed and either avoid or obsess over it", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm feeling down, I tend to think:",
+                options: [
+                    { text: "\"This is a difficult moment, but it will pass\"", value: 4 },
+                    { text: "\"This is hard, but I can handle it\"", value: 3 },
+                    { text: "\"I need to figure out how to fix this\"", value: 2 },
+                    { text: "\"Why does this always happen to me?\"", value: 1 },
+                    { text: "\"I'm such a failure, everything is wrong\"", value: 0 }
+                ]
+            },
+            {
+                text: "When I make a mistake, my inner voice usually sounds:",
+                options: [
+                    { text: "Gentle and encouraging, like a good friend", value: 4 },
+                    { text: "Understanding with gentle guidance", value: 3 },
+                    { text: "Neutral and matter-of-fact", value: 2 },
+                    { text: "Disappointed and somewhat critical", value: 1 },
+                    { text: "Harsh and punishing", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm struggling with something, I remind myself that:",
+                options: [
+                    { text: "Struggling is a normal part of being human", value: 4 },
+                    { text: "Many people go through similar challenges", value: 3 },
+                    { text: "I need to work harder to overcome this", value: 2 },
+                    { text: "I should be able to handle this better", value: 1 },
+                    { text: "I'm probably the only one who struggles like this", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm having a bad day, I:",
+                options: [
+                    { text: "Treat myself with extra care and gentleness", value: 4 },
+                    { text: "Try to be patient and understanding with myself", value: 3 },
+                    { text: "Try to distract myself or stay busy", value: 2 },
+                    { text: "Feel frustrated that I'm not handling things better", value: 1 },
+                    { text: "Judge myself harshly for having a bad day", value: 0 }
+                ]
+            },
+            {
+                text: "When I think about my personal problems, I:",
+                options: [
+                    { text: "Feel compassionate toward myself and my struggles", value: 4 },
+                    { text: "Try to maintain perspective and be understanding", value: 3 },
+                    { text: "Focus on finding practical solutions", value: 2 },
+                    { text: "Feel overwhelmed and somewhat critical of myself", value: 1 },
+                    { text: "Feel like I'm somehow defective or broken", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm disappointed by my performance, I:",
+                options: [
+                    { text: "Acknowledge the disappointment and comfort myself", value: 4 },
+                    { text: "Feel disappointed but try to be understanding", value: 3 },
+                    { text: "Analyze what went wrong and make a plan", value: 2 },
+                    { text: "Feel quite frustrated and critical of myself", value: 1 },
+                    { text: "Beat myself up and feel like a failure", value: 0 }
+                ]
+            },
+            {
+                text: "When difficult emotions arise, I:",
+                options: [
+                    { text: "Allow myself to feel them with kindness", value: 4 },
+                    { text: "Try to be gentle and patient with the feelings", value: 3 },
+                    { text: "Notice them but try to stay focused on other things", value: 2 },
+                    { text: "Feel frustrated that I'm having these emotions", value: 1 },
+                    { text: "Judge myself for having 'negative' emotions", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm going through tough times, I:",
+                options: [
+                    { text: "Remember that difficulty is part of the human experience", value: 4 },
+                    { text: "Try to remind myself that others face challenges too", value: 3 },
+                    { text: "Focus on getting through it as best I can", value: 2 },
+                    { text: "Wonder why I can't handle things like others seem to", value: 1 },
+                    { text: "Feel isolated and like I'm the only one struggling", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm stressed about schoolwork or responsibilities, I:",
+                options: [
+                    { text: "Speak to myself with encouragement and support", value: 4 },
+                    { text: "Try to be understanding about the pressure I'm under", value: 3 },
+                    { text: "Focus on what needs to be done without much self-talk", value: 2 },
+                    { text: "Put pressure on myself to do better", value: 1 },
+                    { text: "Criticize myself for not being more capable", value: 0 }
+                ]
+            },
+            {
+                text: "When I compare myself to others and feel inadequate, I:",
+                options: [
+                    { text: "Remind myself that everyone has strengths and struggles", value: 4 },
+                    { text: "Try to focus on my own growth and journey", value: 3 },
+                    { text: "Notice the comparison but try to move on", value: 2 },
+                    { text: "Feel discouraged about my own abilities", value: 1 },
+                    { text: "Feel ashamed and like I'll never measure up", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm experiencing painful emotions, I:",
+                options: [
+                    { text: "Give myself permission to feel and process them fully", value: 4 },
+                    { text: "Try to be patient and gentle with myself", value: 3 },
+                    { text: "Acknowledge them briefly then try to move forward", value: 2 },
+                    { text: "Feel frustrated that I'm so emotional", value: 1 },
+                    { text: "Judge myself for being 'too sensitive' or 'weak'", value: 0 }
+                ]
+            },
+            {
+                text: "When I face a personal challenge, I typically:",
+                options: [
+                    { text: "Approach it with self-compassion and patience", value: 4 },
+                    { text: "Try to be understanding while working through it", value: 3 },
+                    { text: "Focus on solving the problem step by step", value: 2 },
+                    { text: "Feel stressed and worried about handling it well", value: 1 },
+                    { text: "Criticize myself for having the challenge in the first place", value: 0 }
+                ]
+            },
+            {
+                text: "When I think about my mistakes and failures, I:",
+                options: [
+                    { text: "View them as learning opportunities with compassion", value: 4 },
+                    { text: "Try to learn from them without being too hard on myself", value: 3 },
+                    { text: "Analyze them objectively for future improvement", value: 2 },
+                    { text: "Feel embarrassed and disappointed in myself", value: 1 },
+                    { text: "Feel shame and see them as proof of my inadequacy", value: 0 }
+                ]
+            },
+            {
+                text: "When I'm suffering, I remind myself that:",
+                options: [
+                    { text: "Suffering is a universal human experience", value: 4 },
+                    { text: "Many people experience similar pain", value: 3 },
+                    { text: "This will eventually pass", value: 2 },
+                    { text: "I need to be stronger and get over it", value: 1 },
+                    { text: "I shouldn't be feeling this way", value: 0 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let answers = [];
+        const maxScore = questions.length * 4;
+
+        function initializeAssessment() {
+            document.getElementById('totalQuestions').textContent = questions.length;
+            loadQuestion();
+            updateProgress();
+        }
+
+        function loadQuestion() {
+            const questionsContainer = document.getElementById('questionsContainer');
+            const question = questions[currentQuestionIndex];
+            
+            questionsContainer.innerHTML = `
+                <div class="question-card active">
+                    <h3 class="question-title">${question.text}</h3>
+                    <div class="answer-options">
+                        ${question.options.map((option, index) => `
+                            <div class="answer-option" onclick="selectAnswer(${option.value}, this)">
+                                <input type="radio" name="question${currentQuestionIndex}" value="${option.value}" id="q${currentQuestionIndex}_${index}">
+                                <label for="q${currentQuestionIndex}_${index}">${option.text}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Restore previous answer if exists
+            if (answers[currentQuestionIndex] !== undefined) {
+                const value = answers[currentQuestionIndex];
+                const selectedOption = questionsContainer.querySelector(`input[value="${value}"]`);
+                if (selectedOption) {
+                    selectedOption.checked = true;
+                    selectedOption.closest('.answer-option').classList.add('selected');
+                }
+            }
+        }
+
+        function selectAnswer(value, element) {
+            // Remove selection from all options
+            element.parentElement.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Select this option
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+            
+            // Store answer
+            answers[currentQuestionIndex] = value;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            
+            // Update button visibility
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestionIndex] === undefined) {
+                alert('Please select an answer before continuing.');
+                return;
+            }
+            
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        function calculateResults() {
+            if (answers[currentQuestionIndex] === undefined) {
+                alert('Please select an answer before submitting.');
+                return;
+            }
+
+            const totalScore = answers.reduce((sum, answer) => sum + answer, 0);
+            const percentageScore = Math.round((totalScore / maxScore) * 100);
+            
+            let category, description, recommendations;
+
+            if (percentageScore >= 85) {
+                category = "High Self-Compassion";
+                description = `
+                    <p><strong>Excellent!</strong> You demonstrate high levels of self-compassion. You treat yourself with kindness during difficult times, recognize that suffering is part of the human experience, and maintain a balanced perspective on your challenges.</p>
+                    <p>Your self-compassionate approach is a significant strength that supports your mental health, resilience, and overall wellbeing. You're likely better equipped to handle stress, recover from setbacks, and maintain motivation during challenging times.</p>
+                `;
+                recommendations = `
+                    <h3>Ways to Maintain Your Self-Compassion:</h3>
+                    <ul>
+                        <li>Continue practicing the self-compassion techniques that work for you</li>
+                        <li>Share your self-compassionate approach with friends who might benefit</li>
+                        <li>Consider becoming a peer mentor to help other students develop self-kindness</li>
+                        <li>Explore advanced self-compassion practices like loving-kindness meditation</li>
+                        <li>Use your self-compassion as a foundation for helping others during difficult times</li>
+                        <li>Practice gratitude for your ability to be kind to yourself</li>
+                    </ul>
+                `;
+            } else if (percentageScore >= 65) {
+                category = "Moderate Self-Compassion";
+                description = `
+                    <p><strong>Good progress!</strong> You show moderate levels of self-compassion and have developed some healthy ways of relating to yourself during difficult times. While you may still be somewhat self-critical at times, you're generally able to be supportive of yourself.</p>
+                    <p>You have a solid foundation to build upon. With some focused practice, you can strengthen your self-compassion and enjoy even greater emotional resilience and wellbeing.</p>
+                `;
+                recommendations = `
+                    <h3>Ways to Strengthen Your Self-Compassion:</h3>
+                    <ul>
+                        <li>Practice the self-compassion break: acknowledge suffering, remember common humanity, offer yourself kindness</li>
+                        <li>Notice when your inner critic gets loud and consciously choose a kinder inner voice</li>
+                        <li>Try writing yourself a compassionate letter when facing a challenge</li>
+                        <li>Practice loving touch - place your hand on your heart when you're stressed</li>
+                        <li>Ask yourself: "What would I say to a good friend in this situation?" then say it to yourself</li>
+                        <li>Practice self-compassion meditation regularly</li>
+                        <li>Challenge perfectionist thinking with gentle, realistic self-talk</li>
+                    </ul>
+                `;
+            } else if (percentageScore >= 40) {
+                category = "Developing Self-Compassion";
+                description = `
+                    <p>Your assessment suggests that self-compassion is an area where you can grow significantly. You may tend to be quite self-critical during difficult times or feel isolated in your struggles. This is very common, especially among students who often face high pressure and perfectionist expectations.</p>
+                    <p>The great news is that self-compassion can be learned and developed at any age. With practice, you can develop a much kinder, more supportive relationship with yourself.</p>
+                `;
+                recommendations = `
+                    <h3>Building Your Self-Compassion:</h3>
+                    <ul>
+                        <li>Start noticing your inner critic and challenging harsh self-talk</li>
+                        <li>Practice treating yourself as you would treat a beloved friend</li>
+                        <li>Remember that struggling and making mistakes is part of being human - you're not alone</li>
+                        <li>Use physical comfort like placing your hand on your heart when distressed</li>
+                        <li>Try guided self-compassion meditations daily</li>
+                        <li>Write down compassionate phrases to use when you're being self-critical</li>
+                        <li>Consider counseling to work on developing self-kindness and emotional resilience</li>
+                        <li>Practice mindfulness to observe your thoughts without immediately believing them</li>
+                    </ul>
+                `;
+            } else {
+                category = "Self-Compassion Needs Attention";
+                description = `
+                    <p>Your responses suggest that you may be quite hard on yourself during difficult times. You might experience significant self-criticism, feel isolated in your struggles, or have difficulty being kind to yourself when things go wrong. This pattern can contribute to increased stress, anxiety, and low mood.</p>
+                    <p>Please know that being self-critical is learned behavior, and you can absolutely develop greater self-kindness with practice and support. Many students struggle with this, and there are effective ways to develop a more compassionate inner voice.</p>
+                `;
+                recommendations = `
+                    <h3>Priority Steps for Developing Self-Compassion:</h3>
+                    <ul>
+                        <li>Start with awareness - notice when you're being self-critical without trying to change it yet</li>
+                        <li>Practice one small act of self-kindness each day (gentle self-talk, self-care activity)</li>
+                        <li>Remind yourself daily that making mistakes and struggling is normal and human</li>
+                        <li>Use physical comfort like hugging yourself or placing your hand on your heart</li>
+                        <li>Consider professional support to work on developing self-compassion and emotional wellness</li>
+                        <li>Try apps or guided meditations specifically for self-compassion</li>
+                        <li>Practice saying your name with kindness when you talk to yourself</li>
+                        <li>Challenge thoughts that you're uniquely flawed or different from others</li>
+                    </ul>
+                `;
+                showSupportResources();
+            }
+
+            // Track completion
+            if (window.vivifyTracker && typeof window.vivifyTracker.trackActivity === 'function') {
+                window.vivifyTracker.trackActivity(
+                    'self_compassion_assessment_complete',
+                    'mental',
+                    `Completed self-compassion assessment - ${category}`,
+                    15
+                );
+            }
+
+            // Save results to localStorage
+            const assessmentResults = {
+                type: 'self_compassion',
+                score: totalScore,
+                percentage: percentageScore,
+                category: category,
+                date: new Date().toISOString(),
+                answers: answers
+            };
+            
+            const existingResults = JSON.parse(localStorage.getItem('assessmentResults') || '[]');
+            existingResults.push(assessmentResults);
+            localStorage.setItem('assessmentResults', JSON.stringify(existingResults));
+
+            // Display results
+            document.getElementById('totalScore').textContent = percentageScore + '%';
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('scoreDescription').textContent = `Score: ${totalScore}/${maxScore}`;
+            document.getElementById('resultDescription').innerHTML = description;
+            document.getElementById('recommendations').innerHTML = recommendations;
+
+            // Show results section and hide assessment
+            document.querySelector('.assessment-container').style.display = 'none';
+            document.getElementById('resultsSection').classList.add('show');
+
+            // Scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        function showSupportResources() {
+            const alertHtml = `
+                <div class="warning-card">
+                    <h3><i class="fas fa-heart"></i> Additional Support Available</h3>
+                    <p><strong>Developing self-compassion takes time and practice, and that's completely normal.</strong></p>
+                    <p>If you're experiencing persistent self-criticism, shame, or emotional distress, remember that professional support is available and can be incredibly helpful. Many students benefit from counselling services that can help you develop healthier ways of relating to yourself.</p>
+                    <div style="margin: 1.5rem 0;">
+                        <a href="tel:1800551800" class="cta-button emergency-button">Kids Helpline: 1800 55 1800</a>
+                        <a href="tel:131114" class="cta-button emergency-button">Lifeline: 13 11 14</a>
+                    </div>
+                    <p>Remember: being kind to yourself isn't selfish or weak - it's essential for your wellbeing and success. You deserve the same compassion you would offer a good friend.</p>
+                </div>
+            `;
+            document.getElementById('resultsSection').insertAdjacentHTML('afterbegin', alertHtml);
+        }
+
+        function restartAssessment() {
+            currentQuestionIndex = 0;
+            answers = [];
+            document.querySelector('.assessment-container').style.display = 'block';
+            document.getElementById('resultsSection').classList.remove('show');
+            initializeAssessment();
+        }
+
+        // Initialize assessment when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Standard login/logout handling
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+
+            // Initialize the assessment
+            initializeAssessment();
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+<script src="/pwa-install.js"></script>
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+</body>
+</html>

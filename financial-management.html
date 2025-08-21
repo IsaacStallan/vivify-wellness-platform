@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Financial Management - Vivify</title>
+   <link rel="stylesheet" href="styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .financial-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .financial-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .financial-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2.5rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+           padding-bottom: 0.5rem;
+           border-bottom: 2px solid #333;
+       }
+
+       .topic-grid {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           gap: 2rem;
+           padding: 3rem 2rem;
+       }
+
+       .topic-card {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           width: 350px;
+           transition: transform 0.3s, box-shadow 0.3s;
+           box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+       }
+
+       .topic-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 12px 16px rgba(0,0,0,0.3);
+       }
+
+       .topic-icon {
+           font-size: 3rem;
+           color: #f39c12;
+           margin-bottom: 1rem;
+           text-align: center;
+       }
+
+       .topic-card h3 {
+           color: #f39c12;
+           font-size: 1.5rem;
+           margin-bottom: 1rem;
+           text-align: center;
+       }
+
+       .topic-card p {
+           color: #ddd;
+           margin-bottom: 1.5rem;
+           line-height: 1.6;
+       }
+
+       .topic-card ul {
+           color: #ddd;
+           margin-bottom: 1.5rem;
+           padding-left: 1.5rem;
+       }
+
+       .topic-card li {
+           margin-bottom: 0.5rem;
+       }
+
+       .cta-button {
+           display: inline-block;
+           padding: 0.8rem 1.5rem;
+           background-color: #f39c12;
+           color: #000;
+           text-decoration: none;
+           border-radius: 5px;
+           font-weight: 600;
+           transition: background-color 0.3s;
+           text-align: center;
+           width: 100%;
+       }
+
+       .cta-button:hover {
+           background-color: #e67e22;
+       }
+
+       .calculator-section {
+           background-color: #111;
+           padding: 4rem 2rem;
+           text-align: center;
+       }
+
+       .calculator-grid {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           gap: 2rem;
+           max-width: 1200px;
+           margin: 0 auto;
+       }
+
+       .calculator-card {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           width: 300px;
+           text-align: center;
+       }
+
+       .calculator-card h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .calculator-card p {
+           color: #ddd;
+           margin-bottom: 1.5rem;
+       }
+
+       .emergency-fund {
+           background-color: #e74c3c;
+           padding: 3rem 2rem;
+           margin: 3rem auto;
+           max-width: 1000px;
+           border-radius: 10px;
+           text-align: center;
+       }
+
+       .emergency-fund h2 {
+           color: white;
+           margin-bottom: 1rem;
+       }
+
+       .emergency-fund p {
+           color: white;
+           margin-bottom: 1.5rem;
+       }
+
+       .tips-section {
+           background-color: #2c3e50;
+           padding: 4rem 2rem;
+           margin: 3rem 0;
+       }
+
+       .tips-grid {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           gap: 2rem;
+           max-width: 1200px;
+           margin: 0 auto;
+       }
+
+       .tip-card {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           width: 300px;
+           border-left: 4px solid #f39c12;
+       }
+
+       .tip-card h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .tip-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+       }
+
+       .warning-box {
+           background-color: #e67e22;
+           color: white;
+           padding: 1.5rem;
+           border-radius: 8px;
+           margin: 2rem 0;
+           text-align: center;
+       }
+
+       .warning-box h3 {
+           margin-bottom: 1rem;
+       }
+
+       @media (max-width: 768px) {
+           .financial-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .topic-card {
+               width: 100%;
+               max-width: 400px;
+           }
+       }
+   </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wellness Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                               <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="financial-hero">
+           <h1>Financial Management</h1>
+           <p>Master the fundamentals of personal finance to build a secure financial future. Learn budgeting, banking, credit, taxes, and investment basics that will serve you throughout life.</p>
+           <a href="#financial-topics" class="cta-button" style="display: inline-block; width: auto;">Start Learning</a>
+       </section>
+
+       <!-- Financial Topics Section -->
+       <section id="financial-topics">
+           <h2 class="section-title">Essential Financial Skills</h2>
+           <div class="topic-grid">
+               <div class="topic-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-wallet"></i>
+                   </div>
+                   <h3>Budgeting Basics</h3>
+                   <p>Learn to track your income and expenses, create a realistic budget, and stick to it.</p>
+                   <ul>
+                       <li>50/30/20 Rule (Needs/Wants/Savings)</li>
+                       <li>Tracking expenses with apps</li>
+                       <li>Creating emergency funds</li>
+                       <li>Managing student budgets</li>
+                   </ul>
+                   <a href="budgeting-guide.html" class="cta-button">Learn Budgeting</a>
+               </div>
+
+               <div class="topic-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-university"></i>
+                   </div>
+                   <h3>Banking Essentials</h3>
+                   <p>Understanding bank accounts, choosing the right bank, and managing your money safely.</p>
+                   <ul>
+                       <li>Checking vs. Savings accounts</li>
+                       <li>Online banking and mobile apps</li>
+                       <li>Avoiding fees and penalties</li>
+                       <li>Understanding interest rates</li>
+                   </ul>
+                   <a href="banking-guide.html" class="cta-button">Banking Guide</a>
+               </div>
+
+               <div class="topic-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-credit-card"></i>
+                   </div>
+                   <h3>Credit & Credit Scores</h3>
+                   <p>Build and maintain good credit while avoiding common credit card traps.</p>
+                   <ul>
+                       <li>How credit scores work</li>
+                       <li>Building credit responsibly</li>
+                       <li>Credit card do's and don'ts</li>
+                       <li>Improving your credit score</li>
+                   </ul>
+                   <a href="credit-guide.html" class="cta-button">Credit Guide</a>
+               </div>
+
+               <div class="topic-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-file-invoice-dollar"></i>
+                   </div>
+                   <h3>Taxes Made Simple</h3>
+                   <p>Navigate tax season with confidence and maximize your refunds.</p>
+                   <ul>
+                       <li>Filing your first tax return</li>
+                       <li>Understanding tax forms (W-2, 1099)</li>
+                       <li>Tax deductions for students</li>
+                       <li>Free tax filing resources</li>
+                   </ul>
+                   <a href="tax-guide.html" class="cta-button">Tax Guide</a>
+               </div>
+
+               <div class="topic-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-chart-line"></i>
+                   </div>
+                   <h3>Investment Basics</h3>
+                   <p>Start building wealth early with simple investment strategies.</p>
+                   <ul>
+                       <li>Understanding stocks and bonds</li>
+                       <li>Index funds and ETFs</li>
+                       <li>Retirement accounts (401k, IRA)</li>
+                       <li>Compound interest power</li>
+                   </ul>
+                   <a href="investment-guide.html" class="cta-button">Investment Guide</a>
+               </div>
+
+               <div class="topic-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-graduation-cap"></i>
+                   </div>
+                   <h3>Student Loans</h3>
+                   <p>Understand your student loans and create a repayment strategy.</p>
+                   <ul>
+                       <li>Types of student loans</li>
+                       <li>Repayment plans and options</li>
+                       <li>Loan forgiveness programs</li>
+                       <li>Avoiding default</li>
+                   </ul>
+                   <a href="student-loans-guide.html" class="cta-button">Loan Guide</a>
+               </div>
+           </div>
+       </section>
+
+       <!-- Emergency Fund Section -->
+       <section class="emergency-fund">
+           <h2><i class="fas fa-exclamation-triangle"></i> Emergency Fund Priority</h2>
+           <p>Before investing or making major purchases, build an emergency fund of 3-6 months of expenses. This is your financial safety net for unexpected situations like job loss, medical emergencies, or major repairs.</p>
+           <a href="emergency-fund-calculator.html" class="cta-button" style="background-color: white; color: #e74c3c;">Calculate Your Emergency Fund</a>
+       </section>
+
+       <!-- Financial Calculators -->
+       <section class="calculator-section">
+           <h2 class="section-title">Financial Calculators</h2>
+           <div class="calculator-grid">
+               <div class="calculator-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-calculator"></i>
+                   </div>
+                   <h3>Budget Calculator</h3>
+                   <p>Create a personalized budget based on your income and expenses.</p>
+                   <a href="budget-calculator.html" class="cta-button">Calculate Budget</a>
+               </div>
+
+               <div class="calculator-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-percent"></i>
+                   </div>
+                   <h3>Loan Payment Calculator</h3>
+                   <p>Calculate monthly payments for student loans, auto loans, or personal loans.</p>
+                   <a href="loan-calculator.html" class="cta-button">Calculate Payments</a>
+               </div>
+
+               <div class="calculator-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-piggy-bank"></i>
+                   </div>
+                   <h3>Savings Goal Calculator</h3>
+                   <p>Determine how much to save monthly to reach your financial goals.</p>
+                   <a href="savings-calculator.html" class="cta-button">Calculate Savings</a>
+               </div>
+
+               <div class="calculator-card">
+                   <div class="topic-icon">
+                       <i class="fas fa-chart-area"></i>
+                   </div>
+                   <h3>Compound Interest Calculator</h3>
+                   <p>See how your money can grow over time with compound interest.</p>
+                   <a href="compound-interest-calculator.html" class="cta-button">Calculate Growth</a>
+               </div>
+           </div>
+       </section>
+
+       <!-- Financial Tips Section -->
+       <section class="tips-section">
+           <h2 class="section-title" style="color: #f39c12;">Smart Money Tips for Students</h2>
+           <div class="tips-grid">
+               <div class="tip-card">
+                   <h3>Start Early</h3>
+                   <p>The earlier you start building good financial habits, the more time compound interest has to work in your favor. Even small amounts saved in your 20s can grow significantly by retirement.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Automate Your Finances</h3>
+                   <p>Set up automatic transfers to savings and automatic bill payments to avoid late fees. This "pay yourself first" approach ensures you save before you spend.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Track Every Dollar</h3>
+                   <p>Use apps like Mint, YNAB, or even a simple spreadsheet to track where your money goes. You can't manage what you don't measure.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Build Credit Responsibly</h3>
+                   <p>Get a student credit card and use it for small purchases you can pay off monthly. This builds credit history without accumulating debt.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Take Advantage of Student Discounts</h3>
+                   <p>Always ask about student discounts on software, entertainment, food, and services. These small savings add up over time.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Learn to Cook</h3>
+                   <p>Eating out frequently can destroy a student budget. Learning basic cooking skills can save you thousands of dollars per year.</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Warning Section -->
+       <section class="warning-box">
+           <h3><i class="fas fa-exclamation-circle"></i> Common Financial Mistakes to Avoid</h3>
+           <p>Don't fall into these traps: maxing out credit cards, taking on unnecessary debt, not reading loan terms, investing without understanding, or ignoring your credit score. These mistakes can take years to recover from.</p>
+       </section>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           // Update UI based on login status
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           // Handle logout
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+       });
+   </script>
+
+<!-- PWA Scripts -->
+<script src="/pwa-install.js"></script>
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIIT Training - Exercise Guide | Vivify</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .overview-image {
+            width: 100%;
+            height: 470px; /* Set a fixed height */
+            overflow: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This crops the image to fit perfectly */
+            object-position: Bottom; /* Centers the crop */
+            border-radius: 10px;
+        }
+
+        .overview-image img.contain {
+            object-fit: contain; /* Shows full image, may have empty space */
+            background-color: #222; /* Fill empty space with background color */
+        }
+        
+        /* Fix internal text alignment */
+        .exercise-details {
+            padding: 2rem; /* Consistent padding */
+            text-align: left; /* Ensure left alignment */
+        }
+
+        .exercise-details h2 {
+            margin-top: 0; /* Remove top margin */
+            margin-bottom: 1.5rem; /* Consistent bottom spacing */
+        }
+
+        /* Fix label/value alignment */
+        .detail-row {
+            display: flex;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+
+        .detail-label {
+            min-width: 150px; /* Fixed width for labels */
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .detail-value {
+            flex: 1;
+            text-align: left; /* Ensure left alignment */
+        }
+
+        /* Fix overall container positioning */
+        .exercise-overview {
+            max-width: 1200px;
+            margin: 0 auto; /* Center the container */
+            padding: 2rem; /* Consistent outer padding */
+        }
+
+        /* Fix title spacing */
+        .section-heading {
+            margin-bottom: 2rem; /* Consistent spacing below title */
+            text-align: left;
+        }
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Exercise Detail Page Styles */
+        .exercise-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1518459031867-a89b944bffe4?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .exercise-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .exercise-hero .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-tag i {
+            color: #f39c12;
+        }
+
+        .exercise-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-heading {
+            color: #f39c12;
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        .exercise-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-details {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .overview-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            width: 120px;
+            color: #ddd;
+        }
+
+        .detail-value {
+            color: #aaa;
+        }
+
+        .overview-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #ddd;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .common-mistakes {
+            background-color: #331111;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .common-mistakes h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+        }
+
+        .mistake-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mistake-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .mistake-list li::before {
+            content: '✕';
+            color: #ff6b6b;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .mistake-list strong {
+            color: #ff6b6b;
+        }
+
+        .variations-section {
+            margin: 3rem 0;
+        }
+
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .variation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .variation-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .variation-info {
+            padding: 1.5rem;
+        }
+
+        .variation-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .variation-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .difficulty-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .difficulty-dot.active {
+            background-color: #f39c12;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .hiit-timer {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .hiit-timer h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .timer-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .start-btn {
+            background-color: #27ae60;
+        }
+
+        .start-btn:hover {
+            background-color: #2ecc71;
+        }
+
+        .pause-btn {
+            background-color: #f39c12;
+        }
+
+        .pause-btn:hover {
+            background-color: #f1c40f;
+        }
+
+        .reset-btn {
+            background-color: #e74c3c;
+        }
+
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .timer-info {
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .timer-info p {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+        }
+
+        .workout-routine {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .workout-routine h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .workout-routine p {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-item {
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            background-color: #333;
+            border-radius: 5px;
+            color: #ddd;
+        }
+
+        .exercise-item:nth-child(odd) {
+            background-color: #3a3a3a;
+        }
+
+        .related-exercises {
+            margin: 3rem 0;
+        }
+
+        .related-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 1rem;
+        }
+
+        .related-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .related-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .related-info a i {
+            margin-left: 0.3rem;
+        }
+
+        .related-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-hero .meta-tags {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+            }
+            
+            .timer-controls {
+                flex-direction: column;
+            }
+            
+            .timer-btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wellness Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Fitness</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness Home</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" class="active" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" aria-label="Flexibility Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Exercise Hero Section -->
+        <section class="exercise-hero">
+            <h1>High-Intensity Interval Training (HIIT)</h1>
+            <p>Maximize results in minimal time with alternating periods of intense exercise and strategic recovery</p>
+            
+            <div class="meta-tags">
+                <div class="meta-tag">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Cardiovascular, Full Body</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Beginner to Advanced (Scalable)</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-tools"></i>
+                    <span>Minimal or None (Adaptable)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="exercise-content">
+            <!-- Overview Section -->
+            <h2 class="section-heading">Exercise Overview</h2>
+            <div class="exercise-overview">
+                <div class="overview-details">
+                    <h3>Exercise Details</h3>
+                    <ul class="detail-list">
+                        <li>
+                            <span class="detail-label">Primary Benefit:</span>
+                            <span class="detail-value">Cardiovascular Fitness, Fat Loss, Metabolic Boost</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Muscles Worked:</span>
+                            <span class="detail-value">Varies by exercise selection (Can target full body)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Equipment:</span>
+                            <span class="detail-value">Adaptable: Bodyweight, Dumbbells, Kettlebells, etc.</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">Cardiovascular, Metabolic, Strength (Hybrid)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Experience Level:</span>
+                            <span class="detail-value">All Levels (Can be modified)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Calorie Burn:</span>
+                            <span class="detail-value">~400-600 calories per 30 min session (varies by intensity)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Duration:</span>
+                            <span class="detail-value">10-30 minutes (typically 20-25 minutes)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Person Doing HIIT Exercises">
+                </div>
+            </div>
+
+            <!-- Video Demonstration -->
+            <h2 class="section-heading">Video Demonstration</h2>
+            <div class="video-container">
+                <!-- This would be a real exercise video in production -->
+                <iframe src="https://www.youtube.com/embed/ml6cT4AZdqI" title="HIIT Workout Demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Step-by-Step Instructions -->
+            <h2 class="section-heading">How to Structure a HIIT Workout</h2>
+            <ol class="instruction-steps">
+                <li class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Warm-Up Properly</h4>
+                        <p>Begin with 5-10 minutes of light cardio (like jogging in place or jumping jacks) to increase your heart rate gradually. Follow with dynamic stretches such as leg swings, arm circles, and hip rotations to prepare your muscles and joints for intense movement.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Select Your Work-to-Rest Ratio</h4>
+                        <p>Choose a work-to-rest ratio based on your fitness level. Beginners might start with 1:2 (e.g., 20 seconds of work, 40 seconds of rest), intermediate 1:1 (30 seconds work, 30 seconds rest), and advanced 2:1 (40 seconds work, 20 seconds rest) or higher.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Choose Your Exercises</h4>
+                        <p>Select 4-8 exercises that target different muscle groups. Mix cardio-focused movements (like burpees, mountain climbers) with strength-based exercises (like squats, push-ups). For maximum effectiveness, include both upper and lower body exercises.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Determine Your Format</h4>
+                        <p>Decide between a circuit format (completing all exercises once before repeating the circuit) or a Tabata-style workout (focusing on one exercise for 4 minutes before moving to the next). For beginners, the circuit approach is often more accessible.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Execute with Maximum Effort</h4>
+                        <p>During work intervals, perform the exercise with maximum intensity (appropriate to your fitness level). This should feel challenging—aim for an 8-9 out of 10 in terms of effort. Your breathing should be heavy, and you should struggle to maintain conversation.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Respect Recovery Periods</h4>
+                        <p>Use rest periods to actively recover by walking in place or performing very light movement rather than standing still. This helps maintain elevated heart rate while preparing for the next intense interval. Focus on controlled breathing during this time.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h4>Complete Your Rounds</h4>
+                        <p>Most HIIT workouts involve 3-5 rounds of the selected circuit. Begin with fewer rounds if you're a beginner and progressively add more as your fitness improves. The entire workout should typically last 10-30 minutes (excluding warm-up and cool-down).</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <h4>Cool Down Thoroughly</h4>
+                        <p>Finish with 5-10 minutes of light activity (such as walking) to gradually lower your heart rate, followed by static stretching to improve flexibility and reduce muscle soreness. Hold each stretch for 20-30 seconds, focusing on the primary muscles used during your workout.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- HIIT Timer -->
+            <h2 class="section-heading">HIIT Workout Timer</h2>
+            <div class="hiit-timer">
+                <h3>Tabata Timer (20 sec work / 10 sec rest)</h3>
+                <div class="timer-display" id="timer-display">00:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn start-btn" id="start-btn">Start</button>
+                    <button class="timer-btn pause-btn" id="pause-btn">Pause</button>
+                    <button class="timer-btn reset-btn" id="reset-btn">Reset</button>
+                </div>
+                <div class="timer-info">
+                    <p>Current Phase: <span id="current-phase">Ready</span></p>
+                    <p>Round: <span id="current-round">0/8</span></p>
+                </div>
+            </div>
+
+            <!-- Sample Workout -->
+            <h2 class="section-heading">Sample HIIT Workout Routines</h2>
+            
+            <div class="workout-routine">
+                <h3>Bodyweight HIIT for Beginners</h3>
+                <p>Perfect for newcomers to HIIT, this workout uses only bodyweight exercises and a more forgiving work-to-rest ratio.</p>
+                <p><strong>Format:</strong> 20 seconds work / 40 seconds rest, 3 rounds</p>
+                <p><strong>Total Time:</strong> Approximately 18 minutes</p>
+                <ul class="exercise-list">
+                    <li class="exercise-item">Jumping Jacks</li>
+                    <li class="exercise-item">Bodyweight Squats</li>
+                    <li class="exercise-item">Modified Push-Ups (from knees if needed)</li>
+                    <li class="exercise-item">High Knees (marching in place)</li>
+                    <li class="exercise-item">Glute Bridges</li>
+                    <li class="exercise-item">Standing Side Bends</li>
+                </ul>
+                <p>Rest 1 minute between rounds if needed. Focus on form over speed.</p>
+            </div>
+            
+            <div class="workout-routine">
+                <h3>Intermediate Full-Body HIIT</h3>
+                <p>A balanced workout targeting all major muscle groups with a challenging work-to-rest ratio.</p>
+                <p><strong>Format:</strong> 30 seconds work / 30 seconds rest, 4 rounds</p>
+                <p><strong>Total Time:</strong> Approximately 24 minutes</p>
+                <ul class="exercise-list">
+                    <li class="exercise-item">Burpees (modified if needed)</li>
+                    <li class="exercise-item">Alternating Reverse Lunges</li>
+                    <li class="exercise-item">Push-Ups</li>
+                    <li class="exercise-item">Mountain Climbers</li>
+                    <li class="exercise-item">Plank Jacks</li>
+                    <li class="exercise-item">Squat Jumps</li>
+                </ul>
+                <p>Keep transitions between exercises quick and maintain intensity throughout all work intervals.</p>
+            </div>
+            
+            <div class="workout-routine">
+                <h3>Advanced Tabata HIIT</h3>
+                <p>A challenging Tabata-protocol workout with a demanding work-to-rest ratio for experienced exercisers.</p>
+                <p><strong>Format:</strong> 20 seconds work / 10 seconds rest, 8 rounds per exercise</p>
+                <p><strong>Total Time:</strong> 16 minutes (4 minutes per exercise)</p>
+                <ul class="exercise-list">
+                    <li class="exercise-item">Burpees (8 rounds)</li>
+                    <li class="exercise-item">Jump Squats (8 rounds)</li>
+                    <li class="exercise-item">Mountain Climbers (8 rounds)</li>
+                    <li class="exercise-item">Push-Up to Shoulder Tap (8 rounds)</li>
+                </ul>
+                <p>Complete all 8 rounds of one exercise before moving to the next. This is an extremely challenging format requiring high fitness levels.</p>
+            </div>
+
+            <!-- Training Tips -->
+            <section class="tips-section">
+                <h3>HIIT Training Tips</h3>
+                <ul class="tips-list">
+                    <li><strong>Start gradually:</strong> If you're new to HIIT, begin with 1-2 sessions per week, lower intensity, and more forgiving work-to-rest ratios (like 1:2 or 1:3).</li>
+                    <li><strong>Quality over quantity:</strong> True HIIT workouts are short but intense. Focus on giving maximum effort during work intervals rather than extending workout duration.</li>
+                    <li><strong>Modify as needed:</strong> All exercises can be modified to match your fitness level. For example, do push-ups from knees or against a wall if standard push-ups are too challenging.</li>
+                    <li><strong>Rest appropriately:</strong> Limit HIIT to 2-3 sessions per week with at least 48 hours between sessions to allow for proper recovery.</li>
+                    <li><strong>Use a timer:</strong> A proper interval timer helps maintain accurate work and rest periods. Many free smartphone apps are available specifically for HIIT.</li>
+                    <li><strong>Progress gradually:</strong> As your fitness improves, progress by increasing work time, decreasing rest time, adding more challenging exercises, or increasing rounds.</li>
+                    <li><strong>Combine with strength training:</strong> For a well-rounded fitness program, complement your HIIT workouts with traditional strength training sessions.</li>
+                    <li><strong>Listen to your body:</strong> While HIIT should feel challenging, pain is a warning sign. Distinguish between productive discomfort and potential injury.</li>
+                </ul>
+            </section>
+
+            <!-- Common Mistakes -->
+            <section class="common-mistakes">
+                <h3>Common HIIT Mistakes to Avoid</h3>
+                <ul class="mistake-list">
+                    <li><strong>Skipping warm-up and cool-down:</strong> Due to the intense nature of HIIT, proper preparation and recovery are essential. Always spend 5-10 minutes warming up and cooling down to prevent injury and improve recovery.</li>
+                    <li><strong>Sacrificing form for speed:</strong> Maintaining proper exercise form is more important than completing a high number of repetitions. Poor form increases injury risk and decreases workout effectiveness.</li>
+                    <li><strong>Not working hard enough:</strong> True HIIT requires near-maximum effort during work intervals. If you can easily hold a conversation during the work phase, you're likely not pushing hard enough.</li>
+                    <li><strong>Working too hard as a beginner:</strong> Starting with extremely high intensity before building a fitness base can lead to burnout or injury. Progress gradually as your fitness improves.</li>
+                    <li><strong>Doing HIIT every day:</strong> The intense nature of HIIT requires recovery time. Doing HIIT daily prevents adequate recovery and can lead to overtraining, decreased performance, and injury.</li>
+                    <li><strong>Making workouts too long:</strong> Effective HIIT workouts are typically 10-30 minutes (excluding warm-up and cool-down). Extending beyond this often means intensity is being sacrificed for duration.</li>
+                    <li><strong>Using inappropriate exercises:</strong> Choose exercises that can be performed safely at high intensity. Complex movements requiring significant technique should be mastered at slower speeds before incorporating into HIIT.</li>
+                </ul>
+            </section>
+
+            <!-- Exercise Variations -->
+            <section class="variations-section">
+                <h2 class="section-heading">HIIT Training Variations</h2>
+                <div class="variation-cards">
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" alt="Tabata">
+                        <div class="variation-info">
+                            <h4>Tabata Protocol</h4>
+                            <p>A specific HIIT format consisting of 20 seconds of all-out effort followed by 10 seconds of rest, repeated for 8 rounds (4 minutes total). Extremely effective for improving both aerobic and anaerobic fitness.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1434596922112-19c563067271?auto=format&fit=crop&w=600&q=80" alt="EMOM">
+                        <div class="variation-info">
+                            <h4>EMOM (Every Minute On the Minute)</h4>
+                            <p>A timing structure where you perform a specified number of reps at the start of each minute, then rest for the remainder of that minute before beginning the next round.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&fit=crop&w=600&q=80" alt="AMRAP">
+                        <div class="variation-info">
+                            <h4>AMRAP (As Many Rounds As Possible)</h4>
+                            <p>A format where you complete as many rounds of a circuit as possible within a set time frame, typically 10-20 minutes, with minimal rest between exercises.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=600&q=80" alt="Pyramid HIIT">
+                        <div class="variation-info">
+                            <h4>Pyramid HIIT</h4>
+                            <p>A structure where work intervals progressively increase then decrease in duration (e.g., 20-30-40-50-40-30-20 seconds) with consistent rest periods, creating a challenging cardiovascular workout.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Exercises -->
+            <section class="related-exercises">
+                <h2 class="section-heading">Related Exercises</h2>
+                <div class="related-cards">
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1486218119243-13883505764c?auto=format&fit=crop&w=600&q=80" alt="Running & Jogging">
+                        <div class="related-info">
+                            <h4>Running & Jogging</h4>
+                            <p>Traditional cardio that can be incorporated into HIIT formats through sprint intervals.</p>
+                            <a href="running.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="Cycling.jpg" alt="Cycling">
+                        <div class="related-info">
+                            <h4>Cycling</h4>
+                            <p>Low-impact cardio exercise that works well in HIIT formats via sprint intervals.</p>
+                            <a href="cycling.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="Circuit.jpg" alt="Circuit Training">
+                        <div class="related-info">
+                            <h4>Circuit Training</h4>
+                            <p>Similar to HIIT but typically with less intensity and longer work periods.</p>
+                            <a href="../exercises/circuit-training.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" alt="Strength Training">
+                        <div class="related-info">
+                            <h4>Strength Training</h4>
+                            <p>Complements HIIT by building muscle and can be incorporated into HIIT formats.</p>
+                            <a href="../strength.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timer functionality
+            const timerDisplay = document.getElementById('timer-display');
+            const currentPhase = document.getElementById('current-phase');
+            const currentRound = document.getElementById('current-round');
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            let timer;
+            let isRunning = false;
+            let seconds = 0;
+            let round = 0;
+            let isWorkPhase = true;
+            const maxRounds = 8;
+            
+            function updateDisplay() {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                currentRound.textContent = `${round}/${maxRounds}`;
+                currentPhase.textContent = isWorkPhase ? 'Work' : 'Rest';
+            }
+            
+            function runTimer() {
+                if (isRunning) {
+                    seconds--;
+                    
+                    if (seconds < 0) {
+                        // Switch between work and rest phases
+                        isWorkPhase = !isWorkPhase;
+                        
+                        // If we just finished a rest phase, increment the round
+                        if (isWorkPhase) {
+                            round++;
+                        }
+                        
+                        // Check if workout is complete
+                        if (round > maxRounds) {
+                            stopTimer();
+                            currentPhase.textContent = 'Complete!';
+                            return;
+                        }
+                        
+                        // Set seconds based on current phase
+                        seconds = isWorkPhase ? 20 : 10;
+                    }
+                    
+                    updateDisplay();
+                }
+            }
+            
+            function startTimer() {
+                if (!isRunning) {
+                    isRunning = true;
+                    
+                    // If starting from beginning
+                    if (seconds === 0 && round === 0) {
+                        isWorkPhase = true;
+                        seconds = 20; // Start with work phase
+                        round = 1;
+                    }
+                    
+                    timer = setInterval(runTimer, 1000);
+                    updateDisplay();
+                }
+            }
+            
+            function stopTimer() {
+                isRunning = false;
+                clearInterval(timer);
+            }
+            
+            function resetTimerValues() {
+                stopTimer();
+                seconds = 0;
+                round = 0;
+                isWorkPhase = true;
+                currentPhase.textContent = 'Ready';
+                updateDisplay();
+            }
+            
+            startBtn.addEventListener('click', startTimer);
+            pauseBtn.addEventListener('click', stopTimer);
+            resetBtn.addEventListener('click', resetTimerValues);
+            
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+<script src="/pwa-install.js"></script>
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+</body>
+</html>

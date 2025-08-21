@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Assessment - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Stress Assessment specific styles */
+        .assessment-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1592496001020-d31bd830509b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .assessment-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .assessment-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+        
+        .assessment-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .assessment-intro {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .assessment-intro p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .assessment-intro ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .assessment-intro li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .assessment-form {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #f39c12;
+            border-radius: 5px;
+            width: 20%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #999;
+            margin-top: 0.5rem;
+        }
+        
+        .question-section {
+            display: none;
+        }
+        
+        .question-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .question-container {
+            margin-bottom: 2.5rem;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: #f39c12;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .option:hover {
+            background-color: #444;
+        }
+        
+        .option.selected {
+            background-color: rgba(243, 156, 18, 0.3);
+            border: 1px solid #f39c12;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 1rem;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        
+        .option label {
+            flex-grow: 1;
+            cursor: pointer;
+            padding-left: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .btn-nav {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-prev {
+            background-color: #333;
+            color: white;
+        }
+        
+        .btn-prev:hover {
+            background-color: #444;
+        }
+        
+        .btn-next, .btn-submit {
+            background-color: #f39c12;
+            color: black;
+        }
+        
+        .btn-next:hover, .btn-submit:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-prev:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .results-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .stress-score {
+            margin-bottom: 2rem;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            position: relative;
+        }
+        
+        .low-stress {
+            background-color: #27ae60;
+        }
+        
+        .moderate-stress {
+            background-color: #f39c12;
+        }
+        
+        .high-stress {
+            background-color: #e74c3c;
+        }
+        
+        .score-label {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .score-description {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .recommendations-container {
+            text-align: left;
+        }
+        
+        .recommendation-item {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .recommendation-item h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .recommendation-item h3 i {
+            margin-right: 0.75rem;
+        }
+        
+        .recommendation-item p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .recommendation-item .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .recommendation-item .btn:hover {
+            background-color: #e67e22;
+        }
+        
+        .resources-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 600px) {
+            .assessment-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wellness Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                                <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="assessment-hero">
+            <h1>Student Stress Assessment</h1>
+            <p>Understand your current stress levels and receive personalized recommendations to help you manage stress effectively.</p>
+        </section>
+
+        <div class="assessment-container">
+            <!-- Introduction -->
+            <div class="assessment-intro">
+                <h2 class="section-title">About This Assessment</h2>
+                <p>This confidential assessment will help you understand your current stress levels and identify areas where stress may be impacting your wellbeing. Based on your results, you'll receive personalized recommendations and resources.</p>
+                
+                <p><strong>This assessment:</strong></p>
+                <ul>
+                    <li>Takes approximately 5 minutes to complete</li>
+                    <li>Covers physical, emotional, cognitive, and behavioral symptoms of stress</li>
+                    <li>Is completely confidential and your results are only visible to you</li>
+                    <li>Is not a diagnostic tool, but an educational resource</li>
+                </ul>
+                
+                <p><strong>Note:</strong> If you're experiencing severe distress or having thoughts of harming yourself, please contact the Campus Counseling Center at (555) 123-4567 or text HOME to 741741 to reach the Crisis Text Line.</p>
+            </div>
+            
+            <!-- Assessment Form -->
+            <div class="assessment-form">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progressText">Question 1 of 20</span>
+                    </div>
+                </div>
+                
+                <!-- Physical Symptoms Section -->
+                <div class="question-section active" id="physical-section">
+                    <h3>Physical Symptoms</h3>
+                    
+                    <div class="question-container">
+                        <p class="question">1. How often have you experienced headaches or muscle tension in the past month?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q1-a" name="q1" value="0">
+                                <label for="q1-a">Never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q1-b" name="q1" value="1">
+                                <label for="q1-b">Rarely (once or twice)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q1-c" name="q1" value="2">
+                                <label for="q1-c">Sometimes (weekly)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q1-d" name="q1" value="3">
+                                <label for="q1-d">Often (several times a week)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q1-e" name="q1" value="4">
+                                <label for="q1-e">Very frequently (daily)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">2. How would you rate your sleep quality over the past month?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q2-a" name="q2" value="0">
+                                <label for="q2-a">Excellent - I fall asleep easily and wake up refreshed</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q2-b" name="q2" value="1">
+                                <label for="q2-b">Good - I generally sleep well with occasional disruptions</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q2-c" name="q2" value="2">
+                                <label for="q2-c">Fair - I have some trouble falling or staying asleep</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q2-d" name="q2" value="3">
+                                <label for="q2-d">Poor - I frequently have difficulty sleeping</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q2-e" name="q2" value="4">
+                                <label for="q2-e">Very poor - I struggle with sleep most nights</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">3. Have you noticed changes in your appetite or eating habits due to stress?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q3-a" name="q3" value="0">
+                                <label for="q3-a">No changes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q3-b" name="q3" value="1">
+                                <label for="q3-b">Slight changes occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q3-c" name="q3" value="2">
+                                <label for="q3-c">Moderate changes (eating more or less than usual)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q3-d" name="q3" value="3">
+                                <label for="q3-d">Significant changes in appetite</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q3-e" name="q3" value="4">
+                                <label for="q3-e">Extreme changes (skipping meals or overeating regularly)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">4. How often have you experienced digestive issues (stomach pain, nausea, etc.) related to stress?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q4-a" name="q4" value="0">
+                                <label for="q4-a">Never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q4-b" name="q4" value="1">
+                                <label for="q4-b">Rarely</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q4-c" name="q4" value="2">
+                                <label for="q4-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q4-d" name="q4" value="3">
+                                <label for="q4-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q4-e" name="q4" value="4">
+                                <label for="q4-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">5. How often do you feel physically exhausted or low in energy?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q5-a" name="q5" value="0">
+                                <label for="q5-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q5-b" name="q5" value="1">
+                                <label for="q5-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q5-c" name="q5" value="2">
+                                <label for="q5-c">Sometimes (weekly)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q5-d" name="q5" value="3">
+                                <label for="q5-d">Often (several times a week)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q5-e" name="q5" value="4">
+                                <label for="q5-e">Almost daily</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="btn-nav btn-prev" disabled>Previous</button>
+                        <button class="btn-nav btn-next" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Emotional Symptoms Section -->
+                <div class="question-section" id="emotional-section">
+                    <h3>Emotional Symptoms</h3>
+                    
+                    <div class="question-container">
+                        <p class="question">6. How often have you felt overwhelmed by your responsibilities in the past month?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q6-a" name="q6" value="0">
+                                <label for="q6-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q6-b" name="q6" value="1">
+                                <label for="q6-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q6-c" name="q6" value="2">
+                                <label for="q6-c">Sometimes (weekly)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q6-d" name="q6" value="3">
+                                <label for="q6-d">Often (several times a week)</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q6-e" name="q6" value="4">
+                                <label for="q6-e">Almost daily</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">7. How easily do you become irritated or frustrated?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q7-a" name="q7" value="0">
+                                <label for="q7-a">I rarely get irritated</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q7-b" name="q7" value="1">
+                                <label for="q7-b">I occasionally get irritated, but it passes quickly</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q7-c" name="q7" value="2">
+                                <label for="q7-c">I sometimes get irritated over small things</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q7-d" name="q7" value="3">
+                                <label for="q7-d">I often feel irritable or on edge</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q7-e" name="q7" value="4">
+                                <label for="q7-e">I get irritated very easily and frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">8. How often do you feel anxious or worried about upcoming tests, assignments, or presentations?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q8-a" name="q8" value="0">
+                                <label for="q8-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q8-b" name="q8" value="1">
+                                <label for="q8-b">Only right before major deadlines</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q8-c" name="q8" value="2">
+                                <label for="q8-c">Several days before deadlines</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q8-d" name="q8" value="3">
+                                <label for="q8-d">Often throughout the semester</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q8-e" name="q8" value="4">
+                                <label for="q8-e">Constantly thinking about and worrying about academic performance</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">9. How often do you feel sad, down, or hopeless?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q9-a" name="q9" value="0">
+                                <label for="q9-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q9-b" name="q9" value="1">
+                                <label for="q9-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q9-c" name="q9" value="2">
+                                <label for="q9-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q9-d" name="q9" value="3">
+                                <label for="q9-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q9-e" name="q9" value="4">
+                                <label for="q9-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">10. How difficult is it for you to relax when you have time off?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q10-a" name="q10" value="0">
+                                <label for="q10-a">Not difficult at all - I can relax easily</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q10-b" name="q10" value="1">
+                                <label for="q10-b">Slightly difficult - It takes me a little time to relax</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q10-c" name="q10" value="2">
+                                <label for="q10-c">Moderately difficult - I often think about work/school when off</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q10-d" name="q10" value="3">
+                                <label for="q10-d">Very difficult - I rarely feel fully relaxed</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q10-e" name="q10" value="4">
+                                <label for="q10-e">Extremely difficult - I feel guilty or anxious when not working</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="btn-nav btn-prev" onclick="prevSection()">Previous</button>
+                        <button class="btn-nav btn-next" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Cognitive Symptoms Section -->
+                <div class="question-section" id="cognitive-section">
+                    <h3>Cognitive Symptoms</h3>
+                    
+                    <div class="question-container">
+                        <p class="question">11. How often do you have difficulty concentrating on your coursework?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q11-a" name="q11" value="0">
+                                <label for="q11-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q11-b" name="q11" value="1">
+                                <label for="q11-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q11-c" name="q11" value="2">
+                                <label for="q11-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q11-d" name="q11" value="3">
+                                <label for="q11-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q11-e" name="q11" value="4">
+                                <label for="q11-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">12. How often do you find yourself forgetting important deadlines or details?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q12-a" name="q12" value="0">
+                                <label for="q12-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q12-b" name="q12" value="1">
+                                <label for="q12-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q12-c" name="q12" value="2">
+                                <label for="q12-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q12-d" name="q12" value="3">
+                                <label for="q12-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q12-e" name="q12" value="4">
+                                <label for="q12-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">13. How often do you experience racing thoughts or find it difficult to quiet your mind?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q13-a" name="q13" value="0">
+                                <label for="q13-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q13-b" name="q13" value="1">
+                                <label for="q13-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q13-c" name="q13" value="2">
+                                <label for="q13-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q13-d" name="q13" value="3">
+                                <label for="q13-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q13-e" name="q13" value="4">
+                                <label for="q13-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">14. How often do you find yourself thinking in "all-or-nothing" terms about your performance?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q14-a" name="q14" value="0">
+                                <label for="q14-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q14-b" name="q14" value="1">
+                                <label for="q14-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q14-c" name="q14" value="2">
+                                <label for="q14-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q14-d" name="q14" value="3">
+                                <label for="q14-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q14-e" name="q14" value="4">
+                                <label for="q14-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">15. How difficult is it for you to make decisions when under pressure?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q15-a" name="q15" value="0">
+                                <label for="q15-a">Not difficult at all</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q15-b" name="q15" value="1">
+                                <label for="q15-b">Slightly difficult</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q15-c" name="q15" value="2">
+                                <label for="q15-c">Moderately difficult</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q15-d" name="q15" value="3">
+                                <label for="q15-d">Very difficult</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q15-e" name="q15" value="4">
+                                <label for="q15-e">Extremely difficult</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="btn-nav btn-prev" onclick="prevSection()">Previous</button>
+                        <button class="btn-nav btn-next" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Behavioral Symptoms Section -->
+                <div class="question-section" id="behavioral-section">
+                    <h3>Behavioral Symptoms</h3>
+                    
+                    <div class="question-container">
+                        <p class="question">16. How often do you procrastinate on important tasks due to feeling overwhelmed?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q16-a" name="q16" value="0">
+                                <label for="q16-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q16-b" name="q16" value="1">
+                                <label for="q16-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q16-c" name="q16" value="2">
+                                <label for="q16-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q16-d" name="q16" value="3">
+                                <label for="q16-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q16-e" name="q16" value="4">
+                                <label for="q16-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">17. How often do you withdraw from social activities or isolate yourself when stressed?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q17-a" name="q17" value="0">
+                                <label for="q17-a">Rarely or never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q17-b" name="q17" value="1">
+                                <label for="q17-b">Occasionally</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q17-c" name="q17" value="2">
+                                <label for="q17-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q17-d" name="q17" value="3">
+                                <label for="q17-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q17-e" name="q17" value="4">
+                                <label for="q17-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">18. How has your self-care (personal hygiene, exercise, healthy eating) been affected by stress?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q18-a" name="q18" value="0">
+                                <label for="q18-a">Not affected at all</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q18-b" name="q18" value="1">
+                                <label for="q18-b">Slightly affected</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q18-c" name="q18" value="2">
+                                <label for="q18-c">Moderately affected</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q18-d" name="q18" value="3">
+                                <label for="q18-d">Significantly affected</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q18-e" name="q18" value="4">
+                                <label for="q18-e">Severely affected</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">19. How often do you use substances (alcohol, drugs, excessive caffeine) to cope with stress?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q19-a" name="q19" value="0">
+                                <label for="q19-a">Never</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q19-b" name="q19" value="1">
+                                <label for="q19-b">Rarely</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q19-c" name="q19" value="2">
+                                <label for="q19-c">Sometimes</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q19-d" name="q19" value="3">
+                                <label for="q19-d">Often</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q19-e" name="q19" value="4">
+                                <label for="q19-e">Very frequently</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <p class="question">20. How have your relationships been affected by your stress levels?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q20-a" name="q20" value="0">
+                                <label for="q20-a">Not affected at all</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q20-b" name="q20" value="1">
+                                <label for="q20-b">Slightly affected</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q20-c" name="q20" value="2">
+                                <label for="q20-c">Moderately affected</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q20-d" name="q20" value="3">
+                                <label for="q20-d">Significantly affected</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this)">
+                                <input type="radio" id="q20-e" name="q20" value="4">
+                                <label for="q20-e">Severely affected</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="btn-nav btn-prev" onclick="prevSection()">Previous</button>
+                        <button class="btn-nav btn-submit" onclick="submitAssessment()">Submit</button>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div class="results-section" id="results-section">
+                    <h2 class="section-title">Your Stress Assessment Results</h2>
+                    
+                    <div class="results-card">
+                        <div class="stress-score">
+                            <h3>Your Stress Level</h3>
+                            <div class="score-circle" id="scoreCircle">
+                                <span id="scoreValue">--</span>
+                            </div>
+                            <p class="score-label" id="scoreLabel">--</p>
+                            <p class="score-description" id="scoreDescription">--</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="section-subtitle">Personalized Recommendations</h3>
+                    <div class="recommendations-container" id="recommendationsContainer">
+                        <!-- Recommendations will be inserted here by JavaScript -->
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="dashboard.html" class="btn">View Dashboard</a>
+                        <a href="stress-management.html" class="btn">Stress Management Techniques</a>
+                        <a href="#" class="btn" onclick="window.location.reload()">Retake Assessment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+        });
+        
+        // Assessment functionality
+        let currentSection = 0;
+        const sections = ['physical-section', 'emotional-section', 'cognitive-section', 'behavioral-section', 'results-section'];
+        
+        // Helper function to select an option
+        function selectOption(element) {
+            // First, remove selection from all options in the same question
+            const parentQuestion = element.closest('.question-container');
+            const options = parentQuestion.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Select the clicked option
+            element.classList.add('selected');
+            
+            // Check the radio button
+            const radio = element.querySelector('input[type="radio"]');
+            radio.checked = true;
+        }
+        
+        // Function to navigate to the next section
+        function nextSection() {
+            // Check if all questions in current section are answered
+            const currentSectionElement = document.getElementById(sections[currentSection]);
+            const unansweredQuestions = checkUnansweredQuestions(currentSectionElement);
+            
+            if (unansweredQuestions > 0) {
+                alert(`Please answer all questions before proceeding. You have ${unansweredQuestions} unanswered question(s).`);
+                return;
+            }
+            
+            // Hide current section
+            currentSectionElement.classList.remove('active');
+            
+            // Show next section
+            currentSection++;
+            document.getElementById(sections[currentSection]).classList.add('active');
+            
+            // Update progress bar
+            updateProgress();
+        }
+        
+        // Function to navigate to the previous section
+        function prevSection() {
+            // Hide current section
+            document.getElementById(sections[currentSection]).classList.remove('active');
+            
+            // Show previous section
+            currentSection--;
+            document.getElementById(sections[currentSection]).classList.add('active');
+            
+            // Update progress bar
+            updateProgress();
+        }
+        
+        // Function to check for unanswered questions
+        function checkUnansweredQuestions(sectionElement) {
+            const questions = sectionElement.querySelectorAll('.question-container');
+            let unansweredCount = 0;
+            
+            questions.forEach(question => {
+                const checkedOptions = question.querySelectorAll('input[type="radio"]:checked');
+                if (checkedOptions.length === 0) {
+                    unansweredCount++;
+                    // Highlight unanswered question
+                    question.querySelector('.question').style.color = '#e74c3c';
+                } else {
+                    question.querySelector('.question').style.color = '';
+                }
+            });
+            
+            return unansweredCount;
+        }
+        
+        // Function to update progress bar
+        function updateProgress() {
+            const totalSections = sections.length - 1; // Exclude results section
+            const currentProgress = currentSection;
+            const progressPercentage = (currentProgress / totalSections) * 100;
+            
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = `Section ${currentProgress + 1} of ${totalSections}`;
+        }
+        
+        // Function to submit assessment
+        function submitAssessment() {
+            // Check if all questions in current section are answered
+            const currentSectionElement = document.getElementById(sections[currentSection]);
+            const unansweredQuestions = checkUnansweredQuestions(currentSectionElement);
+            
+            if (unansweredQuestions > 0) {
+                alert(`Please answer all questions before submitting. You have ${unansweredQuestions} unanswered question(s).`);
+                return;
+            }
+            
+            // Calculate score
+            const score = calculateScore();
+            
+            // Display results
+            showResults(score);
+            
+            // Hide current section
+            currentSectionElement.classList.remove('active');
+            
+            // Show results section
+            currentSection++;
+            document.getElementById(sections[currentSection]).classList.add('active');
+            
+            // Update progress bar to 100%
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('progressText').textContent = 'Assessment Complete';
+            
+            // Save results to localStorage
+            saveResults(score);
+        }
+        
+        // Function to calculate score
+        function calculateScore() {
+            let totalScore = 0;
+            let totalQuestions = 0;
+            
+            // Loop through all questions
+            for (let i = 1; i <= 20; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedOption) {
+                    totalScore += parseInt(selectedOption.value);
+                    totalQuestions++;
+                }
+            }
+            
+            // Calculate percentage score (0-100)
+            const percentageScore = (totalScore / (totalQuestions * 4)) * 100;
+            return Math.round(percentageScore);
+        }
+        
+        // Function to show results
+        function showResults(score) {
+            // Set score value
+            document.getElementById('scoreValue').textContent = score;
+            
+            // Set score circle class based on stress level
+            const scoreCircle = document.getElementById('scoreCircle');
+            let stressLevel;
+            
+            if (score < 30) {
+                scoreCircle.className = 'score-circle low-stress';
+                stressLevel = 'Low Stress';
+                document.getElementById('scoreDescription').textContent = 'Your stress levels appear to be relatively low. While you may experience occasional stress, you seem to be managing well overall.';
+            } else if (score < 60) {
+                scoreCircle.className = 'score-circle moderate-stress';
+                stressLevel = 'Moderate Stress';
+                document.getElementById('scoreDescription').textContent = 'You are experiencing moderate levels of stress. This is common among students, but it\'s a good time to develop additional coping strategies.';
+            } else {
+                scoreCircle.className = 'score-circle high-stress';
+                stressLevel = 'High Stress';
+                document.getElementById('scoreDescription').textContent = 'Your stress levels are high. This can impact your academic performance, health, and wellbeing. It\'s important to implement stress management strategies and consider seeking support.';
+            }
+            
+            document.getElementById('scoreLabel').textContent = stressLevel;
+            
+            // Generate recommendations based on stress level
+            generateRecommendations(score);
+        }
+        
+        // Function to generate personalized recommendations
+        function generateRecommendations(score) {
+            const recommendationsContainer = document.getElementById('recommendationsContainer');
+            recommendationsContainer.innerHTML = '';
+            
+            const commonRecommendations = [
+                {
+                    title: 'Deep Breathing Exercises',
+                    icon: 'fas fa-lungs',
+                    description: 'Practice deep breathing for 5 minutes, 2-3 times per day to activate your body\'s relaxation response.',
+                    link: 'stress-management.html#deep-breathing'
+                },
+                {
+                    title: 'Physical Activity',
+                    icon: 'fas fa-running',
+                    description: 'Aim for at least 30 minutes of moderate exercise most days of the week to reduce stress hormones and improve mood.',
+                    link: 'fitness.html'
+                },
+                {
+                    title: 'Sleep Hygiene',
+                    icon: 'fas fa-bed',
+                    description: 'Prioritize 7-9 hours of quality sleep by maintaining a consistent sleep schedule and creating a restful environment.',
+                    link: 'sleep.html'
+                }
+            ];
+            
+            let specificRecommendations = [];
+            
+            if (score < 30) {
+                // Low stress recommendations (preventative)
+                specificRecommendations = [
+                    {
+                        title: 'Mindfulness Practice',
+                        icon: 'fas fa-brain',
+                        description: 'Build resilience against future stress by incorporating a brief daily mindfulness practice into your routine.',
+                        link: 'mindfulness.html'
+                    },
+                    {
+                        title: 'Stress Prevention Plan',
+                        icon: 'fas fa-shield-alt',
+                        description: 'Create a personalized plan to maintain your well-being during high-stress periods like exams.',
+                        link: 'stress-management.html#prevention'
+                    }
+                ];
+            } else if (score < 60) {
+                // Moderate stress recommendations
+                specificRecommendations = [
+                    {
+                        title: 'Time Management Tools',
+                        icon: 'fas fa-clock',
+                        description: 'Improve your organization and prioritization to reduce feelings of overwhelm and create more balance.',
+                        link: 'time-management.html'
+                    },
+                    {
+                        title: 'Progressive Muscle Relaxation',
+                        icon: 'fas fa-dumbbell',
+                        description: 'Practice tensing and releasing muscle groups to release physical tension caused by stress.',
+                        link: 'stress-management.html#muscle-relaxation'
+                    },
+                    {
+                        title: 'Social Support',
+                        icon: 'fas fa-users',
+                        description: 'Make time to connect with friends and family who provide emotional support and perspective.',
+                        link: 'social-connection.html'
+                    }
+                ];
+            } else {
+                // High stress recommendations
+                specificRecommendations = [
+                    {
+                        title: 'Professional Support',
+                        icon: 'fas fa-user-md',
+                        description: 'Consider scheduling an appointment with the campus counseling center for additional support and resources.',
+                        link: 'campus-resources.html#counseling'
+                    },
+                    {
+                        title: 'Stress Reduction Workshop',
+                        icon: 'fas fa-chalkboard-teacher',
+                        description: 'Join our weekly stress management workshop to learn and practice effective techniques in a supportive environment.',
+                        link: 'workshops.html#stress'
+                    },
+                    {
+                        title: 'Cognitive Restructuring',
+                        icon: 'fas fa-cogs',
+                        description: 'Learn to identify and challenge negative thought patterns that may be contributing to your stress.',
+                        link: 'stress-management.html#cognitive'
+                    },
+                    {
+                        title: 'Self-Care Plan',
+                        icon: 'fas fa-heart',
+                        description: 'Create a structured self-care plan that includes daily activities to support your physical and emotional wellbeing.',
+                        link: 'self-care.html'
+                    }
+                ];
+            }
+            
+            // Combine recommendations
+            const allRecommendations = [...commonRecommendations, ...specificRecommendations];
+            
+            // Create recommendation elements
+            allRecommendations.forEach(rec => {
+                const recommendationItem = document.createElement('div');
+                recommendationItem.className = 'recommendation-item';
+                
+                recommendationItem.innerHTML = `
+                    <h3><i class="${rec.icon}"></i> ${rec.title}</h3>
+                    <p>${rec.description}</p>
+                    <a href="${rec.link}" class="btn">Learn More</a>
+                `;
+                
+                recommendationsContainer.appendChild(recommendationItem);
+            });
+        }
+        
+        // Function to save results to localStorage
+        function saveResults(score) {
+            const results = {
+                date: new Date().toISOString(),
+                score: score,
+                timestamp: Date.now()
+            };
+            
+            // Get existing results or create new array
+            let stressAssessments = JSON.parse(localStorage.getItem('stressAssessments')) || [];
+            
+            // Add new result
+            stressAssessments.push(results);
+            
+            // Save to localStorage
+            localStorage.setItem('stressAssessments', JSON.stringify(stressAssessments));
+        }
+    </script>
+
+<!-- PWA Scripts -->
+<script src="/pwa-install.js"></script>
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+</body>
+</html>                     

@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Communication Practice Hub - Vivify</title>
+   <link rel="stylesheet" href="styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .practice-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .practice-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .practice-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2.5rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+           padding-bottom: 0.5rem;
+           border-bottom: 2px solid #333;
+       }
+
+       .content-section {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .practice-categories {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 2rem;
+           margin: 3rem 0;
+       }
+
+       .category-card {
+           background-color: #222;
+           border-radius: 15px;
+           padding: 2rem;
+           text-align: center;
+           transition: all 0.3s ease;
+           box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+           border: 2px solid transparent;
+           cursor: pointer;
+       }
+
+       .category-card:hover {
+           transform: translateY(-10px);
+           box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+           border-color: #f39c12;
+       }
+
+       .category-icon {
+           font-size: 4rem;
+           color: #f39c12;
+           margin-bottom: 1.5rem;
+       }
+
+       .category-card h3 {
+           color: #f39c12;
+           font-size: 1.8rem;
+           margin-bottom: 1rem;
+       }
+
+       .category-card p {
+           color: #ddd;
+           margin-bottom: 1.5rem;
+           line-height: 1.6;
+       }
+
+       .skill-level {
+           display: flex;
+           justify-content: center;
+           gap: 0.5rem;
+           margin-bottom: 1.5rem;
+       }
+
+       .level-badge {
+           padding: 0.3rem 0.8rem;
+           border-radius: 15px;
+           font-size: 0.8rem;
+           font-weight: bold;
+       }
+
+       .beginner { background-color: #27ae60; color: white; }
+       .intermediate { background-color: #f39c12; color: black; }
+       .advanced { background-color: #e74c3c; color: white; }
+
+       .practice-tool {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 3rem;
+           margin: 3rem 0;
+           display: none;
+       }
+
+       .practice-tool.active {
+           display: block;
+       }
+
+       .tool-header {
+           text-align: center;
+           margin-bottom: 2rem;
+       }
+
+       .tool-header h3 {
+           color: #f39c12;
+           font-size: 2rem;
+           margin-bottom: 1rem;
+       }
+
+       .conversation-simulator {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .scenario-selector {
+           background-color: #222;
+           padding: 2rem;
+           border-radius: 10px;
+       }
+
+       .scenario-option {
+           background-color: #333;
+           padding: 1rem;
+           margin: 1rem 0;
+           border-radius: 5px;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .scenario-option:hover {
+           background-color: #444;
+       }
+
+       .scenario-option.selected {
+           background-color: #f39c12;
+           color: black;
+       }
+
+       .chat-interface {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           height: 500px;
+           display: flex;
+           flex-direction: column;
+       }
+
+       .chat-messages {
+           flex: 1;
+           overflow-y: auto;
+           border: 1px solid #444;
+           border-radius: 5px;
+           padding: 1rem;
+           margin-bottom: 1rem;
+           background-color: #333;
+       }
+
+       .message {
+           margin-bottom: 1rem;
+           padding: 0.8rem;
+           border-radius: 10px;
+           max-width: 80%;
+       }
+
+       .user-message {
+           background-color: #f39c12;
+           color: black;
+           margin-left: auto;
+           text-align: right;
+       }
+
+       .bot-message {
+           background-color: #444;
+           color: white;
+       }
+
+       .response-options {
+           display: grid;
+           gap: 0.5rem;
+           margin-bottom: 1rem;
+       }
+
+       .response-btn {
+           background-color: #444;
+           color: white;
+           border: none;
+           padding: 1rem;
+           border-radius: 5px;
+           cursor: pointer;
+           text-align: left;
+           transition: background-color 0.3s;
+       }
+
+       .response-btn:hover {
+           background-color: #555;
+       }
+
+       .pronunciation-tool {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 2rem;
+       }
+
+       .word-practice {
+           background-color: #222;
+           padding: 2rem;
+           border-radius: 10px;
+       }
+
+       .word-display {
+           text-align: center;
+           margin: 2rem 0;
+       }
+
+       .practice-word {
+           font-size: 3rem;
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .phonetic {
+           font-size: 1.2rem;
+           color: #ccc;
+           margin-bottom: 1rem;
+       }
+
+       .audio-controls {
+           display: flex;
+           justify-content: center;
+           gap: 1rem;
+           margin: 2rem 0;
+       }
+
+       .audio-btn {
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           padding: 1rem 2rem;
+           border-radius: 25px;
+           cursor: pointer;
+           font-weight: bold;
+           transition: background-color 0.3s;
+       }
+
+       .audio-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .feedback-panel {
+           background-color: #222;
+           padding: 2rem;
+           border-radius: 10px;
+       }
+
+       .feedback-meter {
+           background-color: #333;
+           height: 20px;
+           border-radius: 10px;
+           margin: 1rem 0;
+           overflow: hidden;
+       }
+
+       .feedback-fill {
+           height: 100%;
+           background: linear-gradient(to right, #e74c3c, #f39c12, #27ae60);
+           width: 0%;
+           transition: width 0.5s ease;
+       }
+
+       .body-language-trainer {
+           display: grid;
+           grid-template-columns: 2fr 1fr;
+           gap: 2rem;
+       }
+
+       .video-placeholder {
+           background-color: #222;
+           border-radius: 10px;
+           height: 400px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: #666;
+           font-size: 1.2rem;
+           border: 2px dashed #444;
+       }
+
+       .tips-panel {
+           background-color: #222;
+           padding: 2rem;
+           border-radius: 10px;
+       }
+
+       .tip-item {
+           background-color: #333;
+           padding: 1rem;
+           margin: 1rem 0;
+           border-radius: 5px;
+           border-left: 4px solid #f39c12;
+       }
+
+       .email-composer {
+           background-color: #222;
+           padding: 2rem;
+           border-radius: 10px;
+       }
+
+       .email-form {
+           display: grid;
+           gap: 1rem;
+       }
+
+       .form-group {
+           display: grid;
+           grid-template-columns: 120px 1fr;
+           gap: 1rem;
+           align-items: center;
+       }
+
+       .form-group label {
+           color: #f39c12;
+           font-weight: bold;
+       }
+
+       .form-group input,
+       .form-group textarea {
+           background-color: #333;
+           border: 1px solid #444;
+           color: white;
+           padding: 0.8rem;
+           border-radius: 5px;
+       }
+
+       .form-group textarea {
+           min-height: 200px;
+           resize: vertical;
+       }
+
+       .email-feedback {
+           background-color: #333;
+           padding: 2rem;
+           margin-top: 2rem;
+           border-radius: 10px;
+           display: none;
+       }
+
+       .feedback-section {
+           margin-bottom: 1.5rem;
+       }
+
+       .feedback-section h4 {
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+       }
+
+       .feedback-score {
+           display: flex;
+           align-items: center;
+           gap: 1rem;
+           margin-bottom: 0.5rem;
+       }
+
+       .score-bar {
+           flex: 1;
+           background-color: #444;
+           height: 10px;
+           border-radius: 5px;
+           overflow: hidden;
+       }
+
+       .score-fill {
+           height: 100%;
+           background-color: #27ae60;
+           transition: width 0.5s ease;
+       }
+
+       .progress-tracker {
+           background-color: #2c3e50;
+           padding: 3rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+       }
+
+       .stats-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .stat-card {
+           background-color: #34495e;
+           padding: 2rem;
+           border-radius: 10px;
+           text-align: center;
+       }
+
+       .stat-number {
+           font-size: 2.5rem;
+           color: #f39c12;
+           font-weight: bold;
+           margin-bottom: 0.5rem;
+       }
+
+       .stat-label {
+           color: #ecf0f1;
+           font-size: 1rem;
+       }
+
+       .achievement-badge {
+           background-color: #f39c12;
+           color: black;
+           padding: 0.5rem 1rem;
+           border-radius: 20px;
+           font-size: 0.9rem;
+           font-weight: bold;
+           margin: 0.5rem;
+           display: inline-block;
+       }
+
+       .daily-challenges {
+           background-color: #27ae60;
+           color: white;
+           padding: 3rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+       }
+
+       .challenge-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .challenge-card {
+           background-color: rgba(255, 255, 255, 0.1);
+           padding: 2rem;
+           border-radius: 10px;
+       }
+
+       .challenge-card h4 {
+           margin-bottom: 1rem;
+       }
+
+       .challenge-card p {
+           margin-bottom: 1.5rem;
+           line-height: 1.6;
+       }
+
+       .challenge-btn {
+           background-color: white;
+           color: #27ae60;
+           border: none;
+           padding: 1rem 2rem;
+           border-radius: 25px;
+           cursor: pointer;
+           font-weight: bold;
+           transition: all 0.3s;
+       }
+
+       .challenge-btn:hover {
+           background-color: #f8f9fa;
+           transform: translateY(-2px);
+       }
+
+       .challenge-btn.completed {
+           background-color: #f39c12;
+           color: black;
+       }
+
+       .back-btn {
+           background-color: #444;
+           color: white;
+           border: none;
+           padding: 1rem 2rem;
+           border-radius: 5px;
+           cursor: pointer;
+           margin-bottom: 2rem;
+           transition: background-color 0.3s;
+       }
+
+       .back-btn:hover {
+           background-color: #555;
+       }
+
+       @media (max-width: 768px) {
+           .practice-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .conversation-simulator {
+               grid-template-columns: 1fr;
+           }
+           
+           .pronunciation-tool {
+               grid-template-columns: 1fr;
+           }
+           
+           .body-language-trainer {
+               grid-template-columns: 1fr;
+           }
+           
+           .form-group {
+               grid-template-columns: 1fr;
+           }
+       }
+   </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wellness Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                               <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="practice-hero">
+           <h1>Communication Practice Hub</h1>
+           <p>Interactive tools and exercises to develop your communication skills through hands-on practice. Build confidence through simulated conversations, pronunciation training, and real-world scenarios.</p>
+       </section>
+
+       <!-- Practice Categories -->
+       <section class="content-section">
+           <h2 class="section-title">Choose Your Practice Tool</h2>
+           <div class="practice-categories">
+               <div class="category-card" onclick="showPracticeTool('conversation')">
+                   <div class="category-icon">
+                       <i class="fas fa-comments"></i>
+                   </div>
+                   <h3>Conversation Simulator</h3>
+                   <p>Practice real-life conversations in a safe environment with instant feedback on your responses.</p>
+                   <div class="skill-level">
+                       <span class="level-badge beginner">Beginner</span>
+                       <span class="level-badge intermediate">Intermediate</span>
+                   </div>
+               </div>
+
+               <div class="category-card" onclick="showPracticeTool('pronunciation')">
+                   <div class="category-icon">
+                       <i class="fas fa-microphone"></i>
+                   </div>
+                   <h3>Pronunciation Trainer</h3>
+                   <p>Improve your pronunciation and accent with audio feedback and common Australian words/phrases.</p>
+                   <div class="skill-level">
+                       <span class="level-badge beginner">Beginner</span>
+                       <span class="level-badge intermediate">Intermediate</span>
+                   </div>
+               </div>
+
+               <div class="category-card" onclick="showPracticeTool('bodylanguage')">
+                   <div class="category-icon">
+                       <i class="fas fa-eye"></i>
+                   </div>
+                   <h3>Body Language Trainer</h3>
+                   <p>Practice non-verbal communication including eye contact, posture, and gestures through guided exercises.</p>
+                   <div class="skill-level">
+                       <span class="level-badge intermediate">Intermediate</span>
+                       <span class="level-badge advanced">Advanced</span>
+                   </div>
+               </div>
+
+               <div class="category-card" onclick="showPracticeTool('email')">
+                   <div class="category-icon">
+                       <i class="fas fa-envelope"></i>
+                   </div>
+                   <h3>Email Writing Coach</h3>
+                   <p>Compose professional emails with real-time feedback on tone, clarity, and appropriateness.</p>
+                   <div class="skill-level">
+                       <span class="level-badge beginner">Beginner</span>
+                       <span class="level-badge intermediate">Intermediate</span>
+                   </div>
+               </div>
+
+               <div class="category-card" onclick="showPracticeTool('interview')">
+                   <div class="category-icon">
+                       <i class="fas fa-user-tie"></i>
+                   </div>
+                   <h3>Interview Simulator</h3>
+                   <p>Practice job interviews with common questions and receive feedback on your responses and delivery.</p>
+                   <div class="skill-level">
+                       <span class="level-badge intermediate">Intermediate</span>
+                       <span class="level-badge advanced">Advanced</span>
+                   </div>
+               </div>
+
+               <div class="category-card" onclick="showPracticeTool('presentation')">
+                   <div class="category-icon">
+                       <i class="fas fa-presentation"></i>
+                   </div>
+                   <h3>Presentation Coach</h3>
+                   <p>Develop public speaking skills with structure guidance, timing practice, and delivery feedback.</p>
+                   <div class="skill-level">
+                       <span class="level-badge intermediate">Intermediate</span>
+                       <span class="level-badge advanced">Advanced</span>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Conversation Simulator Tool -->
+       <section id="conversation-tool" class="practice-tool">
+           <button class="back-btn" onclick="hidePracticeTools()">← Back to Practice Tools</button>
+           <div class="tool-header">
+               <h3>Conversation Simulator</h3>
+               <p>Practice conversations in various scenarios. Choose a situation below and respond naturally to build your confidence.</p>
+           </div>
+           
+           <div class="conversation-simulator">
+               <div class="scenario-selector">
+                   <h4 style="color: #f39c12; margin-bottom: 1rem;">Choose a Scenario</h4>
+                   <div class="scenario-option" onclick="loadScenario('coffee-order')">
+                       <strong>☕ Ordering Coffee</strong><br>
+                       <small>Practice ordering at a café with Australian service style</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadScenario('group-project')">
+                       <strong>👥 Group Project Meeting</strong><br>
+                       <small>Coordinate with classmates on university assignments</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadScenario('job-networking')">
+                       <strong>🤝 Networking Event</strong><br>
+                       <small>Meet professionals and make connections</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadScenario('housemate-issue')">
+                       <strong>🏠 Housemate Discussion</strong><br>
+                       <small>Address living situation concerns diplomatically</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadScenario('lecturer-help')">
+                       <strong>📚 Asking for Academic Help</strong><br>
+                       <small>Request assistance from university staff</small>
+                   </div>
+               </div>
+
+               <div class="chat-interface">
+                   <div class="chat-messages" id="chat-messages">
+                       <div class="message bot-message">
+                           Select a scenario to start practicing conversations!
+                       </div>
+                   </div>
+                   <div class="response-options" id="response-options">
+                       <!-- Response options will be populated by JavaScript -->
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Pronunciation Trainer Tool -->
+       <section id="pronunciation-tool" class="practice-tool">
+           <button class="back-btn" onclick="hidePracticeTools()">← Back to Practice Tools</button>
+           <div class="tool-header">
+               <h3>Pronunciation Trainer</h3>
+               <p>Practice pronouncing common Australian words and phrases. Listen to the correct pronunciation, then record yourself.</p>
+           </div>
+           
+           <div class="pronunciation-tool">
+               <div class="word-practice">
+                   <div class="word-display">
+                       <div class="practice-word" id="practice-word">G'day</div>
+                       <div class="phonetic" id="phonetic">/ɡəˈdaɪ/</div>
+                       <div style="color: #ccc; font-style: italic;" id="word-meaning">Australian greeting meaning "good day"</div>
+                   </div>
+                   
+                   <div class="audio-controls">
+                       <button class="audio-btn" onclick="playPronunciation()">
+                           <i class="fas fa-play"></i> Listen
+                       </button>
+                       <button class="audio-btn" onclick="recordPronunciation()">
+                           <i class="fas fa-microphone"></i> Record
+                       </button>
+                       <button class="audio-btn" onclick="nextWord()">
+                           <i class="fas fa-forward"></i> Next Word
+                       </button>
+                   </div>
+                   
+                   <div style="margin-top: 2rem;">
+                       <h4 style="color: #f39c12;">Practice Categories:</h4>
+                       <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                           <button class="audio-btn" onclick="switchCategory('greetings')" style="font-size: 0.9rem;">Greetings</button>
+                           <button class="audio-btn" onclick="switchCategory('slang')" style="font-size: 0.9rem;">Aussie Slang</button>
+                           <button class="audio-btn" onclick="switchCategory('workplace')" style="font-size: 0.9rem;">Workplace</button>
+                           <button class="audio-btn" onclick="switchCategory('university')" style="font-size: 0.9rem;">University</button>
+                       </div>
+                   </div>
+               </div>
+
+               <div class="feedback-panel">
+                   <h4 style="color: #f39c12; margin-bottom: 1rem;">Pronunciation Feedback</h4>
+                   <div style="margin-bottom: 1rem;">
+                       <label style="color: #ccc;">Accuracy:</label>
+                       <div class="feedback-meter">
+                           <div class="feedback-fill" id="accuracy-meter"></div>
+                       </div>
+                       <span id="accuracy-score" style="color: #f39c12;">No recording yet</span>
+                   </div>
+                   
+                   <div style="margin-bottom: 1rem;">
+                       <label style="color: #ccc;">Clarity:</label>
+                       <div class="feedback-meter">
+                           <div class="feedback-fill" id="clarity-meter"></div>
+                       </div>
+                       <span id="clarity-score" style="color: #f39c12;">No recording yet</span>
+                   </div>
+                   
+                   <div id="pronunciation-tips" style="background-color: #333; padding: 1rem; border-radius: 5px; margin-top: 1rem;">
+                       <h5 style="color: #f39c12;">Tips:</h5>
+                       <p style="color: #ccc;">Select a word category and start practicing! The system will provide feedback on your pronunciation.</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Body Language Trainer Tool -->
+       <section id="bodylanguage-tool" class="practice-tool">
+           <button class="back-btn" onclick="hidePracticeTools()">← Back to Practice Tools</button>
+           <div class="tool-header">
+               <h3>Body Language Trainer</h3>
+               <p>Practice non-verbal communication skills with guided exercises and real-time feedback.</p>
+           </div>
+           
+           <div class="body-language-trainer">
+               <div class="video-placeholder">
+                   <div style="text-align: center;">
+                       <i class="fas fa-camera" style="font-size: 4rem; color: #444; margin-bottom: 1rem;"></i>
+                       <p>Camera feed will appear here</p>
+                       <p style="font-size: 0.9rem; color: #666;">Click "Start Practice" to begin body language analysis</p>
+                       <button class="audio-btn" onclick="startBodyLanguagePractice()" style="margin-top: 1rem;">
+                           <i class="fas fa-play"></i> Start Practice
+                       </button>
+                   </div>
+               </div>
+
+               <div class="tips-panel">
+                   <h4 style="color: #f39c12; margin-bottom: 1rem;">Current Exercise: Eye Contact</h4>
+                   
+                   <div class="tip-item">
+                       <strong>Goal:</strong> Maintain appropriate eye contact during conversation
+                   </div>
+                   
+                   <div class="tip-item">
+                       <strong>Guidelines:</strong>
+                       <ul style="margin-top: 0.5rem; color: #ccc;">
+                           <li>Look at the camera 60-70% of the time</li>
+                           <li>Break eye contact naturally every 3-5 seconds</li>
+                           <li>Avoid staring or looking away too much</li>
+                       </ul>
+                   </div>
+                   
+                   <div class="tip-item">
+                       <strong>Cultural Note:</strong> In Australian culture, good eye contact shows confidence and respect, but don't overdo it.
+                   </div>
+                   
+                   <div style="margin-top: 2rem;">
+                       <h5 style="color: #f39c12;">Other Exercises:</h5>
+                       <button class="audio-btn" onclick="switchBodyLanguageExercise('posture')" style="margin: 0.5rem; font-size: 0.9rem;">Posture</button>
+                       <button class="audio-btn" onclick="switchBodyLanguageExercise('gestures')" style="margin: 0.5rem; font-size: 0.9rem;">Hand Gestures</button>
+                       <button class="audio-btn" onclick="switchBodyLanguageExercise('facial')" style="margin: 0.5rem; font-size: 0.9rem;">Facial Expressions</button>
+                   </div>
+                   
+                   <div id="body-language-feedback" style="background-color: #333; padding: 1rem; border-radius: 5px; margin-top: 2rem;">
+                       <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+                       <p style="color: #27ae60;">Ready to start practice session</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Email Writing Coach Tool -->
+       <section id="email-tool" class="practice-tool">
+           <button class="back-btn" onclick="hidePracticeTools()">← Back to Practice Tools</button>
+           <div class="tool-header">
+               <h3>Email Writing Coach</h3>
+               <p>Compose professional emails and receive instant feedback on tone, clarity, and appropriateness.</p>
+           </div>
+           
+           <div class="email-composer">
+               <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                   <button class="audio-btn" onclick="loadEmailTemplate('lecturer')" style="font-size: 0.9rem;">Email to Lecturer</button>
+                   <button class="audio-btn" onclick="loadEmailTemplate('employer')" style="font-size: 0.9rem;">Job Application</button>
+                   <button class="audio-btn" onclick="loadEmailTemplate('colleague')" style="font-size: 0.9rem;">Colleague Email</button>
+                   <button class="audio-btn" onclick="loadEmailTemplate('complaint')" style="font-size: 0.9rem;">Complaint/Issue</button>
+               </div>
+               
+               <form class="email-form" id="email-form">
+                   <div class="form-group">
+                       <label for="email-to">To:</label>
+                       <input type="email" id="email-to" placeholder="recipient@example.com">
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="email-subject">Subject:</label>
+                       <input type="text" id="email-subject" placeholder="Clear, specific subject line">
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="email-body">Message:</label>
+                       <textarea id="email-body" placeholder="Dear [Name],
+
+Write your message here...
+
+Best regards,
+[Your name]"></textarea>
+                   </div>
+                   
+                   <div style="text-align: center; margin-top: 2rem;">
+                       <button type="button" class="audio-btn" onclick="analyzeEmail()">
+                           <i class="fas fa-search"></i> Analyze Email
+                       </button>
+                       <button type="button" class="audio-btn" onclick="clearEmail()">
+                           <i class="fas fa-eraser"></i> Clear
+                       </button>
+                   </div>
+               </form>
+               
+               <div class="email-feedback" id="email-feedback">
+                   <h4 style="color: #f39c12; margin-bottom: 1rem;">Email Analysis Results</h4>
+                   
+                   <div class="feedback-section">
+                       <h4>Professionalism</h4>
+                       <div class="feedback-score">
+                           <div class="score-bar">
+                               <div class="score-fill" id="professionalism-score" style="width: 0%"></div>
+                           </div>
+                           <span id="professionalism-text">-</span>
+                       </div>
+                   </div>
+                   
+                   <div class="feedback-section">
+                       <h4>Clarity</h4>
+                       <div class="feedback-score">
+                           <div class="score-bar">
+                               <div class="score-fill" id="clarity-score" style="width: 0%"></div>
+                           </div>
+                           <span id="clarity-text">-</span>
+                       </div>
+                   </div>
+                   
+                   <div class="feedback-section">
+                       <h4>Tone</h4>
+                       <div class="feedback-score">
+                           <div class="score-bar">
+                               <div class="score-fill" id="tone-score" style="width: 0%"></div>
+                           </div>
+                           <span id="tone-text">-</span>
+                       </div>
+                   </div>
+                   
+                   <div style="background-color: #333; padding: 1rem; border-radius: 5px; margin-top: 1rem;">
+                       <h5 style="color: #f39c12;">Suggestions:</h5>
+                       <ul id="email-suggestions" style="color: #ccc;">
+                           <li>Compose an email to see analysis and suggestions</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Interview Simulator Tool -->
+       <section id="interview-tool" class="practice-tool">
+           <button class="back-btn" onclick="hidePracticeTools()">← Back to Practice Tools</button>
+           <div class="tool-header">
+               <h3>Interview Simulator</h3>
+               <p>Practice common interview questions with AI feedback on your responses and delivery.</p>
+           </div>
+           
+           <div class="conversation-simulator">
+               <div class="scenario-selector">
+                   <h4 style="color: #f39c12; margin-bottom: 1rem;">Interview Type</h4>
+                   <div class="scenario-option" onclick="loadInterview('retail')">
+                       <strong>🛍️ Retail/Customer Service</strong><br>
+                       <small>Entry-level positions, part-time work</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadInterview('internship')">
+                       <strong>💼 Internship</strong><br>
+                       <small>Professional development opportunities</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadInterview('graduate')">
+                       <strong>🎓 Graduate Program</strong><br>
+                       <small>Post-university career positions</small>
+                   </div>
+                   <div class="scenario-option" onclick="loadInterview('technical')">
+                       <strong>💻 Technical Role</strong><br>
+                       <small>IT, engineering, or specialized skills</small>
+                   </div>
+                   
+                   <div style="margin-top: 2rem; padding: 1rem; background-color: #333; border-radius: 5px;">
+                       <h5 style="color: #f39c12;">Tips for Success:</h5>
+                       <ul style="color: #ccc; font-size: 0.9rem;">
+                           <li>Answer clearly and concisely</li>
+                           <li>Use the STAR method (Situation, Task, Action, Result)</li>
+                           <li>Show enthusiasm and confidence</li>
+                           <li>Ask thoughtful questions</li>
+                       </ul>
+                   </div>
+               </div>
+
+               <div class="chat-interface">
+                   <div class="chat-messages" id="interview-messages">
+                       <div class="message bot-message">
+                           Welcome to the interview simulator! Select an interview type to begin.
+                       </div>
+                   </div>
+                   <div style="text-align: center; margin-top: 1rem;">
+                       <textarea id="interview-response" placeholder="Type your response here..." style="width: 100%; height: 80px; background-color: #333; color: white; border: 1px solid #444; border-radius: 5px; padding: 1rem; resize: vertical;"></textarea>
+                       <button class="audio-btn" onclick="submitInterviewResponse()" style="margin-top: 1rem;">
+                           <i class="fas fa-paper-plane"></i> Submit Response
+                       </button>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Presentation Coach Tool -->
+       <section id="presentation-tool" class="practice-tool">
+           <button class="back-btn" onclick="hidePracticeTools()">← Back to Practice Tools</button>
+           <div class="tool-header">
+               <h3>Presentation Coach</h3>
+               <p>Develop public speaking skills with structure guidance, timing practice, and delivery feedback.</p>
+           </div>
+           
+           <div class="body-language-trainer">
+               <div class="video-placeholder">
+                   <div style="text-align: center;">
+                       <i class="fas fa-presentation" style="font-size: 4rem; color: #444; margin-bottom: 1rem;"></i>
+                       <p>Practice Space</p>
+                       <div style="margin: 2rem 0;">
+                           <div style="background-color: #333; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+                               <h4 style="color: #f39c12;">Current Topic:</h4>
+                               <p id="presentation-topic" style="color: #ccc;">Select a presentation type to begin</p>
+                           </div>
+                           <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                               <button class="audio-btn" onclick="startPresentation()" id="presentation-start-btn" disabled>
+                                   <i class="fas fa-play"></i> Start Practice
+                               </button>
+                               <button class="audio-btn" onclick="stopPresentation()" id="presentation-stop-btn" disabled>
+                                   <i class="fas fa-stop"></i> Stop
+                               </button>
+                           </div>
+                       </div>
+                       <div id="presentation-timer" style="font-size: 2rem; color: #f39c12; margin-top: 1rem;">00:00</div>
+                   </div>
+               </div>
+
+               <div class="tips-panel">
+                   <h4 style="color: #f39c12; margin-bottom: 1rem;">Presentation Types</h4>
+                   
+                   <div class="scenario-option" onclick="loadPresentationType('university')" style="margin-bottom: 1rem;">
+                       <strong>📚 University Assignment</strong><br>
+                       <small>Academic presentation, 5-10 minutes</small>
+                   </div>
+                   
+                   <div class="scenario-option" onclick="loadPresentationType('work')" style="margin-bottom: 1rem;">
+                       <strong>💼 Work Presentation</strong><br>
+                       <small>Professional setting, project update</small>
+                   </div>
+                   
+                   <div class="scenario-option" onclick="loadPresentationType('pitch')" style="margin-bottom: 1rem;">
+                       <strong>🚀 Elevator Pitch</strong><br>
+                       <small>30-60 second personal introduction</small>
+                   </div>
+                   
+                   <div class="scenario-option" onclick="loadPresentationType('toast')" style="margin-bottom: 1rem;">
+                       <strong>🍻 Speech/Toast</strong><br>
+                       <small>Social speaking, celebrations</small>
+                   </div>
+                   
+                   <div id="presentation-guidelines" style="background-color: #333; padding: 1rem; border-radius: 5px; margin-top: 2rem;">
+                       <h5 style="color: #f39c12;">Guidelines:</h5>
+                       <p style="color: #ccc;">Select a presentation type to see specific guidelines and structure suggestions.</p>
+                   </div>
+                   
+                   <div id="presentation-feedback" style="background-color: #333; padding: 1rem; border-radius: 5px; margin-top: 1rem;">
+                       <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+                       <p style="color: #ccc;">Start practicing to receive feedback on pace, volume, and delivery.</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Progress Tracker -->
+       <section class="progress-tracker">
+           <h2 class="section-title" style="color: #f39c12; border-bottom: 2px solid #f39c12;">Your Communication Progress</h2>
+           
+           <div class="stats-grid">
+               <div class="stat-card">
+                   <div class="stat-number" id="practice-sessions">0</div>
+                   <div class="stat-label">Practice Sessions</div>
+               </div>
+               
+               <div class="stat-card">
+                   <div class="stat-number" id="total-time">0h</div>
+                   <div class="stat-label">Total Practice Time</div>
+               </div>
+               
+               <div class="stat-card">
+                   <div class="stat-number" id="skill-level">Beginner</div>
+                   <div class="stat-label">Current Level</div>
+               </div>
+               
+               <div class="stat-card">
+                   <div class="stat-number" id="achievements">0</div>
+                   <div class="stat-label">Achievements</div>
+               </div>
+           </div>
+           
+           <div style="text-align: center; margin-top: 2rem;">
+               <h3 style="color: #f39c12; margin-bottom: 1rem;">Recent Achievements</h3>
+               <div id="achievement-badges">
+                   <span class="achievement-badge">First Practice Session</span>
+                   <span class="achievement-badge">Conversation Starter</span>
+               </div>
+           </div>
+       </section>
+
+       <!-- Daily Challenges -->
+       <section class="daily-challenges">
+           <h2 class="section-title" style="color: white; border-bottom: 2px solid white;">Daily Communication Challenges</h2>
+           <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">Complete these daily challenges to build consistent communication habits.</p>
+           
+           <div class="challenge-grid">
+               <div class="challenge-card">
+                   <h4><i class="fas fa-calendar-day"></i> Today's Challenge</h4>
+                   <p><strong>Small Talk Master:</strong> Start a genuine conversation with someone new today. Ask about their day or weekend plans.</p>
+                   <button class="challenge-btn" onclick="completeChallenge('smalltalk')">Accept Challenge</button>
+               </div>
+               
+               <div class="challenge-card">
+                   <h4><i class="fas fa-microphone"></i> Pronunciation Focus</h4>
+                   <p><strong>Aussie Accent:</strong> Practice 5 Australian slang words or phrases using the pronunciation trainer.</p>
+                   <button class="challenge-btn" onclick="completeChallenge('pronunciation')">Start Practice</button>
+               </div>
+               
+               <div class="challenge-card">
+                   <h4><i class="fas fa-envelope"></i> Professional Writing</h4>
+                   <p><strong>Email Excellence:</strong> Compose one professional email and get feedback on clarity and tone.</p>
+                   <button class="challenge-btn" onclick="completeChallenge('email')">Write Email</button>
+               </div>
+               
+               <div class="challenge-card">
+                   <h4><i class="fas fa-eye"></i> Body Language</h4>
+                   <p><strong>Confidence Boost:</strong> Practice maintaining good eye contact and posture for 10 minutes.</p>
+                   <button class="challenge-btn" onclick="completeChallenge('bodylanguage')">Practice Now</button>
+               </div>
+               
+               <div class="challenge-card">
+                   <h4><i class="fas fa-handshake"></i> Active Listening</h4>
+                   <p><strong>Listen & Learn:</strong> Practice active listening by summarizing what someone tells you in conversation.</p>
+                   <button class="challenge-btn" onclick="completeChallenge('listening')">Focus on Listening</button>
+               </div>
+               
+               <div class="challenge-card">
+                   <h4><i class="fas fa-question"></i> Question Master</h4>
+                   <p><strong>Curiosity Catalyst:</strong> Ask 3 open-ended questions in conversations today to deepen connections.</p>
+                   <button class="challenge-btn" onclick="completeChallenge('questions')">Ask Better Questions</button>
+               </div>
+           </div>
+       </section>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       // Global variables for practice tracking
+       let currentTool = null;
+       let practiceStartTime = null;
+       let currentScenario = null;
+       let practiceData = JSON.parse(localStorage.getItem('communicationPractice')) || {
+           sessions: 0,
+           totalTime: 0,
+           achievements: ['First Practice Session', 'Conversation Starter'],
+           challengesCompleted: []
+       };
+
+       // Conversation scenarios data
+       const conversationScenarios = {
+           'coffee-order': {
+               title: 'Ordering Coffee',
+               messages: [
+                   { type: 'bot', text: "G'day! What can I get for you today?" },
+                   { type: 'user', options: [
+                       "Hi! Could I please have a flat white?",
+                       "Yeah, gimme a coffee.",
+                       "Good morning! I'd like a medium cappuccino with an extra shot, please."
+                   ]}
+               ],
+               feedback: {
+                   0: "Perfect! Polite and clear ordering style.",
+                   1: "Too casual - try being more polite in service situations.",
+                   2: "Excellent! Detailed and polite order."
+               }
+           },
+           'group-project': {
+               title: 'Group Project Meeting',
+               messages: [
+                   { type: 'bot', text: "Hey everyone! Should we start working on our assignment outline?" },
+                   { type: 'user', options: [
+                       "Yes, let's start. I think we should divide the work into sections.",
+                       "Whatever, I don't really care.",
+                       "Great idea! I've actually prepared some initial research we could use as a starting point."
+                   ]}
+               ],
+               feedback: {
+                   0: "Good leadership! Shows initiative and organization.",
+                   1: "Too disengaged - show more enthusiasm for group work.",
+                   2: "Excellent! Proactive and collaborative approach."
+               }
+           }
+       };
+
+       // Pronunciation word lists
+       const pronunciationWords = {
+           greetings: [
+               { word: "G'day", phonetic: "/ɡəˈdaɪ/", meaning: "Australian greeting meaning 'good day'" },
+               { word: "How ya going?", phonetic: "/haʊ jə ˈɡoʊɪŋ/", meaning: "Casual way to ask 'how are you?'" },
+               { word: "No worries", phonetic: "/noʊ ˈwʌriz/", meaning: "You're welcome / don't worry about it" }
+           ],
+           slang: [
+               { word: "Arvo", phonetic: "/ˈɑrvoʊ/", meaning: "Afternoon" },
+               { word: "Brekkie", phonetic: "/ˈbreki/", meaning: "Breakfast" },
+               { word: "Heaps", phonetic: "/hips/", meaning: "Lots of, many" }
+           ],
+           workplace: [
+               { word: "Meeting", phonetic: "/ˈmitɪŋ/", meaning: "Business gathering" },
+               { word: "Presentation", phonetic: "/ˌprezənˈteɪʃən/", meaning: "Formal speech or display" },
+               { word: "Colleague", phonetic: "/ˈkɑliɡ/", meaning: "Work associate" }
+           ]
+       };
+
+       let currentWordIndex = 0;
+       let currentCategory = 'greetings';
+
+       // Email templates
+       const emailTemplates = {
+           lecturer: {
+               to: "professor.smith@university.edu.au",
+               subject: "Question about [Course Code] Assignment",
+               body: "Dear Professor Smith,\n\nI hope this email finds you well. I am writing to seek clarification about the upcoming assignment for [Course Code].\n\n[Your specific question here]\n\nI have reviewed the assignment brief and course materials, but would appreciate your guidance on this matter.\n\nThank you for your time and assistance.\n\nBest regards,\n[Your name]\n[Student ID]"
+           },
+           employer: {
+               to: "hiring@company.com.au",
+               subject: "Application for [Position Title] - [Your Name]",
+               body: "Dear Hiring Manager,\n\nI am writing to express my interest in the [Position Title] position advertised on [where you found the job].\n\nAs a [your qualification/year] student at [University], I believe my skills in [relevant skills] make me a strong candidate for this role.\n\nI have attached my resume and would welcome the opportunity to discuss how I can contribute to your team.\n\nThank you for considering my application.\n\nKind regards,\n[Your name]"
+           }
+       };
+
+       // Show specific practice tool
+       function showPracticeTool(toolName) {
+           // Hide all tools
+           document.querySelectorAll('.practice-tool').forEach(tool => {
+               tool.classList.remove('active');
+           });
+           
+           // Show selected tool
+           document.getElementById(toolName + '-tool').classList.add('active');
+           currentTool = toolName;
+           
+           // Start practice session
+           startPracticeSession();
+       }
+
+       // Hide all practice tools
+       function hidePracticeTools() {
+           document.querySelectorAll('.practice-tool').forEach(tool => {
+               tool.classList.remove('active');
+           });
+           
+           // End practice session
+           endPracticeSession();
+       }
+
+       // Practice session management
+       function startPracticeSession() {
+           practiceStartTime = Date.now();
+       }
+
+       function endPracticeSession() {
+           if (practiceStartTime) {
+               const sessionTime = (Date.now() - practiceStartTime) / (1000 * 60); // minutes
+               practiceData.sessions += 1;
+               practiceData.totalTime += sessionTime;
+               savePracticeData();
+               updateProgressDisplay();
+           }
+           practiceStartTime = null;
+           currentTool = null;
+       }
+
+       // Conversation simulator functions
+       function loadScenario(scenarioKey) {
+           // Update selected scenario
+           document.querySelectorAll('.scenario-option').forEach(option => {
+               option.classList.remove('selected');
+           });
+           event.target.classList.add('selected');
+           
+           currentScenario = conversationScenarios[scenarioKey];
+           const messagesContainer = document.getElementById('chat-messages');
+           const optionsContainer = document.getElementById('response-options');
+           
+           // Clear previous messages
+           messagesContainer.innerHTML = '';
+           
+           // Add scenario messages
+           currentScenario.messages.forEach((message, index) => {
+               if (message.type === 'bot') {
+                   messagesContainer.innerHTML += `<div class="message bot-message">${message.text}</div>`;
+               } else if (message.type === 'user' && message.options) {
+                   // Show response options
+                   optionsContainer.innerHTML = '';
+                   message.options.forEach((option, optionIndex) => {
+                       optionsContainer.innerHTML += `
+                           <button class="response-btn" onclick="selectResponse(${optionIndex}, '${option}')">
+                               ${option}
+                           </button>
+                       `;
+                   });
+               }
+           });
+       }
+
+       function selectResponse(optionIndex, responseText) {
+           const messagesContainer = document.getElementById('chat-messages');
+           const optionsContainer = document.getElementById('response-options');
+           
+           // Add user response
+           messagesContainer.innerHTML += `<div class="message user-message">${responseText}</div>`;
+           
+           // Add feedback
+           const feedback = currentScenario.feedback[optionIndex];
+           messagesContainer.innerHTML += `<div class="message bot-message">${feedback}</div>`;
+           
+           // Clear options
+           optionsContainer.innerHTML = '';
+           
+           // Scroll to bottom
+           messagesContainer.scrollTop = messagesContainer.scrollHeight;
+       }
+
+       // Pronunciation trainer functions
+       function switchCategory(category) {
+           currentCategory = category;
+           currentWordIndex = 0;
+           updatePronunciationDisplay();
+       }
+
+       function updatePronunciationDisplay() {
+           const words = pronunciationWords[currentCategory];
+           const currentWord = words[currentWordIndex];
+           
+           document.getElementById('practice-word').textContent = currentWord.word;
+           document.getElementById('phonetic').textContent = currentWord.phonetic;
+           document.getElementById('word-meaning').textContent = currentWord.meaning;
+       }
+
+       function playPronunciation() {
+           // In a real implementation, this would play audio
+           document.getElementById('pronunciation-tips').innerHTML = `
+               <h5 style="color: #f39c12;">Playing pronunciation:</h5>
+               <p style="color: #ccc;">Audio would play here. Listen carefully and try to mimic the pronunciation.</p>
+           `;
+       }
+
+       function recordPronunciation() {
+           // Simulate recording and feedback
+           const accuracy = Math.floor(Math.random() * 40) + 60; // 60-100%
+           const clarity = Math.floor(Math.random() * 30) + 70; // 70-100%
+           
+           document.getElementById('accuracy-meter').style.width = accuracy + '%';
+           document.getElementById('clarity-meter').style.width = clarity + '%';
+           document.getElementById('accuracy-score').textContent = accuracy + '% accurate';
+           document.getElementById('clarity-score').textContent = clarity + '% clear';
+           
+           document.getElementById('pronunciation-tips').innerHTML = `
+               <h5 style="color: #f39c12;">Feedback:</h5>
+               <p style="color: #ccc;">${accuracy > 80 ? 'Great pronunciation!' : 'Try emphasizing the stressed syllables more clearly.'}</p>
+           `;
+       }
+
+       function nextWord() {
+           const words = pronunciationWords[currentCategory];
+           currentWordIndex = (currentWordIndex + 1) % words.length;
+           updatePronunciationDisplay();
+       }
+
+       // Email analyzer
+       function loadEmailTemplate(templateKey) {
+           const template = emailTemplates[templateKey];
+           if (template) {
+               document.getElementById('email-to').value = template.to;
+               document.getElementById('email-subject').value = template.subject;
+               document.getElementById('email-body').value = template.body;
+           }
+       }
+
+       function analyzeEmail() {
+           const subject = document.getElementById('email-subject').value;
+           const body = document.getElementById('email-body').value;
+           
+           if (!subject || !body) {
+               alert('Please fill in both subject and message fields.');
+               return;
+           }
+           
+           // Simple analysis simulation
+           const professionalism = analyzeText(body, ['dear', 'please', 'thank you', 'regards', 'sincerely']);
+           const clarity = subject.length > 5 && subject.length < 50 ? 85 : 65;
+           const tone = body.includes('please') && body.includes('thank') ? 90 : 70;
+           
+           // Update feedback display
+           document.getElementById('professionalism-score').style.width = professionalism + '%';
+           document.getElementById('clarity-score').style.width = clarity + '%';
+           document.getElementById('tone-score').style.width = tone + '%';
+           
+           document.getElementById('professionalism-text').textContent = professionalism + '%';
+           document.getElementById('clarity-text').textContent = clarity + '%';
+           document.getElementById('tone-text').textContent = tone + '%';
+           
+           // Generate suggestions
+           const suggestions = [];
+           if (professionalism < 80) suggestions.push('Consider using more formal language');
+           if (clarity < 80) suggestions.push('Make your subject line more specific');
+           if (tone < 80) suggestions.push('Add polite expressions like "please" and "thank you"');
+           if (suggestions.length === 0) suggestions.push('Excellent email! Professional and clear.');
+           
+           document.getElementById('email-suggestions').innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
+           document.getElementById('email-feedback').style.display = 'block';
+       }
+
+       function analyzeText(text, keywords) {
+           const words = text.toLowerCase().split(' ');
+           const keywordCount = keywords.reduce((count, keyword) => {
+               return count + (words.includes(keyword) ? 1 : 0);
+           }, 0);
+           return Math.min(90, 60 + (keywordCount * 10));
+       }
+
+       function clearEmail() {
+           document.getElementById('email-form').reset();
+           document.getElementById('email-feedback').style.display = 'none';
+       }
+
+       // Challenge completion
+       function completeChallenge(challengeType) {
+           if (!practiceData.challengesCompleted.includes(challengeType)) {
+               practiceData.challengesCompleted.push(challengeType);
+               
+               // Add achievement
+               const challengeNames = {
+                   'smalltalk': 'Social Butterfly',
+                   'pronunciation': 'Accent Master',
+                   'email': 'Professional Writer',
+                   'bodylanguage': 'Confident Communicator',
+                   'listening': 'Active Listener',
+                   'questions': 'Conversation Catalyst'
+               };
+               
+               const achievementName = challengeNames[challengeType];
+               if (achievementName && !practiceData.achievements.includes(achievementName)) {
+                   practiceData.achievements.push(achievementName);
+               }
+               
+               savePracticeData();
+               updateProgressDisplay();
+               
+               // Update button
+               event.target.textContent = 'Completed!';
+               event.target.classList.add('completed');
+               event.target.disabled = true;
+           }
+       }
+
+       // Data persistence
+       function savePracticeData() {
+           localStorage.setItem('communicationPractice', JSON.stringify(practiceData));
+       }
+
+       function updateProgressDisplay() {
+           document.getElementById('practice-sessions').textContent = practiceData.sessions;
+           document.getElementById('total-time').textContent = Math.round(practiceData.totalTime / 60 * 10) / 10 + 'h';
+           document.getElementById('achievements').textContent = practiceData.achievements.length;
+           
+           // Update skill level based on practice time
+           let skillLevel = 'Beginner';
+           if (practiceData.totalTime > 300) skillLevel = 'Advanced';
+           else if (practiceData.totalTime > 120) skillLevel = 'Intermediate';
+           document.getElementById('skill-level').textContent = skillLevel;
+           
+           // Update achievement badges
+           const badgesContainer = document.getElementById('achievement-badges');
+           badgesContainer.innerHTML = practiceData.achievements.map(achievement => 
+               `<span class="achievement-badge">${achievement}</span>`
+           ).join('');
+       }
+
+       // Initialize page
+       document.addEventListener('DOMContentLoaded', function() {
+           updateProgressDisplay();
+           updatePronunciationDisplay();
+           
+           // Login status check
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           // Handle logout
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+       });
+
+       // Additional functions for interview and presentation tools
+       function loadInterview(interviewType) {
+           document.querySelectorAll('.scenario-option').forEach(option => {
+               option.classList.remove('selected');
+           });
+           event.target.classList.add('selected');
+           
+           const interviewQuestions = {
+               retail: [
+                   "Tell me about yourself.",
+                   "Why do you want to work in retail?",
+                   "How would you handle a difficult customer?",
+                   "What does good customer service mean to you?"
+               ],
+               internship: [
+                   "What interests you about this internship?",
+                   "What skills do you hope to develop?",
+                   "Tell me about a project you're proud of.",
+                   "How do you handle feedback?"
+               ],
+               graduate: [
+                   "Where do you see yourself in 5 years?",
+                   "What makes you a good fit for this role?",
+                   "Describe a challenge you've overcome.",
+                   "What questions do you have for us?"
+               ],
+               technical: [
+                   "Walk me through your technical background.",
+                   "How do you approach problem-solving?",
+                   "Describe a technical project you've worked on.",
+                   "How do you stay updated with new technologies?"
+               ]
+           };
+           
+           const questions = interviewQuestions[interviewType];
+           const messagesContainer = document.getElementById('interview-messages');
+           messagesContainer.innerHTML = `
+               <div class="message bot-message">
+                   Great! Let's start with a ${interviewType} interview. I'll ask you some common questions.
+               </div>
+               <div class="message bot-message">
+                   ${questions[0]}
+               </div>
+           `;
+           
+           // Store current questions for the session
+           window.currentInterviewQuestions = questions;
+           window.currentQuestionIndex = 0;
+       }
+
+       function submitInterviewResponse() {
+           const response = document.getElementById('interview-response').value.trim();
+           if (!response) {
+               alert('Please enter a response before submitting.');
+               return;
+           }
+           
+           const messagesContainer = document.getElementById('interview-messages');
+           
+           // Add user response
+           messagesContainer.innerHTML += `<div class="message user-message">${response}</div>`;
+           
+           // Analyze response and provide feedback
+           const feedback = analyzeInterviewResponse(response);
+           messagesContainer.innerHTML += `<div class="message bot-message">${feedback}</div>`;
+           
+           // Move to next question or end interview
+           if (window.currentQuestionIndex < window.currentInterviewQuestions.length - 1) {
+               window.currentQuestionIndex++;
+               setTimeout(() => {
+                   messagesContainer.innerHTML += `<div class="message bot-message">${window.currentInterviewQuestions[window.currentQuestionIndex]}</div>`;
+                   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+               }, 2000);
+           } else {
+               setTimeout(() => {
+                   messagesContainer.innerHTML += `<div class="message bot-message">That concludes our interview practice! Great job working through all the questions.</div>`;
+                   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+               }, 2000);
+           }
+           
+           // Clear response field
+           document.getElementById('interview-response').value = '';
+           messagesContainer.scrollTop = messagesContainer.scrollHeight;
+       }
+
+       function analyzeInterviewResponse(response) {
+           const responseLength = response.split(' ').length;
+           let feedback = '';
+           
+           if (responseLength < 20) {
+               feedback = "Good start! Try to provide more detail and specific examples to strengthen your answer.";
+           } else if (responseLength > 100) {
+               feedback = "Great detail! Remember to be concise - aim for 1-2 minutes per response in real interviews.";
+           } else {
+               feedback = "Excellent response length! You provided good detail while staying focused.";
+           }
+           
+           // Add specific feedback based on content
+           if (response.toLowerCase().includes('example') || response.toLowerCase().includes('instance')) {
+               feedback += " I like that you included specific examples.";
+           }
+           
+           return feedback;
+       }
+
+       // Presentation coach functions
+       function loadPresentationType(presentationType) {
+           document.querySelectorAll('.scenario-option').forEach(option => {
+               option.classList.remove('selected');
+           });
+           event.target.classList.add('selected');
+           
+           const presentationData = {
+               university: {
+                   title: "University Assignment Presentation (5-10 minutes)",
+                   guidelines: [
+                       "Start with a clear introduction and agenda",
+                       "Use evidence-based arguments with citations",
+                       "Include visual aids if appropriate",
+                       "Conclude with key takeaways",
+                       "Prepare for Q&A session"
+                   ]
+               },
+               work: {
+                   title: "Professional Work Presentation (10-15 minutes)",
+                   guidelines: [
+                       "Begin with objectives and expected outcomes",
+                       "Present data and analysis clearly",
+                       "Include actionable recommendations",
+                       "Address potential concerns proactively",
+                       "End with clear next steps"
+                   ]
+               },
+               pitch: {
+                   title: "Elevator Pitch (30-60 seconds)",
+                   guidelines: [
+                       "Hook: Start with an interesting fact or question",
+                       "Who you are and what you do",
+                       "What makes you unique or valuable",
+                       "What you're looking for or offering",
+                       "Call to action or conversation starter"
+                   ]
+               },
+               toast: {
+                   title: "Social Speech/Toast (2-3 minutes)",
+                   guidelines: [
+                       "Start with gratitude or acknowledgment",
+                       "Share a meaningful story or memory",
+                       "Keep it positive and inclusive",
+                       "Conclude with well-wishes or celebration",
+                       "Practice timing and emotional delivery"
+                   ]
+               }
+           };
+           
+           const data = presentationData[presentationType];
+           document.getElementById('presentation-topic').textContent = data.title;
+           document.getElementById('presentation-guidelines').innerHTML = `
+               <h5 style="color: #f39c12;">Structure Guidelines:</h5>
+               <ul style="color: #ccc;">
+                   ${data.guidelines.map(guideline => `<li>${guideline}</li>`).join('')}
+               </ul>
+           `;
+           
+           // Enable start button
+           document.getElementById('presentation-start-btn').disabled = false;
+           window.currentPresentationType = presentationType;
+       }
+
+       let presentationTimer;
+       let presentationSeconds = 0;
+
+       function startPresentation() {
+           presentationSeconds = 0;
+           document.getElementById('presentation-start-btn').disabled = true;
+           document.getElementById('presentation-stop-btn').disabled = false;
+           
+           presentationTimer = setInterval(() => {
+               presentationSeconds++;
+               const minutes = Math.floor(presentationSeconds / 60);
+               const seconds = presentationSeconds % 60;
+               document.getElementById('presentation-timer').textContent = 
+                   `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+           }, 1000);
+           
+           // Simulate real-time feedback
+           document.getElementById('presentation-feedback').innerHTML = `
+               <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+               <p style="color: #27ae60;">Good posture! Speak clearly and maintain eye contact.</p>
+           `;
+           
+           setTimeout(() => {
+               if (presentationTimer) {
+                   document.getElementById('presentation-feedback').innerHTML = `
+                       <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+                       <p style="color: #f39c12;">Remember to pause between points. You're doing well!</p>
+                   `;
+               }
+           }, 30000);
+       }
+
+       function stopPresentation() {
+           if (presentationTimer) {
+               clearInterval(presentationTimer);
+               presentationTimer = null;
+           }
+           
+           document.getElementById('presentation-start-btn').disabled = false;
+           document.getElementById('presentation-stop-btn').disabled = true;
+           
+           // Provide session feedback
+           const minutes = Math.floor(presentationSeconds / 60);
+           const feedback = getPresentationFeedback(presentationSeconds, window.currentPresentationType);
+           
+           document.getElementById('presentation-feedback').innerHTML = `
+               <h5 style="color: #f39c12;">Session Complete:</h5>
+               <p style="color: #ccc;">Duration: ${minutes}:${(presentationSeconds % 60).toString().padStart(2, '0')}</p>
+               <p style="color: #ccc;">${feedback}</p>
+           `;
+       }
+
+       function getPresentationFeedback(seconds, type) {
+           const targetTimes = {
+               pitch: { min: 30, max: 90 },
+               toast: { min: 120, max: 180 },
+               university: { min: 300, max: 600 },
+               work: { min: 600, max: 900 }
+           };
+           
+           const target = targetTimes[type];
+           if (!target) return "Great practice session!";
+           
+           if (seconds < target.min) {
+               return "Consider expanding your content - you might be rushing through important points.";
+           } else if (seconds > target.max) {
+               return "Try to be more concise - your audience's attention span is limited.";
+           } else {
+               return "Perfect timing! Your presentation length is ideal for this format.";
+           }
+       }
+
+       // Body language trainer functions
+       function startBodyLanguagePractice() {
+           document.getElementById('body-language-feedback').innerHTML = `
+               <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+               <p style="color: #27ae60;">Session started! Maintain good posture and natural eye contact.</p>
+           `;
+           
+           // Simulate feedback updates
+           setTimeout(() => {
+               document.getElementById('body-language-feedback').innerHTML = `
+                   <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+                   <p style="color: #f39c12;">Good eye contact! Try to relax your shoulders a bit more.</p>
+               `;
+           }, 10000);
+           
+           setTimeout(() => {
+               document.getElementById('body-language-feedback').innerHTML = `
+                   <h5 style="color: #f39c12;">Real-time Feedback:</h5>
+                   <p style="color: #27ae60;">Excellent improvement! Your body language looks confident and natural.</p>
+               `;
+           }, 20000);
+       }
+
+       function switchBodyLanguageExercise(exercise) {
+           const exercises = {
+               posture: {
+                   title: "Posture Practice",
+                   goal: "Maintain confident, upright posture",
+                   guidelines: [
+                       "Shoulders back and relaxed",
+                       "Spine straight but not rigid",
+                       "Feet planted firmly on ground",
+                       "Head held high with chin parallel to floor"
+                   ],
+                   note: "Good posture projects confidence and helps you feel more confident too."
+               },
+               gestures: {
+                   title: "Hand Gestures",
+                   goal: "Use natural, purposeful hand movements",
+                   guidelines: [
+                       "Keep gestures within your 'box' (shoulder width)",
+                       "Use open palms when possible",
+                       "Match gestures to your words",
+                       "Avoid repetitive or distracting movements"
+                   ],
+                   note: "Effective gestures enhance your message and keep audiences engaged."
+               },
+               facial: {
+                   title: "Facial Expressions",
+                   goal: "Express emotions naturally and appropriately",
+                   guidelines: [
+                       "Match expressions to your content",
+                       "Smile genuinely when appropriate",
+                       "Avoid excessive or distracting expressions",
+                       "Practice in front of a mirror"
+                   ],
+                   note: "Your face is often the first thing people notice - make it work for you."
+               }
+           };
+           
+           const data = exercises[exercise];
+           document.querySelector('.tips-panel h4').textContent = `Current Exercise: ${data.title}`;
+           document.querySelector('.tip-item:first-child').innerHTML = `<strong>Goal:</strong> ${data.goal}`;
+           document.querySelector('.tip-item:nth-child(2)').innerHTML = `
+               <strong>Guidelines:</strong>
+               <ul style="margin-top: 0.5rem; color: #ccc;">
+                   ${data.guidelines.map(g => `<li>${g}</li>`).join('')}
+               </ul>
+           `;
+           document.querySelector('.tip-item:nth-child(3)').innerHTML = `<strong>Cultural Note:</strong> ${data.note}`;
+       }
+   </script>
+
+<!-- PWA Scripts -->
+<script src="/pwa-install.js"></script>
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+</body>
+</html>
