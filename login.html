@@ -216,6 +216,30 @@
            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
        }
 
+       .role-badge {
+           display: inline-block;
+           padding: 0.2rem 0.6rem;
+           border-radius: 12px;
+           font-size: 0.7rem;
+           font-weight: 600;
+           margin-left: 0.5rem;
+       }
+
+       .role-student {
+           background: #3498db;
+           color: white;
+       }
+
+       .role-teacher {
+           background: #9b59b6;
+           color: white;
+       }
+
+       .role-admin {
+           background: #e74c3c;
+           color: white;
+       }
+
        .form-footer {
            text-align: center;
            margin-top: 1.5rem;
@@ -370,18 +394,28 @@
                
                <!-- Demo accounts for testing -->
                <div class="demo-accounts">
-                   <h3>📚 Demo Student Accounts</h3>
-                   <div class="demo-account" onclick="fillDemoAccount('sarah.w@knox.nsw.edu.au', 'Sarah Wilson', 'Knox Grammar School', 11)">
-                       <span>Sarah Wilson - Knox Grammar (Year 11)</span>
-                       <button>Try Demo</button>
+                   <h3>🎯 Try Demo Accounts</h3>
+                   
+                   <!-- Student Demo Accounts -->
+                   <div class="demo-account" onclick="fillDemoAccount('sarah.wilson@knox.nsw.edu.au', 'Sarah Wilson', 'student', { school: 'Knox Grammar School', yearLevel: 11 })">
+                       <span>Sarah Wilson - Knox Grammar (Year 11) <span class="role-badge role-student">STUDENT</span></span>
+                       <button>Login</button>
                    </div>
-                   <div class="demo-account" onclick="fillDemoAccount('alex.c@pymble.nsw.edu.au', 'Alex Chen', 'Pymble Ladies\' College', 10)">
-                       <span>Alex Chen - Pymble Ladies' College (Year 10)</span>
-                       <button>Try Demo</button>
+                   <div class="demo-account" onclick="fillDemoAccount('alex.chen@pymble.nsw.edu.au', 'Alex Chen', 'student', { school: 'Pymble Ladies College', yearLevel: 10 })">
+                       <span>Alex Chen - Pymble Ladies' College (Year 10) <span class="role-badge role-student">STUDENT</span></span>
+                       <button>Login</button>
                    </div>
-                   <div class="demo-account" onclick="fillDemoAccount('jamie.t@sydney.grammar.nsw.edu.au', 'Jamie Taylor', 'Sydney Grammar School', 12)">
-                       <span>Jamie Taylor - Sydney Grammar (Year 12)</span>
-                       <button>Try Demo</button>
+                   
+                   <!-- Teacher Demo Account -->
+                   <div class="demo-account" onclick="fillDemoAccount('mr.smith@knox.nsw.edu.au', 'Mr. David Smith', 'teacher', { department: 'Mathematics', schoolCode: 'KGS001' })">
+                       <span>Mr. Smith - Mathematics Teacher <span class="role-badge role-teacher">TEACHER</span></span>
+                       <button>Login</button>
+                   </div>
+                   
+                   <!-- Admin Demo Account -->
+                   <div class="demo-account" onclick="fillDemoAccount('admin@knox.nsw.edu.au', 'Dr. Sarah Johnson', 'admin', { department: 'Wellness Coordinator', schoolCode: 'KGS001' })">
+                       <span>Dr. Johnson - School Administrator <span class="role-badge role-admin">ADMIN</span></span>
+                       <button>Login</button>
                    </div>
                </div>
                
@@ -393,33 +427,67 @@
        </main>
 
        <footer>
-           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <p>&copy; 2025 Vivify. All rights reserved.</p>
        </footer>
    </div>
 
    <script>
-       // Demo accounts for testing
+       // Demo accounts for testing - Updated with roles
        const demoAccounts = [
-           { email: 'sarah.w@knox.nsw.edu.au', name: 'Sarah Wilson', school: 'Knox Grammar School', yearLevel: 11 },
-           { email: 'alex.c@pymble.nsw.edu.au', name: 'Alex Chen', school: 'Pymble Ladies\' College', yearLevel: 10 },
-           { email: 'jamie.t@sydney.grammar.nsw.edu.au', name: 'Jamie Taylor', school: 'Sydney Grammar School', yearLevel: 12 }
+           // Students
+           {
+               email: 'sarah.wilson@knox.nsw.edu.au',
+               name: 'Sarah Wilson',
+               role: 'student',
+               school: 'Knox Grammar School',
+               yearLevel: 11,
+               classes: []
+           },
+           {
+               email: 'alex.chen@pymble.nsw.edu.au',
+               name: 'Alex Chen',
+               role: 'student',
+               school: 'Pymble Ladies\' College',
+               yearLevel: 10,
+               classes: []
+           },
+           // Teacher
+           {
+               email: 'mr.smith@knox.nsw.edu.au',
+               name: 'Mr. David Smith',
+               role: 'teacher',
+               department: 'Mathematics',
+               schoolCode: 'KGS001',
+               classPermissions: []
+           },
+           // Admin
+           {
+               email: 'admin@knox.nsw.edu.au',
+               name: 'Dr. Sarah Johnson',
+               role: 'admin',
+               department: 'Wellness Coordinator',
+               schoolCode: 'KGS001',
+               classPermissions: []
+           }
        ];
 
-       function fillDemoAccount(email, name, school, yearLevel) {
+       function fillDemoAccount(email, name, role, roleData) {
            document.getElementById('email').value = email;
-           document.getElementById('password').value = 'Student123';
+           document.getElementById('password').value = 'Demo123';
            
+           // Create complete demo profile
            const demoProfile = {
-               id: Date.now(),
+               id: Date.now() + Math.random(),
                name: name,
                email: email,
-               school: school,
-               yearLevel: yearLevel,
+               role: role,
                joinDate: new Date().toISOString(),
-               verified: true
+               verified: true,
+               ...roleData
            };
            
-           localStorage.setItem('demoProfile', JSON.stringify(demoProfile));
+           // Store temporarily for login
+           sessionStorage.setItem('pendingDemoProfile', JSON.stringify(demoProfile));
        }
 
        function showMessage(message, type = 'error') {
@@ -474,34 +542,57 @@
                    
                    let userProfile = null;
                    
-                   const isDemoAccount = demoAccounts.some(account => account.email === email);
-                   
-                   if (isDemoAccount && password === 'Student123') {
-                       userProfile = JSON.parse(localStorage.getItem('demoProfile'));
+                   // Check for demo account login
+                   const pendingDemo = sessionStorage.getItem('pendingDemoProfile');
+                   if (pendingDemo && password === 'Demo123') {
+                       userProfile = JSON.parse(pendingDemo);
+                       sessionStorage.removeItem('pendingDemoProfile');
                    } else {
+                       // Check registered users
                        const existingUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
-                       const user = existingUsers.find(user => user.email === email);
+                       userProfile = existingUsers.find(user => user.email === email);
                        
-                       if (user) {
-                           userProfile = user;
+                       if (!userProfile) {
+                           throw new Error('Invalid email or password. Try a demo account or sign up for a new account.');
                        }
                    }
                    
                    if (userProfile) {
+                       // Save user session
                        localStorage.setItem('userProfile', JSON.stringify(userProfile));
                        localStorage.setItem('userLoggedIn', 'true');
+                       localStorage.setItem('userRole', userProfile.role);
                        localStorage.setItem('authToken', 'demo_token_' + Date.now());
                        
                        showMessage('Login successful! Redirecting...', 'success');
                        
-                       const redirectParam = urlParams.get('redirect');
-                       const redirectTo = redirectParam ? `${redirectParam}.html` : 'Index.html';
-                       
+                       // Role-based redirect
                        setTimeout(() => {
+                           const redirectParam = urlParams.get('redirect');
+                           let redirectTo;
+                           
+                           if (redirectParam) {
+                               redirectTo = `${redirectParam}.html`;
+                           } else {
+                               // Default redirects based on role
+                               switch (userProfile.role) {
+                                   case 'teacher':
+                                       redirectTo = 'teacher-dashboard.html';
+                                       break;
+                                   case 'admin':
+                                       redirectTo = 'admin-dashboard.html';
+                                       break;
+                                   case 'student':
+                                   default:
+                                       redirectTo = 'dashboard.html';
+                                       break;
+                               }
+                           }
+                           
                            window.location.href = redirectTo;
                        }, 1500);
                    } else {
-                       throw new Error('Invalid email or password. Try a demo account or sign up for a new account.');
+                       throw new Error('Invalid email or password.');
                    }
                    
                } catch (error) {
@@ -577,5 +668,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Load class management for global functions -->
+<script src="script.js"></script>
 </body>
 </html>

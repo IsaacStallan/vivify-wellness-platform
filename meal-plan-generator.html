@@ -121,6 +121,15 @@
             border-radius: 5px;
             color: white;
             font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f39c12;
+            box-shadow: 0 0 5px rgba(243, 156, 18, 0.3);
         }
 
         .form-group select {
@@ -141,6 +150,7 @@
             font-size: 1rem;
             min-height: 100px;
             resize: vertical;
+            box-sizing: border-box;
         }
 
         .checkbox-group {
@@ -154,10 +164,12 @@
             display: flex;
             align-items: center;
             color: #ddd;
+            cursor: pointer;
         }
 
         .checkbox-option input[type="checkbox"] {
             margin-right: 0.5rem;
+            cursor: pointer;
         }
 
         .radio-group {
@@ -171,17 +183,27 @@
             display: flex;
             align-items: center;
             color: #ddd;
+            cursor: pointer;
         }
 
         .radio-option input[type="radio"] {
             margin-right: 0.5rem;
+            cursor: pointer;
         }
 
-        .macro-fields {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
+        .form-help {
+            margin-top: 0.5rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .form-help a {
+            color: #f39c12;
+            text-decoration: none;
+        }
+
+        .form-help a:hover {
+            text-decoration: underline;
         }
 
         .btn {
@@ -194,18 +216,26 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             font-size: 1rem;
         }
 
         .btn:hover {
             background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-block {
             display: block;
             width: 100%;
             text-align: center;
+            box-sizing: border-box;
         }
 
         .generate-btn {
@@ -223,10 +253,18 @@
             display: none;
             text-align: center;
             padding: 2rem;
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .loading.active {
             display: block;
+        }
+
+        .loading p {
+            color: #ddd;
+            margin-top: 1rem;
         }
 
         .spinner {
@@ -279,6 +317,12 @@
             text-align: center;
         }
 
+        .nutrition-summary p {
+            color: #ddd;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
         .macro-summary {
             display: flex;
             justify-content: space-between;
@@ -320,6 +364,11 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .day-header:hover {
+            background-color: #444;
         }
 
         .day-header::after {
@@ -344,6 +393,11 @@
             background-color: #333;
             border-radius: 8px;
             padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .meal-card:hover {
+            transform: translateY(-2px);
         }
 
         .meal-card h5 {
@@ -489,6 +543,29 @@
             margin-bottom: 0.8rem;
         }
 
+        .error-message {
+            background-color: #d32f2f;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #2e7d32;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .form-validation-error {
+            border-color: #d32f2f !important;
+            box-shadow: 0 0 5px rgba(211, 47, 47, 0.3) !important;
+        }
+
         .info-card {
             background-color: #222;
             border-radius: 10px;
@@ -541,129 +618,7 @@
             margin-bottom: 0;
         }
 
-        .example-meals {
-            margin-top: 4rem;
-        }
-
-        .example-meals h2 {
-            color: #f39c12;
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .meal-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .meal-category {
-            background-color: #222;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .meal-category h3 {
-            color: #f39c12;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .example-meal {
-            background-color: #333;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .example-meal h4 {
-            color: #f39c12;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #444;
-        }
-
-        .example-meal p {
-            color: #ddd;
-            margin-bottom: 1rem;
-        }
-
-        .example-meal ul {
-            color: #ddd;
-            padding-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .example-meal li {
-            margin-bottom: 0.5rem;
-        }
-
-        .example-meal .macros {
-            display: flex;
-            justify-content: space-between;
-            background-color: #444;
-            padding: 0.5rem 0.8rem;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            color: #ddd;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .faq-section {
-            margin-top: 4rem;
-        }
-
-        .faq-section h2 {
-            color: #f39c12;
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .faq-item {
-            background-color: #222;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            overflow: hidden;
-        }
-
-        .faq-question {
-            padding: 1.5rem;
-            color: #f39c12;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .faq-question:after {
-            content: '\f078';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            transition: transform 0.3s;
-        }
-
-        .faq-question.active:after {
-            transform: rotate(180deg);
-        }
-
-        .faq-answer {
-            padding: 0 1.5rem 1.5rem;
-            color: #ddd;
-            line-height: 1.6;
-            display: none;
-        }
-
-        .faq-answer.active {
-            display: block;
-        }
-
+        /* Responsive improvements */
         @media (max-width: 768px) {
             .generator-hero h1 {
                 font-size: 2.5rem;
@@ -681,10 +636,6 @@
                 width: 100%;
             }
 
-            .macro-fields {
-                grid-template-columns: 1fr;
-            }
-
             .day-meals {
                 grid-template-columns: 1fr;
             }
@@ -692,32 +643,57 @@
             .shopping-categories {
                 grid-template-columns: 1fr;
             }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .macro-summary {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .macro-item {
+                min-width: auto;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .generator-form,
+            .action-buttons,
+            .footer,
+            header,
+            .generator-hero {
+                display: none !important;
+            }
+
+            .meal-plan {
+                display: block !important;
+                background: white !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+
+            .day-header {
+                background-color: #f5f5f5 !important;
+                color: black !important;
+                page-break-after: avoid;
+            }
+
+            .meal-card {
+                background-color: #f9f9f9 !important;
+                color: black !important;
+                page-break-inside: avoid;
+            }
+
+            .shopping-list,
+            .meal-prep-tips {
+                background-color: #f9f9f9 !important;
+                color: black !important;
+            }
         }
     </style>
-
-<!-- PWA Manifest -->
-<link rel="manifest" href="/manifest.json">
-
-<!-- iOS PWA Support -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Wellness Hub">
-<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
-
-<!-- Microsoft Tiles -->
-<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<meta name="msapplication-TileColor" content="#f39c12">
-
-<!-- Theme Color -->
-<meta name="theme-color" content="#f39c12">
-
-<!-- Viewport for PWA -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<!-- Preload PWA installer script -->
-<link rel="preload" href="/pwa-install.js" as="script">
 </head>
 <body>
     <div class="wrapper">
@@ -765,11 +741,11 @@
             <div class="generator-container">
                 <div class="generator-form">
                     <h3>Your Information & Preferences</h3>
-                    <form id="meal-plan-form">
+                    <form id="meal-plan-form" novalidate>
                         <div class="form-group">
                             <label for="calories">Daily Calorie Target</label>
                             <input type="number" id="calories" name="calories" min="1200" max="5000" placeholder="e.g., 2000" required>
-                            <p style="margin-top: 0.5rem; color: #aaa; font-size: 0.9rem;">Not sure? <a href="tdee-calculator.html" style="color: #f39c12;">Calculate your calorie needs</a></p>
+                            <p class="form-help">Not sure? <a href="tdee-calculator.html">Calculate your calorie needs</a></p>
                         </div>
                         
                         <div class="form-group">
@@ -915,8 +891,11 @@
                                 <option value="7" selected>7 days</option>
                             </select>
                         </div>
+
+                        <div class="error-message" id="form-error"></div>
+                        <div class="success-message" id="form-success"></div>
                         
-                        <button type="submit" class="btn btn-block generate-btn">Generate My Meal Plan</button>
+                        <button type="submit" class="btn btn-block generate-btn" id="generate-button">Generate My Meal Plan</button>
                     </form>
                 </div>
                 
@@ -925,6 +904,7 @@
                     <div class="loading" id="loading-spinner">
                         <div class="spinner"></div>
                         <p>Creating your personalized meal plan...</p>
+                        <p style="font-size: 0.9rem; color: #aaa;">This may take a few moments while we optimize your nutrition plan.</p>
                     </div>
                     
                     <!-- Meal Plan Results -->
@@ -933,713 +913,1001 @@
                         
                         <div class="nutrition-summary">
                             <h4>Nutrition Overview</h4>
-                            <p style="text-align: center; color: #ddd;">Based on your goals and preferences, here's your daily nutritional breakdown:</p>
-                            
-                            <div class="macro-summary">
-                                <div class="macro-item">
-                                    <div class="macro-value" id="daily-calories">2,000</div>
-                                    <div class="macro-label">Calories</div>
-                                </div>
-                                <div class="macro-item">
-                                    <div class="macro-value" id="daily-protein">125g</div>
-                                    <div class="macro-label">Protein (25%)</div>
-                                </div>
-                                <div class="macro-item">
-                                    <div class="macro-value" id="daily-carbs">250g</div>
-                                    <div class="macro-label">Carbs (50%)</div>
-                                </div>
-                                <div class="macro-item">
-                                    <div class="macro-value" id="daily-fat">56g</div>
-                                    <div class="macro-label">Fat (25%)</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="daily-meals">
-                            <h4 style="color: #f39c12; margin-bottom: 1rem;">Weekly Meal Schedule</h4>
-                            
-                            <!-- Day 1 -->
-                            <div class="day-header">
-                                Day 1 - Monday
-                            </div>
-                            <div class="day-meals">
-                                <div class="meal-card">
-                                    <h5>Breakfast</h5>
-                                    <ul>
-                                        <li>Protein Oatmeal (1/2 cup oats, 1 scoop protein powder, 1 tbsp peanut butter, 1/2 banana)</li>
-                                        <li>1 cup Greek yogurt with berries</li>
-                                    </ul>
-                                    <div class="meal-macros">
-                                        <div>Calories: <span>480</span></div>
-                                        <div>Protein: <span>35g</span></div>
-                                        <div>Carbs: <span>55g</span></div>
-                                        <div>Fat: <span>15g</span></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="meal-card">
-                                    <h5>Lunch</h5>
-                                    <ul>
-                                        <li>Turkey & Avocado Wrap (2 slices turkey, 1/4 avocado, lettuce, tomato, whole wheat wrap)</li>
-                                        <li>Side salad with olive oil dressing</li>
-                                        <li>1 apple</li>
-                                    </ul>
-                                    <div class="meal-macros">
-                                        <div>Calories: <span>550</span></div>
-                                        <div>Protein: <span>30g</span></div>
-                                        <div>Carbs: <span>60g</span></div>
-                                        <div>Fat: <span>20g</span></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="meal-card">
-                                    <h5>Dinner</h5>
-                                    <ul>
-                                        <li>Baked Salmon (5oz)</li>
-                                        <li>Quinoa (3/4 cup cooked)</li>
-                                        <li>Roasted broccoli & carrots</li>
-                                    </ul>
-                                    <div class="meal-macros">
-                                        <div>Calories: <span>520</span></div>
-                                        <div>Protein: <span>40g</span></div>
-                                        <div>Carbs: <span>45g</span></div>
-                                        <div>Fat: <span>15g</span></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="meal-card">
-                                    <h5>Snack</h5>
-                                    <ul>
-                                        <li>Protein shake (1 scoop protein powder, 1 cup almond milk)</li>
-                                        <li>1 oz mixed nuts</li>
-                                    </ul>
-                                    <div class="meal-macros">
-                                        <div>Calories: <span>330</span></div>
-                                        <div>Protein: <span>25g</span></div>
-                                        <div>Carbs: <span>10g</span></div>
-                                        <div>Fat: <span>20g</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Day 2 -->
-                            <div class="day-header collapsed">
-                                Day 2 - Tuesday
-                            </div>
-                            <div class="day-meals" style="display: none;">
-                                <!-- Day 2 meals would be added here -->
-                            </div>
-                            
-                            <!-- Day 3 -->
-                            <div class="day-header collapsed">
-                                Day 3 - Wednesday
-                            </div>
-                            <div class="day-meals" style="display: none;">
-                                <!-- Day 3 meals would be added here -->
-                            </div>
-                            
-                            <!-- More days would be added dynamically -->
-                        </div>
-                        
-                        <div class="shopping-list">
-                            <h4>Weekly Shopping List</h4>
-                            
-                            <div class="shopping-categories">
-                                <div class="shopping-category">
-                                    <h5>Proteins</h5>
-                                    <ul>
-                                        <li>Greek yogurt (32oz)</li>
-                                        <li>Protein powder (your choice)</li>
-                                        <li>Turkey slices (1 package)</li>
-                                        <li>Chicken breast (2lbs)</li>
-                                        <li>Salmon fillets (1lb)</li>
-                                        <li>Eggs (1 dozen)</li>
-                                        <li>Tofu, extra firm (1 block)</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="shopping-category">
-                                    <h5>Grains & Starches</h5>
-                                    <ul>
-                                        <li>Rolled oats</li>
-                                        <li>Quinoa</li>
-                                        <li>Brown rice</li>
-                                        <li>Whole wheat wraps</li>
-                                        <li>Whole grain bread</li>
-                                        <li>Sweet potatoes (3)</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="shopping-category">
-                                    <h5>Fruits & Vegetables</h5>
-                                    <ul>
-                                        <li>Bananas</li>
-                                        <li>Berries (frozen or fresh)</li>
-                                        <li>Apples</li>
-                                        <li>Avocados (3)</li>
-                                        <li>Lettuce</li>
-                                        <li>Tomatoes</li>
-                                        <li>Broccoli</li>
-                                        <li>Carrots</li>
-                                        <li>Bell peppers</li>
-                                        <li>Spinach</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="shopping-category">
-                                    <h5>Healthy Fats</h5>
-                                    <ul>
-                                        <li>Peanut butter</li>
-                                        <li>Mixed nuts</li>
-                                        <li>Olive oil</li>
-                                        <li>Avocados (listed in produce)</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="shopping-category">
-                                    <h5>Dairy & Alternatives</h5>
-                                    <ul>
-                                        <li>Almond milk (or milk of choice)</li>
-                                        <li>Greek yogurt (listed in proteins)</li>
-                                        <li>Cheese, shredded (4oz)</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="shopping-category">
-                                    <h5>Condiments & Spices</h5>
-                                    <ul>
-                                        <li>Salt & pepper</li>
-                                        <li>Garlic powder</li>
-                                        <li>Italian herbs</li>
-                                        <li>Olive oil</li>
-                                        <li>Lemon juice</li>
-                                        <li>Low-sodium soy sauce</li>
-                                        <li>Hot sauce (optional)</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="meal-prep-tips">
-                            <h4>Meal Prep Strategies</h4>
-                            <p>Based on your preference for batch cooking, here's a recommended prep schedule:</p>
-                            
-                            <ul>
-                                <li><strong>Sunday Prep (2 hours):</strong> Cook rice, quinoa, and roast vegetables. Prepare protein sources like chicken and tofu. Portion into containers for grab-and-go meals.</li>
-                                <li><strong>Wednesday Quick Prep (30 mins):</strong> Refresh some items and cook additional proteins for the second half of the week.</li>
-                                <li><strong>Breakfast Shortcut:</strong> Prepare overnight oats in batches of 3-4 to save morning time.</li>
-                                <li><strong>Salad Hack:</strong> Wash and chop vegetables for salads, but store components separately and assemble just before eating.</li>
-                                <li><strong>Freezer-Friendly Items:</strong> Extra portions of cooked grains and proteins can be frozen for future weeks.</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button class="btn" id="save-meal-plan">
-                                <i class="fas fa-save"></i> Save Plan
-                            </button>
-                            <button class="btn" id="print-meal-plan">
-                                <i class="fas fa-print"></i> Print Plan
-                            </button>
-                            <button class="btn" id="regenerate-plan">
-                                <i class="fas fa-redo"></i> Regenerate
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Information Section -->
-            <div class="info-card">
-                <h3>Student Meal Planning Principles</h3>
-                <p>Effective meal planning for students balances nutrition, convenience, affordability, and academic support. Here are the key principles behind our meal plan generator:</p>
-                
-                <div class="tips-cards">
-                    <div class="tip-card">
-                        <h4><i class="fas fa-brain"></i> Brain-Boosting Nutrition</h4>
-                        <p>Each meal plan incorporates foods known to support cognitive function, including omega-3 fatty acids (fatty fish, walnuts), antioxidants (berries, dark leafy greens), and complex carbohydrates for sustained energy during study sessions. Protein timing and distribution are optimized to support neurotransmitter production.</p>
-                    </div>
-                    
-                    <div class="tip-card">
-                        <h4><i class="fas fa-dollar-sign"></i> Budget Optimization</h4>
-                        <p>Plans utilize cost-effective protein sources (eggs, legumes, chicken), seasonal produce, and staple grains that provide excellent nutritional value per dollar. Meal prep recommendations minimize food waste, and shopping lists are organized to help you maximize your grocery budget and take advantage of bulk purchases.</p>
-                    </div>
-                    
-                    <div class="tip-card">
-                        <h4><i class="fas fa-clock"></i> Time-Efficient Preparation</h4>
-                        <p>Recipes and meal combinations are designed to work with your available cooking time and kitchen equipment. Batch cooking strategies allow you to prepare multiple meals at once, and quick-assembly options are included for busy days before exams or during heavy course loads.</p>
-                    </div>
-                    
-                    <div class="tip-card">
-                        <h4><i class="fas fa-balance-scale"></i> Balanced Macronutrients</h4>
-                        <p>Each meal plan provides appropriate proportions of protein, carbohydrates, and fats based on your goals. Academic performance plans emphasize slow-releasing carbs for sustained energy, while athletic plans may include more protein for recovery and muscle maintenance.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Example Meals Section -->
-        <section class="container example-meals">
-            <h2>Student-Friendly Meal Ideas</h2>
-            
-            <div class="meal-categories">
-                <div class="meal-category">
-                    <h3>Dorm Room Meals</h3>
-                    <p style="color: #ddd; text-align: center; margin-bottom: 1.5rem;">Limited equipment? No problem! These meals require minimal tools and space.</p>
-                    
-                    <div class="example-meal">
-                        <h4>No-Cook Protein Bowl</h4>
-                        <ul>
-                            <li>1 cup Greek yogurt</li>
-                            <li>1 tbsp peanut butter</li>
-                            <li>1 tbsp honey</li>
-                            <li>1/4 cup granola</li>
-                            <li>1/2 cup berries (fresh or frozen)</li>
-                            <li>1 tbsp chia seeds</li>
-                        </ul>
-                        <p><strong>Preparation:</strong> Layer all ingredients in a bowl. If using frozen berries, add them first and let them thaw slightly before adding other ingredients.</p>
-                        <div class="macros">
-                            <div>Calories: 450</div>
-                            <div>Protein: 25g</div>
-                            <div>Carbs: 45g</div>
-                            <div>Fat: 18g</div>
-                        </div>
-                    </div>
-                    
-                    <div class="example-meal">
-                        <h4>Microwave Egg & Veggie Mug</h4>
-                        <ul>
-                            <li>2 eggs</li>
-                            <li>1/4 cup diced bell pepper</li>
-                            <li>2 tbsp shredded cheese</li>
-                            <li>Pinch of salt and pepper</li>
-                            <li>Optional: 1/4 avocado and hot sauce</li>
-                        </ul>
-                        <p><strong>Preparation:</strong> Spray a microwave-safe mug with cooking spray. Add eggs and whisk with a fork. Add vegetables and seasonings. Microwave for 45 seconds, stir, then microwave for another 45 seconds or until eggs are set.</p>
-                        <div class="macros">
-                            <div>Calories: 280</div>
-                            <div>Protein: 19g</div>
-                            <div>Carbs: 5g</div>
-                            <div>Fat: 20g</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="meal-category">
-                    <h3>Quick Grab-and-Go Options</h3>
-                    <p style="color: #ddd; text-align: center; margin-bottom: 1.5rem;">Perfect for busy class days when you need portable nutrition.</p>
-                    
-                    <div class="example-meal">
-                        <h4>Protein-Packed Wrap</h4>
-                        <ul>
-                            <li>1 whole wheat wrap</li>
-                            <li>3oz sliced turkey or chicken</li>
-                            <li>1/4 avocado, mashed</li>
-                            <li>Handful of spinach</li>
-                            <li>1 tbsp hummus</li>
-                            <li>Optional: sliced tomato, mustard</li>
-                        </ul>
-                        <p><strong>Preparation:</strong> Spread hummus and avocado on wrap. Layer remaining ingredients and roll tightly. Wrap in foil for easy transport to class.</p>
-                        <div class="macros">
-                            <div>Calories: 350</div>
-                            <div>Protein: 25g</div>
-                            <div>Carbs: 30g</div>
-                            <div>Fat: 15g</div>
-                        </div>
-                    </div>
-                    
-                    <div class="example-meal">
-                        <h4>Mason Jar Salad</h4>
-                        <ul>
-                            <li>2 tbsp dressing (olive oil + vinegar)</li>
-                            <li>1/4 cup chickpeas</li>
-                            <li>1/4 cup diced bell peppers</li>
-                            <li>1/4 cup cherry tomatoes</li>
-                            <li>2oz diced chicken or tofu</li>
-                            <li>1 cup leafy greens</li>
-                            <li>1 tbsp sunflower seeds</li>
-                        </ul>
-                        <p><strong>Preparation:</strong> Layer ingredients in a mason jar starting with dressing at bottom, then hard vegetables, protein, and greens on top. Keeps fresh for 2-3 days in refrigerator.</p>
-                        <div class="macros">
-                            <div>Calories: 320</div>
-                            <div>Protein: 20g</div>
-                            <div>Carbs: 15g</div>
-                            <div>Fat: 18g</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="meal-category">
-                    <h3>Batch-Cooking Champions</h3>
-                    <p style="color: #ddd; text-align: center; margin-bottom: 1.5rem;">Prep once, eat multiple times with these meal-prep friendly recipes.</p>
-                    
-                    <div class="example-meal">
-                        <h4>Sheet Pan Chicken & Vegetables</h4>
-                        <ul>
-                            <li>4oz chicken breast</li>
-                            <li>1 cup mixed vegetables (broccoli, bell pepper, onion)</li>
-                            <li>1 small sweet potato, diced</li>
-                            <li>1 tbsp olive oil</li>
-                            <li>Italian herbs, garlic powder, salt & pepper</li>
-                        </ul>
-                        <p><strong>Preparation:</strong> Toss ingredients with oil and seasonings. Spread on sheet pan and bake at 400°F for 20-25 minutes. Makes 4 servings when prepared with 1lb chicken and 4 cups vegetables.</p>
-                        <div class="macros">
-                            <div>Calories: 310</div>
-                            <div>Protein: 28g</div>
-                            <div>Carbs: 20g</div>
-                            <div>Fat: 12g</div>
-                        </div>
-                    </div>
-                    
-                    <div class="example-meal">
-                        <h4>Meal Prep Burrito Bowls</h4>
-                        <ul>
-                            <li>1/2 cup cooked brown rice</li>
-                            <li>1/2 cup black beans</li>
-                            <li>3oz ground turkey (seasoned)</li>
-                            <li>1/4 cup corn</li>
-                            <li>2 tbsp salsa</li>
-                            <li>1/4 avocado</li>
-                            <li>Lime juice, cilantro, and spices</li>
-                        </ul>
-                        <p><strong>Preparation:</strong> Cook rice according to package. Brown turkey with taco seasoning. Assemble bowls with rice, beans, meat, and toppings. Store avocado separately and add just before eating. Makes 4 servings when prepared with 2 cups rice and 12oz turkey.</p>
-                        <div class="macros">
-                            <div>Calories: 380</div>
-                            <div>Protein: 25g</div>
-                            <div>Carbs: 40g</div>
-                            <div>Fat: 12g</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- FAQ Section -->
-        <section class="container faq-section">
-            <h2>Frequently Asked Questions</h2>
-            
-            <div class="faq-item">
-                <div class="faq-question">How do I adapt my meal plan for dining hall eating?</div>
-                <div class="faq-answer">
-                    <p>To use your meal plan in a college dining hall:</p>
-                    <ul>
-                        <li><strong>Look for equivalent options:</strong> Use your meal plan as a guide for proportions and food groups rather than exact recipes.</li>
-                        <li><strong>Build a balanced plate:</strong> Fill half your plate with vegetables, a quarter with protein (chicken, fish, beans), and a quarter with complex carbs (brown rice, quinoa).</li>
-                        <li><strong>Watch portion sizes:</strong> Use the dining hall's portioning tools or estimate using your hand (palm = protein portion, fist = carb portion).</li>
-                        <li><strong>Plan ahead:</strong> Look at the dining hall menu online before going to identify the healthiest options available.</li>
-                        <li><strong>Customize stations:</strong> Use the salad bar, sandwich station, or custom stir-fry options to create meals that align with your meal plan.</li>
-                    </ul>
-                    <p>Consider using your meal plan fully for meals you prepare yourself, while using these guidelines for dining hall meals.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">How should I adjust my meal timing around classes and studying?</div>
-                <div class="faq-answer">
-                    <p>Strategic meal timing can support academic performance:</p>
-                    <ul>
-                        <li><strong>Before morning classes:</strong> Include protein and complex carbs (like oatmeal with protein powder) for sustained energy and focus.</li>
-                        <li><strong>Between classes:</strong> Keep portable snacks in your backpack that combine protein and carbs (Greek yogurt, fruit with nut butter, protein bars).</li>
-                        <li><strong>Before exams:</strong> Eat a balanced meal 1-2 hours prior, focusing on steady energy sources rather than sugary or heavy foods that might cause energy crashes.</li>
-                        <li><strong>During study sessions:</strong> Plan study breaks to coincide with meals or snacks, as this can improve information retention.</li>
-                        <li><strong>Late-night studying:</strong> Opt for lighter, easily digestible options that won't disrupt sleep if studying late (protein shake, toast with nut butter, yogurt with berries).</li>
-                    </ul>
-                    <p>If you know you have a particularly challenging class day, prepare grab-and-go options in advance so nutrition doesn't suffer due to time constraints.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">Can I adapt this meal plan for a tight student budget?</div>
-                <div class="faq-answer">
-                    <p>Absolutely! Here are strategies to make your meal plan more budget-friendly:</p>
-                    <ul>
-                        <li><strong>Protein sources:</strong> Emphasize eggs, canned tuna, chicken thighs (vs. breasts), beans, and lentils, which offer protein at lower cost.</li>
-                        <li><strong>Buy in bulk:</strong> Purchase staples like rice, oats, and dried beans in bulk quantities for significant savings.</li>
-                        <li><strong>Frozen over fresh:</strong> Frozen fruits and vegetables are often cheaper, last longer, and retain similar nutritional value to fresh options.</li>
-                        <li><strong>Seasonal produce:</strong> Buy fruits and vegetables that are in season, which typically cost less.</li>
-                        <li><strong>Store brands:</strong> Opt for generic or store brands for pantry staples like pasta, canned goods, and frozen vegetables.</li>
-                        <li><strong>Reduce food waste:</strong> Follow the meal prep schedule carefully to ensure you use ingredients before they spoil.</li>
-                        <li><strong>Batch cooking:</strong> Prepare larger quantities of meals that freeze well to take advantage of bulk pricing.</li>
-                    </ul>
-                    <p>You can use the "regenerate" option and select "tight budget" to receive a more cost-conscious version of your meal plan.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">How do I adjust my meal plan during exam periods?</div>
-                <div class="faq-answer">
-                    <p>During exam periods, prioritize both convenience and brain-supporting nutrition:</p>
-                    <ul>
-                        <li><strong>Increase meal prep:</strong> Prepare more grab-and-go meals in advance to minimize cooking time during intense study periods.</li>
-                        <li><strong>Prioritize brain foods:</strong> Emphasize omega-3 fatty acids (fatty fish, walnuts), antioxidants (berries, dark chocolate), and sources of choline (eggs) that support cognitive function.</li>
-                        <li><strong>Consider carb timing:</strong> Include more complex carbs during long study sessions for sustained energy and focus.</li>
-                        <li><strong>Stay hydrated:</strong> Dehydration can impair cognitive performance, so keep water accessible during study sessions.</li>
-                        <li><strong>Plan smaller, more frequent meals:</strong> This can help maintain steady energy levels without the drowsiness that can follow larger meals.</li>
-                        <li><strong>Strategic caffeine:</strong> If you use caffeine, time it for optimal effectiveness rather than constant consumption (typically early morning and early afternoon).</li>
-                    </ul>
-                    <p>Remember that while nutrition is important during exam periods, perfect adherence to your meal plan should not become an additional stressor. Simplify where needed while maintaining nutritional quality.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">What if I don't have time to prepare all these meals?</div>
-                <div class="faq-answer">
-                    <p>If time is severely limited, adapt your meal plan with these strategies:</p>
-                    <ul>
-                        <li><strong>Focus on one major prep session:</strong> Dedicate 2-3 hours once per week (perhaps Sunday) to prepare most of your meals in advance.</li>
-                        <li><strong>Utilize pre-prepped ingredients:</strong> Pre-washed greens, pre-cut vegetables, canned beans (rinsed), and rotisserie chicken can save significant time.</li>
-                        <li><strong>Embrace "assembly meals":</strong> Keep ingredients that don't require cooking (wraps, canned tuna, hummus, pre-cooked grains) for quickly assembled meals.</li>
-                        <li><strong>Simplify recipes:</strong> Use the "regenerate" option with "minimal" cooking time to get simplified versions of recipes.</li>
-                        <li><strong>Batch cook and freeze:</strong> Prepare larger portions of meals that freeze well, so you can defrost as needed.</li>
-                        <li><strong>Supermarket shortcuts:</strong> Utilize pre-cooked proteins, steam-in-bag vegetables, and quick-cook grains to reduce prep time.</li>
-                    </ul>
-                    <p>Even implementing parts of the meal plan is valuable. Consider identifying which meals are most important for you to prepare (perhaps breakfast for focus in morning classes) and focus your time there.</p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Footer -->
-        <footer>
-            <p>&copy; 2024 Vivify. All rights reserved.</p>
-            <ul class="footer-links">
-                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
-                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
-                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
-            </ul>
-        </footer>
-    </div>
+                           <p>Based on your goals and preferences, here's your daily nutritional breakdown:</p>
+                           
+                           <div class="macro-summary">
+                               <div class="macro-item">
+                                   <div class="macro-value" id="daily-calories">2,000</div>
+                                   <div class="macro-label">Calories</div>
+                               </div>
+                               <div class="macro-item">
+                                   <div class="macro-value" id="daily-protein">125g</div>
+                                   <div class="macro-label">Protein (<span id="protein-percent">25</span>%)</div>
+                               </div>
+                               <div class="macro-item">
+                                   <div class="macro-value" id="daily-carbs">250g</div>
+                                   <div class="macro-label">Carbs (<span id="carb-percent">50</span>%)</div>
+                               </div>
+                               <div class="macro-item">
+                                   <div class="macro-value" id="daily-fat">56g</div>
+                                   <div class="macro-label">Fat (<span id="fat-percent">25</span>%)</div>
+                               </div>
+                           </div>
+                       </div>
+                       
+                       <div class="daily-meals">
+                           <h4 style="color: #f39c12; margin-bottom: 1rem;">Weekly Meal Schedule</h4>
+                           <div id="generated-days-container"></div>
+                       </div>
+                       
+                       <div class="shopping-list">
+                           <h4>Weekly Shopping List</h4>
+                           <div id="shopping-categories-container"></div>
+                       </div>
+                       
+                       <div class="meal-prep-tips">
+                           <h4>Meal Prep Strategies</h4>
+                           <p id="prep-strategy-text">Based on your preferences, here's a recommended prep schedule:</p>
+                           <ul id="prep-tips-list"></ul>
+                       </div>
+                       
+                       <div class="action-buttons">
+                           <button class="btn" id="save-meal-plan">
+                               <i class="fas fa-save"></i> Save Plan
+                           </button>
+                           <button class="btn" id="print-meal-plan">
+                               <i class="fas fa-print"></i> Print Plan
+                           </button>
+                           <button class="btn" id="regenerate-plan">
+                               <i class="fas fa-redo"></i> Regenerate
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           
+           <!-- Information Section -->
+           <div class="info-card">
+               <h3>Student Meal Planning Principles</h3>
+               <p>Effective meal planning for students balances nutrition, convenience, affordability, and academic support. Here are the key principles behind our meal plan generator:</p>
+               
+               <div class="tips-cards">
+                   <div class="tip-card">
+                       <h4><i class="fas fa-brain"></i> Brain-Boosting Nutrition</h4>
+                       <p>Each meal plan incorporates foods known to support cognitive function, including omega-3 fatty acids (fatty fish, walnuts), antioxidants (berries, dark leafy greens), and complex carbohydrates for sustained energy during study sessions. Protein timing and distribution are optimized to support neurotransmitter production.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4><i class="fas fa-dollar-sign"></i> Budget Optimization</h4>
+                       <p>Plans utilize cost-effective protein sources (eggs, legumes, chicken), seasonal produce, and staple grains that provide excellent nutritional value per dollar. Meal prep recommendations minimize food waste, and shopping lists are organized to help you maximize your grocery budget and take advantage of bulk purchases.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4><i class="fas fa-clock"></i> Time-Efficient Preparation</h4>
+                       <p>Recipes and meal combinations are designed to work with your available cooking time and kitchen equipment. Batch cooking strategies allow you to prepare multiple meals at once, and quick-assembly options are included for busy days before exams or during heavy course loads.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4><i class="fas fa-balance-scale"></i> Balanced Macronutrients</h4>
+                       <p>Each meal plan provides appropriate proportions of protein, carbohydrates, and fats based on your goals. Academic performance plans emphasize slow-releasing carbs for sustained energy, while athletic plans may include more protein for recovery and muscle maintenance.</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+       
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2025 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in
-            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-            
-            // Update UI based on login status
-            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
-            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
-            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
-            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
-            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
-            
-            // Handle logout
-            document.getElementById('logoutLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('userLoggedIn');
-                window.location.href = 'index.html';
-            });
-            
-            // Form submission for meal plan generation
-            const mealPlanForm = document.getElementById('meal-plan-form');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const mealPlanResults = document.getElementById('meal-plan-results');
-            
-            mealPlanForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Show loading spinner
-                loadingSpinner.classList.add('active');
-                mealPlanResults.style.display = 'none';
-                
-                // Simulate calculation/generation delay
-                setTimeout(function() {
-                    generateMealPlan();
-                    
-                    // Hide loading spinner and show results
-                    loadingSpinner.classList.remove('active');
-                    mealPlanResults.style.display = 'block';
-                    
-                    // Scroll to results
-                    mealPlanResults.scrollIntoView({ behavior: 'smooth' });
-                }, 2000);
-            });
-            
-            // Day header toggle functionality
-            document.addEventListener('click', function(e) {
-                if(e.target.matches('.day-header') || e.target.closest('.day-header')) {
-                    const header = e.target.matches('.day-header') ? e.target : e.target.closest('.day-header');
-                    header.classList.toggle('collapsed');
-                    
-                    const mealSection = header.nextElementSibling;
-                    if(mealSection.style.display === 'none' || !mealSection.style.display) {
-                        mealSection.style.display = 'grid';
-                    } else {
-                        mealSection.style.display = 'none';
-                    }
-                }
-            });
-            
-            // Function to generate meal plan based on form inputs
-            function generateMealPlan() {
-                // Get main form values
-                const calories = parseInt(document.getElementById('calories').value);
-                const goal = document.getElementById('goal').value;
-                const dietType = document.getElementById('diet-type').value;
-                const mealsPerDay = parseInt(document.getElementById('meals-per-day').value);
-                
-                // Update nutrition summary
-                document.getElementById('daily-calories').textContent = calories.toLocaleString();
-                
-                // Calculate macros based on goal
-                let proteinPct, carbPct, fatPct;
-                
-                switch(goal) {
-                    case 'muscle-gain':
-                        proteinPct = 0.30; // 30%
-                        carbPct = 0.45; // 45%
-                        fatPct = 0.25; // 25%
-                        break;
-                    case 'fat-loss':
-                        proteinPct = 0.35; // 35%
-                        carbPct = 0.40; // 40%
-                        fatPct = 0.25; // 25%
-                        break;
-                    case 'performance':
-                        proteinPct = 0.25; // 25%
-                        carbPct = 0.55; // 55%
-                        fatPct = 0.20; // 20%
-                        break;
-                    case 'academic':
-                        proteinPct = 0.20; // 20%
-                        carbPct = 0.55; // 55%
-                        fatPct = 0.25; // 25%
-                        break;
-                    default: // maintenance/balanced
-                        proteinPct = 0.25; // 25%
-                        carbPct = 0.50; // 50%
-                        fatPct = 0.25; // 25%
-                }
-                
-                // Adjust macros based on diet type
-                if(dietType === 'keto') {
-                    proteinPct = 0.30; // 30%
-                    carbPct = 0.10; // 10%
-                    fatPct = 0.60; // 60%
-                } else if(dietType === 'high-protein') {
-                    proteinPct = Math.min(proteinPct + 0.05, 0.40);
-                    carbPct = 1 - proteinPct - fatPct;
-                } else if(dietType === 'vegan' || dietType === 'vegetarian') {
-                    // Slightly adjust plant-based diets for protein sources
-                    proteinPct = Math.max(proteinPct - 0.05, 0.15);
-                    carbPct = carbPct + 0.05;
-                }
-                
-                // Calculate macros in grams
-                // Protein and carbs = 4 calories per gram, Fat = 9 calories per gram
-                const proteinGrams = Math.round((calories * proteinPct) / 4);
-                const carbGrams = Math.round((calories * carbPct) / 4);
-                const fatGrams = Math.round((calories * fatPct) / 9);
-                
-                // Update UI with calculated macros
-                document.getElementById('daily-protein').textContent = proteinGrams + 'g';
-                document.getElementById('daily-carbs').textContent = carbGrams + 'g';
-                document.getElementById('daily-fat').textContent = fatGrams + 'g';
-                
-                // In a real application, this would generate a complete meal plan based on all form inputs
-                // For now, we're showing a static example meal plan
-                
-                // Update days to display based on form selection
-                const days = parseInt(document.getElementById('days').value);
-                // A real implementation would dynamically generate meal plans for each selected day
-            }
-            
-            // Handle action buttons
-            document.getElementById('save-meal-plan').addEventListener('click', function() {
-                // In a real app, this would save to user's profile
-                alert('Meal plan saved to your profile! You can access it from your dashboard.');
-            });
-            
-            document.getElementById('print-meal-plan').addEventListener('click', function() {
-                window.print();
-            });
-            
-            document.getElementById('regenerate-plan').addEventListener('click', function() {
-                mealPlanResults.style.display = 'none';
-                loadingSpinner.classList.add('active');
-                
-                // Simulate regeneration delay
-                setTimeout(function() {
-                    generateMealPlan();
-                    
-                    // Hide loading spinner and show results
-                    loadingSpinner.classList.remove('active');
-                    mealPlanResults.style.display = 'block';
-                }, 1500);
-            });
-            
-            // FAQ Toggle functionality
-            const faqQuestions = document.querySelectorAll('.faq-question');
-            
-            faqQuestions.forEach(question => {
-                question.addEventListener('click', function() {
-                    // Toggle active class on question
-                    this.classList.toggle('active');
-                    
-                    // Toggle display of answer
-                    const answer = this.nextElementSibling;
-                    if (answer.classList.contains('active')) {
-                        answer.classList.remove('active');
-                    } else {
-                        // Close other answers first
-                        document.querySelectorAll('.faq-answer').forEach(a => {
-                            a.classList.remove('active');
-                        });
-                        answer.classList.add('active');
-                    }
-                });
-            });
-        });
-    </script>
+   <script>
+       // Comprehensive meal database organized by dietary preferences
+       const MEAL_DATABASE = {
+           breakfasts: {
+               balanced: [
+                   {
+                       name: "Protein Oatmeal Bowl",
+                       items: ["1/2 cup oats", "1 scoop protein powder", "1 tbsp almond butter", "1/2 banana", "berries"],
+                       calories: 480, protein: 35, carbs: 55, fat: 15
+                   },
+                   {
+                       name: "Avocado Toast with Eggs",
+                       items: ["2 slices whole grain bread", "1 avocado", "2 scrambled eggs", "cherry tomatoes"],
+                       calories: 520, protein: 22, carbs: 45, fat: 28
+                   },
+                   {
+                       name: "Greek Yogurt Parfait",
+                       items: ["1 cup Greek yogurt", "1/4 cup granola", "mixed berries", "1 tbsp honey", "chia seeds"],
+                       calories: 380, protein: 25, carbs: 42, fat: 12
+                   },
+                   {
+                       name: "Breakfast Burrito",
+                       items: ["whole wheat tortilla", "2 scrambled eggs", "black beans", "cheese", "salsa", "spinach"],
+                       calories: 450, protein: 28, carbs: 38, fat: 20
+                   },
+                   {
+                       name: "Smoothie Bowl",
+                       items: ["protein powder", "frozen berries", "banana", "almond milk", "granola topping"],
+                       calories: 420, protein: 30, carbs: 48, fat: 14
+                   }
+               ],
+               vegetarian: [
+                   {
+                       name: "Veggie Scramble",
+                       items: ["2 eggs", "spinach", "mushrooms", "bell peppers", "cheese", "whole grain toast"],
+                       calories: 420, protein: 24, carbs: 28, fat: 22
+                   },
+                   {
+                       name: "Overnight Oats",
+                       items: ["oats", "chia seeds", "almond milk", "maple syrup", "berries", "nuts"],
+                       calories: 380, protein: 12, carbs: 58, fat: 15
+                   },
+                   {
+                       name: "Peanut Butter Toast",
+                       items: ["2 slices whole grain bread", "2 tbsp peanut butter", "sliced banana", "hemp seeds"],
+                       calories: 440, protein: 18, carbs: 52, fat: 20
+                   }
+               ],
+               vegan: [
+                   {
+                       name: "Tofu Scramble",
+                       items: ["firm tofu", "nutritional yeast", "spinach", "mushrooms", "turmeric", "whole grain toast"],
+                       calories: 380, protein: 22, carbs: 32, fat: 18
+                   },
+                   {
+                       name: "Chia Pudding",
+                       items: ["chia seeds", "coconut milk", "maple syrup", "berries", "granola"],
+                       calories: 360, protein: 8, carbs: 45, fat: 18
+                   },
+                   {
+                       name: "Quinoa Breakfast Bowl",
+                       items: ["cooked quinoa", "almond milk", "berries", "nuts", "coconut flakes"],
+                       calories: 400, protein: 12, carbs: 58, fat: 16
+                   }
+               ],
+               keto: [
+                   {
+                       name: "Keto Eggs Benedict",
+                       items: ["2 eggs", "avocado", "bacon", "hollandaise sauce", "spinach"],
+                       calories: 520, protein: 25, carbs: 8, fat: 45
+                   },
+                   {
+                       name: "Bulletproof Coffee & Eggs",
+                       items: ["coffee with MCT oil", "2 scrambled eggs", "cheese", "spinach"],
+                       calories: 480, protein: 20, carbs: 5, fat: 42
+                   }
+               ]
+           },
+           lunches: {
+               balanced: [
+                   {
+                       name: "Turkey Avocado Wrap",
+                       items: ["whole wheat wrap", "sliced turkey", "avocado", "lettuce", "tomato", "hummus"],
+                       calories: 520, protein: 28, carbs: 45, fat: 22
+                   },
+                   {
+                       name: "Quinoa Buddha Bowl",
+                       items: ["quinoa", "chickpeas", "roasted vegetables", "tahini dressing", "pumpkin seeds"],
+                       calories: 480, protein: 18, carbs: 65, fat: 18
+                   },
+                   {
+                       name: "Chicken Caesar Salad",
+                       items: ["grilled chicken", "romaine lettuce", "parmesan", "whole grain croutons", "caesar dressing"],
+                       calories: 450, protein: 35, carbs: 25, fat: 24
+                   },
+                   {
+                       name: "Tuna Pasta Salad",
+                       items: ["whole grain pasta", "tuna", "vegetables", "olive oil dressing", "herbs"],
+                       calories: 490, protein: 32, carbs: 52, fat: 16
+                   },
+                   {
+                       name: "Mexican Bowl",
+                       items: ["brown rice", "black beans", "grilled chicken", "corn", "salsa", "avocado"],
+                       calories: 510, protein: 30, carbs: 55, fat: 18
+                   }
+               ],
+               vegetarian: [
+                   {
+                       name: "Caprese Sandwich",
+                       items: ["whole grain bread", "mozzarella", "tomato", "basil", "balsamic glaze"],
+                       calories: 420, protein: 20, carbs: 45, fat: 18
+                   },
+                   {
+                       name: "Lentil Soup & Bread",
+                       items: ["lentil soup", "whole grain roll", "side salad", "olive oil"],
+                       calories: 460, protein: 22, carbs: 68, fat: 12
+                   },
+                   {
+                       name: "Veggie Quesadilla",
+                       items: ["whole wheat tortilla", "cheese", "bell peppers", "onions", "black beans"],
+                       calories: 480, protein: 24, carbs: 52, fat: 20
+                   }
+               ],
+               vegan: [
+                   {
+                       name: "Hummus Veggie Wrap",
+                       items: ["whole wheat wrap", "hummus", "cucumber", "sprouts", "bell peppers", "avocado"],
+                       calories: 420, protein: 15, carbs: 58, fat: 16
+                   },
+                   {
+                       name: "Tempeh Stir-fry",
+                       items: ["brown rice", "tempeh", "mixed vegetables", "soy sauce", "sesame oil"],
+                       calories: 450, protein: 20, carbs: 55, fat: 18
+                   }
+               ],
+               keto: [
+                   {
+                       name: "Cobb Salad",
+                       items: ["mixed greens", "chicken", "bacon", "eggs", "blue cheese", "avocado"],
+                       calories: 520, protein: 32, carbs: 8, fat: 42
+                   },
+                   {
+                       name: "Zucchini Lasagna",
+                       items: ["zucchini noodles", "ground beef", "ricotta", "mozzarella", "tomato sauce"],
+                       calories: 480, protein: 35, carbs: 12, fat: 35
+                   }
+               ]
+           },
+           dinners: {
+               balanced: [
+                   {
+                       name: "Baked Salmon with Quinoa",
+                       items: ["salmon fillet", "quinoa", "roasted broccoli", "lemon", "olive oil"],
+                       calories: 520, protein: 40, carbs: 45, fat: 15
+                   },
+                   {
+                       name: "Chicken Stir-fry",
+                       items: ["chicken breast", "brown rice", "mixed vegetables", "soy sauce", "ginger"],
+                       calories: 480, protein: 38, carbs: 52, fat: 12
+                   },
+                   {
+                       name: "Lean Beef & Sweet Potato",
+                       items: ["lean ground beef", "baked sweet potato", "green beans", "herbs"],
+                       calories: 510, protein: 35, carbs: 48, fat: 16
+                   },
+                   {
+                       name: "Turkey Meatballs & Pasta",
+                       items: ["turkey meatballs", "whole grain pasta", "marinara sauce", "side salad"],
+                       calories: 490, protein: 32, carbs: 58, fat: 14
+                   },
+                   {
+                       name: "Grilled Chicken & Vegetables",
+                       items: ["grilled chicken", "roasted vegetables", "quinoa", "herbs", "olive oil"],
+                       calories: 460, protein: 42, carbs: 35, fat: 16
+                   }
+               ],
+               vegetarian: [
+                   {
+                       name: "Eggplant Parmesan",
+                       items: ["baked eggplant", "marinara sauce", "mozzarella", "whole grain pasta"],
+                       calories: 480, protein: 22, carbs: 62, fat: 16
+                   },
+                   {
+                       name: "Vegetable Curry",
+                       items: ["mixed vegetables", "coconut milk", "chickpeas", "brown rice", "spices"],
+                       calories: 450, protein: 18, carbs: 68, fat: 14
+                   },
+                   {
+                       name: "Stuffed Bell Peppers",
+                       items: ["bell peppers", "quinoa", "black beans", "cheese", "vegetables"],
+                       calories: 420, protein: 20, carbs: 55, fat: 12
+                   }
+               ],
+               vegan: [
+                   {
+                       name: "Lentil Bolognese",
+                       items: ["lentils", "whole grain pasta", "marinara sauce", "vegetables", "nutritional yeast"],
+                       calories: 440, protein: 22, carbs: 72, fat: 8
+                   },
+                   {
+                       name: "Buddha Bowl",
+                       items: ["quinoa", "roasted vegetables", "chickpeas", "tahini dressing", "seeds"],
+                       calories: 460, protein: 18, carbs: 65, fat: 16
+                   }
+               ],
+               keto: [
+                   {
+                       name: "Keto Salmon & Asparagus",
+                       items: ["salmon", "asparagus", "avocado", "olive oil", "lemon"],
+                       calories: 520, protein: 38, carbs: 8, fat: 38
+                   },
+                   {
+                       name: "Cauliflower Casserole",
+                       items: ["cauliflower", "ground beef", "cheese", "cream", "herbs"],
+                       calories: 480, protein: 32, carbs: 10, fat: 36
+                   }
+               ]
+           },
+           snacks: {
+               balanced: [
+                   {
+                       name: "Apple with Almond Butter",
+                       items: ["medium apple", "2 tbsp almond butter"],
+                       calories: 290, protein: 8, carbs: 25, fat: 18
+                   },
+                   {
+                       name: "Greek Yogurt & Berries",
+                       items: ["Greek yogurt", "mixed berries", "granola"],
+                       calories: 250, protein: 15, carbs: 32, fat: 8
+                   },
+                   {
+                       name: "Protein Shake",
+                       items: ["protein powder", "almond milk", "banana"],
+                       calories: 280, protein: 25, carbs: 28, fat: 6
+                   },
+                   {
+                       name: "Trail Mix",
+                       items: ["mixed nuts", "dried fruit", "dark chocolate chips"],
+                       calories: 320, protein: 8, carbs: 24, fat: 22
+                   }
+               ],
+               vegetarian: [
+                   {
+                       name: "Hummus & Veggies",
+                       items: ["hummus", "carrot sticks", "cucumber", "bell peppers"],
+                       calories: 180, protein: 8, carbs: 22, fat: 8
+                   },
+                   {
+                       name: "Cheese & Crackers",
+                       items: ["whole grain crackers", "cheese", "grapes"],
+                       calories: 260, protein: 12, carbs: 28, fat: 12
+                   }
+               ],
+               vegan: [
+                   {
+                       name: "Energy Balls",
+                       items: ["dates", "nuts", "coconut", "chia seeds"],
+                       calories: 240, protein: 6, carbs: 28, fat: 14
+                   },
+                   {
+                       name: "Avocado Toast",
+                       items: ["whole grain toast", "avocado", "hemp seeds"],
+                       calories: 280, protein: 8, carbs: 22, fat: 18
+                   }
+               ],
+               keto: [
+                   {
+                       name: "Keto Fat Bombs",
+                       items: ["coconut oil", "nuts", "cocoa powder"],
+                       calories: 320, protein: 4, carbs: 6, fat: 32
+                   },
+                   {
+                       name: "Cheese & Olives",
+                       items: ["cheese cubes", "olives", "cucumber"],
+                       calories: 280, protein: 12, carbs: 6, fat: 24
+                   }
+               ]
+           }
+       };
 
-<!-- PWA Scripts -->
-<script src="/pwa-install.js"></script>
+       // Function to filter meals based on allergies and dislikes
+       function filterMeals(meals, allergies, dislikes) {
+           return meals.filter(meal => {
+               // Check allergies
+               for (let allergy of allergies) {
+                   if (meal.items.some(item => item.toLowerCase().includes(allergy.toLowerCase()))) {
+                       return false;
+                   }
+               }
+               
+               // Check dislikes
+               for (let dislike of dislikes) {
+                   if (meal.items.some(item => item.toLowerCase().includes(dislike.toLowerCase()))) {
+                       return false;
+                   }
+               }
+               
+               return true;
+           });
+       }
 
-<script>
-// Additional PWA features for each page
-document.addEventListener('DOMContentLoaded', function() {
-    // Add PWA-specific styles
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        document.body.classList.add('pwa-mode');
-        
-        // Hide address bar on mobile when in PWA mode
-        window.scrollTo(0, 1);
-    }
-    
-    // Handle network status
-    function updateOnlineStatus() {
-        const statusElement = document.getElementById('network-status');
-        if (statusElement) {
-            if (navigator.onLine) {
-                statusElement.textContent = 'Online';
-                statusElement.className = 'online';
-            } else {
-                statusElement.textContent = 'Offline';
-                statusElement.className = 'offline';
-            }
-        }
-    }
-    
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    updateOnlineStatus();
-    
-    // Add network status indicator if it doesn't exist
-    if (!document.getElementById('network-status')) {
-        const statusDiv = document.createElement('div');
-        statusDiv.id = 'network-status';
-        statusDiv.style.cssText = `
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        `;
-        document.body.appendChild(statusDiv);
-        updateOnlineStatus();
-    }
-});
-</script>
-</body>
+       // Function to get random meals with variation
+       function getRandomMeals(mealArray, count) {
+           const shuffled = [...mealArray].sort(() => 0.5 - Math.random());
+           return shuffled.slice(0, count);
+       }
+
+       // FIXED: Function to generate shopping list based on selected meals
+       function generateShoppingList(selectedMeals) {
+           const ingredients = {};
+           
+           selectedMeals.forEach(dayMeals => {
+               // Handle the case where dayMeals is an object with meal types as keys
+               Object.values(dayMeals).forEach(meal => {
+                   if (meal && meal.items) {
+                       meal.items.forEach(item => {
+                           const cleanItem = item.replace(/\d+\s*(cup|tbsp|tsp|oz|slice|medium|large|small)\s*/g, '').trim();
+                           if (cleanItem) {
+                               ingredients[cleanItem] = (ingredients[cleanItem] || 0) + 1;
+                           }
+                       });
+                   }
+               });
+           });
+
+           return {
+               proteins: Object.keys(ingredients).filter(item => 
+                   ['chicken', 'turkey', 'salmon', 'tuna', 'eggs', 'tofu', 'tempeh', 'lentils', 'chickpeas', 'beans', 'protein powder', 'greek yogurt', 'cheese'].some(protein => 
+                       item.toLowerCase().includes(protein)
+                   )
+               ),
+               grains: Object.keys(ingredients).filter(item => 
+                   ['oats', 'quinoa', 'rice', 'bread', 'pasta', 'tortilla', 'crackers'].some(grain => 
+                       item.toLowerCase().includes(grain)
+                   )
+               ),
+               produce: Object.keys(ingredients).filter(item => 
+                   ['banana', 'berries', 'apple', 'avocado', 'spinach', 'lettuce', 'tomato', 'broccoli', 'carrots', 'bell peppers', 'cucumber', 'onions', 'mushrooms'].some(produce => 
+                       item.toLowerCase().includes(produce)
+                   )
+               ),
+               pantry: Object.keys(ingredients).filter(item => 
+                   ['almond butter', 'olive oil', 'nuts', 'seeds', 'spices', 'herbs', 'soy sauce', 'coconut oil'].some(pantry => 
+                       item.toLowerCase().includes(pantry)
+                   )
+               )
+           };
+       }
+
+       document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           // Update UI based on login status
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           // Handle logout
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               window.location.href = 'index.html';
+           });
+           
+           // Form elements
+           const mealPlanForm = document.getElementById('meal-plan-form');
+           const loadingSpinner = document.getElementById('loading-spinner');
+           const mealPlanResults = document.getElementById('meal-plan-results');
+           const generateButton = document.getElementById('generate-button');
+           const errorMessage = document.getElementById('form-error');
+           const successMessage = document.getElementById('form-success');
+           
+           // Form validation function
+           function validateForm() {
+               let isValid = true;
+               const requiredFields = ['calories', 'goal', 'diet-type', 'meals-per-day', 'time-to-cook', 'budget', 'days'];
+               
+               // Clear previous validation styles
+               document.querySelectorAll('.form-validation-error').forEach(el => {
+                   el.classList.remove('form-validation-error');
+               });
+               
+               // Validate required fields
+               requiredFields.forEach(fieldId => {
+                   const field = document.getElementById(fieldId);
+                   if (!field.value.trim()) {
+                       field.classList.add('form-validation-error');
+                       isValid = false;
+                   }
+               });
+               
+               // Validate calorie range
+               const calories = parseInt(document.getElementById('calories').value);
+               if (calories && (calories < 1200 || calories > 5000)) {
+                   document.getElementById('calories').classList.add('form-validation-error');
+                   isValid = false;
+               }
+               
+               return isValid;
+           }
+           
+           // Show error message
+           function showError(message) {
+               errorMessage.textContent = message;
+               errorMessage.style.display = 'block';
+               successMessage.style.display = 'none';
+               setTimeout(() => {
+                   errorMessage.style.display = 'none';
+               }, 5000);
+           }
+           
+           // Show success message
+           function showSuccess(message) {
+               successMessage.textContent = message;
+               successMessage.style.display = 'block';
+               errorMessage.style.display = 'none';
+               setTimeout(() => {
+                   successMessage.style.display = 'none';
+               }, 3000);
+           }
+           
+           // Form submission for meal plan generation
+           mealPlanForm.addEventListener('submit', function(e) {
+               e.preventDefault();
+               
+               // Validate form
+               if (!validateForm()) {
+                   showError('Please fill in all required fields with valid values.');
+                   return;
+               }
+               
+               // Disable button and show loading
+               generateButton.disabled = true;
+               generateButton.textContent = 'Generating...';
+               loadingSpinner.classList.add('active');
+               mealPlanResults.style.display = 'none';
+               
+               // Simulate calculation/generation delay
+               setTimeout(function() {
+                   try {
+                       generateMealPlan();
+                       
+                       // Hide loading spinner and show results
+                       loadingSpinner.classList.remove('active');
+                       mealPlanResults.style.display = 'block';
+                       
+                       // Re-enable button
+                       generateButton.disabled = false;
+                       generateButton.textContent = 'Generate My Meal Plan';
+                       
+                       // Show success message
+                       showSuccess('Your meal plan has been generated successfully!');
+                       
+                       // Scroll to results
+                       mealPlanResults.scrollIntoView({ behavior: 'smooth' });
+                   } catch (error) {
+                       // Handle any errors
+                       loadingSpinner.classList.remove('active');
+                       generateButton.disabled = false;
+                       generateButton.textContent = 'Generate My Meal Plan';
+                       showError('There was an error generating your meal plan. Please try again.');
+                       console.error('Meal plan generation error:', error);
+                   }
+               }, 2000);
+           });
+           
+           // Day header toggle functionality
+           document.addEventListener('click', function(e) {
+               if(e.target.matches('.day-header') || e.target.closest('.day-header')) {
+                   const header = e.target.matches('.day-header') ? e.target : e.target.closest('.day-header');
+                   header.classList.toggle('collapsed');
+                   
+                   const mealSection = header.nextElementSibling;
+                   if(mealSection) {
+                       if(mealSection.style.display === 'none' || getComputedStyle(mealSection).display === 'none') {
+                           mealSection.style.display = 'grid';
+                       } else {
+                           mealSection.style.display = 'none';
+                       }
+                   }
+               }
+           });
+           
+           // Function to generate meal plan based on form inputs
+           function generateMealPlan() {
+               // Get form values
+               const calories = parseInt(document.getElementById('calories').value);
+               const goal = document.getElementById('goal').value;
+               const dietType = document.getElementById('diet-type').value;
+               const mealsPerDay = parseInt(document.getElementById('meals-per-day').value);
+               const days = parseInt(document.getElementById('days').value);
+               const mealPrepPreference = document.querySelector('input[name="meal-prep"]:checked').value;
+               const timeAvailable = document.getElementById('time-to-cook').value;
+               const budget = document.getElementById('budget').value;
+               
+               // Get allergies and dislikes
+               const allergies = Array.from(document.querySelectorAll('input[name="allergies"]:checked')).map(cb => cb.value);
+               const dislikesText = document.getElementById('foods-dislike').value;
+               const dislikes = dislikesText ? dislikesText.split(',').map(item => item.trim()).filter(item => item) : [];
+               
+               // Update nutrition summary
+               document.getElementById('daily-calories').textContent = calories.toLocaleString();
+               
+               // Calculate macros based on goal
+               let proteinPct, carbPct, fatPct;
+               
+               switch(goal) {
+                   case 'muscle-gain':
+                       proteinPct = 0.30; carbPct = 0.45; fatPct = 0.25;
+                       break;
+                   case 'fat-loss':
+                       proteinPct = 0.35; carbPct = 0.40; fatPct = 0.25;
+                       break;
+                   case 'performance':
+                       proteinPct = 0.25; carbPct = 0.55; fatPct = 0.20;
+                       break;
+                   case 'academic':
+                       proteinPct = 0.20; carbPct = 0.55; fatPct = 0.25;
+                       break;
+                   default: // maintenance
+                       proteinPct = 0.25; carbPct = 0.50; fatPct = 0.25;
+               }
+               
+               // Adjust macros based on diet type
+               if(dietType === 'keto') {
+                   proteinPct = 0.30; carbPct = 0.10; fatPct = 0.60;
+               } else if(dietType === 'high-protein') {
+                   proteinPct = Math.min(proteinPct + 0.05, 0.40);
+                   carbPct = carbPct - 0.05;
+               } else if(dietType === 'vegan' || dietType === 'vegetarian') {
+                   proteinPct = Math.max(proteinPct - 0.05, 0.15);
+                   carbPct = carbPct + 0.05;
+               }
+               
+               // Calculate macros in grams
+               const proteinGrams = Math.round((calories * proteinPct) / 4);
+               const carbGrams = Math.round((calories * carbPct) / 4);
+               const fatGrams = Math.round((calories * fatPct) / 9);
+               
+               // Update UI with calculated macros
+               document.getElementById('daily-protein').textContent = proteinGrams + 'g';
+               document.getElementById('daily-carbs').textContent = carbGrams + 'g';
+               document.getElementById('daily-fat').textContent = fatGrams + 'g';
+               document.getElementById('protein-percent').textContent = Math.round(proteinPct * 100);
+               document.getElementById('carb-percent').textContent = Math.round(carbPct * 100);
+               document.getElementById('fat-percent').textContent = Math.round(fatPct * 100);
+               
+               // Get appropriate meal categories based on diet type
+               let mealCategory = dietType === 'balanced' ? 'balanced' : dietType;
+               if (!MEAL_DATABASE.breakfasts[mealCategory]) {
+                   mealCategory = 'balanced'; // fallback
+               }
+               
+               // Filter meals based on allergies and dislikes
+               const availableBreakfasts = filterMeals(MEAL_DATABASE.breakfasts[mealCategory], allergies, dislikes);
+               const availableLunches = filterMeals(MEAL_DATABASE.lunches[mealCategory], allergies, dislikes);
+               const availableDinners = filterMeals(MEAL_DATABASE.dinners[mealCategory], allergies, dislikes);
+               const availableSnacks = filterMeals(MEAL_DATABASE.snacks[mealCategory], allergies, dislikes);
+               
+               // Generate meals for each day
+               const selectedMeals = [];
+               const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+               const daysContainer = document.getElementById('generated-days-container');
+               daysContainer.innerHTML = '';
+               
+               for (let i = 0; i < days; i++) {
+                   const dayName = dayNames[i] || `Day ${i + 1}`;
+                   
+                   // Select different meals for each day to ensure variety
+                   let dayBreakfast = getRandomMeals(availableBreakfasts.filter(meal => 
+                       !selectedMeals.some(day => day.breakfast && day.breakfast.name === meal.name)
+                   ), 1)[0];
+                   
+                   let dayLunch = getRandomMeals(availableLunches.filter(meal => 
+                       !selectedMeals.some(day => day.lunch && day.lunch.name === meal.name)
+                   ), 1)[0];
+                   
+                   let dayDinner = getRandomMeals(availableDinners.filter(meal => 
+                       !selectedMeals.some(day => day.dinner && day.dinner.name === meal.name)
+                   ), 1)[0];
+                   
+                   // Fallback if no unique meals left
+                   if (!dayBreakfast) dayBreakfast = getRandomMeals(availableBreakfasts, 1)[0];
+                   if (!dayLunch) dayLunch = getRandomMeals(availableLunches, 1)[0];
+                   if (!dayDinner) dayDinner = getRandomMeals(availableDinners, 1)[0];
+                   
+                   let dayMeals = {
+                       breakfast: dayBreakfast,
+                       lunch: dayLunch,
+                       dinner: dayDinner
+                   };
+                   
+                   // Add snacks based on meals per day
+                   if (mealsPerDay >= 4 && availableSnacks.length > 0) {
+                       dayMeals.snack1 = getRandomMeals(availableSnacks, 1)[0];
+                   }
+                   if (mealsPerDay >= 5 && availableSnacks.length > 1) {
+                       dayMeals.snack2 = getRandomMeals(availableSnacks.filter(s => s !== dayMeals.snack1), 1)[0];
+                   }
+                   if (mealsPerDay >= 6 && availableSnacks.length > 2) {
+                       dayMeals.snack3 = getRandomMeals(availableSnacks.filter(s => s !== dayMeals.snack1 && s !== dayMeals.snack2), 1)[0];
+                   }
+                   
+                   selectedMeals.push(dayMeals);
+                   
+                   // Create day header
+                   const dayHeader = document.createElement('div');
+                   dayHeader.className = i === 0 ? 'day-header' : 'day-header collapsed';
+                   dayHeader.textContent = `Day ${i + 1} - ${dayName}`;
+                   
+                   // Create day meals container
+                   const dayMealsContainer = document.createElement('div');
+                   dayMealsContainer.className = 'day-meals';
+                   dayMealsContainer.style.display = i === 0 ? 'grid' : 'none';
+                   
+                   // Add meals to container
+                   Object.entries(dayMeals).forEach(([mealType, meal]) => {
+                       if (meal) {
+                           const mealCard = document.createElement('div');
+                           mealCard.className = 'meal-card';
+                           
+                           const mealName = mealType === 'snack1' ? 'Morning Snack' : 
+                                          mealType === 'snack2' ? 'Afternoon Snack' : 
+                                          mealType === 'snack3' ? 'Evening Snack' : 
+                                          mealType.charAt(0).toUpperCase() + mealType.slice(1);
+                           
+                           mealCard.innerHTML = `
+                               <h5>${mealName}</h5>
+                               <ul>
+                                   ${meal.items.map(item => `<li>${item}</li>`).join('')}
+                               </ul>
+                               <div class="meal-macros">
+                                   <div>Calories: <span>${meal.calories}</span></div>
+                                   <div>Protein: <span>${meal.protein}g</span></div>
+                                   <div>Carbs: <span>${meal.carbs}g</span></div>
+                                   <div>Fat: <span>${meal.fat}g</span></div>
+                               </div>
+                           `;
+                           
+                           dayMealsContainer.appendChild(mealCard);
+                       }
+                   });
+                   
+                   daysContainer.appendChild(dayHeader);
+                   daysContainer.appendChild(dayMealsContainer);
+               }
+               
+               // Generate shopping list
+               generateShoppingListUI(selectedMeals);
+               
+               // Update meal prep tips
+               updateMealPrepTips(mealPrepPreference, timeAvailable, budget);
+           }
+           
+           // Function to generate shopping list UI
+           function generateShoppingListUI(selectedMeals) {
+               const shoppingList = generateShoppingList(selectedMeals);
+               const container = document.getElementById('shopping-categories-container');
+               
+               container.innerHTML = `
+                   <div class="shopping-categories">
+                       <div class="shopping-category">
+                           <h5>Proteins</h5>
+                           <ul>
+                               ${shoppingList.proteins.length > 0 ? shoppingList.proteins.map(item => `<li>${item}</li>`).join('') : '<li>No protein items needed</li>'}
+                           </ul>
+                       </div>
+                       <div class="shopping-category">
+                           <h5>Grains & Starches</h5>
+                           <ul>
+                               ${shoppingList.grains.length > 0 ? shoppingList.grains.map(item => `<li>${item}</li>`).join('') : '<li>No grain items needed</li>'}
+                           </ul>
+                       </div>
+                       <div class="shopping-category">
+                           <h5>Fruits & Vegetables</h5>
+                           <ul>
+                               ${shoppingList.produce.length > 0 ? shoppingList.produce.map(item => `<li>${item}</li>`).join('') : '<li>No produce items needed</li>'}
+                           </ul>
+                       </div>
+                       <div class="shopping-category">
+                           <h5>Pantry Items</h5>
+                           <ul>
+                               ${shoppingList.pantry.length > 0 ? shoppingList.pantry.map(item => `<li>${item}</li>`).join('') : '<li>No pantry items needed</li>'}
+                           </ul>
+                       </div>
+                   </div>
+               `;
+           }
+           
+           // Function to update meal prep tips based on preferences
+           function updateMealPrepTips(mealPrepPreference, timeAvailable, budget) {
+               const prepStrategyText = document.getElementById('prep-strategy-text');
+               const prepTipsList = document.getElementById('prep-tips-list');
+               
+               let tips = [];
+               let strategyText = '';
+               
+               // Base tips on meal prep preference
+               switch(mealPrepPreference) {
+                   case 'daily':
+                       strategyText = 'Based on your preference for daily cooking, here are efficient strategies:';
+                       tips = [
+                           '<strong>Morning Prep (10 mins):</strong> Prepare ingredients the night before for quick assembly.',
+                           '<strong>One-Pot Meals:</strong> Focus on simple recipes that minimize cleanup.',
+                           '<strong>Quick Proteins:</strong> Keep easy proteins like eggs, canned tuna, and pre-cooked options.',
+                           '<strong>Batch Basics:</strong> Cook larger portions of grains on weekends for the week.',
+                           '<strong>Smart Snacks:</strong> Prepare grab-and-go options in advance.'
+                       ];
+                       break;
+                   case 'weekly':
+                       strategyText = 'Based on your weekly meal prep preference, here\'s an optimized schedule:';
+                       tips = [
+                           '<strong>Sunday Prep (3-4 hours):</strong> Cook all proteins, grains, and vegetables for the week.',
+                           '<strong>Portion Control:</strong> Divide meals into containers immediately after cooking.',
+                           '<strong>Strategic Storage:</strong> Keep wet and dry ingredients separate until eating.',
+                           '<strong>Freezer Friendly:</strong> Prepare extra portions for future weeks.',
+                           '<strong>Fresh Elements:</strong> Add fresh ingredients just before eating.'
+                       ];
+                       break;
+                   default: // batch
+                       strategyText = 'Based on your batch cooking preference, here\'s a recommended schedule:';
+                       tips = [
+                           '<strong>Sunday Prep (2 hours):</strong> Cook grains and proteins, prep vegetables.',
+                           '<strong>Wednesday Refresh (30 mins):</strong> Cook fresh proteins for the week\'s second half.',
+                           '<strong>Breakfast Batch:</strong> Prepare 3-4 days of overnight oats or smoothie packs.',
+                           '<strong>Salad Strategy:</strong> Wash and chop vegetables, store components separately.',
+                           '<strong>Freezer Storage:</strong> Freeze extra portions for busy weeks.'
+                       ];
+               }
+               
+               // Add time-specific tips
+               if (timeAvailable === 'minimal') {
+                   tips.push('<strong>Time-Saver:</strong> Focus on no-cook and microwave-friendly options during busy periods.');
+               } else if (timeAvailable === 'flexible') {
+                   tips.push('<strong>Advanced Prep:</strong> Use your extra time to make homemade sauces and marinades.');
+               }
+               
+               // Add budget-specific tips
+               if (budget === 'tight') {
+                   tips.push('<strong>Budget Tip:</strong> Buy in bulk, use seasonal produce, and prioritize versatile ingredients.');
+               } else if (budget === 'flexible') {
+                   tips.push('<strong>Quality Focus:</strong> Invest in organic produce and premium proteins for optimal nutrition.');
+               }
+               
+               prepStrategyText.textContent = strategyText;
+               prepTipsList.innerHTML = tips.map(tip => `<li>${tip}</li>`).join('');
+           }
+           
+           // Handle action buttons
+           document.getElementById('save-meal-plan').addEventListener('click', function() {
+               const saveButton = this;
+               saveButton.disabled = true;
+               saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+               
+               setTimeout(() => {
+                   saveButton.disabled = false;
+                   saveButton.innerHTML = '<i class="fas fa-save"></i> Save Plan';
+                   
+                   if (isLoggedIn) {
+                       showSuccess('Meal plan saved to your profile!');
+                   } else {
+                       showError('Please log in to save your meal plan.');
+                   }
+               }, 1000);
+           });
+           
+           document.getElementById('print-meal-plan').addEventListener('click', function() {
+               window.print();
+           });
+           
+           document.getElementById('regenerate-plan').addEventListener('click', function() {
+               if (!validateForm()) {
+                   showError('Please fill in all required fields before regenerating.');
+                   return;
+               }
+               
+               mealPlanResults.style.display = 'none';
+               loadingSpinner.classList.add('active');
+               
+               setTimeout(function() {
+                   try {
+                       generateMealPlan();
+                       loadingSpinner.classList.remove('active');
+                       mealPlanResults.style.display = 'block';
+                       showSuccess('Your meal plan has been regenerated with new variety!');
+                   } catch (error) {
+                       loadingSpinner.classList.remove('active');
+                       showError('There was an error regenerating your meal plan. Please try again.');
+                       console.error('Meal plan regeneration error:', error);
+                   }
+               }, 1500);
+           });
+           
+           // Real-time form validation
+           document.getElementById('calories').addEventListener('input', function() {
+               const value = parseInt(this.value);
+               if (value && (value < 1200 || value > 5000)) {
+                   this.classList.add('form-validation-error');
+               } else {
+                   this.classList.remove('form-validation-error');
+               }
+           });
+           
+           // Remove validation error styling when user starts typing
+           document.querySelectorAll('input, select, textarea').forEach(field => {
+               field.addEventListener('input', function() {
+                   if (this.value.trim()) {
+                       this.classList.remove('form-validation-error');
+                   }
+               });
+           });
+           
+           // Auto-save form data
+           function saveFormData() {
+               const formData = new FormData(mealPlanForm);
+               const formObject = {};
+               
+               for (let [key, value] of formData.entries()) {
+                   if (formObject[key]) {
+                       if (Array.isArray(formObject[key])) {
+                           formObject[key].push(value);
+                       } else {
+                           formObject[key] = [formObject[key], value];
+                       }
+                   } else {
+                       formObject[key] = value;
+                   }
+               }
+               
+               const mealPrepRadio = document.querySelector('input[name="meal-prep"]:checked');
+               if (mealPrepRadio) {
+                   formObject['meal-prep'] = mealPrepRadio.value;
+               }
+               
+               localStorage.setItem('mealPlanFormData', JSON.stringify(formObject));
+           }
+           
+           function loadFormData() {
+               const savedData = localStorage.getItem('mealPlanFormData');
+               if (savedData) {
+                   try {
+                       const formData = JSON.parse(savedData);
+                       
+                       Object.keys(formData).forEach(key => {
+                           const element = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+                           if (element) {
+                               if (element.type === 'checkbox') {
+                                   const checkboxes = document.querySelectorAll(`[name="${key}"]`);
+                                   const values = Array.isArray(formData[key]) ? formData[key] : [formData[key]];
+                                   checkboxes.forEach(cb => {
+                                       cb.checked = values.includes(cb.value);
+                                   });
+                               } else if (element.type === 'radio') {
+                                   const radio = document.querySelector(`[name="${key}"][value="${formData[key]}"]`);
+                                   if (radio) radio.checked = true;
+                               } else {
+                                   element.value = formData[key];
+                               }
+                           }
+                       });
+                   } catch (error) {
+                       console.error('Error loading saved form data:', error);
+                   }
+               }
+           }
+           
+           // Load saved form data on page load
+           loadFormData();
+           
+           // Save form data when user makes changes
+           mealPlanForm.addEventListener('input', saveFormData);
+           mealPlanForm.addEventListener('change', saveFormData);
+           
+           // Clear saved form data when form is successfully submitted
+           mealPlanForm.addEventListener('submit', function() {
+               setTimeout(() => {
+                   localStorage.removeItem('mealPlanFormData');
+               }, 2000);
+           });
+           
+           // Keyboard accessibility
+           document.addEventListener('keydown', function(e) {
+               if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('day-header')) {
+                   e.preventDefault();
+                   e.target.click();
+               }
+           });
+           
+           // Error handling
+           window.addEventListener('error', function(e) {
+               console.error('Application error:', e.error);
+               showError('An unexpected error occurred. Please refresh the page and try again.');
+           });
+           
+           window.addEventListener('unhandledrejection', function(e) {
+               console.error('Unhandled promise rejection:', e.reason);
+               showError('An unexpected error occurred. Please refresh the page and try again.');
+           });
+       });
+   </script>
+<script src="class-management.js"></script> </body>
 </html>

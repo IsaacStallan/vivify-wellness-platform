@@ -1,36 +1,30 @@
+// auth-middleware.js - Enhanced with role-based access
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { User } = require('../models/User');
 
 /**
- * Middleware to authenticate JWT token and attach user to request object
+ * Basic authentication middleware
  */
 const authenticate = async (req, res, next) => {
     try {
-        // Get token from header or cookie
         const token = 
-            req.headers.authorization?.split(' ')[1] || // Bearer token
-            req.cookies?.token; // Cookie token
+            req.headers.authorization?.split(' ')[1] || 
+            req.cookies?.token;
         
         if (!token) {
             return res.status(401).json({ message: 'Authentication required. Please log in.' });
         }
         
-        // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-        
-        // Find user by ID
-        const user = await User.findById(decoded.id).select('-password');
+        const user = await User.findById(decoded.id)
+            .populate('schoolId')
+            .select('-password');
+            
         if (!user) {
             return res.status(401).json({ message: 'User not found or deleted.' });
         }
         
-        // Attach user to request object
         req.user = user;
-        
-        // Log last activity
-        user.lastLogin = new Date();
-        await user.save();
-        
         next();
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
@@ -45,60 +39,85 @@ const authenticate = async (req, res, next) => {
 };
 
 /**
- * Middleware to check if user has admin role
+ * Role-based access control middleware
+ * @param {Array} allowedRoles - Array of roles that can access the route
  */
-const isAdmin = (req, res, next) => {
-    if (!req.user) {
-        return res.status(401).json({ message: 'Authentication required. Please log in.' });
-    }
-    
-    if (req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Access denied. Admin privileges required.' });
-    }
-    
-    next();
+const requireRole = (allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Authentication required.' });
+        }
+        
+        if (!allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ 
+                message: `Access denied. Required roles: ${allowedRoles.join(', ')}` 
+            });
+        }
+        
+        next();
+    };
 };
 
 /**
- * Optional authentication middleware - doesn't reject if no token is present
+ * Check if teacher can access specific student data
  */
-const optionalAuth = async (req, res, next) => {
+const canAccessStudent = async (req, res, next) => {
     try {
-        // Get token from header or cookie
-        const token = 
-            req.headers.authorization?.split(' ')[1] || // Bearer token
-            req.cookies?.token; // Cookie token
+        if (!req.user) {
+            return res.status(401).json({ message: 'Authentication required.' });
+        }
         
-        if (!token) {
-            // Skip authentication but mark request as unauthenticated
-            req.isAuthenticated = false;
+        const { studentId } = req.params;
+        
+        // Admins can access all students in their school
+        if (req.user.role === 'admin' || req.user.role === 'school_admin') {
             return next();
         }
         
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-        
-        // Find user by ID
-        const user = await User.findById(decoded.id).select('-password');
-        if (!user) {
-            req.isAuthenticated = false;
+        // Teachers can only access students in their classes
+        if (req.user.role === 'teacher') {
+            const hasPermission = req.user.classPermissions.some(permission => 
+                permission.studentIds.includes(studentId)
+            );
+            
+            if (!hasPermission) {
+                return res.status(403).json({ 
+                    message: 'You do not have permission to access this student\'s data.' 
+                });
+            }
+            
             return next();
         }
         
-        // Attach user to request object
-        req.user = user;
-        req.isAuthenticated = true;
+        // Students can only access their own data
+        if (req.user.role === 'student' && req.user._id.toString() === studentId) {
+            return next();
+        }
         
-        next();
+        return res.status(403).json({ message: 'Access denied.' });
+        
     } catch (error) {
-        // Don't reject the request, just mark as unauthenticated
-        req.isAuthenticated = false;
-        next();
+        console.error('Permission check error:', error);
+        return res.status(500).json({ message: 'Server error during permission check.' });
     }
+};
+
+/**
+ * School-level access control
+ */
+const requireSameSchool = (req, res, next) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Authentication required.' });
+    }
+    
+    // For routes that need school-level access control
+    // This will be used when accessing school-wide data
+    next();
 };
 
 module.exports = {
     authenticate,
-    isAdmin,
-    optionalAuth
+    requireRole,
+    canAccessStudent,
+    requireSameSchool
 };

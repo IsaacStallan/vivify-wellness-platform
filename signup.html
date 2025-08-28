@@ -24,7 +24,7 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 6rem 1rem 2rem 1rem; /* Added top padding for header */
+            padding: 6rem 1rem 2rem 1rem;
         }
 
         .form-container {
@@ -98,6 +98,82 @@
             font-weight: 400;
         }
 
+        .form-group small {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .role-selector {
+            margin: 1.25rem 0;
+        }
+
+        .role-selector label {
+            display: block;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 0.8rem;
+        }
+
+        .role-option {
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ccc;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .role-option:hover {
+            border-color: #f39c12;
+            background: #383838;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .role-option.selected {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #000;
+            font-weight: 600;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .role-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .role-details {
+            flex: 1;
+        }
+
+        .role-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .role-description {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
         .year-selector {
             margin: 1.25rem 0;
         }
@@ -143,6 +219,35 @@
             font-weight: 600;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .role-specific-section {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, #2a2a2a 0%, #333 100%);
+            border-radius: 12px;
+            border: 1px solid #444;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .role-specific-section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .password-requirements {
@@ -324,29 +429,18 @@
         }
     </style>
 
-<!-- PWA Manifest -->
-<link rel="manifest" href="/manifest.json">
-
-<!-- iOS PWA Support -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Wellness Hub">
-<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
-
-<!-- Microsoft Tiles -->
-<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<meta name="msapplication-TileColor" content="#f39c12">
-
-<!-- Theme Color -->
-<meta name="theme-color" content="#f39c12">
-
-<!-- Viewport for PWA -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<!-- Preload PWA installer script -->
-<link rel="preload" href="/pwa-install.js" as="script">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wellness Hub">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#f39c12">
+    <meta name="theme-color" content="#f39c12">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preload" href="/pwa-install.js" as="script">
 </head>
 <body>
     <div class="wrapper">
@@ -372,9 +466,38 @@
         <main class="form-section">
             <div class="form-container">
                 <h1>Join Vivify</h1>
-                <p>Start your wellness journey as a high school student</p>
+                <p>Start your wellness journey</p>
                 
                 <form id="signupForm">
+                    <!-- Role Selection -->
+                    <div class="role-selector">
+                        <label>I am a...</label>
+                        <div class="role-grid">
+                            <div class="role-option" data-role="student">
+                                <div class="role-icon">🎓</div>
+                                <div class="role-details">
+                                    <div class="role-title">Student</div>
+                                    <div class="role-description">Years 7-12 high school student</div>
+                                </div>
+                            </div>
+                            <div class="role-option" data-role="teacher">
+                                <div class="role-icon">👨‍🏫</div>
+                                <div class="role-details">
+                                    <div class="role-title">Teacher</div>
+                                    <div class="role-description">Educator monitoring student wellness</div>
+                                </div>
+                            </div>
+                            <div class="role-option" data-role="admin">
+                                <div class="role-icon">👩‍💼</div>
+                                <div class="role-details">
+                                    <div class="role-title">School Admin</div>
+                                    <div class="role-description">School administrator or counselor</div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="userRole" name="userRole" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="username">Full Name</label>
                         <input type="text" id="username" name="username" placeholder="Enter your full name" required>
@@ -385,118 +508,159 @@
                         <input type="email" id="email" name="email" placeholder="Enter your email address" required>
                     </div>
                     
-                    <div class="year-selector">
-                        <label>Year Level</label>
-                        <div class="year-grid">
-                            <div class="year-option" data-year="7">Year 7</div>
-                            <div class="year-option" data-year="8">Year 8</div>
-                            <div class="year-option" data-year="9">Year 9</div>
-                            <div class="year-option" data-year="10">Year 10</div>
-                            <div class="year-option" data-year="11">Year 11</div>
-                            <div class="year-option" data-year="12">Year 12</div>
+                    <!-- Student-specific section -->
+                    <div id="studentSection" class="role-specific-section">
+                        <div class="section-title">
+                            <span>🎓</span>
+                            Student Information
                         </div>
-                        <input type="hidden" id="yearLevel" name="yearLevel" required>
+                        
+                        <div class="year-selector">
+                            <label>Year Level</label>
+                            <div class="year-grid">
+                                <div class="year-option" data-year="7">Year 7</div>
+                                <div class="year-option" data-year="8">Year 8</div>
+                                <div class="year-option" data-year="9">Year 9</div>
+                                <div class="year-option" data-year="10">Year 10</div>
+                                <div class="year-option" data-year="11">Year 11</div>
+                                <div class="year-option" data-year="12">Year 12</div>
+                            </div>
+                            <input type="hidden" id="yearLevel" name="yearLevel">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="school">School</label>
+                            <select id="school" name="school">
+                                <option value="">Select your school</option>
+                                
+                                <!-- NSW Schools -->
+                                <optgroup label="New South Wales">
+                                    <option value="Knox Grammar School">Knox Grammar School</option>
+                                    <option value="Pymble Ladies' College">Pymble Ladies' College</option>
+                                    <option value="Sydney Grammar School">Sydney Grammar School</option>
+                                    <option value="SCEGGS Darlinghurst">SCEGGS Darlinghurst</option>
+                                    <option value="Newington College">Newington College</option>
+                                    <option value="The King's School">The King's School</option>
+                                    <option value="Abbotsleigh">Abbotsleigh</option>
+                                    <option value="Barker College">Barker College</option>
+                                    <option value="Cranbrook School">Cranbrook School</option>
+                                    <option value="North Sydney Boys High School">North Sydney Boys High School</option>
+                                    <option value="North Sydney Girls High School">North Sydney Girls High School</option>
+                                    <option value="Sydney Boys High School">Sydney Boys High School</option>
+                                    <option value="Sydney Girls High School">Sydney Girls High School</option>
+                                    <option value="Fort Street High School">Fort Street High School</option>
+                                    <option value="James Ruse Agricultural High School">James Ruse Agricultural High School</option>
+                                </optgroup>
+                                
+                                <!-- VIC Schools -->
+                                <optgroup label="Victoria">
+                                    <option value="Melbourne Grammar School">Melbourne Grammar School</option>
+                                    <option value="Scotch College Melbourne">Scotch College Melbourne</option>
+                                    <option value="Wesley College">Wesley College</option>
+                                    <option value="Geelong Grammar School">Geelong Grammar School</option>
+                                    <option value="Methodist Ladies' College">Methodist Ladies' College</option>
+                                    <option value="Lauriston Girls' School">Lauriston Girls' School</option>
+                                    <option value="Presbyterian Ladies' College">Presbyterian Ladies' College</option>
+                                    <option value="St Kevin's College">St Kevin's College</option>
+                                    <option value="Haileybury College">Haileybury College</option>
+                                    <option value="Camberwell Grammar School">Camberwell Grammar School</option>
+                                    <option value="MacRobertson Girls' High School">MacRobertson Girls' High School</option>
+                                    <option value="Melbourne High School">Melbourne High School</option>
+                                </optgroup>
+                                
+                                <!-- QLD Schools -->
+                                <optgroup label="Queensland">
+                                    <option value="Brisbane Grammar School">Brisbane Grammar School</option>
+                                    <option value="Brisbane Girls Grammar School">Brisbane Girls Grammar School</option>
+                                    <option value="Somerville House">Somerville House</option>
+                                    <option value="St Joseph's Nudgee College">St Joseph's Nudgee College</option>
+                                    <option value="The Southport School">The Southport School</option>
+                                    <option value="Anglican Church Grammar School">Anglican Church Grammar School</option>
+                                    <option value="St Aidan's Anglican Girls' School">St Aidan's Anglican Girls' School</option>
+                                    <option value="Ipswich Grammar School">Ipswich Grammar School</option>
+                                </optgroup>
+                                
+                                <!-- SA Schools -->
+                                <optgroup label="South Australia">
+                                    <option value="St Peter's College">St Peter's College</option>
+                                    <option value="Scotch College Adelaide">Scotch College Adelaide</option>
+                                    <option value="Wilderness School">Wilderness School</option>
+                                    <option value="Pembroke School">Pembroke School</option>
+                                    <option value="Adelaide High School">Adelaide High School</option>
+                                </optgroup>
+                                
+                                <!-- WA Schools -->
+                                <optgroup label="Western Australia">
+                                    <option value="Hale School">Hale School</option>
+                                    <option value="Perth Modern School">Perth Modern School</option>
+                                    <option value="Christ Church Grammar School">Christ Church Grammar School</option>
+                                    <option value="Methodist Ladies' College Perth">Methodist Ladies' College Perth</option>
+                                    <option value="Scotch College Perth">Scotch College Perth</option>
+                                </optgroup>
+                                
+                                <!-- TAS Schools -->
+                                <optgroup label="Tasmania">
+                                    <option value="The Hutchins School">The Hutchins School</option>
+                                    <option value="Collegiate School">Collegiate School</option>
+                                    <option value="St Michael's Collegiate School">St Michael's Collegiate School</option>
+                                </optgroup>
+                                
+                                <!-- ACT Schools -->
+                                <optgroup label="Australian Capital Territory">
+                                    <option value="Canberra Grammar School">Canberra Grammar School</option>
+                                    <option value="Canberra Girls Grammar School">Canberra Girls Grammar School</option>
+                                    <option value="Radford College">Radford College</option>
+                                </optgroup>
+                                
+                                <!-- NT Schools -->
+                                <optgroup label="Northern Territory">
+                                    <option value="Darwin High School">Darwin High School</option>
+                                    <option value="St Philip's College">St Philip's College</option>
+                                </optgroup>
+                                
+                                <option value="Other">Other/Not Listed</option>
+                            </select>
+                        </div>
+                        
+                        <div id="otherSchoolGroup" class="other-school-group" style="display: none;">
+                            <label for="otherSchool">Specify School</label>
+                            <input type="text" id="otherSchool" name="otherSchool" placeholder="Enter your school name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="teacherClassCode">Teacher's Class Code (Optional)</label>
+                            <input type="text" 
+                                   id="teacherClassCode" 
+                                   name="teacherClassCode" 
+                                   placeholder="e.g., ABC123" 
+                                   style="text-transform: uppercase;"
+                                   maxlength="6">
+                            <small>If your teacher gave you a class code, enter it here to automatically join their wellness monitoring class.</small>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="school">School</label>
-                        <select id="school" name="school" required>
-                            <option value="">Select your school</option>
-                            
-                            <!-- NSW Schools -->
-                            <optgroup label="New South Wales">
-                                <option value="Knox Grammar School">Knox Grammar School</option>
-                                <option value="Pymble Ladies' College">Pymble Ladies' College</option>
-                                <option value="Sydney Grammar School">Sydney Grammar School</option>
-                                <option value="SCEGGS Darlinghurst">SCEGGS Darlinghurst</option>
-                                <option value="Newington College">Newington College</option>
-                                <option value="The King's School">The King's School</option>
-                                <option value="Abbotsleigh">Abbotsleigh</option>
-                                <option value="Barker College">Barker College</option>
-                                <option value="Cranbrook School">Cranbrook School</option>
-                                <option value="Kambala">Kambala</option>
-                                <option value="MLC School">MLC School</option>
-                                <option value="North Sydney Boys High School">North Sydney Boys High School</option>
-                                <option value="North Sydney Girls High School">North Sydney Girls High School</option>
-                                <option value="Sydney Boys High School">Sydney Boys High School</option>
-                                <option value="Sydney Girls High School">Sydney Girls High School</option>
-                                <option value="Fort Street High School">Fort Street High School</option>
-                                <option value="James Ruse Agricultural High School">James Ruse Agricultural High School</option>
-                            </optgroup>
-                            
-                            <!-- VIC Schools -->
-                            <optgroup label="Victoria">
-                                <option value="Melbourne Grammar School">Melbourne Grammar School</option>
-                                <option value="Scotch College Melbourne">Scotch College Melbourne</option>
-                                <option value="Wesley College">Wesley College</option>
-                                <option value="Geelong Grammar School">Geelong Grammar School</option>
-                                <option value="Methodist Ladies' College">Methodist Ladies' College</option>
-                                <option value="Lauriston Girls' School">Lauriston Girls' School</option>
-                                <option value="Presbyterian Ladies' College">Presbyterian Ladies' College</option>
-                                <option value="St Kevin's College">St Kevin's College</option>
-                                <option value="Haileybury College">Haileybury College</option>
-                                <option value="Camberwell Grammar School">Camberwell Grammar School</option>
-                                <option value="MacRobertson Girls' High School">MacRobertson Girls' High School</option>
-                                <option value="Melbourne High School">Melbourne High School</option>
-                            </optgroup>
-                            
-                            <!-- QLD Schools -->
-                            <optgroup label="Queensland">
-                                <option value="Brisbane Grammar School">Brisbane Grammar School</option>
-                                <option value="Brisbane Girls Grammar School">Brisbane Girls Grammar School</option>
-                                <option value="Somerville House">Somerville House</option>
-                                <option value="St Joseph's Nudgee College">St Joseph's Nudgee College</option>
-                                <option value="The Southport School">The Southport School</option>
-                                <option value="Anglican Church Grammar School">Anglican Church Grammar School</option>
-                                <option value="St Aidan's Anglican Girls' School">St Aidan's Anglican Girls' School</option>
-                                <option value="Ipswich Grammar School">Ipswich Grammar School</option>
-                            </optgroup>
-                            
-                            <!-- SA Schools -->
-                            <optgroup label="South Australia">
-                                <option value="St Peter's College">St Peter's College</option>
-                                <option value="Scotch College Adelaide">Scotch College Adelaide</option>
-                                <option value="Wilderness School">Wilderness School</option>
-                                <option value="Pembroke School">Pembroke School</option>
-                                <option value="Adelaide High School">Adelaide High School</option>
-                            </optgroup>
-                            
-                            <!-- WA Schools -->
-                            <optgroup label="Western Australia">
-                                <option value="Hale School">Hale School</option>
-                                <option value="Perth Modern School">Perth Modern School</option>
-                                <option value="Christ Church Grammar School">Christ Church Grammar School</option>
-                                <option value="Methodist Ladies' College Perth">Methodist Ladies' College Perth</option>
-                                <option value="Scotch College Perth">Scotch College Perth</option>
-                            </optgroup>
-                            
-                            <!-- TAS Schools -->
-                            <optgroup label="Tasmania">
-                                <option value="The Hutchins School">The Hutchins School</option>
-                                <option value="Collegiate School">Collegiate School</option>
-                                <option value="St Michael's Collegiate School">St Michael's Collegiate School</option>
-                            </optgroup>
-                            
-                            <!-- ACT Schools -->
-                            <optgroup label="Australian Capital Territory">
-                                <option value="Canberra Grammar School">Canberra Grammar School</option>
-                                <option value="Canberra Girls Grammar School">Canberra Girls Grammar School</option>
-                                <option value="Radford College">Radford College</option>
-                            </optgroup>
-                            
-                            <!-- NT Schools -->
-                            <optgroup label="Northern Territory">
-                                <option value="Darwin High School">Darwin High School</option>
-                                <option value="St Philip's College">St Philip's College</option>
-                            </optgroup>
-                            
-                            <option value="Other">Other/Not Listed</option>
-                        </select>
-                    </div>
-                    
-                    <div id="otherSchoolGroup" class="other-school-group" style="display: none;">
-                        <label for="otherSchool">Specify School</label>
-                        <input type="text" id="otherSchool" name="otherSchool" placeholder="Enter your school name">
+
+                    <!-- Teacher/Admin section -->
+                    <div id="educatorSection" class="role-specific-section">
+                        <div class="section-title">
+                            <span>👨‍🏫</span>
+                            Educator Information
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="schoolCode">School Code</label>
+                            <input type="text" id="schoolCode" name="schoolCode" placeholder="Your school's registration code">
+                            <small>Contact your school administrator for the school code</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="staffId">Staff ID (Optional)</label>
+                            <input type="text" id="staffId" name="staffId" placeholder="Your school staff ID">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="department">Department/Subject (Optional)</label>
+                            <input type="text" id="department" name="department" placeholder="e.g., Mathematics, Counselling">
+                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -546,6 +710,36 @@
     </div>
 
     <script>
+        const ClassManager = {
+            generateClassCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 6; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            },
+
+            async joinClass(studentId, classCode) {
+                const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+                const targetClass = classes.find(c => c.code === classCode.toUpperCase() && c.active);
+                
+                if (!targetClass) {
+                    return { success: true, className: 'Class (Pending)', pending: true };
+                }
+                
+                if (targetClass.students && targetClass.students.includes(String(studentId))) {
+                    return { success: false, error: 'Already enrolled' };
+                }
+                
+                if (!targetClass.students) targetClass.students = [];
+                targetClass.students.push(String(studentId));
+                localStorage.setItem('vivifyClasses', JSON.stringify(classes));
+                
+                return { success: true, className: targetClass.name };
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             const signupForm = document.getElementById('signupForm');
             const messageElement = document.getElementById('message');
@@ -556,8 +750,29 @@
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const yearOptions = document.querySelectorAll('.year-option');
             const yearLevelInput = document.getElementById('yearLevel');
+            const roleOptions = document.querySelectorAll('.role-option');
+            const userRoleInput = document.getElementById('userRole');
             
-            // Handle year level selection
+            const studentSection = document.getElementById('studentSection');
+            const educatorSection = document.getElementById('educatorSection');
+            
+            roleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    roleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    userRoleInput.value = this.dataset.role;
+                    
+                    studentSection.classList.remove('active');
+                    educatorSection.classList.remove('active');
+                    
+                    if (this.dataset.role === 'student') {
+                        studentSection.classList.add('active');
+                    } else if (this.dataset.role === 'teacher' || this.dataset.role === 'admin') {
+                        educatorSection.classList.add('active');
+                    }
+                });
+            });
+            
             yearOptions.forEach(option => {
                 option.addEventListener('click', function() {
                     yearOptions.forEach(opt => opt.classList.remove('selected'));
@@ -566,18 +781,18 @@
                 });
             });
             
-            // Handle school selection
-            schoolSelect.addEventListener('change', function() {
-                if (this.value === 'Other') {
-                    otherSchoolGroup.style.display = 'block';
-                    document.getElementById('otherSchool').required = true;
-                } else {
-                    otherSchoolGroup.style.display = 'none';
-                    document.getElementById('otherSchool').required = false;
-                }
-            });
+            if (schoolSelect) {
+                schoolSelect.addEventListener('change', function() {
+                    if (this.value === 'Other') {
+                        otherSchoolGroup.style.display = 'block';
+                        document.getElementById('otherSchool').required = true;
+                    } else {
+                        otherSchoolGroup.style.display = 'none';
+                        document.getElementById('otherSchool').required = false;
+                    }
+                });
+            }
             
-            // Real-time password validation
             passwordInput.addEventListener('input', validatePassword);
             confirmPasswordInput.addEventListener('input', validatePasswordMatch);
             
@@ -645,19 +860,10 @@
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value.trim();
                 const confirmPassword = document.getElementById('confirmPassword').value.trim();
-                const yearLevel = document.getElementById('yearLevel').value;
-                let school = document.getElementById('school').value;
+                const userRole = document.getElementById('userRole').value;
                 
-                if (school === 'Other') {
-                    school = document.getElementById('otherSchool').value.trim();
-                    if (!school) {
-                        showMessage('Please specify your school name.');
-                        return;
-                    }
-                }
-                
-                if (!username || !email || !password || !school || !yearLevel) {
-                    showMessage('Please fill in all required fields including your year level.');
+                if (!username || !email || !password || !userRole) {
+                    showMessage('Please fill in all required fields and select your role.');
                     return;
                 }
                 
@@ -675,6 +881,53 @@
                 if (!emailRegex.test(email)) {
                     showMessage('Please enter a valid email address.');
                     return;
+                }
+                
+                let userData = {
+                    username,
+                    email,
+                    password,
+                    role: userRole
+                };
+                
+                if (userRole === 'student') {
+                    const yearLevel = document.getElementById('yearLevel').value;
+                    let school = document.getElementById('school').value;
+                    
+                    if (!yearLevel || !school) {
+                        showMessage('Please select your year level and school.');
+                        return;
+                    }
+                    
+                    if (school === 'Other') {
+                        school = document.getElementById('otherSchool').value.trim();
+                        if (!school) {
+                            showMessage('Please specify your school name.');
+                            return;
+                        }
+                    }
+                    
+                    userData.yearLevel = parseInt(yearLevel);
+                    userData.school = school;
+                    
+                    const classCode = document.getElementById('teacherClassCode').value.trim();
+                    if (classCode) {
+                        userData.pendingClassCode = classCode.toUpperCase();
+                    }
+                    
+                } else if (userRole === 'teacher' || userRole === 'admin') {
+                    const schoolCode = document.getElementById('schoolCode').value.trim();
+                    const staffId = document.getElementById('staffId').value.trim();
+                    const department = document.getElementById('department').value.trim();
+                    
+                    if (!schoolCode) {
+                        showMessage('Please enter your school code.');
+                        return;
+                    }
+                    
+                    userData.schoolCode = schoolCode;
+                    userData.staffId = staffId;
+                    userData.department = department;
                 }
                 
                 signupBtn.textContent = 'Creating Account...';
@@ -695,22 +948,61 @@
                         id: Date.now(),
                         name: username,
                         email: email,
-                        school: school,
-                        yearLevel: parseInt(yearLevel),
+                        role: userRole,
                         joinDate: new Date().toISOString(),
                         verified: true
                     };
+                    
+                    if (userRole === 'student') {
+                        userProfile.school = userData.school;
+                        userProfile.yearLevel = userData.yearLevel;
+                        userProfile.classes = [];
+                    } else if (userRole === 'teacher' || userRole === 'admin') {
+                        userProfile.schoolCode = userData.schoolCode;
+                        userProfile.staffId = userData.staffId;
+                        userProfile.department = userData.department;
+                        userProfile.classPermissions = [];
+                    }
                     
                     existingUsers.push(userProfile);
                     localStorage.setItem('vivifyUsers', JSON.stringify(existingUsers));
                     localStorage.setItem('userProfile', JSON.stringify(userProfile));
                     localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('userRole', userRole);
                     localStorage.setItem('authToken', 'demo_token_' + Date.now());
                     
-                    showMessage('Account created successfully! Redirecting to Home Page...', 'success');
+                    if (userProfile.role === 'student' && userData.pendingClassCode) {
+                        setTimeout(async () => {
+                            const result = await ClassManager.joinClass(userProfile.id, userData.pendingClassCode);
+                            if (result.success) {
+                                console.log('Class join result:', result);
+                                userProfile.classes.push({
+                                    classCode: userData.pendingClassCode,
+                                    status: result.pending ? 'pending' : 'active',
+                                    joinedAt: new Date().toISOString()
+                                });
+                                localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                            }
+                        }, 1000);
+                    }
+                    
+                    showMessage('Account created successfully! Redirecting...', 'success');
                     
                     setTimeout(() => {
-                        window.location.href = 'Index.html';
+                        switch (userRole) {
+                            case 'teacher':
+                                window.location.href = 'teacher-dashboard.html';
+                                break;
+                            case 'admin':
+                                window.location.href = 'admin-dashboard.html';
+                                break;
+                            case 'student':
+                            default:
+                                // MODIFIED: Redirect students to baseline assessment first
+                                localStorage.setItem('needsBaselineAssessment', 'true');
+                                window.location.href = 'wellness-baseline-assessment.html';
+                                break;
+                        }
                     }, 2000);
                     
                 } catch (error) {
@@ -722,24 +1014,26 @@
                     signupForm.classList.remove('loading');
                 }
             });
+
+            // Auto-uppercase class code input
+            const classCodeInput = document.getElementById('teacherClassCode');
+            if (classCodeInput) {
+                classCodeInput.addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
+            }
         });
     </script>
 
-<!-- PWA Scripts -->
 <script src="/pwa-install.js"></script>
 
 <script>
-// Additional PWA features for each page
 document.addEventListener('DOMContentLoaded', function() {
-    // Add PWA-specific styles
     if (window.matchMedia('(display-mode: standalone)').matches) {
         document.body.classList.add('pwa-mode');
-        
-        // Hide address bar on mobile when in PWA mode
         window.scrollTo(0, 1);
     }
     
-    // Handle network status
     function updateOnlineStatus() {
         const statusElement = document.getElementById('network-status');
         if (statusElement) {
@@ -757,7 +1051,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
     
-    // Add network status indicator if it doesn't exist
     if (!document.getElementById('network-status')) {
         const statusDiv = document.createElement('div');
         statusDiv.id = 'network-status';

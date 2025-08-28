@@ -59,7 +59,7 @@ Vivify offers comprehensive wellness support for students with:
 - Safe, moderated community features
 - Analytics for wellness program effectiveness
 
-Contact: isaac.stallan@gmail.com
+Contact: isaac@Vivify.au
 
 ## License
 

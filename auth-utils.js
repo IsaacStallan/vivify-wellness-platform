@@ -1,134 +1,75 @@
-/**
- * Authentication utility functions for client-side use
- */
-
+// auth-utils.js - Enhanced with role-based UI control
 const authUtils = {
     /**
-     * Checks if user is logged in by verifying token in localStorage
-     * @returns {Promise<boolean>} - True if user is logged in and token is valid
+     * Get current user data including role information
+     * @returns {Promise<Object|null>} - User data with role info or null
      */
-    isLoggedIn: async function() {
+    getCurrentUser: async function() {
         const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-            return false;
-        }
+        if (!token) return null;
         
         try {
-            const response = await fetch('/auth/verify-token', {
-                method: 'POST',
+            const response = await fetch('/auth/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             
-            const data = await response.json();
-            return data.isValid;
+            if (response.ok) {
+                const data = await response.json();
+                return data.user;
+            }
         } catch (error) {
-            console.error('Token verification error:', error);
-            return false;
+            console.error('Error getting current user:', error);
         }
+        
+        return null;
     },
     
     /**
-     * Get user data from token or from API if available
-     * @param {boolean} [refresh=false] - Whether to fetch fresh data from API
-     * @returns {Promise<Object|null>} - User data or null if not logged in
+     * Check if user has specific role
+     * @param {string|Array} roles - Role(s) to check
+     * @returns {Promise<boolean>} - True if user has required role
      */
-    getUser: async function(refresh = false) {
-        const token = localStorage.getItem('authToken');
+    hasRole: async function(roles) {
+        const user = await this.getCurrentUser();
+        if (!user) return false;
         
-        if (!token) {
-            return null;
-        }
-        
-        // If refresh is false, try to get user from token
-        if (!refresh) {
-            try {
-                // Parse token (JWT is header.payload.signature)
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(
-                    atob(base64)
-                        .split('')
-                        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-                        .join('')
-                );
-                
-                const payload = JSON.parse(jsonPayload);
-                
-                // Check if token is expired
-                const expiryDate = new Date(payload.exp * 1000);
-                if (expiryDate < new Date()) {
-                    this.logout();
-                    return null;
-                }
-                
-                return {
-                    id: payload.id,
-                    username: payload.username,
-                    email: payload.email
-                };
-            } catch (error) {
-                console.error('Token parsing error:', error);
-            }
-        }
-        
-        // If payload couldn't be parsed or refresh is true, get user from API
-        try {
-            const response = await fetch('/auth/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            if (!response.ok) {
-                if (response.status === 401) {
-                    this.logout();
-                }
-                return null;
-            }
-            
-            const data = await response.json();
-            return data.user;
-        } catch (error) {
-            console.error('User profile error:', error);
-            return null;
-        }
+        const requiredRoles = Array.isArray(roles) ? roles : [roles];
+        return requiredRoles.includes(user.role);
     },
     
     /**
-     * Log user in and store token
-     * @param {string} email - User email
-     * @param {string} password - User password
-     * @returns {Promise<Object>} - Login result with success flag and message
+     * Enhanced login with role handling
      */
     login: async function(email, password) {
         try {
             const response = await fetch('/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
             
             const data = await response.json();
             
-            if (response.ok && data.token) {
+            if (response.ok) {
+                // Store token and user info
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userRole', data.user.role);
+                localStorage.setItem('userData', JSON.stringify(data.user));
+                
                 return {
                     success: true,
-                    user: data.user,
-                    redirectTo: data.redirectTo
+                    redirectTo: data.redirectTo,
+                    user: data.user
+                };
+            } else {
+                return {
+                    success: false,
+                    message: data.message
                 };
             }
-            
-            return {
-                success: false,
-                message: data.message || 'Login failed'
-            };
         } catch (error) {
             console.error('Login error:', error);
             return {
@@ -139,17 +80,13 @@ const authUtils = {
     },
     
     /**
-     * Register a new user
-     * @param {Object} userData - User registration data
-     * @returns {Promise<Object>} - Registration result with success flag and message
+     * Enhanced signup with role selection
      */
     register: async function(userData) {
         try {
             const response = await fetch('/auth/signup', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
             });
             
@@ -169,138 +106,128 @@ const authUtils = {
     },
     
     /**
-     * Log user out and clear storage
+     * Enhanced UI update with role-based visibility
      */
-    logout: function() {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userLoggedIn');
+    updateAuthUI: async function() {
+        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+        const userRole = localStorage.getItem('userRole');
         
-        // Optional: Make a server request to invalidate the token
-        fetch('/auth/logout', { method: 'GET' }).catch(console.error);
-    },
-    
-    /**
-     * Request password reset for an email
-     * @param {string} email - User email
-     * @returns {Promise<Object>} - Result with success flag and message
-     */
-    requestPasswordReset: async function(email) {
-        try {
-            const response = await fetch('/auth/reset-password-request', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email })
-            });
-            
-            const data = await response.json();
-            
-            return {
-                success: response.ok,
-                message: data.message
-            };
-        } catch (error) {
-            console.error('Password reset request error:', error);
-            return {
-                success: false,
-                message: 'Network error. Please try again later.'
-            };
-        }
-    },
-    
-    /**
-     * Reset password with token
-     * @param {string} token - Reset token
-     * @param {string} password - New password
-     * @returns {Promise<Object>} - Result with success flag and message
-     */
-    resetPassword: async function(token, password) {
-        try {
-            const response = await fetch(`/auth/reset-password/${token}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ password })
-            });
-            
-            const data = await response.json();
-            
-            return {
-                success: response.ok,
-                message: data.message
-            };
-        } catch (error) {
-            console.error('Password reset error:', error);
-            return {
-                success: false,
-                message: 'Network error. Please try again later.'
-            };
-        }
-    },
-    
-    /**
-     * Update authentication UI elements based on login state
-     */
-    updateAuthUI: function() {
-        const token = localStorage.getItem('authToken');
-        const isLoggedIn = !!token && localStorage.getItem('userLoggedIn') === 'true';
-        
-        // Update navigation links
+        // Basic auth UI elements
         const loginLink = document.getElementById('loginLink');
         const signupLink = document.getElementById('signupLink');
         const logoutLink = document.getElementById('logoutLink');
-        const profileLink = document.getElementById('profileLink') || document.getElementById('profile-link');
-        const categoryDropdown = document.getElementById('categoryDropdown');
+        const profileLink = document.getElementById('profileLink');
+        const dashboardLink = document.getElementById('dashboardLink');
         
+        // Role-specific UI elements
+        const teacherNav = document.querySelector('.teacher-nav');
+        const adminNav = document.querySelector('.admin-nav');
+        const studentNav = document.querySelector('.student-nav');
+        
+        // Update basic auth elements
         if (loginLink) loginLink.style.display = isLoggedIn ? 'none' : 'inline';
         if (signupLink) signupLink.style.display = isLoggedIn ? 'none' : 'inline';
         if (logoutLink) logoutLink.style.display = isLoggedIn ? 'inline' : 'none';
         if (profileLink) profileLink.style.display = isLoggedIn ? 'inline' : 'none';
-        if (categoryDropdown) categoryDropdown.style.display = isLoggedIn ? 'block' : 'none';
         
-        // Attach logout handler
-        if (logoutLink) {
-            logoutLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.logout();
-                window.location.href = '/';
-            });
+        // Update dashboard link based on role
+        if (dashboardLink && isLoggedIn) {
+            switch (userRole) {
+                case 'teacher':
+                    dashboardLink.href = 'teacher-dashboard.html';
+                    dashboardLink.textContent = 'Teacher Dashboard';
+                    break;
+                case 'admin':
+                case 'school_admin':
+                    dashboardLink.href = 'admin-dashboard.html';
+                    dashboardLink.textContent = 'Admin Dashboard';
+                    break;
+                default:
+                    dashboardLink.href = 'dashboard.html';
+                    dashboardLink.textContent = 'Dashboard';
+            }
         }
         
-        // Handle restricted content
-        const restrictedElements = document.querySelectorAll('.restricted');
-        restrictedElements.forEach(element => {
-            if (isLoggedIn) {
-                element.classList.remove('disabled');
-                if (element.tagName === 'A') {
-                    element.style.pointerEvents = 'auto';
-                    element.removeAttribute('data-tooltip');
-                }
-            } else {
-                element.classList.add('disabled');
-                if (element.tagName === 'A') {
-                    element.style.pointerEvents = 'none';
-                    element.setAttribute('data-tooltip', 'Login required to access this feature');
-                    
-                    // Add login redirect
-                    element.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        window.location.href = `/login.html?redirect=${encodeURIComponent(element.href)}`;
-                    });
-                }
-            }
+        // Show/hide role-specific navigation
+        if (teacherNav) {
+            teacherNav.style.display = (isLoggedIn && (userRole === 'teacher' || userRole === 'admin')) ? 'block' : 'none';
+        }
+        if (adminNav) {
+            adminNav.style.display = (isLoggedIn && (userRole === 'admin' || userRole === 'school_admin')) ? 'block' : 'none';
+        }
+        if (studentNav) {
+            studentNav.style.display = (isLoggedIn && userRole === 'student') ? 'block' : 'none';
+        }
+        
+        // Handle role-restricted content
+        this.handleRoleRestrictions(userRole);
+    },
+    
+    /**
+     * Handle role-based content restrictions
+     */
+    handleRoleRestrictions: function(userRole) {
+        // Hide content based on role restrictions
+        const teacherOnlyElements = document.querySelectorAll('.teacher-only');
+        const adminOnlyElements = document.querySelectorAll('.admin-only');
+        const studentOnlyElements = document.querySelectorAll('.student-only');
+        
+        teacherOnlyElements.forEach(element => {
+            element.style.display = (userRole === 'teacher' || userRole === 'admin') ? 'block' : 'none';
         });
+        
+        adminOnlyElements.forEach(element => {
+            element.style.display = (userRole === 'admin' || userRole === 'school_admin') ? 'block' : 'none';
+        });
+        
+        studentOnlyElements.forEach(element => {
+            element.style.display = (userRole === 'student') ? 'block' : 'none';
+        });
+    },
+    
+    /**
+     * Enhanced logout with role cleanup
+     */
+    logout: function() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userData');
+        
+        // Server-side logout
+        fetch('/auth/logout', { method: 'GET' }).catch(console.error);
+    },
+    
+    /**
+     * Check if user can access specific student data (for teachers)
+     */
+    canAccessStudent: async function(studentId) {
+        const user = await this.getCurrentUser();
+        if (!user) return false;
+        
+        // Admins can access all students in their school
+        if (user.role === 'admin' || user.role === 'school_admin') {
+            return true;
+        }
+        
+        // Teachers can access students in their classes
+        if (user.role === 'teacher') {
+            return user.classPermissions?.some(permission => 
+                permission.studentIds.includes(studentId)
+            );
+        }
+        
+        // Students can only access their own data
+        return user.role === 'student' && user.id === studentId;
     }
 };
 
-// Auto-run UI update when script loads
+// Auto-update UI on page load
 document.addEventListener('DOMContentLoaded', function() {
     authUtils.updateAuthUI();
 });
 
-// Export for module use if needed
+// Export for module use
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = authUtils;
 }

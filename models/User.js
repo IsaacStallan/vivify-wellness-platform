@@ -1,131 +1,105 @@
+// models/User.js - Enhanced with role-based access
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: [true, 'Username is required'],
+        required: true,
         unique: true,
-        trim: true,
-        minlength: [3, 'Username must be at least 3 characters']
+        trim: true
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: true,
         unique: true,
-        trim: true,
-        lowercase: true,
-        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email address']
+        lowercase: true
     },
     password: {
         type: String,
-        required: [true, 'Password is required'],
-        minlength: [8, 'Password must be at least 8 characters']
+        required: true
     },
+    // NEW: Role-based access
+    role: {
+        type: String,
+        enum: ['student', 'teacher', 'admin', 'school_admin'],
+        default: 'student'
+    },
+    // NEW: School association for teachers/admins
+    schoolId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'School',
+        required: function() {
+            return this.role !== 'student';
+        }
+    },
+    // NEW: For teachers - which classes/year levels they can access
+    classPermissions: [{
+        yearLevel: Number,
+        className: String,
+        studentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    }],
+    // NEW: Student-specific data
+    studentData: {
+        yearLevel: {
+            type: Number,
+            min: 7,
+            max: 12,
+            required: function() {
+                return this.role === 'student';
+            }
+        },
+        schoolClass: String,
+        teacherIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        parentEmail: String,
+        // Privacy settings for what teachers can see
+        privacySettings: {
+            shareWellnessScores: { type: Boolean, default: true },
+            shareActivityData: { type: Boolean, default: true },
+            shareAssessmentResults: { type: Boolean, default: false }
+        }
+    },
+    // Existing fields
     emailVerified: {
         type: Boolean,
         default: false
     },
     verificationToken: String,
     resetPasswordToken: String,
-    resetPasswordExpiry: Date,
-    profileImage: {
-        type: String,
-        default: '/images/default-profile.png'
-    },
-    role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
-    },
-    createdAt: {
+    resetPasswordExpires: Date,
+    lastLogin: {
         type: Date,
         default: Date.now
-    },
-    lastLogin: Date,
-    preferences: {
-        theme: {
-            type: String,
-            enum: ['light', 'dark'],
-            default: 'dark'
-        },
-        notifications: {
-            email: {
-                type: Boolean,
-                default: true
-            },
-            push: {
-                type: Boolean,
-                default: true
-            }
-        }
-    },
-    wellnessData: {
-        physicalScore: {
-            type: Number,
-            min: 0,
-            max: 100,
-            default: 0
-        },
-        mentalScore: {
-            type: Number,
-            min: 0,
-            max: 100,
-            default: 0
-        },
-        academicScore: {
-            type: Number,
-            min: 0,
-            max: 100,
-            default: 0
-        },
-        socialScore: {
-            type: Number,
-            min: 0,
-            max: 100,
-            default: 0
-        },
-        lastAssessment: Date
-    },
-    activity: [{
-        type: {
-            type: String,
-            enum: ['login', 'assessment', 'workout', 'meditation', 'nutrition', 'other']
-        },
-        timestamp: {
-            type: Date,
-            default: Date.now
-        },
-        details: mongoose.Schema.Types.Mixed
-    }]
-}, { timestamps: true });
-
-// Add pre-save hooks, virtual fields, or methods here if needed
-
-// Example method to calculate overall wellness score
-UserSchema.methods.calculateOverallWellnessScore = function() {
-    const { physicalScore, mentalScore, academicScore, socialScore } = this.wellnessData;
-    
-    // Only calculate if all scores are populated
-    if (physicalScore !== undefined && mentalScore !== undefined && 
-        academicScore !== undefined && socialScore !== undefined) {
-        // Simple average calculation (could be weighted if needed)
-        return Math.round((physicalScore + mentalScore + academicScore + socialScore) / 4);
     }
-    
-    return 0;
+}, {
+    timestamps: true
+});
+
+// NEW: School model for multi-tenancy
+const schoolSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    address: String,
+    state: {
+        type: String,
+        enum: ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT']
+    },
+    schoolCode: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    subscriptionTier: {
+        type: String,
+        enum: ['basic', 'premium', 'enterprise'],
+        default: 'basic'
+    }
+}, {
+    timestamps: true
+});
+
+module.exports = {
+    User: mongoose.model('User', userSchema),
+    School: mongoose.model('School', schoolSchema)
 };
-
-// Example method to add activity log
-UserSchema.methods.addActivity = function(type, details = {}) {
-    this.activity.push({
-        type,
-        timestamp: new Date(),
-        details
-    });
-    
-    return this.save();
-};
-
-const User = mongoose.model('User', UserSchema);
-
-module.exports = User;
