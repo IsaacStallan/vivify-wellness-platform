@@ -862,6 +862,7 @@
                 const confirmPassword = document.getElementById('confirmPassword').value.trim();
                 const userRole = document.getElementById('userRole').value;
                 
+                // Validation (keep your existing validation code)
                 if (!username || !email || !password || !userRole) {
                     showMessage('Please fill in all required fields and select your role.');
                     return;
@@ -872,23 +873,8 @@
                     return;
                 }
                 
-                if (password.length < 8 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
-                    showMessage('Password must meet all requirements listed above.');
-                    return;
-                }
-                
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    showMessage('Please enter a valid email address.');
-                    return;
-                }
-                
-                let userData = {
-                    username,
-                    email,
-                    password,
-                    role: userRole
-                };
+                // Role-specific data collection
+                let signupData = { username, email, password, role: userRole };
                 
                 if (userRole === 'student') {
                     const yearLevel = document.getElementById('yearLevel').value;
@@ -901,117 +887,48 @@
                     
                     if (school === 'Other') {
                         school = document.getElementById('otherSchool').value.trim();
-                        if (!school) {
-                            showMessage('Please specify your school name.');
-                            return;
-                        }
                     }
                     
-                    userData.yearLevel = parseInt(yearLevel);
-                    userData.school = school;
-                    
-                    const classCode = document.getElementById('teacherClassCode').value.trim();
-                    if (classCode) {
-                        userData.pendingClassCode = classCode.toUpperCase();
-                    }
-                    
-                } else if (userRole === 'teacher' || userRole === 'admin') {
+                    signupData.yearLevel = parseInt(yearLevel);
+                    signupData.schoolCode = 'KNOX2024'; // Default for Knox students
+                    signupData.className = school;
+                } else {
                     const schoolCode = document.getElementById('schoolCode').value.trim();
-                    const staffId = document.getElementById('staffId').value.trim();
-                    const department = document.getElementById('department').value.trim();
-                    
                     if (!schoolCode) {
                         showMessage('Please enter your school code.');
                         return;
                     }
-                    
-                    userData.schoolCode = schoolCode;
-                    userData.staffId = staffId;
-                    userData.department = department;
+                    signupData.schoolCode = schoolCode;
                 }
                 
                 signupBtn.textContent = 'Creating Account...';
                 signupBtn.disabled = true;
-                signupForm.classList.add('loading');
                 
                 try {
-                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    // CALL BACKEND SIGNUP
+                    const response = await fetch('/auth/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(signupData)
+                    });
                     
-                    const existingUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
-                    const userExists = existingUsers.some(user => user.email === email);
+                    const result = await response.json();
                     
-                    if (userExists) {
-                        throw new Error('An account with this email already exists.');
+                    if (response.ok) {
+                        showMessage('Account created successfully! You can now log in.', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html?message=signup-success';
+                        }, 2000);
+                    } else {
+                        showMessage(result.message || 'Signup failed');
                     }
-                    
-                    const userProfile = {
-                        id: Date.now(),
-                        name: username,
-                        email: email,
-                        role: userRole,
-                        joinDate: new Date().toISOString(),
-                        verified: true
-                    };
-                    
-                    if (userRole === 'student') {
-                        userProfile.school = userData.school;
-                        userProfile.yearLevel = userData.yearLevel;
-                        userProfile.classes = [];
-                    } else if (userRole === 'teacher' || userRole === 'admin') {
-                        userProfile.schoolCode = userData.schoolCode;
-                        userProfile.staffId = userData.staffId;
-                        userProfile.department = userData.department;
-                        userProfile.classPermissions = [];
-                    }
-                    
-                    existingUsers.push(userProfile);
-                    localStorage.setItem('vivifyUsers', JSON.stringify(existingUsers));
-                    localStorage.setItem('userProfile', JSON.stringify(userProfile));
-                    localStorage.setItem('userLoggedIn', 'true');
-                    localStorage.setItem('userRole', userRole);
-                    localStorage.setItem('authToken', 'demo_token_' + Date.now());
-                    
-                    if (userProfile.role === 'student' && userData.pendingClassCode) {
-                        setTimeout(async () => {
-                            const result = await ClassManager.joinClass(userProfile.id, userData.pendingClassCode);
-                            if (result.success) {
-                                console.log('Class join result:', result);
-                                userProfile.classes.push({
-                                    classCode: userData.pendingClassCode,
-                                    status: result.pending ? 'pending' : 'active',
-                                    joinedAt: new Date().toISOString()
-                                });
-                                localStorage.setItem('userProfile', JSON.stringify(userProfile));
-                            }
-                        }, 1000);
-                    }
-                    
-                    showMessage('Account created successfully! Redirecting...', 'success');
-                    
-                    setTimeout(() => {
-                        switch (userRole) {
-                            case 'teacher':
-                                window.location.href = 'teacher-dashboard.html';
-                                break;
-                            case 'admin':
-                                window.location.href = 'admin-dashboard.html';
-                                break;
-                            case 'student':
-                            default:
-                                // MODIFIED: Redirect students to baseline assessment first
-                                localStorage.setItem('needsBaselineAssessment', 'true');
-                                window.location.href = 'wellness-baseline-assessment.html';
-                                break;
-                        }
-                    }, 2000);
                     
                 } catch (error) {
                     console.error('Signup error:', error);
-                    showMessage(error.message || 'An error occurred during signup. Please try again.');
+                    showMessage('Network error. Please try again.');
                 } finally {
                     signupBtn.textContent = 'Create Account';
                     signupBtn.disabled = false;
-                    signupForm.classList.remove('loading');
                 }
             });
 

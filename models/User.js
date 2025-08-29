@@ -1,105 +1,145 @@
-// models/User.js - Enhanced with role-based access
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
+        required: [true, 'Username is required'],
         unique: true,
-        trim: true
+        trim: true,
+        minlength: [3, 'Username must be at least 3 characters']
     },
     email: {
         type: String,
-        required: true,
+        required: [true, 'Email is required'],
         unique: true,
-        lowercase: true
+        trim: true,
+        lowercase: true,
+        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email address']
     },
     password: {
         type: String,
-        required: true
+        required: [true, 'Password is required'],
+        minlength: [8, 'Password must be at least 8 characters']
     },
-    // NEW: Role-based access
-    role: {
-        type: String,
-        enum: ['student', 'teacher', 'admin', 'school_admin'],
-        default: 'student'
-    },
-    // NEW: School association for teachers/admins
-    schoolId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'School',
-        required: function() {
-            return this.role !== 'student';
-        }
-    },
-    // NEW: For teachers - which classes/year levels they can access
-    classPermissions: [{
-        yearLevel: Number,
-        className: String,
-        studentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
-    }],
-    // NEW: Student-specific data
-    studentData: {
-        yearLevel: {
-            type: Number,
-            min: 7,
-            max: 12,
-            required: function() {
-                return this.role === 'student';
-            }
-        },
-        schoolClass: String,
-        teacherIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-        parentEmail: String,
-        // Privacy settings for what teachers can see
-        privacySettings: {
-            shareWellnessScores: { type: Boolean, default: true },
-            shareActivityData: { type: Boolean, default: true },
-            shareAssessmentResults: { type: Boolean, default: false }
-        }
-    },
-    // Existing fields
     emailVerified: {
         type: Boolean,
         default: false
     },
     verificationToken: String,
     resetPasswordToken: String,
-    resetPasswordExpires: Date,
-    lastLogin: {
-        type: Date,
-        default: Date.now
-    }
-}, {
-    timestamps: true
+    resetPasswordExpiry: Date,
+    role: {
+        type: String,
+        enum: ['student', 'teacher', 'admin', 'school_admin', 'counselor'],
+        default: 'student'
+    },
+    school: {
+        type: String,
+        default: 'Knox Grammar School'
+    },
+    yearLevel: {
+        type: String,
+        enum: ['7', '8', '9', '10', '11', '12', '']
+    },
+    lastLogin: Date,
+    
+    // Wellness baseline assessment data
+    wellnessBaseline: {
+        scores: {
+            physical: { type: Number, min: 0, max: 100 },
+            mental: { type: Number, min: 0, max: 100 },
+            nutrition: { type: Number, min: 0, max: 100 },
+            lifeSkills: { type: Number, min: 0, max: 100 },
+            overall: { type: Number, min: 0, max: 100 }
+        },
+        responses: [{
+            question: String,
+            category: String,
+            value: Number,
+            answer: String
+        }],
+        completedAt: Date,
+        version: { type: String, default: '1.0' }
+    },
+    
+    // Class enrollment for students
+    enrolledClasses: [String],
+    
+    // Classes created by teachers
+    classes: [{
+        id: String,
+        code: String,
+        name: String,
+        subject: String,
+        yearLevel: String,
+        students: [String],
+        createdAt: Date,
+        active: { type: Boolean, default: true }
+    }],
+    
+    // User preferences
+    preferences: {
+        theme: {
+            type: String,
+            enum: ['light', 'dark'],
+            default: 'dark'
+        },
+        notifications: {
+            email: { type: Boolean, default: true },
+            push: { type: Boolean, default: true }
+        }
+    },
+    
+    // Activity tracking
+    activities: [{
+        type: {
+            type: String,
+            enum: ['login', 'assessment', 'workout', 'meditation', 'nutrition', 'goal', 'other']
+        },
+        category: String,
+        description: String,
+        points: Number,
+        timestamp: {
+            type: Date,
+            default: Date.now
+        }
+    }]
+}, { 
+    timestamps: true 
 });
 
-// NEW: School model for multi-tenancy
-const schoolSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    address: String,
-    state: {
-        type: String,
-        enum: ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT']
-    },
-    schoolCode: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    subscriptionTier: {
-        type: String,
-        enum: ['basic', 'premium', 'enterprise'],
-        default: 'basic'
+// Method to calculate overall wellness score
+UserSchema.methods.calculateOverallWellnessScore = function() {
+    if (this.wellnessBaseline && this.wellnessBaseline.scores) {
+        const { physical, mental, nutrition, lifeSkills } = this.wellnessBaseline.scores;
+        
+        if (physical !== undefined && mental !== undefined && 
+            nutrition !== undefined && lifeSkills !== undefined) {
+            return Math.round((physical + mental + nutrition + lifeSkills) / 4);
+        }
     }
-}, {
-    timestamps: true
-});
-
-module.exports = {
-    User: mongoose.model('User', userSchema),
-    School: mongoose.model('School', schoolSchema)
+    
+    return 0;
 };
+
+// Method to add activity
+UserSchema.methods.addActivity = function(type, category, description, points = 0) {
+    this.activities.push({
+        type,
+        category,
+        description,
+        points,
+        timestamp: new Date()
+    });
+    
+    // Keep only last 50 activities
+    if (this.activities.length > 50) {
+        this.activities = this.activities.slice(-50);
+    }
+    
+    return this.save();
+};
+
+const User = mongoose.model('User', UserSchema);
+
+module.exports = User;

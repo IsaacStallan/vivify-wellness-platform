@@ -448,9 +448,19 @@
         let currentQuestionIndex = 0;
         let responses = [];
 
+        // ADD this at the beginning of your DOMContentLoaded function in wellness-baseline-assessment.html
         document.addEventListener('DOMContentLoaded', function() {
             // Check if user should be here
-            if (localStorage.getItem('needsBaselineAssessment') !== 'true') {
+            const needsAssessment = localStorage.getItem('needsBaselineAssessment') === 'true';
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const hasCompletedBaseline = localStorage.getItem('wellnessData');
+            
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (!needsAssessment && hasCompletedBaseline) {
                 window.location.href = 'dashboard.html';
                 return;
             }
@@ -591,7 +601,7 @@
             calculateBaselineScores();
         }
 
-        function calculateBaselineScores() {
+        async function calculateBaselineScores() {
             const scores = {
                 physical: [],
                 mental: [],
@@ -625,21 +635,42 @@
 
             console.log('Calculated baseline scores:', finalScores);
 
-            // Save to user's assessment results
-            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-            localStorage.setItem(`assessment_${userProfile.id}`, JSON.stringify({
-                ...finalScores,
-                completedAt: new Date().toISOString(),
-                type: 'baseline',
-                responses: responses
-            }));
+            // Save to server if possible
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                try {
+                    const serverResponse = await fetch('/api/wellness/baseline', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({
+                            scores: finalScores,
+                            responses: responses
+                        })
+                    });
 
-            // Initialize wellness data with these scores
+                    if (serverResponse.ok) {
+                        console.log('Baseline assessment saved to server successfully');
+                    } else {
+                        console.log('Server save failed, using localStorage backup');
+                    }
+                } catch (error) {
+                    console.log('Server not available, using localStorage');
+                }
+            }
+
+            // Always save locally as backup
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            
+            // Create comprehensive wellness data
             const wellnessData = {
                 user: {
-                    name: userProfile.name,
-                    school: userProfile.school,
-                    yearLevel: userProfile.yearLevel,
+                    name: userProfile.username || userProfile.name || 'Student',
+                    username: userProfile.username || userProfile.name || 'Student',
+                    school: userProfile.school || 'Knox Grammar School',
+                    yearLevel: userProfile.yearLevel || '',
                     userId: userProfile.id,
                     joinDate: new Date().toISOString(),
                     lastActive: new Date().toISOString()
@@ -657,11 +688,16 @@
                 achievements: {
                     first_login: true,
                     assessment_complete: true
-                }
+                },
+                baselineCompleted: true,
+                assessmentResponses: responses,
+                lastUpdated: new Date().toISOString()
             };
 
             localStorage.setItem('wellnessData', JSON.stringify(wellnessData));
             localStorage.removeItem('needsBaselineAssessment');
+            
+            console.log('Wellness data saved:', wellnessData);
 
             showResults(finalScores);
         }
@@ -764,13 +800,39 @@
         }
 
         function goToDashboard() {
+            // Verify we have all required data
+            const wellnessData = localStorage.getItem('wellnessData');
+            const userProfile = localStorage.getItem('userProfile');
+            const username = localStorage.getItem('username');
+            
+            console.log('Pre-dashboard check:', {
+                hasWellnessData: !!wellnessData,
+                hasUserProfile: !!userProfile,
+                username: username
+            });
+            
+            if (!wellnessData) {
+                alert('Assessment data not saved properly. Please try again.');
+                return;
+            }
+            
+            if (!username) {
+                alert('User data missing. Please log in again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
             // Show loading message
             const btn = document.querySelector('.assessment-buttons button');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Setting up your dashboard...';
-            btn.disabled = true;
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Setting up your dashboard...';
+                btn.disabled = true;
+            }
             
+            // Small delay to show loading state
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                console.log('Redirecting to dashboard with wellness data');
+                window.location.href = 'Dashboard.html';
             }, 1500);
         }
 

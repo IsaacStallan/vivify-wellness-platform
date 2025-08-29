@@ -1052,27 +1052,104 @@
                 };
             }
 
-            initializeData() {
-                const realisticScores = this.generateRealisticScores();
-                realisticScores.overall = Math.round(
-                    (realisticScores.physical + realisticScores.mental + realisticScores.nutrition + realisticScores.lifeSkills) / 4
-                );
+            // REPLACE the initializeData() function in your WellnessTracker class in Dashboard.html:
 
-                const defaultData = {
-                    user: {
-                        name: 'Student',
-                        school: 'School Name',
-                        joinDate: new Date().toISOString(),
-                        lastActive: new Date().toISOString(),
-                        userId: this.generateUserId()
-                    },
-                    scores: realisticScores, // Use realistic scores instead of all zeros
-                    activities: [],
-                    customGoals: []
-                };
- 
-                if (!localStorage.getItem('wellnessData')) {
-                    localStorage.setItem('wellnessData', JSON.stringify(defaultData));
+            initializeData() {
+                // Check if user has valid wellness data
+                const existingWellnessData = localStorage.getItem('wellnessData');
+                const needsAssessment = localStorage.getItem('needsBaselineAssessment') === 'true';
+                
+                if (!existingWellnessData) {
+                    console.log('No wellness data found - user needs baseline assessment');
+                    // Don't create default data - redirect to assessment
+                    window.location.href = 'wellness-baseline-assessment.html';
+                    return;
+                }
+
+                try {
+                    const wellness = JSON.parse(existingWellnessData);
+                    
+                    // Validate that it's properly completed baseline data
+                    if (!wellness.baselineCompleted || !wellness.scores) {
+                        console.log('Incomplete wellness data - redirecting to assessment');
+                        localStorage.removeItem('wellnessData');
+                        localStorage.setItem('needsBaselineAssessment', 'true');
+                        window.location.href = 'wellness-baseline-assessment.html';
+                        return;
+                    }
+                    
+                    console.log('Valid wellness data found:', wellness.scores);
+                    
+                } catch (error) {
+                    console.error('Invalid wellness data format, redirecting to assessment');
+                    localStorage.removeItem('wellnessData');
+                    localStorage.setItem('needsBaselineAssessment', 'true');
+                    window.location.href = 'wellness-baseline-assessment.html';
+                    return;
+                }
+            }
+
+            // ALSO REPLACE the loadUserData() function:
+            loadUserData() {
+                try {
+                    // Load wellness data first
+                    const stored = localStorage.getItem('wellnessData');
+                    if (!stored) {
+                        console.error('No wellness data found in loadUserData');
+                        window.location.href = 'wellness-baseline-assessment.html';
+                        return;
+                    }
+                    
+                    this.data = JSON.parse(stored);
+                    
+                    // Initialize missing properties with safe defaults
+                    if (!this.data.customGoals) this.data.customGoals = [];
+                    if (!this.data.activities) this.data.activities = [];
+                    if (!this.data.user) this.data.user = {};
+                    
+                    // Load fresh user profile data
+                    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                    const storedUsername = localStorage.getItem('username');
+                    
+                    // Update user data with priority: stored username > userProfile > existing data
+                    if (storedUsername) {
+                        this.data.user.name = storedUsername;
+                        this.data.user.username = storedUsername;
+                        console.log('Using stored username:', storedUsername);
+                    } else if (userProfile.username) {
+                        this.data.user.name = userProfile.username;
+                        this.data.user.username = userProfile.username;
+                        console.log('Using profile username:', userProfile.username);
+                    } else if (userProfile.name) {
+                        this.data.user.name = userProfile.name;
+                        this.data.user.username = userProfile.name;
+                        console.log('Using profile name:', userProfile.name);
+                    }
+                    
+                    // Update other user fields
+                    if (userProfile.school) this.data.user.school = userProfile.school;
+                    if (userProfile.yearLevel) this.data.user.yearLevel = userProfile.yearLevel;
+                    if (userProfile.id) this.data.user.userId = userProfile.id;
+                    if (userProfile.email) this.data.user.email = userProfile.email;
+                    
+                    // Validate scores exist
+                    if (!this.data.scores) {
+                        console.error('No scores found - invalid wellness data');
+                        window.location.href = 'wellness-baseline-assessment.html';
+                        return;
+                    }
+                    
+                    console.log('User data loaded successfully:', {
+                        username: this.data.user.name,
+                        scores: this.data.scores
+                    });
+                    
+                    this.saveData();
+                    
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    localStorage.removeItem('wellnessData');
+                    window.location.href = 'wellness-baseline-assessment.html';
                 }
             }
 
@@ -1566,22 +1643,34 @@
                this.updateDailyActivities();
            }
 
-           updateUserName() {
-               try {
-                   const userName = this.data.user.name || 'Student';
-                   const yearLevel = this.data.user.yearLevel || '';
-                   const userNameElement = document.getElementById('userName');
-                   if (userNameElement) {
-                       if (yearLevel && yearLevel !== 'Year Level') {
-                           userNameElement.textContent = `${userName} (Year ${yearLevel})`;
-                       } else {
-                           userNameElement.textContent = userName;
-                       }
-                   }
-               } catch (error) {
-                   console.error('Error updating user name:', error);
-               }
-           }
+           // REPLACE this function in your Dashboard.html around line 300-320
+            updateUserName() {
+                try {
+                    // Get username from localStorage (set during signup/login)
+                    const storedUsername = localStorage.getItem('username');
+                    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                    const yearLevel = userProfile.yearLevel || '';
+                    
+                    // Determine display name
+                    let displayName = storedUsername || userProfile.name || 'Student';
+                    
+                    const userNameElement = document.getElementById('userName');
+                    if (userNameElement) {
+                        if (yearLevel && yearLevel !== 'Year Level' && yearLevel !== '') {
+                            userNameElement.textContent = `${displayName} (Year ${yearLevel})`;
+                        } else {
+                            userNameElement.textContent = displayName;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error updating user name:', error);
+                    // Fallback
+                    const userNameElement = document.getElementById('userName');
+                    if (userNameElement) {
+                        userNameElement.textContent = 'Student';
+                    }
+                }
+            }
 
            updateWellnessScores() {
                try {
@@ -1886,143 +1975,224 @@
            loadStudentClasses(); // Refresh the classes display
        };
 
-       document.addEventListener('DOMContentLoaded', function() {
+       // REPLACE the DOMContentLoaded function at the bottom of Dashboard.html with this:
+        document.addEventListener('DOMContentLoaded', async function() {
             // Check authentication
             const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-           if (!isLoggedIn) {
-               window.location.href = 'login.html?redirect=dashboard';
-               return;
-           }
+            const authToken = localStorage.getItem('authToken');
+            
+            if (!isLoggedIn || !authToken) {
+                window.location.href = 'login.html?redirect=dashboard';
+                return;
+            }
 
-           // Initialize wellness tracker
-           window.tracker = new WellnessTracker();
+            // Verify authentication and get fresh user data
+            try {
+                const userResponse = await fetch('/api/user', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                if (userResponse.ok) {
+                    const userData = await userResponse.json();
+                    console.log('Fresh user data from server:', userData.user);
+                    
+                    // Update localStorage with server data
+                    localStorage.setItem('username', userData.user.username);
+                    localStorage.setItem('userEmail', userData.user.email);
+                    
+                    const userProfile = {
+                        id: userData.user.id,
+                        name: userData.user.username,
+                        username: userData.user.username,
+                        email: userData.user.email,
+                        role: userData.user.role || 'student',
+                        school: userData.user.school || 'Knox Grammar School',
+                        yearLevel: userData.user.yearLevel || ''
+                    };
+                    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                    
+                } else if (userResponse.status === 401) {
+                    // Invalid token
+                    console.log('Invalid token, redirecting to login');
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (error) {
+                console.log('User verification failed:', error);
+            }
 
-           // Load student classes
-           loadStudentClasses();
+            // Check for baseline assessment completion
+            const needsAssessment = localStorage.getItem('needsBaselineAssessment') === 'true';
+            const wellnessData = localStorage.getItem('wellnessData');
+            
+            // If user needs assessment and has no wellness data, redirect
+            if (needsAssessment && !wellnessData) {
+                console.log('User needs baseline assessment, redirecting...');
+                window.location.href = 'wellness-baseline-assessment.html';
+                return;
+            }
 
-           // Handle logout
-           const logoutLink = document.getElementById('logoutLink');
-           if (logoutLink) {
-               logoutLink.addEventListener('click', function(e) {
-                   e.preventDefault();
-                   if (confirm('Are you sure you want to logout?')) {
-                       localStorage.removeItem('userLoggedIn');
-                       localStorage.removeItem('userRole');
-                       localStorage.removeItem('authToken');
-                       localStorage.removeItem('userProfile');
-                       localStorage.removeItem('wellnessData');
-                       localStorage.removeItem('assessmentResults');
-                       localStorage.removeItem('userPreferences');
-                       window.location.href = 'index.html';
-                   }
-               });
-           }
+            // If no wellness data exists at all, redirect to assessment
+            if (!wellnessData) {
+                console.log('No wellness data found, redirecting to baseline assessment');
+                localStorage.setItem('needsBaselineAssessment', 'true');
+                window.location.href = 'wellness-baseline-assessment.html';
+                return;
+            }
 
-           // Goal form handling
-           const addGoalBtn = document.getElementById('addGoalBtn');
-           const cancelGoalBtn = document.getElementById('cancelGoalBtn');
-           const goalForm = document.getElementById('goalForm');
-           const addGoalForm = document.getElementById('addGoalForm');
-           const goalDuration = document.getElementById('goalDuration');
-           const customDateGroup = document.getElementById('customDateGroup');
+            // Validate wellness data structure
+            try {
+                const wellness = JSON.parse(wellnessData);
+                if (!wellness.scores || !wellness.baselineCompleted) {
+                    console.log('Invalid wellness data, redirecting to assessment');
+                    localStorage.removeItem('wellnessData');
+                    localStorage.setItem('needsBaselineAssessment', 'true');
+                    window.location.href = 'wellness-baseline-assessment.html';
+                    return;
+                }
+            } catch (error) {
+                console.log('Corrupted wellness data, redirecting to assessment');
+                localStorage.removeItem('wellnessData');
+                localStorage.setItem('needsBaselineAssessment', 'true');
+                window.location.href = 'wellness-baseline-assessment.html';
+                return;
+            }
 
-           if (addGoalBtn) {
-               addGoalBtn.addEventListener('click', function() {
-                   addGoalForm.classList.add('active');
-                   document.getElementById('goalTitle').focus();
-               });
-           }
+            // Initialize dashboard with real data
+            console.log('Initializing dashboard with valid wellness data');
+            window.tracker = new WellnessTracker();
+            loadStudentClasses();
 
-           if (cancelGoalBtn) {
-               cancelGoalBtn.addEventListener('click', function() {
-                   addGoalForm.classList.remove('active');
-                   goalForm.reset();
-                   customDateGroup.style.display = 'none';
-               });
-           }
+            // Handle logout
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
 
-           if (goalDuration) {
-               goalDuration.addEventListener('change', function() {
-                   if (this.value === 'custom') {
-                       customDateGroup.style.display = 'block';
-                       document.getElementById('goalEndDate').required = true;
-                   } else {
-                       customDateGroup.style.display = 'none';
-                       document.getElementById('goalEndDate').required = false;
-                   }
-               });
-           }
+            // Initialize all form handlers (goal forms, etc.)
+            initializeGoalForms();
+            
+            // Track dashboard view
+            setTimeout(() => {
+                if (window.tracker) {
+                    window.tracker.trackActivity('dashboard_view', 'general', 'Dashboard accessed');
+                }
+            }, 1000);
+        });
 
-           if (goalForm) {
-               goalForm.addEventListener('submit', function(e) {
-                   e.preventDefault();
-                   
-                   const title = document.getElementById('goalTitle').value.trim();
-                   const category = document.getElementById('goalCategory').value;
-                   const target = document.getElementById('goalTarget').value;
-                   const duration = document.getElementById('goalDuration').value;
-                   
-                   if (!title || !category || !target || !duration) {
-                       alert('Please fill in all required fields');
-                       return;
-                   }
+        function initializeGoalForms() {
+            // Goal form handling
+            const addGoalBtn = document.getElementById('addGoalBtn');
+            const cancelGoalBtn = document.getElementById('cancelGoalBtn');
+            const goalForm = document.getElementById('goalForm');
+            const addGoalForm = document.getElementById('addGoalForm');
+            const goalDuration = document.getElementById('goalDuration');
+            const customDateGroup = document.getElementById('customDateGroup');
 
-                   if (parseInt(target) < 1 || parseInt(target) > 50) {
-                       alert('Target must be between 1 and 50');
-                       return;
-                   }
+            if (addGoalBtn) {
+                addGoalBtn.addEventListener('click', function() {
+                    addGoalForm.classList.add('active');
+                    document.getElementById('goalTitle').focus();
+                });
+            }
 
-                   let endDate;
-                   if (duration === 'week') {
-                       endDate = new Date();
-                       endDate.setDate(endDate.getDate() + 7);
-                   } else if (duration === 'month') {
-                       endDate = new Date();
-                       endDate.setMonth(endDate.getMonth() + 1);
-                   } else if (duration === 'custom') {
-                       const customDate = document.getElementById('goalEndDate').value;
-                       if (!customDate) {
-                           alert('Please select an end date');
-                           return;
-                       }
-                       endDate = new Date(customDate);
-                       if (endDate <= new Date()) {
-                           alert('End date must be in the future');
-                           return;
-                       }
-                   }
+            if (cancelGoalBtn) {
+                cancelGoalBtn.addEventListener('click', function() {
+                    addGoalForm.classList.remove('active');
+                    goalForm.reset();
+                    customDateGroup.style.display = 'none';
+                });
+            }
 
-                   const newGoal = window.tracker.addCustomGoal(title, category, target, endDate.toISOString());
-                   
-                   if (newGoal) {
-                       goalForm.reset();
-                       addGoalForm.classList.remove('active');
-                       customDateGroup.style.display = 'none';
-                   }
-               });
-           }
+            if (goalDuration) {
+                goalDuration.addEventListener('change', function() {
+                    if (this.value === 'custom') {
+                        customDateGroup.style.display = 'block';
+                        document.getElementById('goalEndDate').required = true;
+                    } else {
+                        customDateGroup.style.display = 'none';
+                        document.getElementById('goalEndDate').required = false;
+                    }
+                });
+            }
 
-           const resetDayBtn = document.getElementById('resetDayBtn');
-           if (resetDayBtn) {
-               resetDayBtn.addEventListener('click', function() {
-                   window.tracker.resetDailyActivities();
-               });
-           }
+            if (goalForm) {
+                goalForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const title = document.getElementById('goalTitle').value.trim();
+                    const category = document.getElementById('goalCategory').value;
+                    const target = document.getElementById('goalTarget').value;
+                    const duration = document.getElementById('goalDuration').value;
+                    
+                    if (!title || !category || !target || !duration) {
+                        alert('Please fill in all required fields');
+                        return;
+                    }
 
-           // Auto-uppercase class code input
-           const classCodeInput = document.getElementById('classCodeInput');
-           if (classCodeInput) {
-               classCodeInput.addEventListener('input', function() {
-                   this.value = this.value.toUpperCase();
-               });
-               
-               // Allow Enter key to join class
-               classCodeInput.addEventListener('keypress', function(e) {
-                   if (e.key === 'Enter') {
-                       joinClass();
-                   }
-               });
-           }
+                    if (parseInt(target) < 1 || parseInt(target) > 50) {
+                        alert('Target must be between 1 and 50');
+                        return;
+                    }
+
+                    let endDate;
+                    if (duration === 'week') {
+                        endDate = new Date();
+                        endDate.setDate(endDate.getDate() + 7);
+                    } else if (duration === 'month') {
+                        endDate = new Date();
+                        endDate.setMonth(endDate.getMonth() + 1);
+                    } else if (duration === 'custom') {
+                        const customDate = document.getElementById('goalEndDate').value;
+                        if (!customDate) {
+                            alert('Please select an end date');
+                            return;
+                        }
+                        endDate = new Date(customDate);
+                        if (endDate <= new Date()) {
+                            alert('End date must be in the future');
+                            return;
+                        }
+                    }
+
+                    const newGoal = window.tracker.addCustomGoal(title, category, target, endDate.toISOString());
+                    
+                    if (newGoal) {
+                        goalForm.reset();
+                        addGoalForm.classList.remove('active');
+                        customDateGroup.style.display = 'none';
+                    }
+                });
+            }
+
+            const resetDayBtn = document.getElementById('resetDayBtn');
+            if (resetDayBtn) {
+                resetDayBtn.addEventListener('click', function() {
+                    window.tracker.resetDailyActivities();
+                });
+            }
+
+            // Auto-uppercase class code input
+            const classCodeInput = document.getElementById('classCodeInput');
+            if (classCodeInput) {
+                classCodeInput.addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                classCodeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        joinClass();
+                    }
+                });
+            }
+        
 
            // Auto-refresh student classes every 10 seconds to show new enrollments
            setInterval(loadStudentClasses, 10000);
@@ -2030,7 +2200,7 @@
            setTimeout(() => {
                window.tracker.trackActivity('dashboard_view', 'general', 'Dashboard accessed');
            }, 1000);
-       });
+       };
 
       // Global tracking functions for other pages
       window.vivifyTracker = {
