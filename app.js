@@ -74,7 +74,7 @@ app.use(helmet({
 // CORS configuration for Knox Grammar
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://vivify.knoxgrammar.nsw.edu.au', 'http://localhost:3000']
+    ? ['https://vivify.au', 'https://www.vivify.au', 'https://vivify.knoxgrammar.nsw.edu.au', 'http://localhost:3000']
     : 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
