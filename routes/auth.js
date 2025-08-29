@@ -27,6 +27,44 @@ const createToken = (payload, expiresIn = '8h') => {
     );
 };
 
+// Add this as a temporary test route in your auth.js file
+// Put this BEFORE your existing signup route
+
+router.post('/test', (req, res) => {
+    console.log('Test route hit successfully!');
+    console.log('Request body:', req.body);
+    res.json({ 
+        success: true, 
+        message: 'Auth routes are working!',
+        body: req.body 
+    });
+});
+
+// Also add this simple signup test that doesn't require database
+router.post('/signup-test', async (req, res) => {
+    try {
+        console.log('Signup test route hit');
+        console.log('Request body:', req.body);
+        
+        const { username, email, password, role } = req.body;
+        
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        
+        // Skip database for now - just return success
+        res.status(201).json({
+            message: 'Test signup successful!',
+            user: { username, email, role: role || 'student' },
+            test: true
+        });
+        
+    } catch (error) {
+        console.error('Test signup error:', error);
+        res.status(500).json({ message: 'Test signup failed: ' + error.message });
+    }
+});
+
 // Signup route - REPLACE YOUR CURRENT SIGNUP ROUTE WITH THIS
 router.post('/signup', async (req, res) => {
     try {
