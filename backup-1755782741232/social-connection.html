@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Social Connection - Vivify</title>
+   <link rel="stylesheet" href="styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   <!-- Add Font Awesome for icons -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       /* Social Connection specific styles */
+       .social-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .social-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .social-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+       
+       .section-title {
+           color: #f39c12;
+           font-size: 2.5rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+           padding-bottom: 0.5rem;
+           border-bottom: 2px solid #333;
+       }
+
+       .section-subtitle {
+           color: #f39c12;
+           font-size: 1.8rem;
+           margin-bottom: 1rem;
+       }
+
+       .content-section {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 0 2rem;
+           width: 100%;
+       }
+
+       .intro-text {
+           font-size: 1.1rem;
+           line-height: 1.6;
+           margin-bottom: 2rem;
+       }
+
+       .connection-benefits {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin-bottom: 3rem;
+       }
+
+       .benefits-container {
+           display: flex;
+           flex-wrap: wrap;
+           gap: 1.5rem;
+           margin-top: 1.5rem;
+       }
+
+       .benefit-card {
+           flex: 1 1 200px;
+           background-color: #333;
+           padding: 1.5rem;
+           border-radius: 8px;
+           border-left: 4px solid #f39c12;
+       }
+
+       .benefit-card h3 {
+           display: flex;
+           align-items: center;
+           margin-bottom: 1rem;
+           color: #f39c12;
+       }
+
+       .benefit-card h3 i {
+           margin-right: 10px;
+       }
+
+       .benefit-card ul {
+           padding-left: 1.5rem;
+           margin: 0;
+       }
+
+       .benefit-card li {
+           margin-bottom: 0.5rem;
+       }
+
+       .loneliness-types {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 3rem 0;
+       }
+
+       .types-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 1.5rem;
+           margin-top: 1.5rem;
+       }
+
+       .type-card {
+           background-color: #333;
+           padding: 1.5rem;
+           border-radius: 8px;
+           text-align: center;
+       }
+
+       .type-icon {
+           font-size: 3rem;
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .type-card h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .type-card p {
+           color: #ddd;
+           line-height: 1.5;
+       }
+
+       .strategies-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .strategy-card {
+           background-color: #222;
+           border-radius: 10px;
+           overflow: hidden;
+           transition: transform 0.3s, box-shadow 0.3s;
+       }
+
+       .strategy-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+       }
+
+       .strategy-card img {
+           width: 100%;
+           height: 200px;
+           object-fit: cover;
+       }
+
+       .strategy-content {
+           padding: 1.5rem;
+       }
+
+       .strategy-content h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .strategy-content p {
+           margin-bottom: 1.5rem;
+       }
+
+       .steps-list {
+           counter-reset: step-counter;
+           list-style-type: none;
+           padding: 0;
+       }
+
+       .steps-list li {
+           counter-increment: step-counter;
+           position: relative;
+           padding-left: 3rem;
+           margin-bottom: 1.5rem;
+       }
+
+       .steps-list li::before {
+           content: counter(step-counter);
+           font-weight: bold;
+           position: absolute;
+           left: 0;
+           top: 0;
+           background: #f39c12;
+           color: black;
+           width: 2rem;
+           height: 2rem;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
+
+       .social-skills {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 3rem 0;
+       }
+
+       .skills-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+           gap: 1.5rem;
+           margin-top: 1.5rem;
+       }
+
+       .skill-card {
+           background-color: #333;
+           padding: 1.5rem;
+           border-radius: 8px;
+           display: flex;
+           align-items: flex-start;
+       }
+
+       .skill-icon {
+           color: #f39c12;
+           font-size: 1.5rem;
+           margin-right: 1rem;
+           flex-shrink: 0;
+       }
+
+       .skill-content h4 {
+           margin-top: 0;
+           margin-bottom: 0.5rem;
+           color: #f39c12;
+       }
+
+       .skill-content p {
+           margin: 0;
+       }
+
+       .campus-opportunities {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 3rem 0;
+           border-left: 5px solid #f39c12;
+       }
+
+       .campus-opportunities h2 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+           display: flex;
+           align-items: center;
+       }
+
+       .campus-opportunities h2 i {
+           margin-right: 10px;
+       }
+
+       .opportunities-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+           gap: 1.5rem;
+           margin-top: 1.5rem;
+       }
+
+       .opportunity-card {
+           background-color: rgba(0,0,0,0.3);
+           padding: 1.5rem;
+           border-radius: 8px;
+       }
+
+       .opportunity-card h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+           display: flex;
+           align-items: center;
+       }
+
+       .opportunity-card h3 i {
+           margin-right: 10px;
+       }
+
+       .digital-connections {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 3rem 0;
+       }
+
+       .digital-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+           gap: 1.5rem;
+           margin-top: 1.5rem;
+       }
+
+       .digital-card {
+           background-color: #333;
+           padding: 1.5rem;
+           border-radius: 8px;
+           text-align: center;
+       }
+
+       .digital-card .icon {
+           font-size: 2.5rem;
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .digital-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .warning-box {
+           background-color: rgba(231, 76, 60, 0.1);
+           border: 1px solid #e74c3c;
+           border-radius: 8px;
+           padding: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .warning-box h3 {
+           color: #e74c3c;
+           margin-bottom: 1rem;
+           display: flex;
+           align-items: center;
+       }
+
+       .warning-box h3 i {
+           margin-right: 10px;
+       }
+
+       .resources-section {
+            margin: 3rem auto; /* Change from '3rem 0' to '3rem auto' */
+            max-width: 1200px; /* Add a max-width */
+            padding: 0 2rem; /* Add some padding for mobile */
+            width: 100%; /* Ensure it takes full width up to max-width */
+        }
+
+       .resources-section .section-title {
+            text-align: center;
+        }
+
+        .resources-section > p {
+            text-align: center; /* Add this line to center the description text */
+            max-width: 800px;
+            margin: 0 auto 2rem auto; /* Center the paragraph block */
+        }
+
+       .resources-list {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+           gap: 1.5rem;
+           width: 100%;
+       }
+
+       .resource-item {
+           background-color: #222;
+           padding: 1.5rem;
+           border-radius: 10px;
+           display: flex;
+           flex-direction: column;
+           height: 100%;
+       }
+
+       .resource-item h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .resource-item p {
+           margin-bottom: 1.5rem;
+           flex-grow: 1;
+       }
+
+       .btn-container {
+           display: flex;
+           justify-content: center;
+           margin: 2rem 0;
+       }
+
+       .cta-button {
+           display: inline-block;
+           padding: 1rem 2rem;
+           background-color: #f39c12;
+           color: #000;
+           text-decoration: none;
+           border-radius: 5px;
+           font-weight: 700;
+           font-size: 1.1rem;
+           transition: background-color 0.3s, transform 0.3s;
+           text-align: center;
+       }
+
+       .cta-button:hover {
+           background-color: #e67e22;
+           transform: scale(1.05);
+       }
+
+       .social-assessment {
+           background-color: #2c3e50;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+           text-align: center;
+           border-left: 5px solid #f39c12;
+       }
+
+       .social-assessment h2 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .social-assessment p {
+           margin-bottom: 1.5rem;
+           max-width: 800px;
+           margin-left: auto;
+           margin-right: auto;
+       }
+
+       @media (max-width: 768px) {
+           .social-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .benefits-container {
+               flex-direction: column;
+           }
+           
+           .types-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .strategies-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .skills-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .opportunities-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .digital-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .resources-list {
+               grid-template-columns: 1fr;
+           }
+       }
+   </style>
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown" id="categoryDropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                               <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="social-hero">
+           <h1>Building Social Connections</h1>
+           <p>Discover strategies to overcome loneliness, build meaningful friendships, and create a supportive social network that enhances your college experience and mental wellbeing.</p>
+           <a href="#connection-strategies" class="cta-button">Learn Connection Strategies</a>
+       </section>
+
+       <!-- Introduction Section -->
+       <section class="content-section">
+           <h2 class="section-title">Why Social Connection Matters for Students</h2>
+           <p class="intro-text">
+               Human beings are wired for connection. Strong social relationships are not just nice to have – they're essential for mental health, academic success, and overall life satisfaction. For college students navigating new environments, building meaningful connections can be challenging but is crucial for thriving during your academic journey and beyond.
+           </p>
+
+           <!-- Benefits of Social Connection -->
+           <div class="connection-benefits">
+               <h3 class="section-subtitle">The Power of Social Connection</h3>
+               <p>Research shows that strong social connections provide numerous benefits that impact every aspect of student life.</p>
+               
+               <div class="benefits-container">
+                   <div class="benefit-card">
+                       <h3><i class="fas fa-brain"></i> Mental Health</h3>
+                       <ul>
+                           <li>Reduced anxiety and depression</li>
+                           <li>Lower stress levels</li>
+                           <li>Improved self-esteem and confidence</li>
+                           <li>Better emotional regulation</li>
+                           <li>Increased sense of belonging</li>
+                       </ul>
+                   </div>
+                   
+                   <div class="benefit-card">
+                       <h3><i class="fas fa-graduation-cap"></i> Academic Success</h3>
+                       <ul>
+                           <li>Study groups and peer learning</li>
+                           <li>Academic motivation and accountability</li>
+                           <li>Resource sharing and collaboration</li>
+                           <li>Better class attendance</li>
+                           <li>Increased graduation rates</li>
+                       </ul>
+                   </div>
+                   
+                   <div class="benefit-card">
+                       <h3><i class="fas fa-heart"></i> Physical Health</h3>
+                       <ul>
+                           <li>Stronger immune system</li>
+                           <li>Better sleep quality</li>
+                           <li>Lower blood pressure</li>
+                           <li>Reduced chronic inflammation</li>
+                           <li>Increased lifespan</li>
+                       </ul>
+                   </div>
+                   
+                   <div class="benefit-card">
+                       <h3><i class="fas fa-briefcase"></i> Future Success</h3>
+                       <ul>
+                           <li>Professional networking opportunities</li>
+                           <li>Career advancement potential</li>
+                           <li>Enhanced communication skills</li>
+                           <li>Leadership development</li>
+                           <li>Long-term life satisfaction</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Types of Loneliness -->
+       <section class="content-section">
+           <div class="loneliness-types">
+               <h2 class="section-subtitle">Understanding Loneliness in College</h2>
+               <p>Loneliness is a common experience among college students. Understanding different types of loneliness can help you identify what you're experiencing and find appropriate solutions.</p>
+               
+               <div class="types-grid">
+                   <div class="type-card">
+                       <div class="type-icon">
+                           <i class="fas fa-user-friends"></i>
+                       </div>
+                       <h3>Social Loneliness</h3>
+                       <p>Missing a network of friends and social connections. Common when starting college or transferring to a new school.</p>
+                   </div>
+                   
+                   <div class="type-card">
+                       <div class="type-icon">
+                           <i class="fas fa-heart"></i>
+                       </div>
+                       <h3>Emotional Loneliness</h3>
+                       <p>Lacking close, intimate relationships where you can share your deepest thoughts and feelings safely.</p>
+                   </div>
+                   
+                   <div class="type-card">
+                       <div class="type-icon">
+                           <i class="fas fa-home"></i>
+                       </div>
+                       <h3>Situational Loneliness</h3>
+                       <p>Temporary loneliness due to life changes like moving away from home, relationship changes, or major transitions.</p>
+                   </div>
+                   
+                   <div class="type-card">
+                       <div class="type-icon">
+                           <i class="fas fa-clock"></i>
+                       </div>
+                       <h3>Chronic Loneliness</h3>
+                       <p>Persistent feelings of isolation that don't improve with time or efforts to connect with others.</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Connection Strategies -->
+       <section id="connection-strategies" class="content-section">
+           <h2 class="section-title">Practical Strategies for Building Connections</h2>
+           <p>Building meaningful relationships takes time and effort, but these evidence-based strategies can help you create the social connections you're seeking.</p>
+           
+           <div class="strategies-grid">
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80" alt="Student Organizations">
+                   <div class="strategy-content">
+                       <h3>Join Student Organizations</h3>
+                       <p>Student clubs and organizations are one of the best ways to meet like-minded people who share your interests and passions.</p>
+                       <ol class="steps-list">
+                           <li>Explore the student activities fair and club listings on your campus website</li>
+                           <li>Attend a few meetings of different organizations that interest you</li>
+                           <li>Don't just attend – volunteer for committees or take on small responsibilities</li>
+                           <li>Be patient – it may take several meetings to feel comfortable and connected</li>
+                           <li>Consider starting your own club if you can't find one that fits your interests</li>
+                       </ol>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80" alt="Study Groups">
+                   <div class="strategy-content">
+                       <h3>Form Study Groups</h3>
+                       <p>Academic collaboration naturally builds relationships while improving your learning and performance.</p>
+                       <ol class="steps-list">
+                           <li>Identify classmates who seem engaged and responsible</li>
+                           <li>Suggest forming a study group for upcoming exams or projects</li>
+                           <li>Meet regularly in common spaces like libraries or student centers</li>
+                           <li>Take turns leading sessions and explaining concepts to each other</li>
+                           <li>Celebrate academic successes together to strengthen bonds</li>
+                       </ol>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=800&q=80" alt="Volunteer Work">
+                   <div class="strategy-content">
+                       <h3>Volunteer for Causes You Care About</h3>
+                       <p>Volunteering connects you with compassionate people while making a positive impact on your community.</p>
+                       <ul>
+                           <li>Research local nonprofits, animal shelters, or community centers</li>
+                           <li>Join campus service organizations or alternative break trips</li>
+                           <li>Participate in one-time events like charity runs or fundraisers</li>
+                           <li>Consider tutoring younger students or peer mentoring</li>
+                           <li>Use your skills – help with websites, social media, or event planning</li>
+                       </ul>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80" alt="Campus Events">
+                   <div class="strategy-content">
+                       <h3>Attend Campus Events</h3>
+                       <p>Regular campus events provide natural opportunities to meet people in a relaxed, structured environment.</p>
+                       <ul>
+                           <li>Check your campus events calendar weekly</li>
+                           <li>Attend lectures, workshops, and cultural events</li>
+                           <li>Go to sporting events and campus festivals</li>
+                           <li>Participate in residence hall activities and floor meetings</li>
+                           <li>Even if you go alone initially, you'll often meet others who did the same</li>
+                       </ul>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1556741533-974f8e62a92d?auto=format&fit=crop&w=800&q=80" alt="Fitness Activities">
+                   <div class="strategy-content">
+                       <h3>Take Fitness Classes or Join Sports</h3>
+                       <p>Physical activities create natural bonding opportunities and shared experiences that build friendships.</p>
+                       <ul>
+                           <li>Join group fitness classes at the campus recreation center</li>
+                           <li>Participate in intramural sports leagues</li>
+                           <li>Try club sports that welcome beginners</li>
+                           <li>Join running or hiking groups</li>
+                           <li>Consider martial arts, dance, or rock climbing clubs</li>
+                       </ul>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Dorm Life">
+                   <div class="strategy-content">
+                       <h3>Be Open in Your Living Space</h3>
+                       <p>Your dorm or living space provides daily opportunities for connection if you approach it intentionally.</p>
+                       <ol class="steps-list">
+                           <li>Keep your door open when you're in your room and available to chat</li>
+                           <li>Introduce yourself to neighbors and remember their names</li>
+                           <li>Participate in floor activities and residence hall programs</li>
+                           <li>Offer to share food, study snacks, or watch movies together</li>
+                           <li>Be the person who organizes group activities or outings</li>
+                       </ol>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Social Skills Development -->
+       <section class="content-section">
+           <div class="social-skills">
+               <h2 class="section-subtitle">Essential Social Skills for Connection</h2>
+               <p>Building connections requires social skills that can be learned and improved with practice. These skills will serve you well in college and throughout your life.</p>
+               
+               <div class="skills-grid">
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-ear-listen"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Active Listening</h4>
+                           <p>Focus fully on the speaker, ask follow-up questions, and show genuine interest in what they're sharing.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-comments"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Conversation Starters</h4>
+                           <p>Develop a repertoire of open-ended questions about classes, interests, weekend plans, or current events.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-handshake"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Showing Interest</h4>
+                           <p>Remember details people share with you and follow up in future conversations to show you care.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-share-alt"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Appropriate Self-Disclosure</h4>
+                           <p>Share personal information gradually and match the level of intimacy in the conversation.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-smile"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Positive Body Language</h4>
+                           <p>Maintain open posture, make appropriate eye contact, and use facial expressions that show engagement.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-users"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Group Dynamics</h4>
+                           <p>Learn to navigate group conversations, include others, and contribute meaningfully to discussions.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-exclamation-triangle"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Conflict Resolution</h4>
+                           <p>Address disagreements respectfully and work toward solutions that maintain relationships.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-heart"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Empathy and Support</h4>
+                           <p>Recognize when others need support and offer appropriate help or a listening ear.</p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Campus Opportunities -->
+       <section class="content-section">
+           <div class="campus-opportunities">
+               <h2><i class="fas fa-university"></i> Campus Connection Opportunities</h2>
+               <p>Your campus offers numerous structured opportunities to meet people and build relationships. Take advantage of these resources designed to foster community.</p>
+               
+               <div class="opportunities-grid">
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-users"></i> Student Organizations</h3>
+                       <p><strong>Academic clubs:</strong> Honor societies, major-specific organizations, study groups</p>
+                       <p><strong>Interest-based:</strong> Hobby clubs, cultural organizations, special interest groups</p>
+                       <p><strong>Service clubs:</strong> Volunteer organizations, community service groups</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-dumbbell"></i> Recreation & Sports</h3>
+                       <p><strong>Intramural sports:</strong> Casual leagues for all skill levels</p>
+                       <p><strong>Club sports:</strong> More competitive teams with regular practice</p>
+                       <p><strong>Fitness classes:</strong> Group exercise, yoga, martial arts, dance</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-briefcase"></i> Work & Leadership</h3>
+                       <p><strong>Campus jobs:</strong> Work-study positions, campus employment</p>
+                       <p><strong>Student government:</strong> Elected positions, committees, advocacy</p>
+                       <p><strong>Resident advisors:</strong> Leadership roles in residence halls</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-calendar-alt"></i> Events & Programs</h3
+                        <p><strong>Campus events:</strong> Concerts, festivals, guest speakers</p>
+                       <p><strong>Residence hall programs:</strong> Floor activities, building events</p>
+                       <p><strong>Cultural events:</strong> Multicultural celebrations, international programs</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-graduation-cap"></i> Academic Support</h3>
+                       <p><strong>Study groups:</strong> Course-specific collaborative learning</p>
+                       <p><strong>Tutoring:</strong> Peer tutoring programs, supplemental instruction</p>
+                       <p><strong>Research opportunities:</strong> Undergraduate research, lab partnerships</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-hands-helping"></i> Support Services</h3>
+                       <p><strong>Peer mentoring:</strong> New student orientation, academic support</p>
+                       <p><strong>Support groups:</strong> Identity-based groups, wellness communities</p>
+                       <p><strong>Counseling groups:</strong> Therapy groups, skill-building workshops</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Digital Connections -->
+       <section class="content-section">
+           <div class="digital-connections">
+               <h2 class="section-subtitle">Navigating Digital Connections</h2>
+               <p>While in-person connections are ideal, digital platforms can supplement your social network and help you connect with people who share your interests.</p>
+               
+               <div class="digital-grid">
+                   <div class="digital-card">
+                       <div class="icon">
+                           <i class="fas fa-mobile-alt"></i>
+                       </div>
+                       <h4>Campus Apps & Platforms</h4>
+                       <p>Many schools have apps for finding study partners, event announcements, and connecting with classmates.</p>
+                   </div>
+                   
+                   <div class="digital-card">
+                       <div class="icon">
+                           <i class="fas fa-comments"></i>
+                       </div>
+                       <h4>Class Group Chats</h4>
+                       <p>Join or create group chats for your classes to share notes, ask questions, and coordinate study sessions.</p>
+                   </div>
+                   
+                   <div class="digital-card">
+                       <div class="icon">
+                           <i class="fas fa-calendar"></i>
+                       </div>
+                       <h4>Virtual Events</h4>
+                       <p>Attend online workshops, virtual club meetings, and digital campus events to meet people with similar interests.</p>
+                   </div>
+                   
+                   <div class="digital-card">
+                       <div class="icon">
+                           <i class="fas fa-gamepad"></i>
+                       </div>
+                       <h4>Gaming & Hobbies</h4>
+                       <p>Connect with fellow students through online gaming communities, hobby forums, or virtual interest groups.</p>
+                   </div>
+               </div>
+               
+               <div class="warning-box">
+                   <h3><i class="fas fa-exclamation-triangle"></i> Digital Connection Balance</h3>
+                   <p>While digital connections can be valuable, prioritize in-person interactions when possible. Use online platforms as a bridge to face-to-face meetings and real-world activities. Be mindful of spending too much time on social media, which can sometimes increase feelings of loneliness and comparison.</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Overcoming Social Anxiety -->
+       <section class="content-section">
+           <div class="social-skills">
+               <h2 class="section-subtitle">Overcoming Social Anxiety</h2>
+               <p>Many students experience social anxiety when trying to make new connections. These strategies can help you manage anxiety and build confidence in social situations.</p>
+               
+               <div class="skills-grid">
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-seedling"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Start Small</h4>
+                           <p>Begin with low-pressure interactions like saying hello to classmates or asking simple questions.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-bullseye"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Set Realistic Goals</h4>
+                           <p>Aim to have one meaningful conversation per day rather than trying to make multiple friends immediately.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-brain"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Challenge Negative Thoughts</h4>
+                           <p>Question catastrophic thinking and remind yourself that most people are understanding and friendly.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-running"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Practice Self-Care</h4>
+                           <p>Manage anxiety through regular exercise, adequate sleep, and stress-reduction techniques.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-redo"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Practice Social Skills</h4>
+                           <p>Rehearse conversations, practice introducing yourself, and role-play social scenarios.</p>
+                       </div>
+                   </div>
+                   
+                   <div class="skill-card">
+                       <div class="skill-icon">
+                           <i class="fas fa-user-friends"></i>
+                       </div>
+                       <div class="skill-content">
+                           <h4>Focus on Others</h4>
+                           <p>Shift attention from your own anxiety to genuine interest in learning about other people.</p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Maintaining Relationships -->
+       <section class="content-section">
+           <div class="strategies-grid">
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="Maintaining Friendships">
+                   <div class="strategy-content">
+                       <h3>Nurturing New Friendships</h3>
+                       <p>Building connections is just the first step – maintaining and deepening relationships requires ongoing effort and intentionality.</p>
+                       <ol class="steps-list">
+                           <li>Follow up after initial meetings with specific plans or invitations</li>
+                           <li>Be reliable and consistent in your interactions and commitments</li>
+                           <li>Show genuine interest in their life, goals, and challenges</li>
+                           <li>Be supportive during difficult times and celebrate their successes</li>
+                           <li>Create shared experiences through activities, traditions, or regular meet-ups</li>
+                       </ol>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Quality vs Quantity">
+                   <div class="strategy-content">
+                       <h3>Quality Over Quantity</h3>
+                       <p>Focus on developing a few meaningful relationships rather than trying to be friends with everyone you meet.</p>
+                       <ul>
+                           <li>Invest time and energy in people who reciprocate your efforts</li>
+                           <li>Seek friends who share your values and support your goals</li>
+                           <li>Develop different types of friendships: study partners, activity buddies, close confidants</li>
+                           <li>Be authentic rather than trying to please everyone</li>
+                           <li>Accept that not every acquaintance will become a close friend</li>
+                       </ul>
+                   </div>
+               </div>
+               
+               <div class="strategy-card">
+                   <img src="https://images.unsplash.com/photo-1556484687-30636164638b?auto=format&fit=crop&w=800&q=80" alt="Conflict Resolution">
+                   <div class="strategy-content">
+                       <h3>Handling Relationship Challenges</h3>
+                       <p>All relationships face challenges. Learning to navigate conflicts and misunderstandings strengthens your connections.</p>
+                       <ul>
+                           <li>Address issues directly but respectfully rather than avoiding them</li>
+                           <li>Listen to understand, not just to respond or defend yourself</li>
+                           <li>Apologize sincerely when you make mistakes</li>
+                           <li>Set healthy boundaries while remaining compassionate</li>
+                           <li>Know when to seek help from counselors or mediators</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Social Assessment -->
+       <section class="content-section">
+           <div class="social-assessment">
+               <h2><i class="fas fa-clipboard-check"></i> Assess Your Social Wellbeing</h2>
+               <p>Understanding your current social connections and identifying areas for growth can help you create a more fulfilling social life. Our assessment provides personalized recommendations.</p>
+               <a href="social-connection-assessment.html" class="cta-button">Take Social Connection Assessment</a>
+           </div>
+       </section>
+
+       <!-- When to Seek Professional Help -->
+       <section class="content-section">
+           <div class="campus-opportunities">
+               <h2><i class="fas fa-user-md"></i> When to Seek Professional Support</h2>
+               <p>Sometimes social challenges require professional guidance. Consider reaching out for help if you experience:</p>
+               
+               <div class="opportunities-grid">
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-clock"></i> Persistent Loneliness</h3>
+                       <p>Feeling isolated for weeks or months despite efforts to connect with others</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-heart-broken"></i> Social Anxiety</h3>
+                       <p>Overwhelming fear or panic in social situations that interferes with daily life</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-graduation-cap"></i> Academic Impact</h3>
+                       <p>Social difficulties affecting your academic performance or class attendance</p>
+                   </div>
+                   
+                   <div class="opportunity-card">
+                       <h3><i class="fas fa-sad-tear"></i> Depression Symptoms</h3>
+                       <p>Persistent sadness, hopelessness, or loss of interest that makes socializing difficult</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Call to Action -->
+       <section class="content-section">
+           <div class="btn-container">
+               <a href="mental-health.html" class="cta-button">Explore More Mental Health Resources</a>
+           </div>
+       </section>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           // Update UI based on login status
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           // Handle logout
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+
+           // Smooth scrolling for anchor links
+           document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+               anchor.addEventListener('click', function (e) {
+                   e.preventDefault();
+                   const target = document.querySelector(this.getAttribute('href'));
+                   if (target) {
+                       target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+
+           // Add loading states for CTA buttons
+           document.querySelectorAll('.cta-button').forEach(button => {
+               button.addEventListener('click', function() {
+                   if (this.href && !this.href.startsWith('tel:')) {
+                       this.textContent = 'Loading...';
+                       this.style.opacity = '0.7';
+                   }
+               });
+           });
+
+           // Add hover effects for strategy cards
+           document.querySelectorAll('.strategy-card, .opportunity-card').forEach(card => {
+               card.addEventListener('mouseenter', function() {
+                   this.style.transform = 'translateY(-5px)';
+               });
+               
+               card.addEventListener('mouseleave', function() {
+                   this.style.transform = 'translateY(0)';
+               });
+           });
+       });
+   </script>
+</body>
+</html>

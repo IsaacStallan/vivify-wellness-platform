@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beginner's Strength Program - Vivify</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Program specific styles */
+        .program-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .program-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .program-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-heading {
+            text-align: center;
+            color: #f39c12;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .program-overview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .overview-card {
+            flex: 1 1 250px;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .overview-icon {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .overview-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: #f39c12;
+        }
+
+        .overview-card p {
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        .program-weeks {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .week-container {
+            margin-bottom: 3rem;
+        }
+
+        .week-header {
+            background-color: #222;
+            padding: 1rem 1.5rem;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .week-header h3 {
+            color: #f39c12;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .week-content {
+            background-color: #333;
+            border-radius: 0 0 10px 10px;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .week-content.active {
+            padding: 1.5rem;
+            max-height: 2000px; /* Adjusted for longer content */
+        }
+
+        .workout-day {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #444;
+        }
+
+        .workout-day:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .workout-day h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-table th, .exercise-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .exercise-table th {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .exercise-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .notes {
+            background-color: #222;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        .notes h5 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .notes p, .notes ul {
+            color: #ddd;
+            margin: 0;
+        }
+
+        .notes ul {
+            padding-left: 1.5rem;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 3rem 2rem;
+            margin: 3rem auto;
+            max-width: 800px;
+            border-radius: 10px;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.2rem;
+            background-color: #333;
+            color: #f39c12;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .faq-question:hover {
+            background-color: #444;
+        }
+
+        .faq-answer {
+            padding: 0 1.2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.2rem;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            color: #ddd;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .progress-tracking {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 3rem auto;
+        }
+
+        .progress-tracking h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .progress-tracking p {
+            color: #ddd;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .tracking-methods {
+            margin-top: 2rem;
+        }
+
+        .tracking-method {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .tracking-method:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .tracking-method h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .tracking-method p {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .program-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-table {
+                font-size: 0.9rem;
+            }
+            
+            .exercise-table th, .exercise-table td {
+                padding: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="../strength.html" class="active" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" aria-label="Flexibility Training Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="program-hero">
+            <h1>Beginner's Strength Program</h1>
+            <p>An 8-week progressive program designed to build a solid foundation in strength training with a focus on proper form and technique</p>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <h2 class="section-heading">Program Overview</h2>
+            <p>Welcome to Vivify's Beginner's Strength Training Program! This 8-week program is specifically designed for those who are new to strength training or returning after a long break. The focus is on learning proper exercise form, building a foundation of strength across all major muscle groups, and gradually introducing your body to resistance training.</p>
+            <p>You'll train three times per week with full-body workouts that incorporate fundamental compound movements to maximize efficiency and results. The program progressively increases in difficulty as your strength and confidence grow, with built-in deload periods to prevent overtraining and promote recovery.</p>
+            <p>By the end of this program, you'll have developed basic strength and muscle, established proper exercise technique, and built the confidence to move on to more advanced training programs.</p>
+        </section>
+
+        <!-- Program Overview -->
+        <div class="program-overview">
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3>Duration</h3>
+                <p>8 weeks total<br>3 workouts per week<br>45-60 minutes per session</p>
+            </div>
+
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <h3>Equipment</h3>
+                <p>Basic gym equipment<br>Dumbbells<br>Barbells<br>Weight machines</p>
+            </div>
+
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3>Focus</h3>
+                <p>Form development<br>Full-body strength<br>Basic muscle building<br>Movement patterns</p>
+            </div>
+
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Progression</h3>
+                <p>Gradual weight increases<br>Progressive volume<br>Technique refinement<br>Built-in deload periods</p>
+            </div>
+        </div>
+
+        <!-- Program Weeks -->
+        <section class="program-weeks">
+            <h2 class="section-heading">Weekly Workout Plans</h2>
+            
+            <!-- Week 1 -->
+            <div class="week-container">
+                <div class="week-header">
+                    <h3>Week 1: Foundations</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="week-content">
+                    <div class="workout-day">
+                        <h4>Day 1: Full Body A</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Goblet Squat</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bench Press</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Row</td>
+                                <td>3</td>
+                                <td>10 each side</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Standing Dumbbell Shoulder Press</td>
+                                <td>2</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Plank</td>
+                                <td>2</td>
+                                <td>30 sec hold</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Focus on learning proper form for each exercise. Use light weights and concentrate on the movement pattern. Take your time between sets to practice the movement without weight if needed.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 2: Full Body B</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Romanian Deadlift</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Push-Ups (Modified if needed)</td>
+                                <td>3</td>
+                                <td>8-12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Lat Pulldown</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Lateral Raises</td>
+                                <td>2</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Bodyweight Glute Bridge</td>
+                                <td>2</td>
+                                <td>15</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>For push-ups, use an elevated surface (bench, countertop) if you can't perform full push-ups yet. For Romanian deadlifts, focus on the hip hinge movement with light weight.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 3: Full Body C</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Split Squat</td>
+                                <td>3</td>
+                                <td>8 each leg</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Seated Cable Row</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Incline Dumbbell Press</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bicep Curls</td>
+                                <td>2</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Tricep Pushdowns</td>
+                                <td>2</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>For split squats, you can hold onto something for balance if needed. Focus on controlled movements with emphasis on proper posture and engagement of targeted muscles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 2 -->
+            <div class="week-container">
+                <div class="week-header">
+                    <h3>Week 2: Building Consistency</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="week-content">
+                    <div class="workout-day">
+                        <h4>Day 1: Full Body A</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Goblet Squat</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bench Press</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Row</td>
+                                <td>3</td>
+                                <td>12 each side</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Standing Dumbbell Shoulder Press</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Plank</td>
+                                <td>3</td>
+                                <td>30 sec hold</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Increase the weight slightly from Week 1 if you can maintain proper form. Focus on controlled eccentric (lowering) phase of each exercise.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 2: Full Body B</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Romanian Deadlift</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Push-Ups (Modified if needed)</td>
+                                <td>3</td>
+                                <td>10-15</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Lat Pulldown</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Lateral Raises</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Bodyweight Glute Bridge</td>
+                                <td>3</td>
+                                <td>15</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Try to progress your push-ups by using a lower elevated surface if you were using modifications. If you can do full push-ups, aim to increase your rep count.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 3: Full Body C</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Split Squat</td>
+                                <td>3</td>
+                                <td>10 each leg</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Seated Cable Row</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Incline Dumbbell Press</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bicep Curls</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Tricep Pushdowns</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Focus on maintaining consistent form while increasing weight or reps. Start tracking your weights to monitor progress.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 3 -->
+            <div class="week-container">
+                <div class="week-header">
+                    <h3>Week 3: Progressive Overload</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="week-content">
+                    <div class="workout-day">
+                        <h4>Day 1: Full Body A</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Barbell Back Squat (light)</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Barbell Bench Press (light)</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Row</td>
+                                <td>3</td>
+                                <td>12 each side</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Shoulder Press</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Plank</td>
+                                <td>3</td>
+                                <td>40 sec hold</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Introduction to barbell exercises. Use very light weight and focus on technique. Have a trainer check your form if possible.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 2: Full Body B</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Romanian Deadlift</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Push-Ups</td>
+                                <td>3</td>
+                                <td>Max reps (aim for 8-15)</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Lat Pulldown</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Lateral Raises</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Weighted Glute Bridge</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Increase weights from week 2. For push-ups, aim for maximum quality reps. If doing more than 15, consider a more challenging variation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 3: Full Body C</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Split Squat</td>
+                                <td>3</td>
+                                <td>10 each leg</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Seated Cable Row</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Incline Dumbbell Press</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>90 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bicep Curls</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Tricep
+                                    <td>Tricep Pushdowns</td>
+                                <td>3</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Increase the weights by approximately 5-10% if your form allows. Start focusing on the mind-muscle connection while performing each exercise.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 4 -->
+            <div class="week-container">
+                <div class="week-header">
+                    <h3>Week 4: Deload Week</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="week-content">
+                    <div class="workout-day">
+                        <h4>Day 1: Full Body A</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Goblet Squat</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bench Press</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Row</td>
+                                <td>2</td>
+                                <td>10 each side</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Standing Dumbbell Shoulder Press</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Plank</td>
+                                <td>2</td>
+                                <td>30 sec hold</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>This is a deload week. Use about 70-80% of your normal weights. Focus on perfect form and technique rather than intensity. This week is crucial for recovery and continued progress.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 2: Full Body B</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Romanian Deadlift</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Push-Ups</td>
+                                <td>2</td>
+                                <td>8-10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Lat Pulldown</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Lateral Raises</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Bodyweight Glute Bridge</td>
+                                <td>2</td>
+                                <td>12</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Continue with lighter weights. This week should feel relatively easy compared to last week. Use this time to focus on any form issues you've identified.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-day">
+                        <h4>Day 3: Full Body C</h4>
+                        <table class="exercise-table">
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Split Squat</td>
+                                <td>2</td>
+                                <td>8 each leg</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Seated Cable Row</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Incline Dumbbell Press</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Dumbbell Bicep Curls</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Tricep Pushdowns</td>
+                                <td>2</td>
+                                <td>10</td>
+                                <td>60 sec</td>
+                            </tr>
+                        </table>
+                        <div class="notes">
+                            <h5>Notes:</h5>
+                            <p>Final deload session. Assess how your body feels after three weeks of progressive training. Make notes of any exercises where form could be improved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 5-8 Summary -->
+            <div class="week-container">
+                <div class="week-header">
+                    <h3>Weeks 5-8: Strength Building Phase</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="week-content">
+                    <p>In weeks 5-8, you'll follow the same workout structure as weeks 1-3, but with progressive increases in weight and/or repetitions. The key principles during this phase include:</p>
+                    
+                    <ul style="color: #ddd; margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                        <li>Week 5: Return to your week 3 weights/reps and aim to increase by 5-10%</li>
+                        <li>Week 6: Further increase weights by 5-10% while maintaining good form</li>
+                        <li>Week 7: Focus on increasing either weight or reps for each exercise</li>
+                        <li>Week 8: Final week - push for personal bests while maintaining proper form</li>
+                    </ul>
+                    
+                    <div class="notes">
+                        <h5>Key Progression Guidelines:</h5>
+                        <ul>
+                            <li>Always prioritize form over weight - only increase loads when you can perform all prescribed repetitions with proper technique</li>
+                            <li>Aim to add 2.5-5 lbs to upper body exercises and 5-10 lbs to lower body exercises each week</li>
+                            <li>If you can't increase weight, try to add 1-2 reps to each set</li>
+                            <li>Keep detailed records of your weights and reps to track progress</li>
+                            <li>Listen to your body - if you're excessively sore or fatigued, take an extra rest day</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="notes" style="margin-top: 1.5rem;">
+                        <h5>What's Next?</h5>
+                        <p>After completing this 8-week program, you'll have developed a solid foundation of strength, learned proper exercise technique, and built confidence with resistance training. You're now ready to progress to one of the following options:</p>
+                        <ul>
+                            <li>Repeat this program with heavier weights to continue building strength</li>
+                            <li>Move on to our Hypertrophy Builder program to focus on muscle growth</li>
+                            <li>Transition to our Strength & Power program to develop more advanced strength skills</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Tracking -->
+        <section class="progress-tracking">
+            <h3>Tracking Your Progress</h3>
+            <p>Monitoring your progress is essential for staying motivated and ensuring your training is effective. Here are several methods to track your development throughout this program:</p>
+            
+            <div class="tracking-methods">
+                <div class="tracking-method">
+                    <h4>Workout Journal</h4>
+                    <p>Record the weights, sets, and reps for each exercise in every workout. Note how each exercise felt and any areas where form could be improved. This allows you to see your strength increases over time and identify patterns in your training.</p>
+                </div>
+                
+                <div class="tracking-method">
+                    <h4>Progress Photos</h4>
+                    <p>Take photos from the front, side, and back at the beginning of the program and every 2-4 weeks thereafter. Changes in body composition can be subtle and hard to notice day-to-day, but become apparent when comparing photos over time.</p>
+                </div>
+                
+                <div class="tracking-method">
+                    <h4>Performance Metrics</h4>
+                    <p>Track key performance indicators like the total weight lifted in key exercises, maximum number of push-ups, or plank hold time. These objective measurements provide clear evidence of your improving fitness.</p>
+                </div>
+                
+                <div class="tracking-method">
+                    <h4>Subjective Assessments</h4>
+                    <p>Note changes in how exercises feel, your energy levels, recovery time between sets, and general well-being. Improvements in these areas are important indicators of progress that numbers alone don't capture.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tips Section -->
+        <section class="tips-section">
+            <h3>Beginner Tips for Success</h3>
+            <ul class="tips-list">
+                <li><strong>Prioritize form over weight:</strong> Always use a weight that allows you to maintain proper technique throughout all repetitions. Poor form can lead to injury and less effective workouts.</li>
+                <li><strong>Warm up properly:</strong> Begin each workout with 5-10 minutes of light cardio and dynamic stretching to prepare your body for the upcoming work.</li>
+                <li><strong>Stay consistent:</strong> Regular workouts, even if occasionally less intense than planned, will yield better results than sporadic, extreme sessions.</li>
+                <li><strong>Focus on protein intake:</strong> Consume 0.7-1g of protein per pound of bodyweight daily to support muscle recovery and growth.</li>
+                <li><strong>Hydrate adequately:</strong> Drink plenty of water before, during, and after workouts to support performance and recovery.</li>
+                <li><strong>Get enough sleep:</strong> Aim for 7-9 hours of quality sleep each night, as this is when much of your muscle repair and growth occurs.</li>
+                <li><strong>Don't skip rest days:</strong> Rest is when your body adapts to the training stimulus. Overtraining can lead to plateaus or injuries.</li>
+                <li><strong>Ask for help:</strong> Don't hesitate to ask a trainer or experienced lifter for form checks or advice if you're unsure about an exercise.</li>
+            </ul>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is this program suitable for complete beginners with no fitness experience?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, this program is specifically designed for those with little to no strength training experience. The first few weeks focus on learning proper form with lighter weights before gradually increasing intensity. If you're completely new to exercise, consider having a qualified trainer review your form on the key movements during the first week.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What if I miss a workout?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Life happens, and missing an occasional workout is not a problem. Try to complete the workouts in order, even if that means pushing the schedule back a day. If you miss more than one workout in a week, simply pick up where you left off the following week rather than trying to cram multiple sessions together. Consistency over time matters more than a perfect weekly schedule.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How should I adjust weights throughout the program?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Start with weights that feel challenging but allow you to complete all prescribed repetitions with good form. Aim to increase weights by 5-10% each week (except during deload weeks). If you can easily perform 2-3 reps more than prescribed, it's time to increase the weight. For bodyweight exercises, progress by adding repetitions until you can perform 15-20 with good form, then consider a more challenging variation.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I add additional exercises to this program?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>While it might be tempting to add more exercises, we recommend following the program as designed, especially for the first 4 weeks. The program is carefully balanced to provide sufficient training stimulus while allowing proper recovery for beginners. If you have extra energy, consider adding 10-15 minutes of light cardio at the end of your strength sessions rather than additional resistance exercises. After week 4, if recovery is good, you might add 1-2 isolation exercises that target specific areas of interest.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What should I eat before and after workouts?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Before workouts, aim to consume a balanced meal with carbohydrates and protein about 1-2 hours prior to training (e.g., oatmeal with protein powder or a turkey sandwich). If training within an hour of eating, opt for something lighter like a banana or toast with a small amount of nut butter. After workouts, consume a meal or shake with 20-30g of protein and some carbohydrates within 1-2 hours to support recovery. Staying hydrated before, during, and after training is also crucial for performance and recovery.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Week accordion functionality
+            const weekHeaders = document.querySelectorAll('.week-header');
+            
+            weekHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const isActive = content.classList.contains('active');
+                    
+                    // Close all contents
+                    document.querySelectorAll('.week-content').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Toggle clicked content
+                    if (!isActive) {
+                        content.classList.add('active');
+                        header.querySelector('i').classList.add('fa-chevron-up');
+                        header.querySelector('i').classList.remove('fa-chevron-down');
+                    } else {
+                        header.querySelector('i').classList.add('fa-chevron-down');
+                        header.querySelector('i').classList.remove('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        question.querySelector('i').classList.add('fa-chevron-up');
+                        question.querySelector('i').classList.remove('fa-chevron-down');
+                    } else {
+                        question.querySelector('i').classList.add('fa-chevron-down');
+                        question.querySelector('i').classList.remove('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Open first week by default
+            document.querySelector('.week-content').classList.add('active');
+            document.querySelector('.week-header i').classList.add('fa-chevron-up');
+            document.querySelector('.week-header i').classList.remove('fa-chevron-down');
+            
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

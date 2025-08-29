@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hip Mobility Exercises - Vivify</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Hip Mobility page specific styles */
+        .mobility-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1600881333165-2e200f153624?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .mobility-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .mobility-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-heading {
+            text-align: center;
+            color: #f39c12;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .benefits-box {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .benefits-box h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .exercise-container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .exercise-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: #333;
+            cursor: pointer;
+        }
+
+        .exercise-header h3 {
+            color: #f39c12;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .exercise-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .exercise-content.active {
+            max-height: 2000px; /* Arbitrary large height */
+        }
+
+        .exercise-details {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exercise-image {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .exercise-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .exercise-instructions h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-instructions p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .instruction-steps {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .instruction-steps li {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .exercise-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background-color: #333;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-item i {
+            color: #f39c12;
+        }
+
+        .meta-item span {
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+
+        .tips-list {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tips-list li {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .student-specific {
+            background-color: #1a365d;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 3rem auto;
+            max-width: 800px;
+        }
+
+        .student-specific h3 {
+            color: #63b3ed;
+            margin-top: 0;
+        }
+
+        .student-specific p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .routine-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .routine-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .routine-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .routine-card p {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .routine-details {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 1.5rem;
+        }
+
+        .routine-details h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .routine-details ul {
+            color: #ddd;
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .routine-details li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.2rem;
+            background-color: #333;
+            color: #f39c12;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .faq-question:hover {
+            background-color: #444;
+        }
+
+        .faq-answer {
+            padding: 0 1.2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.2rem;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            color: #ddd;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .mobility-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio</a>
+                                <a href="../flexibility.html" class="active" aria-label="Flexibility Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="mobility-hero">
+            <h1>Hip Mobility Exercises</h1>
+            <p>Unlock better movement, reduce pain, and improve athletic performance with these targeted hip mobility exercises</p>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <h2 class="section-heading">Why Hip Mobility Matters for Students</h2>
+            <p>Your hip joint is one of the largest and most important mobility centers in your body, designed to move in multiple directions while maintaining stability. However, the modern student lifestyle—involving hours of sitting in lectures, studying at desks, and hunching over devices—can severely restrict this mobility, leading to pain, poor posture, and decreased physical performance.</p>
+            <p>Hip mobility refers to how well your hip joints move through their full range of motion. Limited hip mobility can lead to compensations elsewhere in the body, often resulting in knee pain, lower back issues, and even shoulder problems. For students who often transition directly from sitting in class to sitting for study sessions, this can be particularly problematic.</p>
+            <p>The exercises on this page are specifically designed to counteract the negative effects of prolonged sitting, restore natural hip function, and help you move more efficiently in daily activities and sports. Just 10-15 minutes of hip mobility work a few times a week can make a significant difference in how you feel and perform.</p>
+        </section>
+
+        <!-- Benefits Box -->
+        <div class="benefits-box">
+            <h3>Benefits of Improved Hip Mobility</h3>
+            <ul class="benefits-list">
+                <li><strong>Reduced lower back pain</strong> - Many cases of lower back discomfort stem from tight, immobile hips that force the spine to compensate.</li>
+                <li><strong>Better posture</strong> - Mobile hips allow for proper pelvic positioning, which is foundational for good posture throughout the entire body.</li>
+                <li><strong>Enhanced athletic performance</strong> - Whether you're running, jumping, or lifting weights, better hip mobility translates to improved power and efficiency.</li>
+                <li><strong>Decreased risk of injury</strong> - Mobile hips absorb and distribute forces properly, reducing injury risk during sports and daily activities.</li>
+                <li><strong>Improved sitting comfort</strong> - Essential for students who spend hours in lectures and studying, allowing for more comfortable positioning during extended sessions.</li>
+                <li><strong>Better circulation</strong> - Movement promotes blood flow to tight areas that become constricted during prolonged sitting.</li>
+            </ul>
+        </div>
+
+        <!-- Hip Mobility Exercises -->
+        <h2 class="section-heading">Essential Hip Mobility Exercises</h2>
+        <div class="exercise-container">
+            <!-- Exercise 1 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <h3>90/90 Hip Stretch</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="exercise-content">
+                    <div class="exercise-details">
+                        <div class="exercise-image">
+                            <img src="https://images.unsplash.com/photo-1600881333165-2e200f153624?auto=format&fit=crop&w=600&q=80" alt="90/90 Hip Stretch">
+                        </div>
+                        <div class="exercise-instructions">
+                            <h4>How to Perform</h4>
+                            <ol class="instruction-steps">
+                                <li>Sit on the floor with your right leg bent at 90 degrees in front of you (knee pointing forward) and your left leg bent at 90 degrees behind you (knee pointing to the side).</li>
+                                <li>Keep your back straight and sit tall through your spine.</li>
+                                <li>For a deeper stretch, lean forward slightly over your front leg while maintaining a straight back.</li>
+                                <li>Hold for 30-60 seconds, then switch sides.</li>
+                                <li>To increase the intensity, try to lower your body closer to the ground while maintaining the position.</li>
+                            </ol>
+                            <h4>Tips for Success</h4>
+                            <ul class="tips-list">
+                                <li>Use cushions or folded blankets under your hips if sitting directly on the floor is uncomfortable.</li>
+                                <li>Focus on keeping your spine neutral rather than rounding your back.</li>
+                                <li>Breathe deeply into any tight spots you feel in the hips.</li>
+                                <li>If you feel any pinching pain (rather than a stretching sensation), adjust your position.</li>
+                            </ul>
+                            <div class="exercise-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>Hold: 30-60 seconds per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-retweet"></i>
+                                    <span>Repetitions: 2-3 per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Difficulty: Intermediate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 2 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <h3>Hip Flexor Stretch (Kneeling Lunge)</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="exercise-content">
+                    <div class="exercise-details">
+                        <div class="exercise-image">
+                            <img src="https://images.unsplash.com/photo-1597075941308-6265941b64fe?auto=format&fit=crop&w=600&q=80" alt="Hip Flexor Stretch">
+                        </div>
+                        <div class="exercise-instructions">
+                            <h4>How to Perform</h4>
+                            <ol class="instruction-steps">
+                                <li>Start in a half-kneeling position with your right knee on the ground (use a mat or cushion for comfort) and your left foot flat on the floor in front of you, knee bent at 90 degrees.</li>
+                                <li>Place your hands on your left thigh for support and balance.</li>
+                                <li>Keeping your torso upright, gently shift your weight forward until you feel a stretch in the front of your right hip.</li>
+                                <li>To intensify the stretch, tuck your pelvis under slightly (posterior pelvic tilt) by engaging your core and glutes.</li>
+                                <li>Hold for 30-60 seconds, then switch sides.</li>
+                            </ol>
+                            <h4>Tips for Success</h4>
+                            <ul class="tips-list">
+                                <li>Keep your front knee directly above your ankle, not pushed forward over your toes.</li>
+                                <li>Maintain a straight line from your knee to your head—avoid arching your lower back.</li>
+                                <li>For a deeper stretch, raise your arm (on the same side as your back leg) overhead.</li>
+                                <li>If you have knee pain, place additional padding under your knee or try a different exercise.</li>
+                            </ul>
+                            <div class="exercise-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>Hold: 30-60 seconds per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-retweet"></i>
+                                    <span>Repetitions: 2-3 per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Difficulty: Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <h3>Pigeon Pose</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="exercise-content">
+                    <div class="exercise-details">
+                        <div class="exercise-image">
+                            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" alt="Pigeon Pose">
+                        </div>
+                        <div class="exercise-instructions">
+                            <h4>How to Perform</h4>
+                            <ol class="instruction-steps">
+                                <li>Start on all fours in a tabletop position.</li>
+                                <li>Bring your right knee forward toward your right wrist and angle your right shin so your right foot is near your left hip.</li>
+                                <li>Extend your left leg straight behind you, keeping the top of your foot on the floor.</li>
+                                <li>Keep your hips square to the front of your mat.</li>
+                                <li>For a deeper stretch, walk your hands forward and lower your upper body toward the floor, supporting yourself on your forearms or extending all the way down if comfortable.</li>
+                                <li>Hold for 30-90 seconds, then switch sides.</li>
+                            </ol>
+                            <h4>Tips for Success</h4>
+                            <ul class="tips-list">
+                                <li>If the full pose is too intense, place a folded blanket or cushion under your hip for support.</li>
+                                <li>For a modified version, try the "Figure 4" stretch while lying on your back.</li>
+                                <li>Focus on keeping your hips level and squared forward.</li>
+                                <li>If you feel any knee pain, back off the intensity or try a different hip opener.</li>
+                            </ul>
+                            <div class="exercise-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>Hold: 30-90 seconds per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-retweet"></i>
+                                    <span>Repetitions: 1-2 per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Difficulty: Intermediate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 4 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <h3>Dynamic Hip Circles</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="exercise-content">
+                    <div class="exercise-details">
+                        <div class="exercise-image">
+                            <img src="https://images.unsplash.com/photo-1522898467493-49726bf28798?auto=format&fit=crop&w=600&q=80" alt="Dynamic Hip Circles">
+                        </div>
+                        <div class="exercise-instructions">
+                            <h4>How to Perform</h4>
+                            <ol class="instruction-steps">
+                                <li>Stand with feet slightly wider than hip-width apart, hands on hips or extended out to the sides for balance.</li>
+                                <li>Shift your weight slightly onto one leg.</li>
+                                <li>Keeping your core engaged, begin making slow, controlled circles with your hips, as if you're tracing a circle with your pelvis.</li>
+                                <li>Complete 10 circles in one direction, then 10 in the opposite direction.</li>
+                                <li>Focus on making the circles as large and smooth as possible while maintaining balance and control.</li>
+                            </ol>
+                            <h4>Tips for Success</h4>
+                            <ul class="tips-list">
+                                <li>Start with smaller circles and gradually increase the size as you warm up.</li>
+                                <li>Keep your upper body relatively stable; the movement should come from your hips.</li>
+                                <li>Engage your core throughout the exercise to support your lower back.</li>
+                                <li>If balancing is difficult, you can place one hand on a wall or chair for support.</li>
+                            </ul>
+                            <div class="exercise-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>Repetitions: 10 circles in each direction</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-retweet"></i>
+                                    <span>Sets: 2-3</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Difficulty: Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 5 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <h3>Frog Stretch</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="exercise-content">
+                    <div class="exercise-details">
+                        <div class="exercise-image">
+                            <img src="https://images.unsplash.com/photo-1581122584612-713f89daa8eb?auto=format&fit=crop&w=600&q=80" alt="Frog Stretch">
+                        </div>
+                        <div class="exercise-instructions">
+                            <h4>How to Perform</h4>
+                            <ol class="instruction-steps">
+                                <li>Start on all fours in a tabletop position.</li>
+                                <li>Widen your knees as far apart as is comfortable, keeping your ankles in line with your knees (forming 90-degree angles).</li>
+                                <li>Flex your feet so the inner edges are on the floor and your ankles are at 90 degrees.</li>
+                                <li>Keeping your back flat, slowly rock your hips back toward your heels, then forward towards your hands.</li>
+                                <li>Continue this gentle rocking motion, gradually increasing your range of motion as your inner thighs and hips open up.</li>
+                                <li>For a static variation, hold the position where you feel the deepest stretch for 30-60 seconds.</li>
+                            </ol>
+                            <h4>Tips for Success</h4>
+                            <ul class="tips-list">
+                                <li>Use padding under your knees if you experience discomfort.</li>
+                                <li>Keep your back neutral—avoid excessive arching or rounding.</li>
+                                <li>Only go as wide with your knees as is comfortable; this is an intense stretch that should be approached gradually.</li>
+                                <li>If you have a history of groin injuries, consult with a healthcare provider before attempting this stretch.</li>
+                            </ul>
+                            <div class="exercise-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>Duration: 30-60 seconds or 10-15 gentle rocks</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-retweet"></i>
+                                    <span>Sets: 1-2</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Difficulty: Intermediate-Advanced</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 6 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <h3>World's Greatest Stretch</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="exercise-content">
+                    <div class="exercise-details">
+                        <div class="exercise-image">
+                            <img src="https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=600&q=80" alt="World's Greatest Stretch">
+                        </div>
+                        <div class="exercise-instructions">
+                            <h4>How to Perform</h4>
+                            <ol class="instruction-steps">
+                                <li>Start in a lunge position with your right foot forward and your left knee on the ground.</li>
+                                <li>Place your left hand on the ground inside your right foot, straightening your right leg slightly if needed.</li>
+                                <li>Rotate your torso to the right, extending your right arm toward the ceiling and following it with your gaze.</li>
+                                <li>Hold for 1-2 deep breaths.</li>
+                                <li>Return to the starting position and repeat 5 times before switching sides.</li>
+                            </ol>
+                            <h4>Tips for Success</h4>
+                            <ul class="tips-list">
+                                <li>Keep your front heel firmly planted on the ground.</li>
+                                <li>Ensure your front knee stays aligned with your ankle.</li>
+                                <li>Focus on the rotational component—this is what makes this stretch particularly effective for hip mobility.</li>
+                                <li>Breathe deeply and try to relax into the stretch with each exhale.</li>
+                            </ul>
+                            <div class="exercise-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>Hold: 1-2 deep breaths per repetition</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-retweet"></i>
+                                    <span>Repetitions: 5 per side</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Difficulty: Intermediate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student-Specific Section -->
+        <section class="student-specific">
+            <h3>Hip Mobility for Student Life</h3>
+            <p>As a student, you likely spend long hours sitting in lectures, studying at your desk, or hunched over a laptop. This sedentary behavior can severely impact your hip mobility and lead to discomfort, poor posture, and even decreased cognitive function due to physical discomfort.</p>
+            <p>Here are some student-specific recommendations:</p>
+            <ul>
+                <li><strong>Study Break Mobility:</strong> Set a timer to stand up and do 1-2 hip mobility exercises every 50 minutes of studying. This not only helps your hips but gives your brain a needed rest.</li>
+                <li><strong>Dorm Room Routine:</strong> The exercises on this page require minimal space and no equipment, making them perfect for small dorm rooms or apartments.</li>
+                <li><strong>Pre-Exam Stress Relief:</strong> Hip mobility work can help release tension that accumulates during stressful exam periods. Try a 5-minute routine before an exam to clear your mind.</li>
+                <li><strong>Laptop Alternatives:</strong> When possible, use standing desks or alternative study positions that don't require prolonged sitting. Consider studying while lying on your stomach occasionally to allow your hips to extend.</li>
+                <li><strong>Between Classes:</strong> Use the few minutes between classes to perform a quick standing hip mobility exercise instead of immediately sitting down again.</li>
+            </ul>
+        </section>
+
+        <!-- Sample Routines -->
+        <h2 class="section-heading">Hip Mobility Routines</h2>
+        <section class="routine-section">
+            <div class="routine-card">
+                <h3>5-Minute Morning Hip Mobilizer</h3>
+                <p>A quick morning routine to wake up your hips after sleeping and prepare them for the day ahead. Perfect for busy mornings before class.</p>
+                <div class="routine-details">
+                    <h4>Routine Structure:</h4>
+                    <ul>
+                        <li>Dynamic Hip Circles: 10 in each direction</li>
+                        <li>World's Greatest Stretch: 3 reps per side, holding each for 2 breaths</li>
+                        <li>90/90 Hip Stretch: 30 seconds per side</li>
+                        <li>Perform once through, focusing on smooth movement and deep breathing</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>10-Minute Study Break Hip Reset</h3>
+                <p>Use this routine during longer study sessions to counteract the negative effects of prolonged sitting and help you return to your work refreshed.</p>
+                <div class="routine-details">
+                    <h4>Routine Structure:</h4>
+                    <ul>
+                        <li>Hip Flexor Stretch: 45 seconds per side</li>
+                        <li>Dynamic Hip Circles: 10 in each direction</li>
+                        <li>Pigeon Pose: 60 seconds per side</li>
+                        <li>Frog Stretch: 30 seconds or 10 gentle rocks</li>
+                        <li>Finish with 5 deep breaths, focusing on relaxing your hip area</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>15-Minute Complete Hip Mobility Flow</h3>
+                <p>A comprehensive routine to fully restore hip mobility and function. Ideal for weekends or when you have more time.</p>
+                <div class="routine-details">
+                    <h4>Routine Structure:</h4>
+                    <ul>
+                        <li>Dynamic Hip Circles: 10 in each direction</li>
+                        <li>World's Greatest Stretch: 5 reps per side, holding each for 2 breaths</li>
+                        <li>Hip Flexor Stretch: 60 seconds per side</li>
+                        <li>90/90 Hip Stretch: 45 seconds per side</li>
+                        <li>Pigeon Pose: 90 seconds per side</li>
+                        <li>Frog Stretch: 45 seconds</li>
+                        <li>Finish by standing up and walking around for 1 minute to integrate the mobility work</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How often should I do hip mobility exercises?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>For students who spend long hours sitting, daily hip mobility work is ideal, even if it's just 5 minutes. At minimum, aim for 2-3 dedicated sessions per week of 10-15 minutes each. Additionally, taking short "mobility breaks" during study sessions can be extremely beneficial. Remember that consistency is more important than duration—regular short sessions will yield better results than occasional long ones.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>I feel pain in my hips when doing these exercises. Is that normal?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You should feel a stretching sensation or mild discomfort, but never sharp, pinching, or severe pain. If you experience pain, immediately stop the exercise and try a modified version or a different exercise altogether. Persistent hip pain should be evaluated by a healthcare professional, as it could indicate an underlying issue that needs attention. Remember that mobility work should be approached progressively—start with gentler exercises and gradually increase intensity as your mobility improves.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How long does it take to improve hip mobility?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You may notice reduced discomfort and improved ease of movement after just 1-2 weeks of consistent practice. However, significant changes in mobility typically require 4-8 weeks of regular work. Long-term improvements that genuinely change your movement patterns may take 3-6 months of consistent practice. Factors like your current mobility level, consistency of practice, age, and individual body structure all influence your rate of progress. Be patient and focus on gradual improvement rather than immediate results.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Should I do hip mobility exercises before or after my workout?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Both approaches offer benefits. Dynamic hip mobility exercises (like hip circles and the World's Greatest Stretch) make excellent warm-up activities before workouts, preparing your hips for movement and potentially improving performance. More static stretches (like pigeon pose or the 90/90 stretch) are generally better after workouts when your muscles are warm and more pliable. For optimal results, incorporate quick dynamic hip mobility in your warm-up and more sustained stretching in your cool-down. On non-workout days, you can combine both styles in a dedicated mobility session.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can improving hip mobility help with back pain?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, improved hip mobility can significantly reduce back pain for many people. Tight hip flexors and limited hip motion often force the lower back to compensate during movement, creating excessive stress on spinal structures. By restoring proper hip function, you allow your lumbar spine to remain in a more neutral position during activities, potentially alleviating pain. Many students report reduced back discomfort after implementing regular hip mobility work, especially those who spend long hours studying. However, if you have severe or persistent back pain, consult with a healthcare provider for a proper assessment.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Exercise accordion functionality
+            const exerciseHeaders = document.querySelectorAll('.exercise-header');
+            
+            exerciseHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const isActive = content.classList.contains('active');
+                    
+                    // Toggle clicked content
+                    content.classList.toggle('active');
+                    
+                    // Toggle icon
+                    const icon = header.querySelector('i');
+                    if (isActive) {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    } else {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        question.querySelector('i').classList.add('fa-chevron-up');
+                        question.querySelector('i').classList.remove('fa-chevron-down');
+                    } else {
+                        question.querySelector('i').classList.add('fa-chevron-down');
+                        question.querySelector('i').classList.remove('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

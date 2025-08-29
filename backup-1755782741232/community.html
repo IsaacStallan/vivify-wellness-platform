@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* Fixed Footer Styling */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .community-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .community-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .community-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .community-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .community-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .community-nav {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid #333;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: 1px solid #444;
+            color: #a0a0a0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab.active,
+        .nav-tab:hover {
+            background: #f39c12;
+            color: #000;
+            border-color: #f39c12;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Discussion Posts */
+        .post-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            border-color: #444;
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: #f39c12;
+        }
+
+        .post-user-info h4 {
+            color: #ffffff;
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
+        }
+
+        .post-meta {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .school-badge {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .post-title {
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            line-height: 1.4;
+        }
+
+        .post-content {
+            color: #d0d0d0;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: #333;
+            color: #a0a0a0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tag.mental-health { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+        .tag.nutrition { background: rgba(39, 174, 96, 0.2); color: #27ae60; }
+        .tag.fitness { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+        .tag.life-skills { background: rgba(155, 89, 182, 0.2); color: #9b59b6; }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #a0a0a0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .action-btn:hover {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        /* Study Groups */
+        .group-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            border-color: #444;
+            transform: translateY(-2px);
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .group-info h3 {
+            color: #ffffff;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .group-details {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .group-members {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .member-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #f39c12;
+            border: 2px solid #444;
+        }
+
+        .member-count {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+
+        .join-btn {
+            background: #f39c12;
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        /* Events */
+        .event-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #f39c12;
+        }
+
+        .event-date {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .date-block {
+            background: #333;
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .date-day {
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .date-month {
+            color: #a0a0a0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .event-info h3 {
+            color: #ffffff;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .event-location {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-description {
+            color: #d0d0d0;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        .event-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attending-count {
+            color: #27ae60;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Sidebar Components */
+        .sidebar-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trending-topic {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .trending-topic:last-child {
+            border-bottom: none;
+        }
+
+        .trending-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f39c12;
+        }
+
+        .trending-text {
+            color: #d0d0d0;
+            font-size: 0.9rem;
+        }
+
+        .trending-count {
+            color: #a0a0a0;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .online-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        .online-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #f39c12;
+            position: relative;
+        }
+
+        .online-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: #27ae60;
+            border-radius: 50%;
+            border: 2px solid #1a1a1a;
+        }
+
+        .online-info {
+            flex: 1;
+        }
+
+        .online-name {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .online-status {
+            color: #a0a0a0;
+            font-size: 0.8rem;
+        }
+
+        /* Create Post Form */
+        .create-post {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            color: #f39c12;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #f39c12;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .category-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: #333;
+            border: 2px solid #444;
+            color: #a0a0a0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .category-btn.selected {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .submit-btn {
+            background: #f39c12;
+            color: #000;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #a0a0a0;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #a0a0a0;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .community-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .community-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .community-container {
+                padding: 2rem 1rem;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tab {
+                flex: 1;
+                text-align: center;
+                min-width: 120px;
+            }
+            
+            .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .post-actions {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .community-hero {
+                padding: 4rem 1rem;
+            }
+            
+            .post-card,
+            .group-card,
+            .event-card {
+                padding: 1.5rem;
+            }
+            
+            .post-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                                <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="community-hero">
+                <h1>Student Community</h1>
+                <p>Connect with fellow Aussie students, share experiences, and support each other on your wellness journey. From study groups to mental health discussions, find your tribe here.</p>
+            </section>
+
+            <!-- Main Community Content -->
+            <div class="community-container">
+                <!-- Navigation Tabs -->
+                <div class="community-nav">
+                    <div class="nav-tabs">
+                        <button class="nav-tab active" onclick="switchTab('discussions')">
+                            <i class="fas fa-comments"></i> Discussions
+                        </button>
+                        <button class="nav-tab" onclick="switchTab('groups')">
+                            <i class="fas fa-users"></i> Study Groups
+                        </button>
+                        <button class="nav-tab" onclick="switchTab('events')">
+                            <i class="fas fa-calendar"></i> Events
+                        </button>
+                        <button class="nav-tab" onclick="switchTab('create')">
+                            <i class="fas fa-plus"></i> Create Post
+                        </button>
+                    </div>
+                </div>
+
+                <div class="community-grid">
+                    <!-- Main Content Area -->
+                    <div class="main-content">
+                        <!-- Discussions Tab -->
+                        <div id="discussions" class="tab-content active">
+                            <div class="loading" id="discussionsLoading">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading discussions...</p>
+                            </div>
+                            <div id="discussionsPosts" style="display: none;"></div>
+                        </div>
+
+                        <!-- Study Groups Tab -->
+                        <div id="groups" class="tab-content">
+                            <div class="loading" id="groupsLoading">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading study groups...</p>
+                            </div>
+                            <div id="groupsList" style="display: none;"></div>
+                        </div>
+
+                        <!-- Events Tab -->
+                        <div id="events" class="tab-content">
+                            <div class="loading" id="eventsLoading">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading events...</p>
+                            </div>
+                            <div id="eventsList" style="display: none;"></div>
+                        </div>
+
+                        <!-- Create Post Tab -->
+                        <div id="create" class="tab-content">
+                            <div class="create-post">
+                                <h2 style="color: #f39c12; margin-bottom: 1.5rem;">Share with the Community</h2>
+                                <form id="createPostForm">
+                                    <div class="form-group">
+                                        <label class="form-label">Post Title</label>
+                                        <input type="text" class="form-input" id="postTitle" placeholder="What's on your mind?" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Content</label>
+                                        <textarea class="form-textarea" id="postContent" placeholder="Share your thoughts, ask questions, or offer advice to fellow students..." required></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Category</label>
+                                        <div class="category-selector">
+                                            <button type="button" class="category-btn" data-category="general">General</button>
+                                            <button type="button" class="category-btn" data-category="mental-health">Mental Health</button>
+                                            <button type="button" class="category-btn" data-category="nutrition">Nutrition</button>
+                                            <button type="button" class="category-btn" data-category="fitness">Fitness</button>
+                                            <button type="button" class="category-btn" data-category="life-skills">Life Skills</button>
+                                            <button type="button" class="category-btn" data-category="study-help">Study Help</button>
+                                            <button type="button" class="category-btn" data-category="school-life">School Life</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Your School (Optional)</label>
+                                        <select class="form-select" id="userSchool">
+                                            <option value="">Select your school</option>
+                                            <!-- NSW Schools -->
+                                            <option value="Knox Grammar School">Knox Grammar School</option>
+                                            <option value="Pymble Ladies' College">Pymble Ladies' College</option>
+                                            <option value="Sydney Grammar School">Sydney Grammar School</option>
+                                            <option value="SCEGGS Darlinghurst">SCEGGS Darlinghurst</option>
+                                            <option value="Shore School">Shore School</option>
+                                            <option value="Abbotsleigh">Abbotsleigh</option>
+                                            <option value="Barker College">Barker College</option>
+                                            <option value="Cranbrook School">Cranbrook School</option>
+                                            <option value="Loreto Kirribilli">Loreto Kirribilli</option>
+                                            <option value="MLC School">MLC School</option>
+                                            <option value="Newington College">Newington College</option>
+                                            <option value="PLC Sydney">PLC Sydney</option>
+                                            <option value="Redlands">Redlands</option>
+                                            <option value="SCECGS Redlands">SCECGS Redlands</option>
+                                            <option value="St Catherine's School">St Catherine's School</option>
+                                            <option value="St Ignatius' College Riverview">St Ignatius' College Riverview</option>
+                                            <option value="Trinity Grammar School">Trinity Grammar School</option>
+                                            <option value="Wenona School">Wenona School</option>
+                                            <!-- VIC Schools -->
+                                            <option value="Melbourne Grammar School">Melbourne Grammar School</option>
+                                            <option value="Scotch College Melbourne">Scotch College Melbourne</option>
+                                            <option value="Xavier College">Xavier College</option>
+                                            <option value="Methodist Ladies' College">Methodist Ladies' College</option>
+                                            <option value="Geelong Grammar School">Geelong Grammar School</option>
+                                            <option value="Haileybury">Haileybury</option>
+                                            <option value="Lauriston Girls' School">Lauriston Girls' School</option>
+                                            <option value="Peninsula Grammar">Peninsula Grammar</option>
+                                            <option value="St Kevin's College">St Kevin's College</option>
+                                            <option value="Tintern Grammar">Tintern Grammar</option>
+                                            <!-- QLD Schools -->
+                                            <option value="Brisbane Grammar School">Brisbane Grammar School</option>
+                                            <option value="Brisbane Girls Grammar School">Brisbane Girls Grammar School</option>
+                                            <option value="Anglican Church Grammar School">Anglican Church Grammar School</option>
+                                            <option value="Somerville House">Somerville House</option>
+                                            <option value="St Aidan's Anglican Girls' School">St Aidan's Anglican Girls' School</option>
+                                            <option value="The King's School">The King's School</option>
+                                            <option value="All Hallows' School">All Hallows' School</option>
+                                            <option value="Ipswich Grammar School">Ipswich Grammar School</option>
+                                            <option value="St Margaret's Anglican Girls School">St Margaret's Anglican Girls School</option>
+                                            <option value="Stuartholme School">Stuartholme School</option>
+                                            <!-- WA Schools -->
+                                            <option value="Hale School">Hale School</option>
+                                            <option value="Perth Modern School">Perth Modern School</option>
+                                            <option value="Scotch College Perth">Scotch College Perth</option>
+                                            <option value="Wesley College Perth">Wesley College Perth</option>
+                                            <option value="Christ Church Grammar School">Christ Church Grammar School</option>
+                                            <option value="Presbyterian Ladies' College Perth">Presbyterian Ladies' College Perth</option>
+                                            <option value="Methodist Ladies' College Perth">Methodist Ladies' College Perth</option>
+                                            <option value="Penrhos College">Penrhos College</option>
+                                            <!-- SA Schools -->
+                                            <option value="Prince Alfred College">Prince Alfred College</option>
+                                            <option value="St Peter's College Adelaide">St Peter's College Adelaide</option>
+                                            <option value="Wilderness School">Wilderness School</option>
+                                            <option value="Scotch College Adelaide">Scotch College Adelaide</option>
+                                            <option value="St Peter's Girls' School">St Peter's Girls' School</option>
+                                            <option value="Pembroke School">Pembroke School</option>
+                                            <option value="Walford Anglican School for Girls">Walford Anglican School for Girls</option>
+                                            <!-- TAS Schools -->
+                                            <option value="The Hutchins School">The Hutchins School</option>
+                                            <option value="Collegiate School">Collegiate School</option>
+                                            <option value="Fahan School">Fahan School</option>
+                                            <option value="St Michael's Collegiate School">St Michael's Collegiate School</option>
+                                            <option value="Launceston Grammar School">Launceston Grammar School</option>
+                                            <!-- ACT Schools -->
+                                            <option value="Canberra Grammar School">Canberra Grammar School</option>
+                                            <option value="Radford College">Radford College</option>
+                                            <option value="Burgmann Anglican School">Burgmann Anglican School</option>
+                                            <option value="Other">Other</option>
+                                            </select>
+                                            </div><button type="submit" class="submit-btn">
+                                                <i class="fas fa-paper-plane"></i> Share with Community
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Sidebar -->
+                            <div class="sidebar">
+                                <!-- Trending Topics -->
+                                <div class="sidebar-card">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-fire"></i>
+                                        Trending Topics
+                                    </h3>
+                                    <div id="trendingTopics">
+                                        <div class="trending-topic">
+                                            <div class="trending-icon"></div>
+                                            <span class="trending-text">HSC study tips</span>
+                                            <span class="trending-count">127 posts</span>
+                                        </div>
+                                        <div class="trending-topic">
+                                            <div class="trending-icon"></div>
+                                            <span class="trending-text">Budget meal prep ideas</span>
+                                            <span class="trending-count">89 posts</span>
+                                        </div>
+                                        <div class="trending-topic">
+                                            <div class="trending-icon"></div>
+                                            <span class="trending-text">Year 12 stress management</span>
+                                            <span class="trending-count">76 posts</span>
+                                        </div>
+                                        <div class="trending-topic">
+                                            <div class="trending-icon"></div>
+                                            <span class="trending-text">Mental health resources</span>
+                                            <span class="trending-count">65 posts</span>
+                                        </div>
+                                        <div class="trending-topic">
+                                            <div class="trending-icon"></div>
+                                            <span class="trending-text">School formal tips</span>
+                                            <span class="trending-count">52 posts</span>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <!-- Online Users -->
+                                <div class="sidebar-card">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-users"></i>
+                                        Active Students
+                                    </h3>
+                                    <div id="onlineUsers">
+                                        <div class="online-user">
+                                            <div class="online-avatar">SC</div>
+                                            <div class="online-info">
+                                                <div class="online-name">Sarah Chen</div>
+                                                <div class="online-status">Knox Grammar - Year 11</div>
+                                            </div>
+                                        </div>
+                                        <div class="online-user">
+                                            <div class="online-avatar">JM</div>
+                                            <div class="online-info">
+                                                <div class="online-name">James Mitchell</div>
+                                                <div class="online-status">Melbourne Grammar - Year 12</div>
+                                            </div>
+                                        </div>
+                                        <div class="online-user">
+                                            <div class="online-avatar">EP</div>
+                                            <div class="online-info">
+                                                <div class="online-name">Emma Park</div>
+                                                <div class="online-status">Pymble Ladies' - Year 10</div>
+                                            </div>
+                                        </div>
+                                        <div class="online-user">
+                                            <div class="online-avatar">DW</div>
+                                            <div class="online-info">
+                                                <div class="online-name">Daniel Wong</div>
+                                                <div class="online-status">Brisbane Grammar - Year 11</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <!-- Community Guidelines -->
+                                <div class="sidebar-card">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-shield-alt"></i>
+                                        Community Guidelines
+                                    </h3>
+                                    <div style="color: #d0d0d0; font-size: 0.9rem; line-height: 1.5;">
+                                        <p style="margin: 0 0 1rem 0;">🤝 Be respectful and supportive</p>
+                                        <p style="margin: 0 0 1rem 0;">🔒 Keep personal info private</p>
+                                        <p style="margin: 0 0 1rem 0;">📚 Share helpful resources</p>
+                                        <p style="margin: 0 0 1rem 0;">🚫 No spam or self-promotion</p>
+                                        <p style="margin: 0 0 1rem 0;">💬 Use appropriate language</p>
+                                        <p style="margin: 0;">🆘 Report concerning content</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            
+                <footer>
+                    <p>&copy; 2024 Vivify. All rights reserved.</p>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                        <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                        <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+                    </ul>
+                </footer>
+            </div>
+            
+            <script>
+                // Sample data for community content
+                const samplePosts = [
+                    {
+                        id: 1,
+                        author: "Sarah Chen",
+                        avatar: "SC",
+                        school: "Knox Grammar School",
+                        yearLevel: "Year 11",
+                        title: "How to survive Year 11 when you're already burnt out?",
+                        content: "Hey everyone! I'm in Year 11 at Knox and feeling completely overwhelmed with upcoming exams. Between my part-time job at Woolies and assignments, I'm struggling to find time for proper study. Has anyone got tips for staying motivated? Also looking for study buddies in the North Shore area if anyone's keen! 📚",
+                        tags: ["mental-health", "study-help"],
+                        timestamp: "2 hours ago",
+                        likes: 24,
+                        comments: 8,
+                        category: "mental-health"
+                    },
+                    {
+                        id: 2,
+                        author: "James Mitchell",
+                        avatar: "JM",
+                        school: "Melbourne Grammar School",
+                        yearLevel: "Year 12",
+                        title: "Budget meal prep that doesn't make you hate life",
+                        content: "Alright legends, after a year of living off Mi Goreng and regret, I've finally figured out some decent budget meals that don't taste like cardboard. Here's my weekly shop for under $40 at Coles that actually keeps you healthy. Will share recipes if anyone's interested! The key is buying in bulk and meal prepping on Sunday arvos.",
+                        tags: ["nutrition", "life-skills"],
+                        timestamp: "5 hours ago",
+                        likes: 67,
+                        comments: 23,
+                        category: "nutrition"
+                    },
+                    {
+                        id: 3,
+                        author: "Emma Park",
+                        avatar: "EP",
+                        school: "Pymble Ladies' College",
+                        yearLevel: "Year 10",
+                        title: "First time at formal - is this anxiety normal?",
+                        content: "Year 10 formal is coming up next month and honestly feeling pretty anxious about the whole thing. Dress shopping, finding a date, dancing... it all feels like a lot. I know Pymble has good counselling but wondering if anyone has other tips for dealing with social anxiety? Especially keen to hear from other Pymble girls or anyone who remembers what it was like! 💙",
+                        tags: ["mental-health", "school-life"],
+                        timestamp: "1 day ago",
+                        likes: 45,
+                        comments: 31,
+                        category: "mental-health"
+                    },
+                    {
+                        id: 4,
+                        author: "Daniel Wong",
+                        avatar: "DW",
+                        school: "Brisbane Grammar School",
+                        yearLevel: "Year 11",
+                        title: "Free gym alternatives around Brisbane",
+                        content: "For anyone looking to stay fit without the crazy gym membership fees, here's a list of free outdoor gyms and parks around Brisbane. South Bank has great equipment, and the CityCycle paths are perfect for riding. New Farm Park has calisthenics equipment too. Who's keen for a group workout session sometime?",
+                        tags: ["fitness"],
+                        timestamp: "1 day ago",
+                        likes: 38,
+                        comments: 12,
+                        category: "fitness"
+                    },
+                    {
+                        id: 5,
+                        author: "Zoe Peterson",
+                        avatar: "ZP",
+                        school: "St Catherine's School",
+                        yearLevel: "Year 12",
+                        title: "HSC study schedule that actually works",
+                        content: "Just finished my HSC trials and wanted to share the study schedule that saved my life. The key things I learned: break everything into 25-minute blocks, always include breaks, and don't study the same subject for more than 2 hours straight. Made a massive difference to my ATAR predictions! Happy to share my actual schedule if anyone wants it.",
+                        tags: ["study-help"],
+                        timestamp: "2 days ago",
+                        likes: 89,
+                        comments: 27,
+                        category: "study-help"
+                    }
+                ];
+            
+                const sampleGroups = [
+                    {
+                        id: 1,
+                        name: "Knox Grammar HSC Physics Study Group",
+                        description: "Weekly study sessions for HSC Physics. Currently focusing on electricity and magnetism modules.",
+                        school: "Knox Grammar School",
+                        members: 12,
+                        meetingTime: "Sundays 2PM",
+                        location: "Knox Library",
+                        tags: ["Physics", "HSC", "Knox"]
+                    },
+                    {
+                        id: 2,
+                        name: "North Shore Girls Mental Health Support",
+                        description: "Support group for girls from North Shore schools. We discuss stress management and wellbeing strategies.",
+                        school: "Multiple North Shore Schools",
+                        members: 23,
+                        meetingTime: "Thursdays 6PM",
+                        location: "Online via Zoom",
+                        tags: ["Mental Health", "Girls", "North Shore"]
+                    },
+                    {
+                        id: 3,
+                        name: "Brisbane Grammar Mathematics Extension",
+                        description: "Study group for Extension 1 and 2 Mathematics. Collaborative problem solving and exam prep.",
+                        school: "Brisbane Grammar School",
+                        members: 15,
+                        meetingTime: "Tuesdays 4PM",
+                        location: "BGS Library",
+                        tags: ["Mathematics", "Extension", "BGS"]
+                    },
+                    {
+                        id: 4,
+                        name: "Melbourne Grammar Debating Club",
+                        description: "Informal debating practice for students interested in improving public speaking and critical thinking.",
+                        school: "Melbourne Grammar School",
+                        members: 18,
+                        meetingTime: "Saturdays 10AM",
+                        location: "MGS Assembly Hall",
+                        tags: ["Debating", "Public Speaking", "MGS"]
+                    }
+                ];
+            
+                const sampleEvents = [
+                    {
+                        id: 1,
+                        title: "Year 12 Stress Management Workshop",
+                        date: "15",
+                        month: "Mar",
+                        location: "Sydney Grammar School",
+                        description: "A workshop designed specifically for Year 12 students dealing with HSC pressure and university preparation stress.",
+                        attending: 156,
+                        type: "Workshop"
+                    },
+                    {
+                        id: 2,
+                        title: "Healthy Eating on a Budget Workshop",
+                        date: "22",
+                        month: "Mar",
+                        location: "Pymble Ladies' College",
+                        description: "Learn to prepare nutritious, affordable meals perfect for busy students. All ingredients provided!",
+                        attending: 45,
+                        type: "Workshop"
+                    },
+                    {
+                        id: 3,
+                        title: "Study Group Meetup - Sydney",
+                        date: "28",
+                        month: "Mar",
+                        location: "State Library NSW",
+                        description: "Informal meetup for students across Sydney schools. Bring your study materials and make new friends!",
+                        attending: 73,
+                        type: "Social"
+                    },
+                    {
+                        id: 4,
+                        title: "Teen Fitness Challenge: Outdoor Circuit",
+                        date: "05",
+                        month: "Apr",
+                        location: "Melbourne Royal Botanic Gardens",
+                        description: "Free outdoor fitness session suitable for all levels. Equipment provided, just bring water and a positive attitude!",
+                        attending: 32,
+                        type: "Fitness"
+                    }
+                ];
+            
+                // Tab switching functionality
+                function switchTab(tabName) {
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all nav tabs
+                    document.querySelectorAll('.nav-tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Show selected tab content
+                    document.getElementById(tabName).classList.add('active');
+                    
+                    // Add active class to clicked nav tab
+                    event.target.classList.add('active');
+                    
+                    // Load content based on tab
+                    if (tabName === 'discussions') {
+                        loadDiscussions();
+                    } else if (tabName === 'groups') {
+                        loadGroups();
+                    } else if (tabName === 'events') {
+                        loadEvents();
+                    }
+                }
+            
+                // Load discussions
+                function loadDiscussions() {
+                    const container = document.getElementById('discussionsPosts');
+                    const loading = document.getElementById('discussionsLoading');
+                    
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                        container.style.display = 'block';
+                        
+                        container.innerHTML = samplePosts.map(post => `
+                            <div class="post-card">
+                                <div class="post-header">
+                                    <div class="post-avatar">${post.avatar}</div>
+                                    <div class="post-user-info">
+                                        <h4>${post.author}</h4>
+                                        <div class="post-meta">
+                                            <span class="school-badge">${post.school}</span>
+                                            <span>${post.yearLevel}</span>
+                                            <span>${post.timestamp}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 class="post-title">${post.title}</h3>
+                                <div class="post-content">${post.content}</div>
+                                <div class="post-tags">
+                                    ${post.tags.map(tag => `<span class="tag ${tag}">#${tag.replace('-', ' ')}</span>`).join('')}
+                                </div>
+                                <div class="post-actions">
+                                    <div class="post-stats">
+                                        <div class="stat-item">
+                                            <i class="fas fa-heart"></i>
+                                            <span>${post.likes} likes</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fas fa-comment"></i>
+                                            <span>${post.comments} comments</span>
+                                        </div>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="likePost(${post.id})">
+                                            <i class="fas fa-heart"></i> Like
+                                        </button>
+                                        <button class="action-btn" onclick="commentPost(${post.id})">
+                                            <i class="fas fa-comment"></i> Comment
+                                        </button>
+                                        <button class="action-btn" onclick="sharePost(${post.id})">
+                                            <i class="fas fa-share"></i> Share
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }, 1000);
+                }
+            
+                // Load study groups
+                function loadGroups() {
+                    const container = document.getElementById('groupsList');
+                    const loading = document.getElementById('groupsLoading');
+                    
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                        container.style.display = 'block';
+                        
+                        container.innerHTML = sampleGroups.map(group => `
+                            <div class="group-card">
+                                <div class="group-header">
+                                    <div class="group-info">
+                                        <h3>${group.name}</h3>
+                                        <div class="group-details">
+                                            <span><i class="fas fa-school"></i> ${group.school}</span>
+                                            <span><i class="fas fa-clock"></i> ${group.meetingTime}</span>
+                                            <span><i class="fas fa-map-marker-alt"></i> ${group.location}</span>
+                                        </div>
+                                    </div>
+                                    <button class="join-btn" onclick="joinGroup(${group.id})">Join Group</button>
+                                </div>
+                                <p>${group.description}</p>
+                                <div class="group-members">
+                                    <div class="member-avatar">A</div>
+                                    <div class="member-avatar">B</div>
+                                    <div class="member-avatar">C</div>
+                                    <div class="member-avatar">+</div>
+                                    <span class="member-count">${group.members} members</span>
+                                </div>
+                                <div class="post-tags">
+                                    ${group.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                </div>
+                            </div>
+                        `).join('');
+                    }, 800);
+                }
+            
+                // Load events
+                function loadEvents() {
+                    const container = document.getElementById('eventsList');
+                    const loading = document.getElementById('eventsLoading');
+                    
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                        container.style.display = 'block';
+                        
+                        container.innerHTML = sampleEvents.map(event => `
+                            <div class="event-card">
+                                <div class="event-date">
+                                    <div class="date-block">
+                                        <span class="date-day">${event.date}</span>
+                                        <span class="date-month">${event.month}</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <h3>${event.title}</h3>
+                                        <div class="event-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            ${event.location}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event-description">${event.description}</div>
+                                <div class="event-actions">
+                                    <div class="attending-count">
+                                        <i class="fas fa-users"></i>
+                                        ${event.attending} attending
+                                    </div>
+                                    <button class="join-btn" onclick="attendEvent(${event.id})">
+                                        <i class="fas fa-calendar-check"></i> Attend
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }, 600);
+                }
+            
+                // Post creation functionality
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Check authentication
+                    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+                    if (!isLoggedIn) {
+                        window.location.href = 'login.html?redirect=community';
+                        return;
+                    }
+            
+                    // Update navigation
+                    document.getElementById('loginLink').style.display = 'none';
+                    document.getElementById('signupLink').style.display = 'none';
+                    document.getElementById('logoutLink').style.display = 'inline';
+                    document.getElementById('profileLink').style.display = 'inline';
+                    document.getElementById('dashboardLink').style.display = 'inline';
+                    document.getElementById('categoryDropdown').style.display = 'block';
+            
+                    // Handle logout
+                    document.getElementById('logoutLink').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        localStorage.removeItem('userLoggedIn');
+                        localStorage.removeItem('authToken');
+                        window.location.href = 'index.html';
+                    });
+            
+                    // Category selection
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                            this.classList.add('selected');
+                        });
+                    });
+            
+                    // Create post form
+                    document.getElementById('createPostForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const title = document.getElementById('postTitle').value.trim();
+                        const content = document.getElementById('postContent').value.trim();
+                        const selectedCategory = document.querySelector('.category-btn.selected');
+                        const school = document.getElementById('userSchool').value;
+                        
+                        if (!title || !content) {
+                            alert('Please fill in both title and content');
+                            return;
+                        }
+                        
+                        if (!selectedCategory) {
+                            alert('Please select a category');
+                            return;
+                        }
+                        
+                        // Get user profile data
+                        const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                        const userName = userProfile.name || 'Anonymous Student';
+                        
+                        // Create new post
+                        const newPost = {
+                            id: Date.now(),
+                            author: userName,
+                            avatar: userName.split(' ').map(n => n[0]).join('').toUpperCase(),
+                            school: school || 'Australian School',
+                            yearLevel: userProfile.yearLevel ? `Year ${userProfile.yearLevel}` : 'Student',
+                            title: title,
+                            content: content,
+                            tags: [selectedCategory.dataset.category],
+                            timestamp: 'Just now',
+                            likes: 0,
+                            comments: 0,
+                            category: selectedCategory.dataset.category
+                        };
+                        
+                        // Add to sample posts (in a real app, this would be sent to a server)
+                        samplePosts.unshift(newPost);
+                        
+                        // Clear form
+                        this.reset();
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                        
+                        // Switch to discussions tab and reload
+                        switchTab('discussions');
+                        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                        document.querySelector('.nav-tab').classList.add('active');
+                        
+                        // Show success message
+                        alert('Your post has been shared with the community! 🎉');
+                        
+                        // Track activity if wellness tracker is available
+                        if (window.vivifyTracker) {
+                            window.vivifyTracker.trackActivity('community_post_create', 'general', 'Created community post', 15);
+                        }
+                    });
+            
+                    // Load initial content
+                    loadDiscussions();
+                    
+                    // Track community page visit
+                    if (window.vivifyTracker) {
+                        window.vivifyTracker.trackActivity('community_visit', 'general', 'Community page visited', 5);
+                    }
+                });
+            
+                // Interactive functions
+                function likePost(postId) {
+                    const post = samplePosts.find(p => p.id === postId);
+                    if (post) {
+                        post.likes++;
+                        loadDiscussions(); // Reload to show updated likes
+                        
+                        if (window.vivifyTracker) {
+                            window.vivifyTracker.trackActivity('community_like', 'general', 'Liked community post', 2);
+                        }
+                    }
+                }
+            
+                function commentPost(postId) {
+                    const comment = prompt('Add your comment:');
+                    if (comment && comment.trim()) {
+                        const post = samplePosts.find(p => p.id === postId);
+                        if (post) {
+                            post.comments++;
+                            loadDiscussions(); // Reload to show updated comments
+                            alert('Your comment has been added! 💬');
+                            
+                            if (window.vivifyTracker) {
+                                window.vivifyTracker.trackActivity('community_comment', 'general', 'Commented on post', 5);
+                            }
+                        }
+                    }
+                }
+            
+                function sharePost(postId) {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Check out this post from Vivify Community',
+                            text: 'Found this helpful post in the Vivify student community',
+                            url: window.location.href
+                        });
+                    } else {
+                        alert('Post link copied to clipboard! Share it with your mates.');
+                    }
+                    
+                    if (window.vivifyTracker) {
+                        window.vivifyTracker.trackActivity('community_share', 'general', 'Shared community post', 3);
+                    }
+                }
+            
+                function joinGroup(groupId) {
+                    const group = sampleGroups.find(g => g.id === groupId);
+                    if (group) {
+                        group.members++;
+                        loadGroups(); // Reload to show updated member count
+                        alert(`You've joined ${group.name}! You'll receive updates about meetings and activities. 🎉`);
+                        
+                        if (window.vivifyTracker) {
+                            window.vivifyTracker.trackActivity('study_group_join', 'general', 'Joined study group', 10);
+                        }
+                    }
+                }
+            
+                function attendEvent(eventId) {
+                    const event = sampleEvents.find(e => e.id === eventId);
+                    if (event) {
+                        event.attending++;
+                        loadEvents(); // Reload to show updated attendance
+                        alert(`You're now attending ${event.title}! Check your email for event details. 📅`);
+                        
+                        if (window.vivifyTracker) {
+                            window.vivifyTracker.trackActivity('event_attend', 'general', 'Registered for event', 8);
+                        }
+                    }
+                }
+            
+                // Add some Australian school-specific features
+                function updateSchoolContent() {
+                    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                    if (userProfile.school) {
+                        // Filter content by school if user has set their school
+                        const schoolPosts = samplePosts.filter(post => 
+                            post.school === userProfile.school || 
+                            post.tags.includes('general')
+                        );
+                        
+                        if (schoolPosts.length > 0) {
+                            // Show school-specific content
+                            const schoolSection = document.createElement('div');
+                            schoolSection.style.cssText = `
+                                background: rgba(243, 156, 18, 0.1);
+                                border: 1px solid #f39c12;
+                                border-radius: 10px;
+                                padding: 1rem;
+                                margin-bottom: 2rem;
+                                text-align: center;
+                            `;
+                            schoolSection.innerHTML = `
+                                <h3 style="color: #f39c12; margin: 0 0 0.5rem 0;">
+                                    <i class="fas fa-school"></i> ${userProfile.school} Community
+                                </h3>
+                                <p style="color: #d0d0d0; margin: 0; font-size: 0.9rem;">
+                                    Connect with fellow students from your school
+                                </p>
+                            `;
+                            
+                            const mainContent = document.querySelector('.main-content');
+                            if (mainContent) {
+                                mainContent.insertBefore(schoolSection, mainContent.firstChild);
+                            }
+                        }
+                    }
+                }
+            
+                // Update content after page loads
+                setTimeout(updateSchoolContent, 2000);
+            
+                // Add some fun Australian expressions to random posts
+                const aussieExpressions = [
+                    "Fair dinkum!",
+                    "She'll be right!",
+                    "Too right!",
+                    "Good on ya!",
+                    "Bloody oath!",
+                    "Sweet as!",
+                    "No worries!",
+                    "You beauty!"
+                ];
+            
+                function addAussieTouch() {
+                    if (Math.random() < 0.3) { // 30% chance
+                        setTimeout(() => {
+                            const posts = document.querySelectorAll('.post-content');
+                            posts.forEach(post => {
+                                if (Math.random() < 0.2) { // 20% chance per post
+                                    const expression = aussieExpressions[Math.floor(Math.random() * aussieExpressions.length)];
+                                    post.innerHTML += ` ${expression}`;
+                                }
+                            });
+                        }, 3000);
+                    }
+                }
+            
+                // Add Aussie touch after content loads
+                setTimeout(addAussieTouch, 4000);
+            </script>  
+    </body>
+</html>

@@ -862,7 +862,9 @@
                 const confirmPassword = document.getElementById('confirmPassword').value.trim();
                 const userRole = document.getElementById('userRole').value;
                 
-                // Validation (keep your existing validation code)
+                console.log('Form data being collected:', { username, email, userRole }); // Debug log
+                
+                // Validation
                 if (!username || !email || !password || !userRole) {
                     showMessage('Please fill in all required fields and select your role.');
                     return;
@@ -874,11 +876,17 @@
                 }
                 
                 // Role-specific data collection
-                let signupData = { username, email, password, role: userRole };
+                let signupData = { 
+                    username, 
+                    email, 
+                    password, 
+                    role: userRole 
+                };
                 
                 if (userRole === 'student') {
                     const yearLevel = document.getElementById('yearLevel').value;
                     let school = document.getElementById('school').value;
+                    const teacherClassCode = document.getElementById('teacherClassCode').value.trim();
                     
                     if (!yearLevel || !school) {
                         showMessage('Please select your year level and school.');
@@ -887,19 +895,43 @@
                     
                     if (school === 'Other') {
                         school = document.getElementById('otherSchool').value.trim();
+                        if (!school) {
+                            showMessage('Please specify your school name.');
+                            return;
+                        }
                     }
                     
                     signupData.yearLevel = parseInt(yearLevel);
                     signupData.schoolCode = 'KNOX2024'; // Default for Knox students
-                    signupData.className = school;
+                    signupData.school = school; // Fixed: was 'className'
+                    
+                    // Add teacher class code if provided
+                    if (teacherClassCode) {
+                        signupData.teacherClassCode = teacherClassCode;
+                    }
                 } else {
+                    // Teacher/Admin specific data
                     const schoolCode = document.getElementById('schoolCode').value.trim();
+                    const staffId = document.getElementById('staffId').value.trim();
+                    const department = document.getElementById('department').value.trim();
+                    
                     if (!schoolCode) {
                         showMessage('Please enter your school code.');
                         return;
                     }
+                    
                     signupData.schoolCode = schoolCode;
+                    
+                    if (staffId) {
+                        signupData.staffId = staffId;
+                    }
+                    
+                    if (department) {
+                        signupData.department = department;
+                    }
                 }
+                
+                console.log('Final signup data being sent:', signupData); // Debug log
                 
                 signupBtn.textContent = 'Creating Account...';
                 signupBtn.disabled = true;
@@ -912,20 +944,50 @@
                         body: JSON.stringify(signupData)
                     });
                     
+                    console.log('Response status:', response.status); // Debug log
+                    
                     const result = await response.json();
+                    console.log('Response data:', result); // Debug log
                     
                     if (response.ok) {
                         showMessage('Account created successfully! You can now log in.', 'success');
-                        setTimeout(() => {
-                            window.location.href = 'login.html?message=signup-success';
-                        }, 2000);
+                        
+                        // Handle auto-login if token is provided
+                        if (result.token) {
+                            localStorage.setItem('token', result.token);
+                            localStorage.setItem('user', JSON.stringify(result.user));
+                            
+                            // Handle class joining for students with teacher code
+                            if (userRole === 'student' && teacherClassCode) {
+                                try {
+                                    const classResult = await ClassManager.joinClass(result.user.id, teacherClassCode);
+                                    if (classResult.success) {
+                                        console.log('Successfully joined class:', classResult.className);
+                                    }
+                                } catch (classError) {
+                                    console.log('Class join error (non-critical):', classError);
+                                }
+                            }
+
+                            const redirectUrl = result.redirectTo || getDefaultRedirectUrl(userRole);
+                            
+                            // Redirect based on role
+                            setTimeout(() => {
+                                window.location.href = redirectUrl;
+                            }, 1500);
+                        } else {
+                            // Manual login redirect
+                            setTimeout(() => {
+                                window.location.href = 'login.html?message=signup-success';
+                            }, 2000);
+                        }
                     } else {
                         showMessage(result.message || 'Signup failed');
                     }
                     
                 } catch (error) {
                     console.error('Signup error:', error);
-                    showMessage('Network error. Please try again.');
+                    showMessage('Network error. Please check your connection and try again.');
                 } finally {
                     signupBtn.textContent = 'Create Account';
                     signupBtn.disabled = false;
@@ -945,6 +1007,17 @@
 <script src="/pwa-install.js"></script>
 
 <script>
+function getDefaultRedirectUrl(userRole) {
+    switch(userRole) {
+        case 'admin':
+            return 'admin-dashboard.html';
+        case 'teacher':
+            return 'teacher-dashboard.html';
+        case 'student':
+        default:
+            return 'wellness-baseline-assessment.html';
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     if (window.matchMedia('(display-mode: standalone)').matches) {
         document.body.classList.add('pwa-mode');

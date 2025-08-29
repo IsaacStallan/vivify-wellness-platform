@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balanced Nutrition - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Balanced Nutrition Page Specific Styles */
+        .nutrition-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .nutrition-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .nutrition-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .subsection-title {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .info-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .info-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .plate-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .plate {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: #eee;
+            position: relative;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .plate-section {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .vegetables {
+            width: 150px;
+            height: 150px;
+            background-color: #66BB6A;
+            border-radius: 150px 0 0 0;
+            top: 0;
+            left: 0;
+        }
+
+        .fruits {
+            width: 150px;
+            height: 150px;
+            background-color: #EC407A;
+            border-radius: 0 150px 0 0;
+            top: 0;
+            right: 0;
+        }
+
+        .grains {
+            width: 150px;
+            height: 150px;
+            background-color: #FFB74D;
+            border-radius: 0 0 0 150px;
+            bottom: 0;
+            left: 0;
+        }
+
+        .protein {
+            width: 150px;
+            height: 150px;
+            background-color: #7E57C2;
+            border-radius: 0 0 150px 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .plate-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .vegetables-color {
+            background-color: #66BB6A;
+        }
+
+        .fruits-color {
+            background-color: #EC407A;
+        }
+
+        .grains-color {
+            background-color: #FFB74D;
+        }
+
+        .protein-color {
+            background-color: #7E57C2;
+        }
+
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .macro-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .macro-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .macro-icon {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .macro-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .food-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .food-category {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .food-category h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .food-category ul {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .food-category li {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .meal-plan {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .meal-plan h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .meal {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .meal h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #444;
+        }
+
+        .meal ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meal li {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+        }
+
+        .meal p {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .brain-boost {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .brain-food {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .brain-food h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .brain-food p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .brain-food strong {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .tips-tricks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .tip-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .tip-card i {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .calculator-cta {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin: 3rem auto;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .calculator-cta h2 {
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+        }
+
+        .calculator-cta p {
+            color: #ddd;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22;
+            transform: scale(1.05);
+        }
+
+        .budget-section {
+            margin: 3rem 0;
+        }
+
+        .budget-tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .budget-tip {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .budget-tip h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .budget-tip i {
+            color: #f39c12;
+        }
+
+        .budget-tip p {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .budget-tip ul {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .budget-tip li {
+            color: #ddd;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-section {
+            margin: 3rem 0;
+        }
+
+        .faq-item {
+            background-color: #222;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            color: #f39c12;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .nutrition-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .subsection-title {
+                font-size: 1.5rem;
+            }
+
+            .plate {
+                width: 250px;
+                height: 250px;
+            }
+
+            .vegetables, .fruits, .grains, .protein {
+                width: 125px;
+                height: 125px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" class="active" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                                <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="nutrition-hero">
+            <h1>Balanced Nutrition for Student Success</h1>
+            <p>Discover how proper nutrition can fuel your body, boost your brain power, and help you thrive throughout your academic journey.</p>
+            <a href="#nutrition-basics" class="cta-button">Get Started</a>
+        </section>
+
+        <!-- Nutrition Basics Section -->
+        <section id="nutrition-basics" class="section-container">
+            <h2 class="section-title">Foundations of Balanced Nutrition</h2>
+            
+            <div class="info-card">
+                <h3>What is Balanced Nutrition?</h3>
+                <p>Balanced nutrition means consuming a variety of foods that provide the essential nutrients your body needs to function optimally. For students, proper nutrition is especially crucial as it directly impacts cognitive function, energy levels, mood, and overall academic performance.</p>
+                <p>A balanced diet isn't about rigid restrictions or complicated meal plans; it's about making consistent, smart food choices that provide your body and brain with what they need to thrive during your educational journey. The right nutrition can help you stay focused during lectures, retain information better when studying, and maintain the energy needed for a busy student lifestyle.</p>
+            </div>
+
+            <h3 class="subsection-title">The Balanced Plate Model</h3>
+            <p>A simple way to visualize balanced nutrition is by following the "balanced plate" model. This approach ensures you get appropriate portions of each food group in a meal.</p>
+            
+            <div class="plate-diagram">
+                <div class="plate">
+                    <div class="plate-section vegetables">Vegetables<br>25%</div>
+                    <div class="plate-section fruits">Fruits<br>25%</div>
+                    <div class="plate-section grains">Whole Grains<br>25%</div>
+                    <div class="plate-section protein">Lean Protein<br>25%</div>
+                </div>
+                
+                <div class="plate-legend">
+                    <div class="legend-item">
+                        <div class="legend-color vegetables-color"></div>
+                        <span>Vegetables: Fill 25% of your plate with colorful vegetables</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color fruits-color"></div>
+                        <span>Fruits: Dedicate 25% to fruits for natural sweetness and vitamins</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color grains-color"></div>
+                        <span>Whole Grains: Use 25% for whole grains like brown rice, whole wheat pasta</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color protein-color"></div>
+                        <span>Lean Protein: Reserve 25% for lean proteins like chicken, fish, beans</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>Caloric Balance for Students</h3>
+                <p>Caloric needs vary based on age, gender, activity level, and individual metabolism. For the average college student, approximate daily caloric needs are:</p>
+                <ul>
+                    <li><strong>Moderately active female students:</strong> 1,800-2,400 calories per day</li>
+                    <li><strong>Moderately active male students:</strong> 2,200-3,000 calories per day</li>
+                </ul>
+                <p>These ranges account for typical student activities like walking across campus, light exercise, and brain power needed for studying. If you're more active (playing sports, working out regularly), you'll need to adjust accordingly.</p>
+                <p>Remember that these are general guidelines. Your individual needs may vary based on factors like metabolism, specific activity levels, and health goals.</p>
+            </div>
+            
+            <h3 class="subsection-title">Macronutrient Balance</h3>
+            <p>Macronutrients are the nutrients your body needs in large amounts: proteins, carbohydrates, and fats. A balanced diet includes appropriate amounts of each.</p>
+            
+            <div class="macros-grid">
+                <div class="macro-card">
+                    <div class="macro-icon">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                    <h3>Protein</h3>
+                    <p><strong>10-35% of daily calories</strong></p>
+                    <p>For most students, aim for 0.8-1.2g of protein per kg of body weight daily.</p>
+                    <p>Protein supports brain function, muscle maintenance, immune health, and helps you feel full longer.</p>
+                </div>
+                
+                <div class="macro-card">
+                    <div class="macro-icon">
+                        <i class="fas fa-bread-slice"></i>
+                    </div>
+                    <h3>Carbohydrates</h3>
+                    <p><strong>45-65% of daily calories</strong></p>
+                    <p>Carbs are your brain's preferred fuel source. Focus on complex carbs for sustained energy.</p>
+                    <p>Choose whole grains, fruits, and vegetables over simple sugars for better focus and energy levels.</p>
+                </div>
+                
+                <div class="macro-card">
+                    <div class="macro-icon">
+                        <i class="fas fa-oil-can"></i>
+                    </div>
+                    <h3>Healthy Fats</h3>
+                    <p><strong>20-35% of daily calories</strong></p>
+                    <p>Essential for brain health, hormone production, and absorption of fat-soluble vitamins.</p>
+                    <p>Focus on unsaturated fats from sources like avocados, nuts, olive oil, and fatty fish.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Student-Friendly Nutrition Section -->
+        <section id="student-nutrition" class="section-container">
+            <h2 class="section-title">Student-Friendly Balanced Food Choices</h2>
+            <p>These foods are selected based on nutritional value, affordability, convenience, and accessibility for busy students.</p>
+            
+            <div class="food-list">
+                <div class="food-category">
+                    <h3>Protein Sources</h3>
+                    <ul>
+                        <li><strong>Eggs</strong> - Affordable, versatile, rich in choline for brain health</li>
+                        <li><strong>Greek yogurt</strong> - High protein, good for quick breakfasts or snacks</li>
+                        <li><strong>Canned tuna</strong> - Budget-friendly, long shelf life, omega-3 fatty acids</li>
+                        <li><strong>Rotisserie chicken</strong> - Time-saving, multi-meal option</li>
+                        <li><strong>Beans & lentils</strong> - Plant-based, cheap, high in fiber and protein</li>
+                        <li><strong>Cottage cheese</strong> - High protein, versatile for meals or snacks</li>
+                        <li><strong>Tofu</strong> - Plant-based, absorbs flavors, long shelf life</li>
+                        <li><strong>Peanut butter</strong> - Shelf-stable, protein + healthy fats</li>
+                        <li><strong>Edamame</strong> - Quick to prepare, complete protein</li>
+                    </ul>
+                </div>
+                
+                <div class="food-category">
+                    <h3>Complex Carbohydrates</h3>
+                    <ul>
+                        <li><strong>Oats</strong> - Cheap, filling breakfast, sustained energy release</li>
+                        <li><strong>Brown rice</strong> - Affordable base for many meals, easy to cook in batches</li>
+                        <li><strong>Sweet potatoes</strong> - Nutrient-dense, versatile preparation methods</li>
+                        <li><strong>Whole grain pasta</strong> - Quick to prepare, hearty base for meals</li>
+                        <li><strong>Quinoa</strong> - Complete protein + complex carbs, cooks quickly</li>
+                        <li><strong>Whole grain bread</strong> - Quick sandwich base, portable</li>
+                        <li><strong>Barley</strong> - Fiber-rich, great in soups and grain bowls</li>
+                        <li><strong>Buckwheat</strong> - Gluten-free option, quick cooking</li>
+                        <li><strong>Beans</strong> - Double duty as protein and complex carbs</li>
+                    </ul>
+                </div>
+                
+                <div class="food-category">
+                    <h3>Fruits & Vegetables</h3>
+                    <ul>
+                        <li><strong>Bananas</strong> - Affordable, portable, nutrient-rich energy</li>
+                        <li><strong>Apples</strong> - Long shelf life, portable, filling</li>
+                        <li><strong>Frozen berries</strong> - Long-lasting, antioxidant-rich, no prep</li>
+                        <li><strong>Oranges</strong> - Vitamin C boost, portable, natural packaging</li>
+                        <li><strong>Spinach</strong> - Nutrient-dense, versatile in many dishes</li>
+                        <li><strong>Frozen vegetables</strong> - Affordable, pre-chopped, long-lasting</li>
+                        <li><strong>Bell peppers</strong> - Vitamin C, crunchy snack option</li>
+                        <li><strong>Carrots</strong> - Affordable, portable, long shelf life</li>
+                        <li><strong>Canned tomatoes</strong> - Base for many quick meals</li>
+                    </ul>
+                </div>
+                
+                <div class="food-category">
+                    <h3>Healthy Fats</h3>
+                    <ul>
+                        <li><strong>Avocados</strong> - Brain-healthy fats, versatile in many dishes</li>
+                        <li><strong>Nuts</strong> - Portable, shelf-stable, protein + healthy fats</li>
+                        <li><strong>Olive oil</strong> - Base for cooking, salad dressings</li>
+                        <li><strong>Chia seeds</strong> - Omega-3s, fiber, can add to many foods</li>
+                        <li><strong>Flaxseeds</strong> - Budget omega-3 source, fiber boost</li>
+                        <li><strong>Canned sardines</strong> - Calcium + omega-3s, affordable</li>
+                        <li><strong>Sunflower seeds</strong> - Budget-friendly, dorm-friendly snack</li>
+                        <li><strong>Natural nut butters</strong> - Versatile, satisfying, protein + fats</li>
+                        <li><strong>Olives</strong> - Shelf-stable, healthy fats, flavor enhancer</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brain Boosting Foods Section -->
+        <section id="brain-foods" class="section-container">
+            <h2 class="section-title">Fueling Your Brain: Cognitive Performance Foods</h2>
+            
+            <div class="info-card">
+                <h3>The Brain-Nutrition Connection</h3>
+                <p>Your brain uses about 20% of your daily energy intake despite being only 2% of your body weight. What you eat directly impacts your cognitive performance, including memory, focus, and mental clarity – all critical for academic success.</p>
+                <p>Research shows that proper nutrition can improve test scores, enhance attention span, boost memory retention, and reduce mental fatigue. By incorporating brain-boosting foods into your diet, you can optimize your cognitive performance during studying, exams, and lectures.</p>
+            </div>
+            
+            <h3 class="subsection-title">Top Brain-Boosting Foods for Students</h3>
+            
+            <div class="brain-boost">
+                <div class="brain-food">
+                    <h3>Fatty Fish</h3>
+                    <p>Rich in omega-3 fatty acids that build brain cells and improve brain function. Studies show omega-3s can enhance memory and reaction times.</p>
+                    <p><strong>Student-friendly options:</strong> Canned tuna, salmon packets, sardines</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Berries</h3>
+                    <p>Contain antioxidants that improve communication between brain cells, enhance learning, and reduce inflammation linked to brain aging.</p>
+                    <p><strong>Student-friendly options:</strong> Frozen berries, dried berries, fresh when affordable</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Dark Chocolate</h3>
+                    <p>Contains flavonoids, caffeine, and antioxidants that improve blood flow to the brain, enhancing memory and focus.</p>
+                    <p><strong>Student-friendly options:</strong> 70%+ dark chocolate squares as study snacks</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Eggs</h3>
+                    <p>Rich in choline, which helps create acetylcholine, a neurotransmitter that regulates mood and memory. B vitamins reduce brain inflammation and slow cognitive decline.</p>
+                    <p><strong>Student-friendly options:</strong> Hard-boiled eggs, quick scrambled eggs, mini frittatas</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Nuts & Seeds</h3>
+                    <p>Contain antioxidants, healthy fats, and vitamin E, which is associated with less cognitive decline as you age.</p>
+                    <p><strong>Student-friendly options:</strong> Trail mix, portion-controlled packs, nut butter packets</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Whole Grains</h3>
+                    <p>Provide steady glucose supply to the brain, improving concentration and focus. Rich in B vitamins that support brain health.</p>
+                    <p><strong>Student-friendly options:</strong> Oatmeal packets, whole grain wraps, brown rice cups</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Leafy Greens</h3>
+                    <p>Packed with vitamin K, lutein, folate, and beta carotene - nutrients linked to slower cognitive decline and better brain function.</p>
+                    <p><strong>Student-friendly options:</strong> Pre-washed spinach, kale in smoothies, microgreens</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Avocado</h3>
+                    <p>Contains monounsaturated fats that support brain structure and blood flow, and vitamin K and folate that help improve cognitive function.</p>
+                    <p><strong>Student-friendly options:</strong> Mini avocados, guacamole packs, avocado toast</p>
+                </div>
+                
+                <div class="brain-food">
+                    <h3>Green Tea</h3>
+                    <p>Contains L-theanine, which increases alpha-wave activity in the brain, promoting alertness while reducing anxiety - perfect for studying.</p>
+                    <p><strong>Student-friendly options:</strong> Tea bags, cold brew bottles, matcha packets</p>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>Pre-Exam Nutrition Strategy</h3>
+                <p>What you eat before an exam can significantly impact your performance. Follow these guidelines for optimal brain function during critical academic moments:</p>
+                <ul>
+                    <li><strong>1-2 hours before:</strong> Consume a balanced meal with complex carbs, protein, and healthy fats (e.g., oatmeal with nuts and berries, or whole grain toast with avocado and egg)</li>
+                    <li><strong>Hydrate well:</strong> Even mild dehydration can impair cognitive function and increase stress</li>
+                    <li><strong>Avoid heavy meals:</strong> Large meals redirect blood flow to digestion instead of your brain</li>
+                    <li><strong>Limit sugar:</strong> While tempting for quick energy, sugar can lead to crashes during your exam</li>
+                    <li><strong>Consider caffeine strategically:</strong> If you regularly consume caffeine, a moderate amount can enhance alertness, but avoid it if you're not used to it</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sample Meal Plans Section -->
+        <section id="meal-plans" class="section-container">
+            <h2 class="section-title">Student-Friendly Balanced Meal Plans</h2>
+            
+            <div class="info-card">
+                <h3>Meal Planning for Student Life</h3>
+                <p>Effective meal planning helps you maintain balanced nutrition despite busy schedules, limited budgets, and minimal cooking facilities. Benefits include:</p>
+                <ul>
+                    <li><strong>Time savings:</strong> Less daily decision-making and more efficient cooking</li>
+                    <li><strong>Budget management:</strong> Reduce food waste and impulse purchases</li>
+                    <li><strong>Nutritional balance:</strong> Ensure you're getting all necessary nutrients</li>
+                    <li><strong>Stress reduction:</strong> Eliminate last-minute meal scrambles during busy academic periods</li>
+                    <li><strong>Academic performance:</strong> Consistent, nutritious meals support optimal brain function</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Basic Balanced Meal Formula</h3>
+            <p>The simplest approach to balanced meals follows this template:</p>
+            <div class="info-card">
+                <ul>
+                    <li><strong>½ plate:</strong> Vegetables and/or fruits (fiber, vitamins, minerals)</li>
+                    <li><strong>¼ plate:</strong> Protein source (building blocks for body and brain)</li>
+                    <li><strong>¼ plate:</strong> Complex carbohydrates (energy for body and brain)</li>
+                    <li><strong>Plus:</strong> A source of healthy fats (brain function, hormone production)</li>
+                    <li><strong>Beverage:</strong> Water, unsweetened tea, or milk</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">7-Day Balanced Meal Plan (Budget-Friendly)</h3>
+            
+            <div class="meal-plan">
+                <div class="meal-grid">
+                    <div class="meal">
+                        <h4>Day 1</h4>
+                        <p><strong>Breakfast:</strong> Overnight oats with Greek yogurt, banana, and peanut butter</p>
+                        <p><strong>Lunch:</strong> Tuna wrap with whole grain tortilla, spinach, and avocado</p>
+                        <p><strong>Dinner:</strong> One-pot pasta with frozen vegetables and chickpeas</p>
+                        <p><strong>Snacks:</strong> Apple with peanut butter, carrot sticks</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 2</h4>
+                        <p><strong>Breakfast:</strong> Scrambled eggs with spinach and whole grain toast</p>
+                        <p><strong>Lunch:</strong> Mason jar salad with quinoa, beans, veggies, and olive oil dressing</p>
+                        <p><strong>Dinner:</strong> Sheet pan sweet potato and black bean tacos</p>
+                        <p><strong>Snacks:</strong> Orange, handful of nuts, Greek yogurt</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 3</h4>
+                        <p><strong>Breakfast:</strong> Smoothie with frozen berries, banana, spinach, Greek yogurt, and milk</p>
+                        <p><strong>Lunch:</strong> Peanut butter and banana sandwich on whole grain bread with side of baby carrots</p>
+                        <p><strong>Dinner:</strong> Microwave "baked" potato topped with canned chili, cheese, and broccoli</p>
+                        <p><strong>Snacks:</strong> Hard-boiled egg, cucumber slices, hummus</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 4</h4>
+                        <p><strong>Breakfast:</strong> Greek yogurt parfait with granola and frozen berries</p>
+                        <p><strong>Lunch:</strong> Leftovers from previous dinner</p>
+                        <p><strong>Dinner:</strong> Bean and vegetable soup with whole grain crackers</p>
+                        <p><strong>Snacks:</strong> Cherry tomatoes, string cheese, trail mix</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 5</h4>
+                        <p><strong>Breakfast:</strong> Whole grain toast with avocado and egg</p>
+                        <p><strong>Lunch:</strong> Microwave rice bowl with canned beans, salsa, and pre-shredded cheese</p>
+                        <p><strong>Dinner:</strong> Rotisserie chicken with steamed frozen vegetables and quinoa</p>
+                        <p><strong>Snacks:</strong> Banana, almonds, cottage cheese</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 6</h4>
+                        <p><strong>Breakfast:</strong> Oatmeal with applesauce, cinnamon, and walnuts</p>
+                        <p><strong>Lunch:</strong> Hummus and vegetable wrap with whole grain tortilla</p>
+                        <p><strong>Dinner:</strong> Stir-fry with leftover chicken, frozen vegetables, and quick-cooking brown rice</p>
+                        <p><strong>Snacks:</strong> Bell pepper strips, hard-boiled egg, pear</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 7</h4>
+                        <p><strong>Breakfast:</strong> Peanut butter banana toast on whole grain bread</p>
+                        <p><strong>Lunch:</strong> Tuna, bean, and vegetable salad with olive oil and lemon</p>
+                        <p><strong>Dinner:</strong> Microwave "stuffed" sweet potato with black beans, salsa, and avocado</p>
+                        <p><strong>Snacks:</strong> Popcorn, mandarin orange, yogurt</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <p><strong>Shopping Note:</strong> This meal plan uses recurring ingredients to minimize costs and reduce waste. Adjust portions based on your individual caloric needs.</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">No-Cooking Needed Meal Plan (Dorm-Friendly)</h3>
+            
+            <div class="meal-plan">
+                <div class="meal-grid">
+                    <div class="meal">
+                        <h4>Day 1</h4>
+                        <p><strong>Breakfast:</strong> Greek yogurt cup with granola topping and apple</p>
+                        <p><strong>Lunch:</strong> Pre-made sandwich from campus with fruit side</p>
+                        <p><strong>Dinner:</strong> Whole grain wrap with hummus, pre-cut vegetables, and rotisserie chicken</p>
+                        <p><strong>Snacks:</strong> Trail mix, string cheese</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 2</h4>
+                        <p><strong>Breakfast:</strong> Overnight oats (prepared in mini fridge)</p>
+                        <p><strong>Lunch:</strong> Prepared salad bowl with added canned tuna for protein</p>
+                        <p><strong>Dinner:</strong> Microwaveable brown rice cup with canned black beans and salsa</p>
+                        <p><strong>Snacks:</strong> Baby carrots with single-serve hummus, banana</p>
+                    </div>
+                    
+                    <div class="meal">
+                        <h4>Day 3</h4>
+                        <p><strong>Breakfast:</strong> Whole grain cereal with milk and banana</p>
+                        <p><strong>Lunch:</strong> Peanut butter and banana sandwich with baby carrots</p>
+                        <p><strong>Dinner:</strong> Ready-made soup with whole grain crackers and pre-cooked chicken strips</p>
+                        <p><strong>Snacks:</strong> Apple, pre-portioned nuts, yogurt drink</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Budget Nutrition Section -->
+        <section id="budget-nutrition" class="section-container">
+            <h2 class="section-title">Balanced Nutrition on a Student Budget</h2>
+            
+            <div class="info-card">
+                <h3>The Budget-Nutrition Balance</h3>
+                <p>Many students believe eating healthily is expensive, but with strategic planning, balanced nutrition can be affordable. The key is focusing on nutrient-dense foods that provide maximum nutritional value for your money.</p>
+                <p>Studies show that cooking at home can reduce food expenses by 50-75% compared to eating out, while providing better nutritional quality. Even with limited cooking facilities, simple meal preparation can dramatically improve your nutrition while protecting your budget.</p>
+            </div>
+            
+            <div class="budget-tips">
+                <div class="budget-tip">
+                    <h3><i class="fas fa-shopping-cart"></i> Strategic Shopping</h3>
+                    <ul>
+                        <li>Plan meals around sales and seasonal produce</li>
+                        <li>Buy in bulk for non-perishable staples (rice, beans, oats)</li>
+                        <li>Use store brands for basics like oats, beans, and frozen vegetables</li>
+                        <li>Shop at discount grocers and farmers' markets</li>
+                        <li>Use student discounts where available</li>
+                        <li>Consider sharing bulk purchases with roommates</li>
+                    </ul>
+                </div>
+                
+                <div class="budget-tip">
+                    <h3><i class="fas fa-seedling"></i> Budget Superfoods</h3>
+                    <p>These foods offer exceptional nutritional value for their price:</p>
+                    <ul>
+                        <li><strong>Eggs:</strong> Complete protein for ~25¢ each</li>
+                        <li><strong>Beans & lentils:</strong> Protein + fiber for ~$1-2 per pound</li>
+                        <li><strong>Rolled oats:</strong> Sustainable energy for ~$1 per pound</li>
+                        <li><strong>Bananas:</strong> Potassium-rich for ~50¢ each</li>
+                        <li><strong>Frozen vegetables:</strong> Year-round nutrition without waste</li>
+                        <li><strong>Canned fish:</strong> Omega-3s and protein for ~$1-2 per serving</li>
+                        <li><strong>Sweet potatoes:</strong> Vitamin A, fiber, and complex carbs</li>
+                        <li><strong>Peanut butter:</strong> Protein and healthy fats that keep</li>
+                    </ul>
+                </div>
+                
+                <div class="budget-tip">
+                    <h3><i class="fas fa-utensils"></i> Minimal Waste Cooking</h3>
+                    <ul>
+                        <li>Cook larger batches and freeze portions</li>
+                        <li>Repurpose leftovers into new meals</li>
+                        <li>Use wilting vegetables in soups or smoothies</li>
+                        <li>Keep a "flexible recipe" list that can use various ingredients</li>
+                        <li>Learn to use food scraps (veggie trimmings for broth, etc.)</li>
+                        <li>Store food properly to extend freshness</li>
+                    </ul>
+                </div>
+                
+                <div class="budget-tip">
+                    <h3><i class="fas fa-graduation-cap"></i> Campus Resources</h3>
+                    <p>Take advantage of these often-overlooked resources:</p>
+                    <ul>
+                        <li>Campus food pantries for emergency supplies</li>
+                        <li>Events with free food (be selective about nutrition)</li>
+                        <li>Nutrition workshops offering free samples and education</li>
+                        <li>Meal exchanges and dining dollar optimization</li>
+                        <li>Campus gardens or farm shares</li>
+                        <li>Student cooperative housing meal plans</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tips and Tricks Section -->
+        <section id="nutrition-tips" class="section-container">
+            <h2 class="section-title">Practical Nutrition Tips for Student Life</h2>
+            
+            <div class="tips-tricks">
+                <div class="tip-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Time-Saving Nutrition Hacks</h3>
+                    <p>Use Sunday evening to prep components for the week: cook a batch of grains, chop vegetables, boil eggs, and portion snacks. Create a "grab and go" section in your fridge with ready-to-eat balanced options. Keep emergency nutrition backup in your backpack (trail mix, protein bar) for unexpected schedule changes.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Dining Hall Navigation</h3>
+                    <p>Survey all options before filling your plate. Start with vegetables and protein, then add complex carbs. Look for steamed, grilled, or roasted items over fried. Create your own stir-fry or salad rather than pre-made options. Use the salad bar to supplement other meals with extra vegetables.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Study Session Nutrition</h3>
+                    <p>Prepare balanced snacks that combine protein and complex carbs: apple with peanut butter, hummus with whole grain crackers, or yogurt with berries. Stay hydrated with water, herbal tea, or diluted fruit juice. Avoid energy drinks and sugar-heavy snacks that cause crashes during long study sessions.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Balanced Social Eating</h3>
+                    <p>Don't isolate yourself from social eating opportunities, but make strategic choices. Eat a small protein-rich snack before parties to avoid hunger-driven choices. Choose thin-crust pizza with vegetables over deep dish with just cheese. At restaurants, split entrees or take half home for tomorrow.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-bed"></i>
+                    <h3>Sleep-Supporting Nutrition</h3>
+                    <p>Avoid caffeine after 2pm to protect sleep quality. Choose tryptophan-rich foods in the evening (milk, turkey, bananas, oats) to support melatonin production. Have a small, balanced bedtime snack if late-night hunger disrupts sleep: yogurt, banana, or a small handful of nuts.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-tint"></i>
+                    <h3>Hydration Strategy</h3>
+                    <p>Carry a reusable water bottle and refill between classes. Set hydration goals based on your body weight (aim for at least half your weight in ounces daily). Use fruit or herb infusions if plain water is unappealing. Check hydration status by urine color (pale yellow = properly hydrated).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nutrition Calculator CTA -->
+        <section class="calculator-cta">
+            <h2>Find Your Personalized Nutrition Plan</h2>
+            <p>Get customized calorie and macronutrient recommendations based on your age, weight, height, activity level, and specific goals as a student.</p>
+            <a href="nutrition-calculator.html" class="cta-button">Calculate My Nutrition Needs</a>
+        </section>
+
+        <!-- Common Challenges & FAQs -->
+        <section id="nutrition-faq" class="section-container">
+            <h2 class="section-title">Student Nutrition FAQs</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">I'm too busy to cook or eat regular meals. What should I do?</div>
+                <div class="faq-answer">
+                    <p>Busy schedules are a reality of student life, but nutrition doesn't have to suffer:</p>
+                    <ul>
+                        <li><strong>Meal prep in batches</strong> when you do have time (weekends, evenings)</li>
+                        <li><strong>Create a "grab and go" section</strong> in your fridge with prepared containers</li>
+                        <li><strong>Set reminders</strong> on your phone for meal/snack times</li>
+                        <li><strong>Keep balanced emergency food</strong> in your backpack (trail mix, protein bars, fruit)</li>
+                        <li><strong>Use "assembly" meals</strong> rather than cooking from scratch (yogurt parfaits, sandwiches, etc.)</li>
+                        <li><strong>Utilize campus resources</strong> strategically - know where to get quick, healthy options</li>
+                    </ul>
+                    <p>Remember that even 5 minutes for a balanced snack is better than skipping meals entirely.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How can I eat healthily with limited kitchen access in a dorm?</div>
+                <div class="faq-answer">
+                    <p>Limited kitchen access requires creativity, but balanced nutrition is still possible:</p>
+                    <ul>
+                        <li><strong>Invest in key tools:</strong> Mini fridge, microwave, electric kettle, and potentially a single burner</li>
+                        <li><strong>Focus on no-cook proteins:</strong> Canned tuna/chicken, rotisserie chicken, nuts, Greek yogurt</li>
+                        <li><strong>Master microwave cooking:</strong> Eggs, potatoes, oatmeal, and even steamed vegetables</li>
+                        <li><strong>Use hot water for quick meals:</strong> Instant oatmeal, couscous, rice noodles</li>
+                        <li><strong>Keep shelf-stable produce:</strong> Apples, oranges, baby carrots, cherry tomatoes</li>
+                        <li><strong>Optimize dining hall visits:</strong> Load up on fresh vegetables and quality proteins</li>
+                        <li><strong>Consider communal cooking:</strong> Partner with floormates for weekly meal preparation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">I'm gaining weight since starting college. How can I eat more balanced?</div>
+                <div class="faq-answer">
+                    <p>The "freshman 15" is common but not inevitable. These strategies can help:</p>
+                    <ul>
+                        <li><strong>Follow the balanced plate model:</strong> Half vegetables/fruits, quarter protein, quarter complex carbs</li>
+                        <li><strong>Be mindful of liquid calories:</strong> Alcohol, sugary coffee drinks, and soda add up quickly</li>
+                        <li><strong>Plan for social eating:</strong> Eat a small protein-rich snack before events with unhealthy options</li>
+                        <li><strong>Manage stress eating:</strong> Find non-food stress relief (walking, talking to friends, brief meditation)</li>
+                        <li><strong>Stay active:</strong> Schedule regular movement into your routine</li>
+                        <li><strong>Mind your hunger cues:</strong> Eat when hungry, stop when satisfied (not full)</li>
+                        <li><strong>Prioritize sleep:</strong> Sleep deprivation alters hunger hormones and increases cravings</li>
+                    </ul>
+                    <p>Focus on overall balance rather than restrictive dieting, which can lead to unhealthy relationships with food.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How can I eat healthily on an extremely tight budget?</div>
+                <div class="faq-answer">
+                    <p>Nutrition on a tight budget requires strategic planning:</p>
+                    <ul>
+                        <li><strong>Prioritize nutrient-dense staples:</strong> Eggs, beans, oats, frozen vegetables, bananas</li>
+                        <li><strong>Buy in bulk:</strong> Rice, beans, and oats are pennies per serving</li>
+                        <li><strong>Reduce waste:</strong> Plan meals around what you already have</li>
+                        <li><strong>Choose cheaper protein sources:</strong> Legumes, eggs, canned fish, whole chickens</li>
+                        <li><strong>Shop sales and use coupons:</strong> Stock up on non-perishables when discounted</li>
+                        <li><strong>Consider campus resources:</strong> Food pantries, meal swipe sharing programs</li>
+                        <li><strong>Grow simple foods:</strong> Herbs, sprouts, and microgreens can grow in a dorm window</li>
+                    </ul>
+                    <p>Remember that eating balanced nutrition now can save money on healthcare and missed classes in the future.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How do I maintain nutrition during finals and high-stress periods?</div>
+                <div class="faq-answer">
+                    <p>During high-stress academic periods, nutrition often suffers exactly when you need it most:</p>
+                    <ul>
+                        <li><strong>Prep brain-boosting snacks in advance:</strong> Cut fruit, veggie sticks, protein portions</li>
+                        <li><strong>Use the 5-minute meal rule:</strong> If you have 5 minutes, make something balanced instead of skipping</li>
+                        <li><strong>Manage caffeine strategically:</strong> Moderate amounts can help focus, but excess causes jitters</li>
+                        <li><strong>Stay hydrated:</strong> Even mild dehydration impairs cognitive function</li>
+                        <li><strong>Consider freezer meals:</strong> Prepare balanced meals in advance and freeze for finals week</li>
+                        <li><strong>Focus on protein + complex carbs:</strong> This combination provides sustained brain energy</li>
+                        <li><strong>Avoid sugar crashes:</strong> Choose balanced snacks over quick sugar fixes</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What supplements should students consider?</div>
+                <div class="faq-answer">
+                    <p>While whole foods should form your nutritional foundation, some supplements may be beneficial:</p>
+                    <ul>
+                        <li><strong>Vitamin D:</strong> Essential for many students, especially with limited sun exposure</li>
+                        <li><strong>B complex:</strong> Supports energy metabolism and brain function</li>
+                        <li><strong>Omega-3:</strong> Beneficial for brain health if fish consumption is low</li>
+                        <li><strong>Multivitamin:</strong> Basic insurance against nutritional gaps</li>
+                        <li><strong>Protein supplement:</strong> Can be helpful for very active students or those struggling to get enough protein</li>
+                    </ul>
+                    <p>Always consult with a healthcare provider before starting any supplement regimen, as individual needs vary. Many campus health centers offer nutritional consultations at no cost.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'index.html';
+            });
+            
+            // FAQ toggles
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const isOpen = answer.style.display === 'block';
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(item => {
+                        item.style.display = 'none';
+                    });
+                    
+                    document.querySelectorAll('.faq-question').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Open this answer if it was closed
+                    if (!isOpen) {
+                        answer.style.display = 'block';
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // Initialize FAQ sections as closed
+            document.querySelectorAll('.faq-answer').forEach(answer => {
+                answer.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

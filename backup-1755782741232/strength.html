@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strength Training - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Strength Training specific styles */
+        .strength-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .strength-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .strength-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-heading {
+            text-align: center;
+            color: #f39c12;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .benefits-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            flex: 1 1 300px;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: #f39c12;
+        }
+
+        .benefit-card p {
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        .exercise-tabs {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background-color: transparent;
+            border: none;
+            color: #ddd;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab-button:hover {
+            color: #f39c12;
+        }
+
+        .tab-button.active {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #f39c12;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .exercise-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .exercise-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .exercise-info {
+            padding: 1.5rem;
+        }
+
+        .exercise-info h3 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .exercise-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-details {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .view-details:hover {
+            background-color: #e67e22;
+        }
+
+        .workout-plans {
+            background-color: #111;
+            padding: 3rem 2rem;
+        }
+
+        .plan-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .plan-card {
+            flex: 1 1 300px;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 16px rgba(0,0,0,0.3);
+        }
+
+        .plan-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .plan-description {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+            min-height: 100px;
+        }
+
+        .plan-details {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .plan-details li {
+            padding: 0.5rem 0;
+            color: #bbb;
+            border-bottom: 1px solid #333;
+        }
+
+        .plan-details li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .plan-button:hover {
+            background-color: #e67e22;
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.2rem;
+            background-color: #333;
+            color: #f39c12;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .faq-question:hover {
+            background-color: #444;
+        }
+
+        .faq-answer {
+            padding: 0 1.2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.2rem;
+            max-height: 300px; /* Adjust as needed */
+        }
+
+        .faq-answer p {
+            color: #ddd;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 3rem 2rem;
+            margin: 3rem auto;
+            max-width: 1000px;
+            border-radius: 10px;
+        }
+
+        .tips-section h2 {
+            color: #f39c12;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .strength-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tab-button {
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="strength.html" class="active" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="flexibility.html" aria-label="Flexibility Training Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="strength-hero">
+            <h1>Strength Training</h1>
+            <p>Build muscle, boost metabolism, and improve overall health with progressive resistance training techniques designed for all fitness levels.</p>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <h2 class="section-heading">What is Strength Training?</h2>
+            <p>Strength training, also known as resistance training, involves working against a force to build muscular strength, power, and endurance. This can be achieved using free weights, weight machines, resistance bands, or even your own body weight.</p>
+            <p>Unlike cardio exercises that primarily improve heart health and burn calories, strength training focuses on gradually increasing the capacity of your muscles by challenging them with progressively heavier loads or more difficult movements.</p>
+            <p>Regular strength training has been proven to increase muscle mass, strengthen bones, boost metabolism, improve posture, and enhance overall functional fitness—making everyday activities easier and reducing the risk of injury as you age.</p>
+        </section>
+
+        <!-- Benefits Section -->
+        <h2 class="section-heading">Key Benefits</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <h3>Increased Muscle Mass</h3>
+                <p>Resistance training stimulates muscle growth (hypertrophy) by creating microscopic damage to muscle fibers, which then repair and grow stronger during recovery.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <h3>Higher Metabolism</h3>
+                <p>Building more muscle increases your basal metabolic rate, helping you burn more calories even when at rest—a significant advantage for weight management.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-bone"></i>
+                </div>
+                <h3>Stronger Bones</h3>
+                <p>Weight-bearing exercises stimulate bone growth, increasing bone density and reducing the risk of osteoporosis and fractures as you age.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3>Improved Heart Health</h3>
+                <p>Regular strength training helps reduce blood pressure, improve cholesterol levels, and enhance overall cardiovascular function.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Better Mental Health</h3>
+                <p>Resistance training releases endorphins that reduce stress, anxiety, and depression while improving overall cognitive function and sleep quality.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <h3>Enhanced Balance & Coordination</h3>
+                <p>Strength exercises, especially those that engage the core, improve proprioception, balance, and overall body coordination, reducing fall risk.</p>
+            </div>
+        </div>
+
+        <!-- Exercise Categories -->
+        <h2 class="section-heading">Exercise Library</h2>
+        <div class="exercise-tabs">
+            <div class="tabs-nav">
+                <button class="tab-button active" data-tab="chest">Chest</button>
+                <button class="tab-button" data-tab="back">Back</button>
+                <button class="tab-button" data-tab="legs">Legs</button>
+                <button class="tab-button" data-tab="shoulders">Shoulders</button>
+                <button class="tab-button" data-tab="arms">Arms</button>
+                <button class="tab-button" data-tab="core">Core</button>
+            </div>
+
+            <!-- Chest Exercises -->
+            <div class="tab-content active" id="chest">
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <img src="Images/Fitness/Strength/Bench-Press.jpg" alt="Bench Press">
+                        <div class="exercise-info">
+                            <h3>Bench Press</h3>
+                            <p>The king of chest exercises, targeting the pectoralis major and minor muscles.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell, Bench</span>
+                            </div>
+                            <a href="exercises/bench-press.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="Images/Fitness/Strength/PushUp.jpg" alt="Push-Up">
+                        <div class="exercise-info">
+                            <h3>Push-Up</h3>
+                            <p>A versatile bodyweight exercise for chest, shoulders, and triceps.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="exercises/push-up.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="Images/Fitness/Strength/Dumbbell-Flyes.jpg" alt="Dumbbell Flyes">
+                        <div class="exercise-info">
+                            <h3>Dumbbell Flyes</h3>
+                            <p>Isolates the chest muscles through a wide range of motion.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Dumbbells, Bench</span>
+                            </div>
+                            <a href="exercises/dumbbell-flyes.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="Images/Fitness/Strength/Incline-Bench-Press.jpg" alt="Incline Bench Press">
+                        <div class="exercise-info">
+                            <h3>Incline Bench Press</h3>
+                            <p>Targets the upper chest region for balanced development.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell, Incline Bench</span>
+                            </div>
+                            <a href="exercises/incline-bench.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Exercises -->
+            <div class="tab-content" id="back">
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <img src="Images/Fitness/Strength/PullUp.jpg" alt="Pull-Up">
+                        <div class="exercise-info">
+                            <h3>Pull-Up</h3>
+                            <p>A challenging bodyweight exercise that works the entire back.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Advanced</span>
+                                <span>Equipment: Pull-up Bar</span>
+                            </div>
+                            <a href="exercises/pull-up.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="Images/Fitness/Strength/Barbell-Row.jpg" alt="Bent Over Row">
+                        <div class="exercise-info">
+                            <h3>Bent Over Row</h3>
+                            <p>A fundamental back exercise to develop thickness and strength.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell</span>
+                            </div>
+                            <a href="exercises/bent-over-row.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1598575468023-d594d8edb4f4?auto=format&fit=crop&w=600&q=80" alt="Lat Pulldown">
+                        <div class="exercise-info">
+                            <h3>Lat Pulldown</h3>
+                            <p>Targets the latissimus dorsi for that sought-after V-shape.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Cable Machine</span>
+                            </div>
+                            <a href="exercises/lat-pulldown.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1609899537878-88d5ba422bd6?auto=format&fit=crop&w=600&q=80" alt="Seated Row">
+                        <div class="exercise-info">
+                            <h3>Seated Row</h3>
+                            <p>Builds mid-back thickness and improves posture.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Cable Machine</span>
+                            </div>
+                            <a href="exercises/seated-row.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legs Exercises -->
+            <div class="tab-content" id="legs">
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" alt="Barbell Squat">
+                        <div class="exercise-info">
+                            <h3>Barbell Squat</h3>
+                            <p>The foundational lower body compound movement for strength and mass.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell, Squat Rack</span>
+                            </div>
+                            <a href="exercises/barbell-squat.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=600&q=80" alt="Deadlift">
+                        <div class="exercise-info">
+                            <h3>Deadlift</h3>
+                            <p>A powerful full-body exercise focusing on posterior chain development.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Advanced</span>
+                                <span>Equipment: Barbell</span>
+                            </div>
+                            <a href="exercises/deadlift.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1574680178549-c08dd7c35770?auto=format&fit=crop&w=600&q=80" alt="Leg Press">
+                        <div class="exercise-info">
+                            <h3>Leg Press</h3>
+                            <p>Machine-based alternative to squats for quadriceps development.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Leg Press Machine</span>
+                            </div>
+                            <a href="exercises/leg-press.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1606889463941-54d3db0bc465?auto=format&fit=crop&w=600&q=80" alt="Romanian Deadlift">
+                        <div class="exercise-info">
+                            <h3>Romanian Deadlift</h3>
+                            <p>Targets hamstrings and glutes while protecting lower back.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell</span>
+                            </div>
+                            <a href="exercises/romanian-deadlift.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Shoulders Exercises -->
+            <div class="tab-content" id="shoulders">
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?auto=format&fit=crop&w=600&q=80" alt="Shoulder Press">
+                        <div class="exercise-info">
+                            <h3>Shoulder Press</h3>
+                            <p>A vertical push movement for shoulder strength and stability.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell/Dumbbells</span>
+                            </div>
+                            <a href="exercises/shoulder-press.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" alt="Lateral Raise">
+                        <div class="exercise-info">
+                            <h3>Lateral Raise</h3>
+                            <p>An isolation exercise targeting the lateral deltoids for shoulder width.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Dumbbells</span>
+                            </div>
+                            <a href="exercises/lateral-raises.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1599058918842-02036c280a55?auto=format&fit=crop&w=600&q=80" alt="Face Pull">
+                        <div class="exercise-info">
+                            <h3>Face Pull</h3>
+                            <p>A cable exercise that targets the rear deltoids and rotator cuff muscles.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Cable Machine</span>
+                            </div>
+                            <a href="exercises/face-pull.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="Upright Row">
+                        <div class="exercise-info">
+                            <h3>Upright Row</h3>
+                            <p>A compound movement targeting the deltoids and upper traps.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Barbell/Dumbbells</span>
+                            </div>
+                            <a href="exercises/upright-rows.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arms Exercises -->
+            <div class="tab-content" id="arms">
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1581009137042-c552e485697a?auto=format&fit=crop&w=600&q=80" alt="Bicep Curl">
+                        <div class="exercise-info">
+                            <h3>Bicep Curl</h3>
+                            <p>The classic isolation exercise for bicep development.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Dumbbells/Barbell</span>
+                            </div>
+                            <a href="exercises/bicep-curl.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1589955791915-526198ae4ee9?auto=format&fit=crop&w=600&q=80" alt="Tricep Dip">
+                        <div class="exercise-info">
+                            <h3>Tricep Dip</h3>
+                            <p>A compound movement that emphasizes the triceps with chest and shoulder involvement.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Parallel Bars/Bench</span>
+                            </div>
+                            <a href="exercises/tricep-dip.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1584863231364-a543ee4685a8?auto=format&fit=crop&w=600&q=80" alt="Skull Crusher">
+                        <div class="exercise-info">
+                            <h3>Skull Crusher</h3>
+                            <p>An isolation exercise targeting all three heads of the triceps.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: EZ Bar/Dumbbells</span>
+                            </div>
+                            <a href="exercises/skull-crusher.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" alt="Hammer Curl">
+                        <div class="exercise-info">
+                            <h3>Hammer Curl</h3>
+                            <p>A variation of the bicep curl that emphasizes the brachialis and brachioradialis.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: Dumbbells</span>
+                            </div>
+                            <a href="exercises/hammer-curl.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Core Exercises -->
+            <div class="tab-content" id="core">
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=600&q=80" alt="Plank">
+                        <div class="exercise-info">
+                            <h3>Plank</h3>
+                            <p>An isometric core exercise that builds endurance and stability.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="exercises/plank.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1571019613538-3c3a380ecc9d?auto=format&fit=crop&w=600&q=80" alt="Russian Twist">
+                        <div class="exercise-info">
+                            <h3>Russian Twist</h3>
+                            <p>A rotational exercise targeting the obliques and transverse abdominis.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Optional Weight</span>
+                            </div>
+                            <a href="exercises/russian-twist.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Hanging Leg Raise">
+                        <div class="exercise-info">
+                            <h3>Hanging Leg Raise</h3>
+                            <p>A challenging exercise for the lower abs and hip flexors.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Advanced</span>
+                                <span>Equipment: Pull-up Bar</span>
+                            </div>
+                            <a href="exercises/hanging-leg-raise.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <img src="https://images.unsplash.com/photo-1603287681836-b174ce5074c2?auto=format&fit=crop&w=600&q=80" alt="Ab Wheel Rollout">
+                        <div class="exercise-info">
+                            <h3>Ab Wheel Rollout</h3>
+                            <p>A dynamic exercise that trains the entire core while challenging stability.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Advanced</span>
+                                <span>Equipment: Ab Wheel</span>
+                            </div>
+                            <a href="exercises/ab-rollout.html" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workout Plans Section -->
+        <section class="workout-plans">
+            <h2 class="section-heading">Strength Training Programs</h2>
+            <div class="plan-cards">
+                <div class="plan-card">
+                    <h3>Beginner's Strength</h3>
+                    <p class="plan-description">Perfect for newcomers to strength training. Focus on form and building a foundation of strength.</p>
+                    <ul class="plan-details">
+                        <li><strong>Duration:</strong> 8 weeks</li>
+                        <li><strong>Frequency:</strong> 3 workouts per week</li>
+                        <li><strong>Focus:</strong> Full-body, basic movements</li>
+                        <li><strong>Equipment:</strong> Minimal</li>
+                    </ul>
+                    <a href="programs/beginner-strength.html" class="plan-button">View Program</a>
+                </div>
+
+                <div class="plan-card">
+                    <h3>Hypertrophy Builder</h3>
+                    <p class="plan-description">Designed for muscle growth with higher volume training and targeted isolation exercises.</p>
+                    <ul class="plan-details">
+                        <li><strong>Duration:</strong> 12 weeks</li>
+                        <li><strong>Frequency:</strong> 4-5 workouts per week</li>
+                        <li><strong>Focus:</strong> Body part splits, volume</li>
+                        <li><strong>Equipment:</strong> Full gym recommended</li>
+                    </ul>
+                    <a href="programs/hypertrophy-builder.html" class="plan-button">View Program</a>
+                </div>
+
+                <div class="plan-card">
+                    <h3>Strength & Power</h3>
+                    <p class="plan-description">Focus on building maximal strength and power output with lower rep ranges and heavier weights.</p>
+                    <ul class="plan-details">
+                        <li><strong>Duration:</strong> 10 weeks</li>
+                        <li><strong>Frequency:</strong> 4 workouts per week</li>
+                        <li><strong>Focus:</strong> Compound lifts, progressive overload</li>
+                        <li><strong>Equipment:</strong> Barbell essentials</li>
+                    </ul>
+                    <a href="programs/strength-power.html" class="plan-button">View Program</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tips Section -->
+        <section class="tips-section">
+            <h2>Training Tips for Success</h2>
+            <ul class="tips-list">
+                <li><strong>Start with proper form:</strong> Learn the correct technique for each exercise before adding weight. Poor form leads to injuries and reduced effectiveness.</li>
+                <li><strong>Progressive overload:</strong> Gradually increase the weight, reps, or sets over time to continuously challenge your muscles and stimulate growth.</li>
+                <li><strong>Rest and recovery:</strong> Allow at least 48 hours before training the same muscle group again. Muscles grow during rest, not during training.</li>
+                <li><strong>Nutrition matters:</strong> Ensure adequate protein intake (0.8-1g per pound of bodyweight) and overall calories to support muscle growth and recovery.</li>
+                <li><strong>Consistency over intensity:</strong> A consistent, moderate approach yields better long-term results than sporadic, extreme workouts.</li>
+                <li><strong>Track your progress:</strong> Keep a workout journal to record weights, reps, and how you feel to monitor improvements over time.</li>
+                <li><strong>Warm up properly:</strong> Begin each workout with 5-10 minutes of light cardio and dynamic stretching to prepare your body for heavy lifting.</li>
+                <li><strong>Listen to your body:</strong> Learn to distinguish between productive muscle soreness and potential injury pain.</li>
+            </ul>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How often should I strength train as a beginner?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>For beginners, 2-3 strength training sessions per week with at least one day of rest between workouts is ideal. This allows your body to adapt to the new stimulus while providing adequate recovery time. Full-body workouts are recommended at this stage to build a foundation of strength across all major muscle groups.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Will lifting weights make me bulky?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>This is a common concern, especially among women, but significant muscle bulk requires specific training, nutrition, and often favorable genetics. Most people who strength train develop lean, toned physiques rather than bulky ones. Building substantial muscle mass takes dedicated effort over many months or years, not something that happens accidentally.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How much weight should I lift?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>The appropriate weight varies greatly by individual and exercise. A good guideline is to select a weight that allows you to complete your target repetitions with proper form, where the last 2-3 reps feel challenging but not impossible. If you can easily complete more than your target reps, increase the weight. If you can't reach your target reps with good form, decrease it.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What should I eat before and after strength training?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Before training (1-2 hours prior), consume a balanced meal with carbohydrates for energy and moderate protein. After training (within 1 hour), prioritize protein (20-30g) to support muscle repair and recovery, along with some carbohydrates to replenish glycogen stores. Hydration is also crucial both before and after your workout.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How long before I see results from strength training?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You may notice increased strength within 2-3 weeks as your nervous system adapts. Visual physical changes typically begin to appear after 4-8 weeks of consistent training, depending on your starting point, genetics, nutrition, and program intensity. Remember that progress isn't always linear, and taking progress photos can help you notice changes that might be hard to see day-to-day.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        question.querySelector('i').classList.add('fa-chevron-up');
+                        question.querySelector('i').classList.remove('fa-chevron-down');
+                    } else {
+                        question.querySelector('i').classList.add('fa-chevron-down');
+                        question.querySelector('i').classList.remove('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

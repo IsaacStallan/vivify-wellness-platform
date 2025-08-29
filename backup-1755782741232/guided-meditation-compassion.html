@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Compassion Meditation - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .meditation-hero {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .meditation-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .meditation-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .meditation-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .meditation-player {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meditation-player::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e91e63, #f06292, #f8bbd9, #fce4ec);
+            animation: compassionShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes compassionShimmer {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .player-title {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .duration-display {
+            color: #e91e63;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .compassion-visualization {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart-container {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            transition: all 3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart-container.growing {
+            transform: scale(1.2);
+        }
+
+        .heart-container.radiating {
+            transform: scale(1.4);
+            filter: drop-shadow(0 0 20px rgba(233, 30, 99, 0.6));
+        }
+
+        .heart-main {
+            font-size: 4rem;
+            color: #e91e63;
+            transition: all 2s ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        .heart-container.growing .heart-main {
+            color: #f06292;
+            filter: drop-shadow(0 0 10px rgba(240, 98, 146, 0.4));
+        }
+
+        .heart-container.radiating .heart-main {
+            color: #f8bbd9;
+            filter: drop-shadow(0 0 15px rgba(248, 187, 217, 0.6));
+        }
+
+        .compassion-ripples {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .ripple {
+            position: absolute;
+            border: 2px solid rgba(233, 30, 99, 0.3);
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            animation: compassionRipple 4s ease-out infinite;
+        }
+
+        .ripple:nth-child(2) { animation-delay: 1.3s; }
+        .ripple:nth-child(3) { animation-delay: 2.6s; }
+
+        @keyframes compassionRipple {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .compassion-instruction {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #e91e63;
+            margin-top: 1.5rem;
+            transition: color 0.5s ease;
+        }
+
+        .meditation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+        }
+
+        .control-btn.play {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+        }
+
+        .control-btn.pause {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .control-btn.reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .meditation-script {
+            background: #222;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border-left: 4px solid #e91e63;
+        }
+
+        .script-section {
+            margin-bottom: 2rem;
+            opacity: 0.6;
+            transition: opacity 0.5s ease;
+        }
+
+        .script-section.active {
+            opacity: 1;
+            color: #f8bbd9;
+        }
+
+        .script-section h4 {
+            color: #e91e63;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: #333;
+            height: 6px;
+            border-radius: 3px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #e91e63, #f06292);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .compassion-benefits {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: #e91e63;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-item h4 {
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .self-compassion-guide {
+            background: #222;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .guide-card {
+            background: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #e91e63;
+        }
+
+        .guide-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .guide-card ul {
+            padding-left: 1.5rem;
+        }
+
+        .guide-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .student-struggles {
+            background: linear-gradient(135deg, #8e24aa, #7b1fa2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #ad1457;
+        }
+
+        .struggles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .struggle-category {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .struggle-category h4 {
+            color: #f8bbd9;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .compassion-exercises {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #333;
+        }
+
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .exercise-card {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #e91e63;
+        }
+
+        .exercise-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .exercise-steps {
+            background: rgba(233, 30, 99, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .exercise-steps ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .exercise-steps li {
+            margin-bottom: 0.5rem;
+            color: #f8bbd9;
+        }
+
+        .related-resources {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #333;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-card i {
+            font-size: 2rem;
+            color: #e91e63;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .back-link {
+            background: transparent;
+            color: #e91e63;
+            border: 2px solid #e91e63;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 2rem 0;
+        }
+
+        .back-link:hover {
+            background: #e91e63;
+            color: white;
+        }
+
+        .meditation-instructions {
+            background: rgba(233, 30, 99, 0.1);
+            border: 1px solid #e91e63;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .meditation-instructions h3 {
+            color: #e91e63;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .meditation-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .meditation-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 200px;
+                justify-content: center;
+            }
+            
+            .compassion-visualization {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .heart-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .content-section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Self-kindness quote that appears */
+        .kindness-quote {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(233, 30, 99, 0.9);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 1s ease;
+            max-width: 300px;
+            text-align: center;
+            z-index: 3;
+        }
+
+        .kindness-quote.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                                <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Dashboard</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="meditation-hero">
+            <div class="hero-content">
+                <div class="meditation-badge">
+                    <i class="fas fa-heart"></i> Self-Compassion
+                </div>
+                <h1>Self-Compassion Meditation</h1>
+                <p>Learn to treat yourself with kindness and understanding during challenging academic moments. This 10-minute practice helps Australian students develop a healthier relationship with themselves and their struggles.</p>
+            </div>
+        </section>
+
+        <div class="content-section">
+            <!-- Back Link -->
+            <a href="mindfulness.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Mindfulness
+            </a>
+
+            <!-- Instructions -->
+            <div class="meditation-instructions">
+                <h3><i class="fas fa-info-circle"></i> How to Practice Self-Compassion Meditation</h3>
+                <ul>
+                    <li>Find a comfortable seated position in a quiet space</li>
+                    <li>This meditation works best when you're feeling stressed or self-critical</li>
+                    <li>Be patient with yourself - self-compassion is a skill that develops over time</li>
+                    <li>If emotions arise, that's normal and part of the healing process</li>
+                    <li>Practice regularly to build your self-compassion muscle</li>
+                </ul>
+            </div>
+
+            <!-- Meditation Player -->
+            <div class="meditation-player">
+                <h2 class="player-title">10-Minute Self-Compassion Practice</h2>
+                <div class="duration-display">Duration: 10:00 minutes</div>
+                
+                <div class="compassion-visualization" id="compassionVisualization">
+                    <div class="compassion-ripples">
+                        <div class="ripple"></div>
+                        <div class="ripple"></div>
+                        <div class="ripple"></div>
+                    </div>
+                    <div class="heart-container" id="heartContainer">
+                        <div class="heart-main" id="heartMain">💝</div>
+                    </div>
+                    <div class="kindness-quote" id="kindnessQuote">
+                        "May I be kind to myself in this moment"
+                    </div>
+                </div>
+                
+                <div class="compassion-instruction" id="compassionInstruction">Prepare for Self-Kindness</div>
+
+                <div class="meditation-controls">
+                    <button class="control-btn play" id="playBtn">
+                        <i class="fas fa-play"></i> Start Meditation
+                    </button>
+                    <button class="control-btn pause" id="pauseBtn" style="display: none;">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="control-btn reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span>10:00</span>
+                </div>
+            </div>
+
+            <!-- Meditation Script -->
+            <div class="meditation-script" id="meditationScript">
+                <h3 style="color: #f39c12; text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-scroll"></i> Self-Compassion Script
+                </h3>
+                
+                <div class="script-section active" data-time="0">
+                    <h4>Welcome & Intention (0:00 - 1:30)</h4>
+                    <p>Welcome to this self-compassion meditation. Find a comfortable position and gently close your eyes. Take a moment to acknowledge that you're here because you care about your wellbeing - and that itself is an act of self-compassion.</p>
+                    <p>As students, we often face pressure, setbacks, and self-doubt. This practice will help you develop a kinder, more supportive relationship with yourself, especially during challenging times.</p>
+                </div>
+
+                <div class="script-section" data-time="90">
+                    <h4>Recognizing Suffering (1:30 - 3:00)</h4>
+                    <p>Begin by bringing to mind a recent situation where you struggled or felt disappointed in yourself. Perhaps a poor exam result, a missed deadline, or a social situation that didn't go well.</p>
+                    <p>Notice any self-critical thoughts that arise. Observe them without judgment. This inner critic often thinks it's helping, but usually just adds unnecessary pain to an already difficult situation.</p>
+                    <p>Place your hand on your heart and acknowledge: "This is a moment of suffering." It's okay to feel this pain - it's part of being human.</p>
+                </div>
+
+                <div class="script-section" data-time="180">
+                    <h4>Common Humanity (3:00 - 5:00)</h4>
+                    <p>Remember that you're not alone in this struggle. Every student has moments of disappointment, failure, and self-doubt. Right now, countless other students are experiencing similar feelings.</p>
+                    <p>This is part of the shared human experience. You haven't been singled out for suffering - this is simply what it means to be human and to care about your growth and success.</p>
+                    <p>Silently repeat: "Suffering is part of life. I'm not alone in this. Other students feel this way too." Feel the connection to this larger community of learners, all doing their best.</p>
+                </div>
+
+                <div class="script-section" data-time="300">
+                    <h4>Self-Kindness Practice (5:00 - 7:30)</h4>
+                    <p>Now, imagine how you would speak to a dear friend who was going through exactly what you're experiencing. What tone would you use? What words of comfort and encouragement would you offer?</p>
+                    <p>Turn that same kindness toward yourself. With your hand still on your heart, speak to yourself as you would to that friend. You might say: "You're doing your best. It's okay to make mistakes. You're learning and growing."</p>
+                    <p>Feel the warmth of your hand on your heart. This is your reminder that you can be a source of comfort and support for yourself. You deserve the same kindness you'd give to others.</p>
+                </div>
+
+                <div class="script-section" data-time="450">
+                    <h4>Loving-Kindness for Self (7:30 - 9:00)</h4>
+                    <p>Now we'll practice sending loving-kindness to yourself. With each phrase, really mean it. Speak to yourself with genuine care and warmth:</p>
+                    <p>"May I be happy. May I be healthy. May I be peaceful. May I accept myself as I am. May I forgive myself for my mistakes. May I have the courage to keep learning and growing."</p>
+                    <p>If these words feel difficult to say, that's normal. Start where you can and be patient with yourself. Self-compassion is a practice, not a destination.</p>
+                </div>
+
+                <div class="script-section" data-time="540">
+                    <h4>Integration & Commitment (9:00 - 10:00)</h4>
+                    <p>Take a moment to notice how you feel right now compared to when you started. Even a small shift toward kindness is significant and worth acknowledging.</p>
+                    <p>Make a commitment to treat yourself with greater compassion in the days ahead. When you notice self-criticism arising, remember you can pause, place your hand on your heart, and choose kindness instead.</p>
+                    <p>Take three deep breaths, feeling grateful for this time you've given yourself. When you're ready, gently open your eyes and carry this self-compassion with you into the rest of your day.</p>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="compassion-benefits">
+                <h2 class="section-title">Benefits of Self-Compassion for Students</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Reduced Anxiety</h4>
+                        <p>Self-compassion decreases anxiety and stress by reducing harsh self-judgment and criticism.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-heart"></i>
+                        <h4>Better Mental Health</h4>
+                        <p>Research shows self-compassion is linked to lower depression and improved overall wellbeing.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-rocket"></i>
+                        <h4>Increased Motivation</h4>
+                        <p>Contrary to self-criticism, self-compassion actually increases motivation and resilience.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-smile"></i>
+                        <h4>Greater Life Satisfaction</h4>
+                        <p>Students who practice self-compassion report higher levels of happiness and life satisfaction.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-users"></i>
+                        <h4>Better Relationships</h4>
+                        <p>Being kind to yourself improves your ability to be genuinely kind and supportive to others.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-brain"></i>
+                        <h4>Improved Learning</h4>
+                        <p>Self-compassion creates a safer emotional space for taking risks and learning from mistakes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common Student Struggles -->
+            <div class="student-struggles">
+                <h2 class="section-title">When to Practice Self-Compassion</h2>
+                <p style="text-align: center; color: #f8bbd9; margin-bottom: 2rem;">Australian students face unique pressures. Self-compassion can help in these common situations:</p>
+                <div class="struggles-container">
+                    <div class="struggle-category">
+                        <h4><i class="fas fa-graduation-cap"></i> Academic Pressure</h4>
+                        <ul>
+                            <li>Poor ATAR, HSC, VCE, or QCE results</li>
+                            <li>Failed assignments or exams</li>
+                            <li>Comparing yourself to high-achieving peers</li>
+                            <li>Imposter syndrome at university</li>
+                            <li>Perfectionism and fear of failure</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="struggle-category">
+                        <h4><i class="fas fa-home"></i> Life Transitions</h4>
+                        <ul>
+                            <li>Moving away from home for university</li>
+                            <li>Difficulty making friends in new cities</li>
+                            <li>Homesickness and missing family</li>
+                            <li>Adjusting to independent living</li>
+                            <li>Financial stress and part-time work pressure</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="struggle-category">
+                        <h4><i class="fas fa-users"></i> Social Challenges</h4>
+                        <ul>
+                            <li>Feeling left out or different from peers</li>
+                            <li>Social anxiety in group settings</li>
+                            <li>Relationship difficulties or breakups</li>
+                            <li>Peer pressure and FOMO</li>
+                            <li>Cyberbullying or social media comparison</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="struggle-category">
+                        <h4><i class="fas fa-heart-broken"></i> Personal Struggles</h4>
+                        <ul>
+                            <li>Body image and appearance concerns</li>
+                            <li>Identity questions and self-doubt</li>
+                            <li>Family problems or divorce</li>
+                            <li>Mental health challenges</li>
+                            <li>Feeling overwhelmed by future decisions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self-Compassion Practices -->
+            <div class="self-compassion-guide">
+                <h2 class="section-title">Building Your Self-Compassion Practice</h2>
+                <div class="guide-grid">
+                    <div class="guide-card">
+                        <h4><i class="fas fa-pause"></i> The Self-Compassion Break</h4>
+                        <div class="exercise-steps">
+                            <p><strong>Use this 2-minute technique when struggling:</strong></p>
+                            <ol>
+                                <li>Place your hand on your heart</li>
+                                <li>Say: "This is a moment of suffering"</li>
+                                <li>Say: "Suffering is part of life"</li>
+                                <li>Say: "May I be kind to myself right now"</li>
+                                <li>Take three deep, soothing breaths</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-pen"></i> Self-Compassionate Letter</h4>
+                        <div class="exercise-steps">
+                            <p><strong>Weekly practice for deeper healing:</strong></p>
+                            <ol>
+                                <li>Think of something you're struggling with</li>
+                                <li>Write a letter to yourself from the perspective of a loving friend</li>
+                                <li>Acknowledge your pain without minimising it</li>
+                                <li>Remind yourself that struggle is human</li>
+                                <li>Offer yourself words of kindness and encouragement</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-mirror"></i> Self-Compassionate Self-Talk</h4>
+                        <div class="exercise-steps">
+                            <p><strong>Transform your inner dialogue:</strong></p>
+                            <ol>
+                                <li>Notice when you're being self-critical</li>
+                                <li>Ask: "What would I say to a friend?"</li>
+                                <li>Reframe harsh thoughts with kindness</li>
+                                <li>Use your name when speaking to yourself</li>
+                                <li>Practice phrases like "It's okay, [name], you're learning"</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-seedling"></i> Daily Self-Compassion Habits</h4>
+                        <ul>
+                            <li>Start each day with a kind intention toward yourself</li>
+                            <li>Practice gratitude for what your body and mind do for you</li>
+                            <li>Celebrate small wins and efforts, not just outcomes</li>
+                            <li>Forgive yourself quickly when you make mistakes</li>
+                            <li>End each day by acknowledging you did your best</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self-Compassion Exercises -->
+            <div class="compassion-exercises">
+                <h2 class="section-title">Quick Self-Compassion Exercises</h2>
+                <div class="exercises-grid">
+                    <div class="exercise-card">
+                        <h4><i class="fas fa-heart"></i> Loving Touch</h4>
+                        <p>Research shows physical touch releases oxytocin and reduces cortisol. Try these soothing gestures:</p>
+                        <div class="exercise-steps">
+                            <ol>
+                                <li>Place both hands on your heart</li>
+                                <li>Give yourself a gentle hug</li>
+                                <li>Stroke your arm or leg soothingly</li>
+                                <li>Rest your hand on your cheek</li>
+                                <li>Hold your own hand for a moment</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4><i class="fas fa-user-friends"></i> The Friend Perspective</h4>
+                        <p>Gain perspective by imagining how a caring friend would respond to your situation:</p>
+                        <div class="exercise-steps">
+                            <ol>
+                                <li>Think of a specific struggle you're facing</li>
+                                <li>Imagine your best friend is experiencing this instead</li>
+                                <li>What would you say to comfort them?</li>
+                                <li>What tone of voice would you use?</li>
+                                <li>Now offer yourself those same words</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4><i class="fas fa-globe"></i> Common Humanity Reminder</h4>
+                        <p>Remember you're not alone in your struggles by connecting with shared human experience:</p>
+                        <div class="exercise-steps">
+                            <ol>
+                                <li>Identify what you're struggling with</li>
+                                <li>Remind yourself: "Other students feel this way too"</li>
+                                <li>Think of someone who might understand your situation</li>
+                                <li>Send them a mental message of support</li>
+                                <li>Feel connected to the wider community of learners</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4><i class="fas fa-mountain"></i> Self-Compassion in Crisis</h4>
+                        <p>When overwhelmed, use this emergency self-compassion protocol:</p>
+                        <div class="exercise-steps">
+                            <ol>
+                                <li>Stop and take three deep breaths</li>
+                                <li>Say: "This is really hard right now"</li>
+                                <li>Say: "It's normal to struggle sometimes"</li>
+                                <li>Ask: "What do I need right now?"</li>
+                                <li>Give yourself permission to take a break or seek help</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Resources -->
+            <div class="related-resources">
+                <h2 class="section-title">Related Resources</h2>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <i class="fas fa-leaf"></i>
+                        <h4>Stress Management</h4>
+                        <p>Learn additional techniques for managing academic stress and pressure.</p>
+                        <a href="stress-management.html" class="cta-button">Learn More</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Exam Anxiety Relief</h4>
+                        <p>12-minute meditation to calm nerves and boost confidence before exams.</p>
+                        <a href="guided-meditation-exam.html" class="cta-button">Try It</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-eye"></i>
+                        <h4>Focus Meditation</h4>
+                        <p>8-minute practice to sharpen concentration for better study sessions.</p>
+                        <a href="guided-meditation-focus.html" class="cta-button">Focus Now</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-bed"></i>
+                        <h4>Sleep Meditation</h4>
+                        <p>15-minute guided practice for better sleep and mental recovery.</p>
+                        <a href="guided-meditation-sleep.html" class="cta-button">Sleep Better</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+
+            // Self-Compassion Meditation functionality
+            let meditationTimer = null;
+            let currentTime = 0;
+            let isPlaying = false;
+            const totalDuration = 600; // 10 minutes in seconds
+
+            const playBtn = document.getElementById('playBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressFill = document.getElementById('progressFill');
+            const currentTimeDisplay = document.getElementById('currentTime');
+            const heartContainer = document.getElementById('heartContainer');
+            const heartMain = document.getElementById('heartMain');
+            const compassionInstruction = document.getElementById('compassionInstruction');
+            const kindnessQuote = document.getElementById('kindnessQuote');
+            const scriptSections = document.querySelectorAll('.script-section');
+
+            // Compassion phases and visuals
+            const compassionPhases = [
+                { time: 0, instruction: "Prepare for Self-Kindness", heartClass: "", heartEmoji: "💝", quote: "May I be kind to myself in this moment" },
+                { time: 90, instruction: "Acknowledge Your Struggle", heartClass: "growing", heartEmoji: "🤗", quote: "This is a moment of suffering" },
+                { time: 180, instruction: "You Are Not Alone", heartClass: "growing", heartEmoji: "🫂", quote: "Suffering is part of the human experience" },
+                { time: 300, instruction: "Offer Yourself Kindness", heartClass: "radiating", heartEmoji: "💖", quote: "May I treat myself with compassion" },
+                { time: 450, instruction: "Send Loving-Kindness", heartClass: "radiating", heartEmoji: "🌟", quote: "May I accept myself as I am" },
+                { time: 540, instruction: "Carry Compassion Forward", heartClass: "radiating", heartEmoji: "✨", quote: "I am worthy of love and kindness" }
+            ];
+
+            // Self-compassion quotes that rotate
+            const compassionQuotes = [
+                "May I be kind to myself in this moment",
+                "This is a moment of suffering",
+                "Suffering is part of the human experience",
+                "May I treat myself with compassion",
+                "May I give myself the love I need",
+                "May I accept myself as I am",
+                "I am worthy of love and kindness",
+                "May I forgive myself for my mistakes",
+                "I am enough, just as I am",
+                "May I be strong and resilient"
+            ];
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function updateProgress() {
+                const progressPercent = (currentTime / totalDuration) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+                currentTimeDisplay.textContent = formatTime(currentTime);
+            }
+
+            function updateActiveScript() {
+                scriptSections.forEach(section => {
+                    const sectionTime = parseInt(section.dataset.time);
+                    if (currentTime >= sectionTime) {
+                        scriptSections.forEach(s => s.classList.remove('active'));
+                        section.classList.add('active');
+                        
+                        // Auto-scroll to active section
+                        section.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                });
+            }
+
+            function updateCompassionVisualization() {
+                // Find current compassion phase
+                let currentPhase = compassionPhases[0];
+                for (let i = compassionPhases.length - 1; i >= 0; i--) {
+                    if (currentTime >= compassionPhases[i].time) {
+                        currentPhase = compassionPhases[i];
+                        break;
+                    }
+                }
+
+                // Update instruction text
+                compassionInstruction.textContent = currentPhase.instruction;
+
+                // Update heart visual
+                heartContainer.className = `heart-container ${currentPhase.heartClass}`;
+                heartMain.textContent = currentPhase.heartEmoji;
+
+                // Update kindness quote
+                kindnessQuote.textContent = currentPhase.quote;
+
+                // Show quote during certain phases
+                if (currentPhase.heartClass === "growing" || currentPhase.heartClass === "radiating") {
+                    kindnessQuote.classList.add('visible');
+                } else {
+                    kindnessQuote.classList.remove('visible');
+                }
+
+                // Activate ripples during radiating phase
+                if (currentPhase.heartClass === "radiating") {
+                    activateRipples();
+                }
+            }
+
+            function activateRipples() {
+                const ripples = document.querySelectorAll('.ripple');
+                ripples.forEach(ripple => {
+                    ripple.style.animationPlayState = 'running';
+                });
+            }
+
+            function startMeditation() {
+                isPlaying = true;
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline-flex';
+                
+                meditationTimer = setInterval(() => {
+                    currentTime++;
+                    updateProgress();
+                    updateActiveScript();
+                    updateCompassionVisualization();
+                    
+                    // Rotate quotes every 30 seconds during active phases
+                    if (currentTime % 30 === 0 && currentTime > 90) {
+                        rotateCompassionQuote();
+                    }
+                    
+                    if (currentTime >= totalDuration) {
+                        completeMeditation();
+                    }
+                }, 1000);
+                
+                // Track meditation start
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('meditation_start', 'mental', 'Self-compassion meditation started', 5);
+                }
+            }
+
+            function pauseMeditation() {
+                isPlaying = false;
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                clearInterval(meditationTimer);
+                
+                compassionInstruction.textContent = 'Paused with Self-Kindness';
+                compassionInstruction.style.color = '#f39c12';
+                kindnessQuote.classList.remove('visible');
+                
+                // Pause animations
+                const ripples = document.querySelectorAll('.ripple');
+                ripples.forEach(ripple => ripple.style.animationPlayState = 'paused');
+            }
+
+            function resetMeditation() {
+                isPlaying = false;
+                currentTime = 0;
+                
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                clearInterval(meditationTimer);
+                
+                updateProgress();
+                compassionInstruction.textContent = 'Prepare for Self-Kindness';
+                compassionInstruction.style.color = '#e91e63';
+                heartContainer.className = 'heart-container';
+                heartMain.textContent = '💝';
+                kindnessQuote.textContent = 'May I be kind to myself in this moment';
+                kindnessQuote.classList.remove('visible');
+                
+                // Reset animations
+                const ripples = document.querySelectorAll('.ripple');
+                ripples.forEach(ripple => ripple.style.animationPlayState = 'paused');
+                
+                // Reset script to first section
+                scriptSections.forEach(section => section.classList.remove('active'));
+                scriptSections[0].classList.add('active');
+                scriptSections[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            function rotateCompassionQuote() {
+                if (kindnessQuote.classList.contains('visible')) {
+                    const randomQuote = compassionQuotes[Math.floor(Math.random() * compassionQuotes.length)];
+                    kindnessQuote.style.opacity = '0';
+                    setTimeout(() => {
+                        kindnessQuote.textContent = randomQuote;
+                        kindnessQuote.style.opacity = '1';
+                    }, 500);
+                }
+            }
+
+            function completeMeditation() {
+                isPlaying = false;
+                clearInterval(meditationTimer);
+                
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                compassionInstruction.textContent = 'Self-Compassion Complete ✨';
+                compassionInstruction.style.color = '#f39c12';
+                heartContainer.className = 'heart-container radiating';
+                heartMain.textContent = '🌟';
+                kindnessQuote.textContent = 'You are worthy of love and kindness';
+                kindnessQuote.classList.add('visible');
+                
+                // Track meditation completion
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('meditation_complete', 'mental', 'Self-compassion meditation completed', 15);
+                }
+                
+                // Show completion message
+                setTimeout(() => {
+                    showCompassionCompletionModal();
+                }, 2000);
+            }
+
+            function showCompassionCompletionModal() {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                `;
+                
+                const content = document.createElement('div');
+                content.style.cssText = `
+                    background: linear-gradient(135deg, #2c3e50, #34495e);
+                    padding: 3rem;
+                    border-radius: 20px;
+                    text-align: center;
+                    max-width: 500px;
+                    margin: 2rem;
+                    border: 2px solid #e91e63;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                `;
+                
+                const compassionMessages = [
+                    "Beautiful! You've just practiced one of the most powerful tools for emotional healing. 💖",
+                    "Wonderful! Self-compassion is a gift you can give yourself every day. 🌟",
+                    "Excellent! You're building a kinder relationship with yourself - that takes courage! ✨",
+                    "Well done! Remember, you deserve the same kindness you give to others. 💝"
+                ];
+                
+                const randomMessage = compassionMessages[Math.floor(Math.random() * compassionMessages.length)];
+                
+                content.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💖✨</div>
+                    <h2 style="color: #e91e63; margin-bottom: 1rem;">Self-Compassion Complete!</h2>
+                    <p style="color: #fff; margin-bottom: 2rem; font-size: 1.1rem;">${randomMessage}</p>
+                    <div style="margin-bottom: 2rem;">
+                        <p style="color: #aaa; font-size: 0.9rem;">Carry this kindness with you:</p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 1rem;">
+                            <span style="color: #e91e63;">🤗 Be gentle</span>
+                            <span style="color: #e91e63;">💝 Show love</span>
+                            <span style="color: #e91e63;">🌟 You matter</span>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: linear-gradient(135deg, #e91e63, #ad1457);
+                        color: #fff;
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                        margin-right: 1rem;
+                    ">Continue with Kindness</button>
+                    <button onclick="resetMeditation(); this.parentElement.parentElement.remove();" style="
+                        background: transparent;
+                        color: #e91e63;
+                        border: 2px solid #e91e63;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Practice Again</button>
+                `;
+                
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+            }
+
+            // Track meditation completion for dashboard
+            function trackCompassionMeditationCompletion() {
+                const wellnessData = JSON.parse(localStorage.getItem('wellnessData') || '{}');
+                
+                if (!wellnessData.activities) wellnessData.activities = [];
+                
+                const activity = {
+                    id: Date.now(),
+                    type: 'meditation_complete',
+                    category: 'mental',
+                    description: 'Completed self-compassion meditation',
+                    points: 15,
+                    timestamp: new Date().toISOString()
+                };
+                
+                wellnessData.activities.unshift(activity);
+                
+                // Update mental health score (self-compassion significantly benefits mental health)
+                if (!wellnessData.scores) wellnessData.scores = { mental: 0, physical: 0, nutrition: 0, lifeSkills: 0, overall: 0 };
+                wellnessData.scores.mental = Math.min(100, wellnessData.scores.mental + 2);
+                
+                // Recalculate overall score
+                const scores = [
+                    wellnessData.scores.physical,
+                    wellnessData.scores.mental,
+                    wellnessData.scores.nutrition,
+                    wellnessData.scores.lifeSkills
+                ];
+                wellnessData.scores.overall = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+                
+                localStorage.setItem('wellnessData', JSON.stringify(wellnessData));
+            }
+
+            // Event listeners
+            playBtn.addEventListener('click', startMeditation);
+            pauseBtn.addEventListener('click', pauseMeditation);
+            resetBtn.addEventListener('click', resetMeditation);
+
+            // Keyboard controls
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (isPlaying) {
+                        pauseMeditation();
+                    } else {
+                        startMeditation();
+                    }
+                } else if (e.code === 'Escape') {
+                    resetMeditation();
+                }
+            });
+
+            // Gentle warning for page unload during meditation
+            window.addEventListener('beforeunload', function(e) {
+                if (isPlaying) {
+                    e.preventDefault();
+                    e.returnValue = 'Are you sure you want to leave? Your self-compassion practice will be interrupted.';
+                }
+            });
+
+            // Override completion to include tracking
+            const originalComplete = completeMeditation;
+            completeMeditation = function() {
+                originalComplete();
+                trackCompassionMeditationCompletion();
+            };
+
+            // Initialize
+            updateProgress();
+            
+            // Pause ripple animations initially
+            const ripples = document.querySelectorAll('.ripple');
+            ripples.forEach(ripple => ripple.style.animationPlayState = 'paused');
+        });
+    </script>
+</body>
+</html>

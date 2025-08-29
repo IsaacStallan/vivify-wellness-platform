@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulking Calculator - Vivify</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Calculator Specific Styles */
+        .calculator-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .calculator-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .calculator-hero p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 1rem;
+        }
+
+        .calculator-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .calculator {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .calculator h2 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ddd;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .form-row > .form-group {
+            flex: 1 0 200px;
+        }
+
+        .calculator-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: #f39c12;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 2rem;
+        }
+
+        .calculator-btn:hover {
+            background-color: #e67e22;
+        }
+
+        .results {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .results h2 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .result-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .result-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-card p {
+            color: #aaa;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .macros-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .macro-item {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .macro-item h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .macro-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .macro-item .subvalue {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .tips-container {
+            margin-top: 2rem;
+        }
+
+        .tips-title {
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tips-list {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .tip-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .tip-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-icon {
+            font-size: 1.8rem;
+            color: #f39c12;
+            flex-shrink: 0;
+        }
+
+        .tip-content h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-content p {
+            color: #ddd;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #f39c12;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #e67e22;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Categories</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" class="active" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="mental-health.html" aria-label="Mental Health Page">Mental Health</a>
+                                <a href="life-lessons.html" aria-label="Life Lessons Page">Life Lessons</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="calculator-hero">
+            <h1>Bulking Calorie & Macro Calculator</h1>
+            <p>Get personalized calorie and macronutrient recommendations based on your body stats, activity level, and bulking goals.</p>
+        </section>
+
+        <!-- Calculator Section -->
+        <section class="calculator-container">
+            <div class="calculator">
+                <h2>Calculate Your Bulking Needs</h2>
+                <form id="calculator-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" min="16" max="70" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" required>
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" min="40" max="200" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" min="140" max="220" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="activity">Activity Level</label>
+                        <select id="activity" required>
+                            <option value="">Select</option>
+                            <option value="1.2">Sedentary (little or no exercise)</option>
+                            <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
+                            <option value="1.55">Moderately active (moderate exercise 3-5 days/week)</option>
+                            <option value="1.725">Very active (hard exercise 6-7 days/week)</option>
+                            <option value="1.9">Extremely active (very hard exercise, physical job or training twice a day)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="goal">Bulking Goal</label>
+                        <select id="goal" required>
+                            <option value="">Select</option>
+                            <option value="0.25">Lean Bulk (0.25kg / 0.5lb per week)</option>
+                            <option value="0.5">Moderate Bulk (0.5kg / 1lb per week)</option>
+                            <option value="0.75">Aggressive Bulk (0.75kg / 1.5lb per week)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="protein-preference">Protein Intake Preference</label>
+                        <select id="protein-preference" required>
+                            <option value="">Select</option>
+                            <option value="1.6">Moderate (1.6g per kg bodyweight)</option>
+                            <option value="1.8">High (1.8g per kg bodyweight)</option>
+                            <option value="2.2">Very High (2.2g per kg bodyweight)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="calculator-btn">Calculate My Bulking Plan</button>
+                </form>
+            </div>
+            
+            <div class="results" id="results">
+                <h2>Your Personalized Bulking Plan</h2>
+                
+                <div class="result-card">
+                    <h3>Daily Calorie Target</h3>
+                    <div class="value" id="calorie-result">0</div>
+                    <p>Calories per day to support your bulking goal</p>
+                </div>
+                
+                <h3 style="text-align: center; color: #f39c12; margin-top: 2rem;">Macronutrient Breakdown</h3>
+                <div class="macros-breakdown">
+                    <div class="macro-item">
+                        <h4>Protein</h4>
+                        <div class="value" id="protein-grams">0g</div>
+                        <div class="subvalue" id="protein-calories">0 calories</div>
+                        <div class="subvalue" id="protein-percent">0%</div>
+                    </div>
+                    
+                    <div class="macro-item">
+                        <h4>Carbohydrates</h4>
+                        <div class="value" id="carbs-grams">0g</div>
+                        <div class="subvalue" id="carbs-calories">0 calories</div>
+                        <div class="subvalue" id="carbs-percent">0%</div>
+                    </div>
+                    
+                    <div class="macro-item">
+                        <h4>Fats</h4>
+                        <div class="value" id="fats-grams">0g</div>
+                        <div class="subvalue" id="fats-calories">0 calories</div>
+                        <div class="subvalue" id="fats-percent">0%</div>
+                    </div>
+                </div>
+                
+                <div class="result-card" style="margin-top: 2rem;">
+                    <h3>Weekly Weight Gain Target</h3>
+                    <div class="value" id="weight-gain">0 kg / 0 lb</div>
+                    <p>Expected weight gain per week with this plan</p>
+                </div>
+                
+                <a href="bulking-diets.html" class="back-link">&larr; Back to Bulking Guide</a>
+            </div>
+        </section>
+        
+        <!-- Tips Section -->
+        <section class="tips-container">
+            <h2 class="tips-title">How to Use Your Bulking Plan</h2>
+            
+            <div class="tips-list">
+                <div class="tip-item">
+                    <div class="tip-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h4>Meal Distribution</h4>
+                        <p>Divide your daily calories into 4-6 meals and snacks throughout the day. For optimal muscle protein synthesis, try to include protein in each meal (20-40g per meal).</p>
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h4>Monitor & Adjust</h4>
+                        <p>Track your weight weekly (same day, same time) and adjust calories if needed. If you're not gaining at your target rate, increase calories by 200-300 per day. If gaining too fast, reduce by the same amount.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h4>Strength Training</h4>
+                        <p>Ensure you're following a progressive overload strength training program 3-5 days per week. Without proper training stimulus, excess calories will be stored as fat rather than building muscle.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-icon">
+                        <i class="fas fa-carrot"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h4>Food Quality</h4>
+                        <p>While hitting your calorie and macro targets is the priority, aim to get 80-90% of your nutrition from whole, nutrient-dense foods. This ensures you get the micronutrients needed for optimal recovery and growth.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'index.html';
+            });
+            
+            // Calculator functionality
+            const calculatorForm = document.getElementById('calculator-form');
+            const resultsSection = document.getElementById('results');
+            
+            calculatorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get input values
+                const age = parseInt(document.getElementById('age').value);
+                const gender = document.getElementById('gender').value;
+                const weight = parseFloat(document.getElementById('weight').value);
+                const height = parseInt(document.getElementById('height').value);
+                const activityLevel = parseFloat(document.getElementById('activity').value);
+                const goal = parseFloat(document.getElementById('goal').value);
+                const proteinPreference = parseFloat(document.getElementById('protein-preference').value);
+                
+                // Calculate BMR (Basal Metabolic Rate) using Mifflin-St Jeor Equation
+                let bmr;
+                if (gender === 'male') {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+                } else {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                }
+                
+                // Calculate TDEE (Total Daily Energy Expenditure)
+                const tdee = bmr * activityLevel;
+                
+                // Calculate bulking calories (TDEE + surplus)
+                // Each 0.5kg of weight gain requires approximately 3500 calories per week
+                const weeklySurplus = goal * 7000; // 7000 calories per kg
+                const dailySurplus = weeklySurplus / 7;
+                const bulkingCalories = Math.round(tdee + dailySurplus);
+                
+                // Calculate macros
+                const proteinGrams = Math.round(weight * proteinPreference);
+                const proteinCalories = proteinGrams * 4;
+                
+                const fatGrams = Math.round((bulkingCalories * 0.25) / 9); // 25% of calories from fat
+                const fatCalories = fatGrams * 9;
+                
+                const carbCalories = bulkingCalories - proteinCalories - fatCalories;
+                const carbGrams = Math.round(carbCalories / 4);
+                
+                // Calculate percentages
+                const proteinPercent = Math.round((proteinCalories / bulkingCalories) * 100);
+                const carbPercent = Math.round((carbCalories / bulkingCalories) * 100);
+                const fatPercent = Math.round((fatCalories / bulkingCalories) * 100);
+                
+                // Update results
+                document.getElementById('calorie-result').textContent = bulkingCalories;
+                
+                document.getElementById('protein-grams').textContent = proteinGrams + 'g';
+                document.getElementById('protein-calories').textContent = proteinCalories + ' calories';
+                document.getElementById('protein-percent').textContent = proteinPercent + '%';
+                
+                document.getElementById('carbs-grams').textContent = carbGrams + 'g';
+                document.getElementById('carbs-calories').textContent = carbCalories + ' calories';
+                document.getElementById('carbs-percent').textContent = carbPercent + '%';
+                
+                document.getElementById('fats-grams').textContent = fatGrams + 'g';
+                document.getElementById('fats-calories').textContent = fatCalories + ' calories';
+                document.getElementById('fats-percent').textContent = fatPercent + '%';
+                
+                document.getElementById('weight-gain').textContent = goal + ' kg / ' + (goal * 2.2).toFixed(1) + ' lb';
+                
+                // Show results
+                resultsSection.style.display = 'block';
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

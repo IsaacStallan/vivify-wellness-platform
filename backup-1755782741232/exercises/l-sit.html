@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-Sit - Exercise Guide | Vivify</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Exercise Detail Page Styles */
+        .exercise-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1598266663439-2056e6900338?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .exercise-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .exercise-hero .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-tag i {
+            color: #f39c12;
+        }
+
+        .exercise-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-heading {
+            color: #f39c12;
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        .exercise-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-details {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .overview-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            width: 120px;
+            color: #ddd;
+        }
+
+        .detail-value {
+            color: #aaa;
+        }
+
+        .overview-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #ddd;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .common-mistakes {
+            background-color: #331111;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .common-mistakes h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+        }
+
+        .mistake-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mistake-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .mistake-list li::before {
+            content: '✕';
+            color: #ff6b6b;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .mistake-list strong {
+            color: #ff6b6b;
+        }
+
+        .variations-section {
+            margin: 3rem 0;
+        }
+
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .variation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .variation-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .variation-info {
+            padding: 1.5rem;
+        }
+
+        .variation-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .variation-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .difficulty-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .difficulty-dot.active {
+            background-color: #f39c12;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .related-exercises {
+            margin: 3rem 0;
+        }
+
+        .related-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 1rem;
+        }
+
+        .related-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .related-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .related-info a i {
+            margin-left: 0.3rem;
+        }
+
+        .related-info a:hover {
+            text-decoration: underline;
+        }
+
+        .progression-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .progression-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .progression-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .progression-step {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .progression-step::before {
+            content: '↑';
+            color: #2ecc71;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .progression-step strong {
+            color: #2ecc71;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-hero .meta-tags {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Fitness</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness Home</a>
+                                <a href="../calisthenics.html" aria-label="Calisthenics Page">Calisthenics</a>
+                                <a href="../core.html" aria-label="Core Training Page">Core Training</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Exercise Hero Section -->
+        <section class="exercise-hero">
+            <h1>L-Sit</h1>
+            <p>A challenging isometric hold that builds tremendous core strength, hip flexor endurance, and upper body stability</p>
+            
+            <div class="meta-tags">
+                <div class="meta-tag">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Core, Hip Flexors, Shoulders</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Intermediate-Advanced</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-tools"></i>
+                    <span>Parallel Bars/Floor</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="exercise-content">
+            <!-- Overview Section -->
+            <h2 class="section-heading">Exercise Overview</h2>
+            <div class="exercise-overview">
+                <div class="overview-details">
+                    <h3>Exercise Details</h3>
+                    <ul class="detail-list">
+                        <li>
+                            <span class="detail-label">Primary Muscles:</span>
+                            <span class="detail-value">Rectus Abdominis, Hip Flexors, Triceps</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Secondary Muscles:</span>
+                            <span class="detail-value">Shoulders, Quads, Lower Back, Chest</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Equipment:</span>
+                            <span class="detail-value">Parallel Bars, Parallettes, Chairs, or Floor</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">Isometric, Compound</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Experience Level:</span>
+                            <span class="detail-value">Intermediate to Advanced</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Mechanics:</span>
+                            <span class="detail-value">Static Hold</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Force:</span>
+                            <span class="detail-value">Push (Vertical/Support)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1598266663439-2056e6900338?auto=format&fit=crop&w=600&q=80" alt="L-Sit Exercise">
+                </div>
+            </div>
+
+            <!-- Video Demonstration -->
+            <h2 class="section-heading">Video Demonstration</h2>
+            <div class="video-container">
+                <!-- This would be a real exercise video in production -->
+                <iframe src="https://www.youtube.com/embed/gc0-uVMGCSM" title="L-Sit Demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Progression Path Section - Added for advanced exercises -->
+            <section class="progression-section">
+                <h3>Path to the L-Sit</h3>
+                <p>The L-Sit is an intermediate to advanced bodyweight skill that requires significant core strength, compression strength, and shoulder stability. Work through these progression steps to build toward a full L-Sit:</p>
+                <ol class="progression-steps">
+                    <li class="progression-step"><strong>Supported Foot L-Sit:</strong> Start with feet on the ground and hands on raised surfaces (blocks, books, parallettes), lifting your hips off the ground and practicing the position.</li>
+                    <li class="progression-step"><strong>One-Foot Supported L-Sit:</strong> From the supported position, lift one foot off the ground while keeping the other foot supporting. Alternate between legs to build balanced strength.</li>
+                    <li class="progression-step"><strong>Tucked L-Sit:</strong> Lift both feet off the ground but keep knees bent close to your chest. Focus on pushing down through your hands and maintaining a straight back.</li>
+                    <li class="progression-step"><strong>One-Leg Extended L-Sit:</strong> From the tucked position, extend one leg fully while keeping the other tucked. Alternate legs to build endurance.</li>
+                    <li class="progression-step"><strong>Full L-Sit:</strong> Extend both legs fully, creating an L shape with your body. Start with short holds (5-10 seconds) and gradually build duration.</li>
+                    <li class="progression-step"><strong>Advanced L-Sit Variations:</strong> Once you've mastered the basic L-Sit, progress to variations like the V-sit (greater hip flexion angle) or L-sit to tuck planche transitions.</li>
+                </ol>
+                <p>Progress through each stage at your own pace. You might spend weeks or even months at each level before advancing. Consistency is the key to developing the necessary strength and endurance.</p>
+            </section>
+
+            <!-- Step-by-Step Instructions -->
+            <h2 class="section-heading">How to Perform the L-Sit</h2>
+            <ol class="instruction-steps">
+                <li class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Setup Position</h4>
+                        <p>Begin seated on the floor with legs extended straight in front of you. Place your hands on the floor beside your hips with fingers pointing forward or slightly outward. If using parallel bars or parallettes, grip them firmly at approximately shoulder width.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Prepare for Lift-Off</h4>
+                        <p>Press your palms firmly into the surface. Engage your core by drawing your navel toward your spine, and prepare to lift your body off the ground. If needed, bend your knees slightly to make the initial lift easier.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Press and Lift</h4>
+                        <p>Push down through your hands to lift your entire body off the ground. Keep your shoulders down and away from your ears (depressed). Your arms should be straight with elbows locked.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Extend Your Legs</h4>
+                        <p>Once your hips are lifted, extend your legs fully, pointing your toes. Your body should form an L shape, with your torso vertical and legs horizontal, parallel to the ground. The closer your legs are to parallel with the floor, the more challenging the exercise.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Hold the Position</h4>
+                        <p>Maintain the position by continuing to push through your hands and keeping your core and hip flexors engaged. Your back should remain straight, not rounded. Hold for the desired duration, starting with 5-10 seconds and building up over time.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Breathing Technique</h4>
+                        <p>Breathe normally throughout the hold, avoiding the tendency to hold your breath. This exercise requires significant muscular tension, but consistent breathing is critical for maintaining the position longer.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h4>Controlled Exit</h4>
+                        <p>To exit the position, either lower your feet back to the ground in a controlled manner or transition to a tucked position first, then lower your feet. Avoid collapsing or dropping out of the position to prevent strain on your shoulders and wrists.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- Training Tips -->
+            <section class="tips-section">
+                <h3>Form & Technique Tips</h3>
+                <ul class="tips-list">
+                    <li><strong>Push the shoulders down:</strong> A common cue is to "push the shoulders away from the ears" to maintain proper shoulder depression throughout the hold.</li>
+                    <li><strong>Create tension:</strong> Generate full-body tension by pointing your toes, squeezing your quads, and engaging your core throughout the movement.</li>
+                    <li><strong>Look forward:</strong> Keep your gaze forward or slightly down, not up, to maintain proper neck alignment with your spine.</li>
+                    <li><strong>Prioritize position over duration:</strong> It's better to hold a proper L-sit for 5 seconds than a poor form version for 20 seconds. Quality over quantity.</li>
+                    <li><strong>Use compression:</strong> Think about actively compressing your body by pulling your legs toward your torso while simultaneously pushing your torso away with your arms.</li>
+                    <li><strong>Practice scapular depression:</strong> Before attempting the full L-sit, practice shoulder depression by trying to push your shoulders down away from your ears while supporting your weight.</li>
+                    <li><strong>Hollow body position:</strong> Maintain a slight posterior pelvic tilt (tailbone tucked under) to activate your lower abs and protect your lower back.</li>
+                    <li><strong>Progressive training:</strong> If the full L-sit is too challenging, work on the progression exercises mentioned earlier and gradually build up your time in each position.</li>
+                </ul>
+            </section>
+
+            <!-- Common Mistakes -->
+            <section class="common-mistakes">
+                <h3>Common Mistakes to Avoid</h3>
+                <ul class="mistake-list">
+                    <li><strong>Hunched shoulders:</strong> Allowing shoulders to rise toward your ears creates excessive tension in the neck and reduces stability. Keep them pressed down throughout the exercise.</li>
+                    <li><strong>Insufficient hip flexor strength:</strong> Many beginners struggle because they lack the hip flexor strength to keep legs parallel to the ground. Address this with targeted hip flexor exercises like leg raises.</li>
+                    <li><strong>Bent knees:</strong> While acceptable during progression work, in a full L-sit, the legs should be completely straight with engaged quads.</li>
+                    <li><strong>Rounding the back:</strong> Excessive rounding of the back places strain on the spine and reduces core engagement. Maintain a relatively straight back position.</li>
+                    <li><strong>Flared elbows:</strong> Allowing elbows to bend or flare outward reduces stability and can lead to injury. Keep arms straight with elbows locked.</li>
+                    <li><strong>Holding breath:</strong> Tension often causes people to hold their breath, which limits hold duration and increases blood pressure. Focus on regular breathing.</li>
+                    <li><strong>Poor wrist preparation:</strong> The L-sit places significant strain on the wrists. Without proper preparation and strengthening, this can lead to wrist pain or injury.</li>
+                </ul>
+            </section>
+
+            <!-- Exercise Variations -->
+            <section class="variations-section">
+                <h2 class="section-heading">L-Sit Variations</h2>
+                <div class="variation-cards">
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1598266663439-2056e6900338?auto=format&fit=crop&w=600&q=80" alt="Floor L-Sit">
+                        <div class="variation-info">
+                            <h4>Floor L-Sit</h4>
+                            <p>Performed directly on the floor, requiring greater shoulder depression strength and making it more challenging than on raised surfaces.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?auto=format&fit=crop&w=600&q=80" alt="V-Sit">
+                        <div class="variation-info">
+                            <h4>V-Sit</h4>
+                            <p>An advanced progression where legs are raised higher than parallel, creating a V shape with the upper body, requiring greater core and hip flexor strength.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="L-Sit on Rings">
+                        <div class="variation-info">
+                            <h4>L-Sit on Rings</h4>
+                            <p>Performing the L-sit on gymnastic rings adds significant instability, requiring greater stabilization strength in the shoulders and core.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1598266663439-2056e6900338?auto=format&fit=crop&w=600&q=80" alt="L-Sit Pull-Up">
+                        <div class="variation-info">
+                            <h4>L-Sit Pull-Up</h4>
+                            <p>Combining an L-sit with a pull-up by maintaining the L position throughout a hanging pull-up movement, dramatically increases intensity.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Exercises -->
+            <section class="related-exercises">
+                <h2 class="section-heading">Related Exercises</h2>
+                <div class="related-cards">
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Hanging Leg Raises">
+                        <div class="related-info">
+                            <h4>Hanging Leg Raises</h4>
+                            <p>A dynamic exercise that builds the hip flexor and core strength needed for a successful L-sit.</p>
+                            <a href="hanging-leg-raises.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1598971639058-a66ef7dd9a70?auto=format&fit=crop&w=600&q=80" alt="Push-Ups">
+                        <div class="related-info">
+                            <h4>Push-Ups</h4>
+                            <p>Builds pushing strength and triceps endurance that helps with the arm support component of the L-sit.</p>
+                            <a href="push-ups.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1589955791915-526198ae4ee9?auto=format&fit=crop&w=600&q=80" alt="Dips">
+                        <div class="related-info">
+                            <h4>Dips</h4>
+                            <p>Strengthens the triceps and shoulders, which are crucial for supporting your bodyweight in the L-sit.</p>
+                            <a href="dips.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1584863231364-a543ee4685a8?auto=format&fit=crop&w=600&q=80" alt="Hollow Body Hold">
+                        <div class="related-info">
+                            <h4>Hollow Body Hold</h4>
+                            <p>A fundamental core exercise that teaches the proper body position and tension needed for the L-sit and many other gymnastics skills.</p>
+                            <a href="hollow-body-hold.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

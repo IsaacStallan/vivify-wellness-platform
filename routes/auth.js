@@ -6,6 +6,18 @@ const User = require('../models/User');
 
 const router = express.Router();
 
+const getRedirectUrl = (userRole) => {
+    switch(userRole) {
+        case 'admin':
+            return 'admin-dashboard.html';
+        case 'teacher':
+            return 'teacher-dashboard.html';
+        case 'student':
+        default:
+            return 'wellness-baseline-assessment.html';
+    }
+};
+
 // Helper to create JWT token
 const createToken = (payload, expiresIn = '8h') => {
     return jwt.sign(
@@ -15,15 +27,32 @@ const createToken = (payload, expiresIn = '8h') => {
     );
 };
 
-// Signup route
+// Signup route - REPLACE YOUR CURRENT SIGNUP ROUTE WITH THIS
 router.post('/signup', async (req, res) => {
     try {
-        let { username, email, password } = req.body;
+        // Add middleware debug logging
+        console.log('Request received at /auth/signup');
+        console.log('req.body exists:', !!req.body);
+        console.log('req.body type:', typeof req.body);
+        console.log('Raw request body:', req.body);
         
-        console.log('Signup attempt:', { username, email });
+        // Check if body exists and is an object
+        if (!req.body || typeof req.body !== 'object') {
+            return res.status(400).json({ message: 'Invalid request body.' });
+        }
+        
+        // Explicitly declare variables to avoid hoisting issues
+        const username = req.body.username || '';
+        const userEmail = req.body.email || '';
+        const password = req.body.password || '';
+        const role = req.body.role || 'student';
+        const yearLevel = req.body.yearLevel;
+        const schoolCode = req.body.schoolCode;
+        
+        console.log('Extracted variables:', { username, userEmail, role, yearLevel, schoolCode });
 
         // Basic validation
-        if (!username || !email || !password) {
+        if (!username || !userEmail || !password) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
@@ -32,7 +61,7 @@ router.post('/signup', async (req, res) => {
         }
 
         // Email validation
-        email = validator.normalizeEmail(email);
+        const email = validator.normalizeEmail(userEmail);
         if (!validator.isEmail(email)) {
             return res.status(400).json({ message: 'Invalid email address.' });
         }
@@ -63,20 +92,21 @@ router.post('/signup', async (req, res) => {
             username,
             email,
             password: hashedPassword,
-            emailVerified: true, // Skip verification for development
-            role: 'student',
-            school: 'Knox Grammar School'
+            emailVerified: true,
+            role: role || 'student',
+            school: 'Knox Grammar School',
+            yearLevel: role === 'student' ? yearLevel : undefined
         });
 
         await newUser.save();
-        console.log('User created successfully:', newUser.username);
+        console.log('User created successfully:', newUser.username, 'Role:', newUser.role);
 
         // Auto-login for development
         const token = createToken({ 
             id: newUser._id,
             username: newUser.username,
             email: newUser.email,
-            role: 'student'
+            role: newUser.role
         });
 
         return res.status(201).json({
@@ -86,13 +116,14 @@ router.post('/signup', async (req, res) => {
                 id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
-                role: 'student',
+                role: newUser.role,
                 school: 'Knox Grammar School'
             },
             autoLogin: true
         });
     } catch (error) {
         console.error('Signup error:', error);
+        console.error('Error stack:', error.stack);
         res.status(500).json({ 
             message: 'Server error: ' + error.message
         });
@@ -140,6 +171,19 @@ router.post('/login', async (req, res) => {
 
         console.log('Login successful for:', user.username);
 
+        // Role-based redirect logic
+        const getRedirectUrl = (userRole) => {
+            switch(userRole) {
+                case 'admin':
+                    return 'admin-dashboard.html';
+                case 'teacher':
+                    return 'Dashboard.html';
+                case 'student':
+                default:
+                    return 'wellness-baseline-assessment.html';
+            }
+        };
+
         // Return success response
         res.status(200).json({
             token,
@@ -152,7 +196,7 @@ router.post('/login', async (req, res) => {
                 yearLevel: user.yearLevel,
                 emailVerified: user.emailVerified
             },
-            redirectTo: 'Dashboard.html'
+            redirectTo: getRedirectUrl(user.role || 'student')  // Role-based redirect
         });
     } catch (error) {
         console.error('Login error:', error);
