@@ -2,11 +2,6 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const jwt = require('jsonwebtoken');
-const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -19,12 +14,11 @@ console.log('Environment check:', {
   JWT_SECRET: process.env.JWT_SECRET ? 'Set ✓' : 'Missing ✗'
 });
 
-// Basic middleware first
+// Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
-// CORS configuration
+// CORS
 app.use(cors({
   origin: ['https://vivify.au', 'https://www.vivify.au', 'http://localhost:3000'],
   credentials: true,
@@ -33,8 +27,11 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
-// Health check route (before database connection)
+// ROUTES REGISTERED IMMEDIATELY (before database connection)
+
+// Health check
 app.get('/health', (req, res) => {
+  console.log('Health check accessed');
   res.json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
@@ -46,113 +43,111 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Add this after your health check route
+// Root route
+app.get('/', (req, res) => {
+  console.log('Root route accessed');
+  res.json({
+    message: 'Vivify Student Wellness Platform API',
+    school: 'Knox Grammar School',
+    timestamp: new Date().toISOString(),
+    endpoints: ['/health', '/auth/signup', '/auth/login']
+  });
+});
+
+// Signup route (directly in main file for now)
 app.post('/auth/signup', async (req, res) => {
   try {
-    console.log('Signup attempt:', req.body);
+    console.log('=== SIGNUP ENDPOINT HIT ===');
+    console.log('Request body:', req.body);
+    console.log('Origin:', req.get('origin'));
     
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, yearLevel, school } = req.body;
     
     // Basic validation
     if (!username || !email || !password) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
     
-    // For now, return success without database save (for testing)
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
+    
+    // For testing - return success without database operations
+    console.log('Signup successful for:', username);
+    
     res.status(201).json({
       message: 'User registered successfully!',
       user: {
         username,
         email,
         role: role || 'student',
-        school: 'Knox Grammar School'
+        school: school || 'Knox Grammar School',
+        yearLevel: role === 'student' ? yearLevel : undefined
       },
-      success: true
+      success: true,
+      test: true // Indicates this is test mode
     });
     
   } catch (error) {
     console.error('Signup error:', error);
-    res.status(500).json({ message: 'Server error: ' + error.message });
+    res.status(500).json({ 
+      message: 'Server error: ' + error.message 
+    });
   }
 });
 
-// Simple test route for debugging
-app.post('/auth/signup', (req, res) => {
-  console.log('Signup endpoint hit!');
-  console.log('Request body:', req.body);
+// Test login route
+app.post('/auth/login', (req, res) => {
+  console.log('Login endpoint hit:', req.body);
   res.json({
-    success: true,
-    message: 'Basic signup endpoint is working!',
-    timestamp: new Date().toISOString()
+    message: 'Login endpoint working',
+    test: true
   });
 });
 
-// Database connection with proper error handling
+// Database connection (happens after routes are registered)
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
       console.log('✅ MongoDB connected successfully');
+      console.log('🏫 Database ready for Knox Grammar School');
       
-      // Only import and register routes AFTER database connection
-      try {
-        const authRoutes = require('./routes/auth');
-        const User = require('./models/User');
-        
-        // Now register the full auth routes
-        app.use('/auth', authRoutes);
-        
-        console.log('🏫 Full Vivify app ready for Knox Grammar School');
-      } catch (importError) {
-        console.error('❌ Error importing routes/models:', importError);
-      }
+      // TODO: Add full database functionality here later
     })
     .catch((err) => {
       console.error('❌ MongoDB connection error:', err);
-      console.log('⚠️ Running in basic mode without database functionality');
+      console.log('⚠️ Running without database - basic functionality only');
     });
 } else {
-  console.log('⚠️ No MONGODB_URI found, running in basic mode');
+  console.log('⚠️ No MONGODB_URI found');
 }
+
+// 404 handler
+app.use((req, res) => {
+  console.log('404 - Route not found:', req.method, req.url);
+  res.status(404).json({ 
+    message: 'Route not found', 
+    path: req.url,
+    method: req.method,
+    availableRoutes: ['/', '/health', '/auth/signup', '/auth/login']
+  });
+});
 
 // Error handling
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ 
-    message: 'Server error occurred',
+    message: 'Server error',
     error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  console.log('404 - Route not found:', req.url);
-  res.status(404).json({ message: 'Endpoint not found: ' + req.url });
-});
-
-// Update graceful shutdown to use modern syntax
-process.on('SIGTERM', async () => {
-  console.log('🛑 Received SIGTERM, shutting down gracefully');
-  await mongoose.connection.close();
-  console.log('📦 MongoDB connection closed');
-  process.exit(0);
-});
-
-process.on('SIGINT', async () => {
-  console.log('🛑 Received SIGINT, shutting down gracefully');
-  try {
-    await mongoose.connection.close();
-    console.log('📦 MongoDB connection closed');
-    process.exit(0);
-  } catch (error) {
-    console.error('Error during shutdown:', error);
-    process.exit(1);
-  }
-});
-
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Vivify server running on port ${PORT}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+  console.log('🚀 Vivify server running on port', PORT);
+  console.log('🔗 Health check: http://localhost:' + PORT + '/health');
+  console.log('📝 Signup: http://localhost:' + PORT + '/auth/signup');
+  console.log('✅ Routes registered and ready');
 });
 
 module.exports = app;
