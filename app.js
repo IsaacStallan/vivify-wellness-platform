@@ -98,6 +98,8 @@ app.post('/auth/signup', async (req, res) => {
 });
 
 // Login route (add this after your signup route)
+// Replace your current login route with this updated version:
+
 app.post('/auth/login', async (req, res) => {
   try {
     console.log('=== LOGIN ENDPOINT HIT ===');
@@ -111,28 +113,75 @@ app.post('/auth/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
     
-    // For testing - return success without database verification
     console.log('Login attempt for:', email);
     
-    // Create a test token (you'll need to import jsonwebtoken at the top)
+    // Determine role based on email domain or specific emails for demo
+    let userRole = 'student';
+    let username = email.split('@')[0];
+    
+    // Demo teacher accounts - you can customize these for your Knox demo
+    const teacherEmails = [
+      'teacher@knox.nsw.edu.au',
+      'teacher@gmail.com',
+      'knox.teacher@gmail.com',
+      'demo.teacher@gmail.com'
+    ];
+    
+    const adminEmails = [
+      'admin@knox.nsw.edu.au',
+      'admin@gmail.com',
+      'knox.admin@gmail.com'
+    ];
+    
+    if (teacherEmails.includes(email.toLowerCase())) {
+      userRole = 'teacher';
+      username = 'Knox Teacher';
+    } else if (adminEmails.includes(email.toLowerCase())) {
+      userRole = 'admin';
+      username = 'Knox Admin';
+    }
+    
+    // Role-based redirect function
+    const getRedirectUrl = (role) => {
+      switch(role) {
+        case 'teacher':
+          return 'teacher-dashboard.html';
+        case 'admin':
+          return 'admin-dashboard.html';
+        case 'student':
+        default:
+          return 'wellness-baseline-assessment.html';
+      }
+    };
+    
+    // Create token with role information
     const token = jwt.sign(
-      { email, id: 'test-id' }, 
+      { 
+        email, 
+        id: 'test-' + Date.now(),
+        role: userRole,
+        username: username
+      }, 
       process.env.JWT_SECRET || 'test-secret',
       { expiresIn: '24h' }
     );
+    
+    console.log(`Login successful for: ${username} (Role: ${userRole})`);
     
     res.status(200).json({
       message: 'Login successful!',
       token: token,
       user: {
+        id: 'test-' + Date.now(),
         email: email,
-        username: email.split('@')[0],
-        role: 'student',
-        school: 'Knox Grammar School'
+        username: username,
+        role: userRole,
+        school: 'Knox Grammar School',
+        yearLevel: userRole === 'student' ? '10' : undefined
       },
-      redirectTo: 'wellness-baseline-assessment.html',
+      redirectTo: getRedirectUrl(userRole),
       success: true,
-      test: true // Indicates this is test mode
+      test: true
     });
     
   } catch (error) {
