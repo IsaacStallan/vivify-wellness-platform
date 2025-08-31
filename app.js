@@ -96,13 +96,51 @@ app.post('/auth/signup', async (req, res) => {
   }
 });
 
-// Test login route
-app.post('/auth/login', (req, res) => {
-  console.log('Login endpoint hit:', req.body);
-  res.json({
-    message: 'Login endpoint working',
-    test: true
-  });
+// Login route (add this after your signup route)
+app.post('/auth/login', async (req, res) => {
+  try {
+    console.log('=== LOGIN ENDPOINT HIT ===');
+    console.log('Request body:', req.body);
+    console.log('Origin:', req.get('origin'));
+    
+    const { email, password } = req.body;
+    
+    // Basic validation
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+    
+    // For testing - return success without database verification
+    console.log('Login attempt for:', email);
+    
+    // Create a test token (you'll need to import jsonwebtoken at the top)
+    const jwt = require('jsonwebtoken');
+    const token = jwt.sign(
+      { email, id: 'test-id' }, 
+      process.env.JWT_SECRET || 'test-secret',
+      { expiresIn: '24h' }
+    );
+    
+    res.status(200).json({
+      message: 'Login successful!',
+      token: token,
+      user: {
+        email: email,
+        username: email.split('@')[0],
+        role: 'student',
+        school: 'Knox Grammar School'
+      },
+      redirectTo: 'wellness-baseline-assessment.html',
+      success: true,
+      test: true // Indicates this is test mode
+    });
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      message: 'Server error: ' + error.message 
+    });
+  }
 });
 
 // Database connection (happens after routes are registered)
