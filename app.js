@@ -102,14 +102,9 @@ app.use((req, res) => {
 // Update graceful shutdown to use modern syntax
 process.on('SIGTERM', async () => {
   console.log('🛑 Received SIGTERM, shutting down gracefully');
-  try {
-    await mongoose.connection.close();
-    console.log('📦 MongoDB connection closed');
-    process.exit(0);
-  } catch (error) {
-    console.error('Error during shutdown:', error);
-    process.exit(1);
-  }
+  await mongoose.connection.close();
+  console.log('📦 MongoDB connection closed');
+  process.exit(0);
 });
 
 process.on('SIGINT', async () => {
