@@ -59,14 +59,17 @@ app.get('/', (req, res) => {
 });
 
 // Signup route (directly in main file for now)
+// Replace your current auth routes in app.js with these production-ready versions:
+
+// Production signup route - saves to MongoDB
 app.post('/auth/signup', async (req, res) => {
   try {
-    console.log('=== SIGNUP ENDPOINT HIT ===');
+    console.log('=== PRODUCTION SIGNUP ===');
     console.log('Request body:', req.body);
     
-    const { username, email, password, role, yearLevel, school, schoolCode } = req.body;
+    const { username, email, password, role, yearLevel, school, schoolCode, staffId, department } = req.body;
     
-    // Basic validation
+    // Validation
     if (!username || !email || !password) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
@@ -91,7 +94,7 @@ app.post('/auth/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     
-    // Create new user
+    // Create new user with all data
     const newUser = new User({
       username,
       email: email.toLowerCase(),
@@ -100,13 +103,15 @@ app.post('/auth/signup', async (req, res) => {
       role: role || 'student',
       school: school || 'Knox Grammar School',
       yearLevel: role === 'student' ? yearLevel : undefined,
-      schoolCode: schoolCode || 'KNOX2024'
+      schoolCode: schoolCode || 'KNOX2024',
+      staffId: staffId || undefined,
+      department: department || undefined
     });
     
     await newUser.save();
-    console.log('User created successfully:', newUser.username, 'Role:', newUser.role);
+    console.log('User created in database:', newUser.username, 'Role:', newUser.role);
     
-    // Create real JWT token
+    // Create JWT token
     const token = jwt.sign({ 
       id: newUser._id,
       username: newUser.username,
@@ -115,6 +120,16 @@ app.post('/auth/signup', async (req, res) => {
     }, process.env.JWT_SECRET || 'knox-vivify-secret', { 
       expiresIn: '24h' 
     });
+    
+    // Role-based redirect
+    const getRedirectUrl = (role) => {
+      switch(role) {
+        case 'teacher': return 'teacher-dashboard.html';
+        case 'admin': return 'admin-dashboard.html';
+        case 'student':
+        default: return 'wellness-baseline-assessment.html';
+      }
+    };
     
     return res.status(201).json({
       message: 'User registered successfully!',
@@ -125,8 +140,10 @@ app.post('/auth/signup', async (req, res) => {
         email: newUser.email,
         role: newUser.role,
         school: newUser.school,
-        yearLevel: newUser.yearLevel
+        yearLevel: newUser.yearLevel,
+        department: newUser.department
       },
+      redirectTo: getRedirectUrl(newUser.role),
       autoLogin: true
     });
     
@@ -138,15 +155,14 @@ app.post('/auth/signup', async (req, res) => {
   }
 });
 
-// Real login route with database verification
+// Production login route - verifies against MongoDB
 app.post('/auth/login', async (req, res) => {
   try {
-    console.log('=== LOGIN ENDPOINT HIT ===');
+    console.log('=== PRODUCTION LOGIN ===');
     console.log('Request body:', req.body);
     
     const { email, password } = req.body;
     
-    // Basic validation
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
@@ -157,7 +173,7 @@ app.post('/auth/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
     
-    // Verify password
+    // Verify password against database
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid email or password.' });
@@ -170,17 +186,14 @@ app.post('/auth/login', async (req, res) => {
     // Role-based redirect
     const getRedirectUrl = (role) => {
       switch(role) {
-        case 'teacher':
-          return 'teacher-dashboard.html';
-        case 'admin':
-          return 'admin-dashboard.html';
+        case 'teacher': return 'teacher-dashboard.html';
+        case 'admin': return 'admin-dashboard.html';
         case 'student':
-        default:
-          return 'wellness-baseline-assessment.html';
+        default: return 'wellness-baseline-assessment.html';
       }
     };
     
-    // Create JWT token with real user data
+    // Create JWT token
     const token = jwt.sign({ 
       id: user._id,
       username: user.username,
@@ -190,7 +203,7 @@ app.post('/auth/login', async (req, res) => {
       expiresIn: '24h' 
     });
     
-    console.log(`Login successful for: ${user.username} (Role: ${user.role})`);
+    console.log(`Production login successful: ${user.username} (${user.role})`);
     
     res.status(200).json({
       message: 'Login successful!',
@@ -201,7 +214,9 @@ app.post('/auth/login', async (req, res) => {
         username: user.username,
         role: user.role,
         school: user.school,
-        yearLevel: user.yearLevel
+        yearLevel: user.yearLevel,
+        department: user.department,
+        lastLogin: user.lastLogin
       },
       redirectTo: getRedirectUrl(user.role),
       success: true
@@ -212,6 +227,92 @@ app.post('/auth/login', async (req, res) => {
     res.status(500).json({ 
       message: 'Server error: ' + error.message 
     });
+  }
+});
+
+// Add API endpoint for teacher classes
+app.get('/api/teacher/classes', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'knox-vivify-secret');
+    const teacher = await User.findById(decoded.id);
+    
+    if (!teacher || teacher.role !== 'teacher') {
+      return res.status(403).json({ message: 'Teacher access required' });
+    }
+    
+    res.json({ 
+      classes: teacher.classes || [],
+      teacherId: teacher._id,
+      teacherName: teacher.username
+    });
+    
+  } catch (error) {
+    console.error('Teacher classes error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Add API endpoint to create classes
+app.post('/api/teacher/create-class', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'knox-vivify-secret');
+    const teacher = await User.findById(decoded.id);
+    
+    if (!teacher || teacher.role !== 'teacher') {
+      return res.status(403).json({ message: 'Teacher access required' });
+    }
+    
+    const { name, subject, yearLevel } = req.body;
+    
+    // Generate class code
+    const generateClassCode = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    };
+    
+    const classCode = generateClassCode();
+    
+    const newClass = {
+      id: Date.now().toString(),
+      code: classCode,
+      name,
+      subject,
+      yearLevel,
+      students: [],
+      createdAt: new Date(),
+      active: true
+    };
+    
+    if (!teacher.classes) teacher.classes = [];
+    teacher.classes.push(newClass);
+    
+    await teacher.save();
+    
+    console.log('Class created in database:', newClass.name, 'Code:', classCode);
+    
+    res.json({ 
+      success: true, 
+      class: newClass,
+      message: 'Class created successfully' 
+    });
+    
+  } catch (error) {
+    console.error('Create class error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
