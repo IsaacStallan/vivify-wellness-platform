@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const password = document.getElementById('password').value.trim();
 
             try {
-                const response = await fetch('/auth/login', {
+                const response = await fetch('https://vivify-wellness-platform.onrender.com/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })

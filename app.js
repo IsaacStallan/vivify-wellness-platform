@@ -4,6 +4,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken'); 
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -60,9 +63,8 @@ app.post('/auth/signup', async (req, res) => {
   try {
     console.log('=== SIGNUP ENDPOINT HIT ===');
     console.log('Request body:', req.body);
-    console.log('Origin:', req.get('origin'));
     
-    const { username, email, password, role, yearLevel, school } = req.body;
+    const { username, email, password, role, yearLevel, school, schoolCode } = req.body;
     
     // Basic validation
     if (!username || !email || !password) {
@@ -73,20 +75,59 @@ app.post('/auth/signup', async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 8 characters.' });
     }
     
-    // For testing - return success without database operations
-    console.log('Signup successful for:', username);
+    // Check if user already exists
+    const existingUser = await User.findOne({ 
+      $or: [{ email: email.toLowerCase() }, { username }] 
+    });
     
-    res.status(201).json({
+    if (existingUser) {
+      if (existingUser.email === email.toLowerCase()) {
+        return res.status(400).json({ message: 'Email already in use.' });
+      }
+      return res.status(400).json({ message: 'Username already taken.' });
+    }
+    
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
+    // Create new user
+    const newUser = new User({
+      username,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      emailVerified: true, // Auto-verify for Knox
+      role: role || 'student',
+      school: school || 'Knox Grammar School',
+      yearLevel: role === 'student' ? yearLevel : undefined,
+      schoolCode: schoolCode || 'KNOX2024'
+    });
+    
+    await newUser.save();
+    console.log('User created successfully:', newUser.username, 'Role:', newUser.role);
+    
+    // Create real JWT token
+    const token = jwt.sign({ 
+      id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role
+    }, process.env.JWT_SECRET || 'knox-vivify-secret', { 
+      expiresIn: '24h' 
+    });
+    
+    return res.status(201).json({
       message: 'User registered successfully!',
+      token: token,
       user: {
-        username,
-        email,
-        role: role || 'student',
-        school: school || 'Knox Grammar School',
-        yearLevel: role === 'student' ? yearLevel : undefined
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+        school: newUser.school,
+        yearLevel: newUser.yearLevel
       },
-      success: true,
-      test: true // Indicates this is test mode
+      autoLogin: true
     });
     
   } catch (error) {
@@ -97,14 +138,11 @@ app.post('/auth/signup', async (req, res) => {
   }
 });
 
-// Login route (add this after your signup route)
-// Replace your current login route with this updated version:
-
+// Real login route with database verification
 app.post('/auth/login', async (req, res) => {
   try {
     console.log('=== LOGIN ENDPOINT HIT ===');
     console.log('Request body:', req.body);
-    console.log('Origin:', req.get('origin'));
     
     const { email, password } = req.body;
     
@@ -113,35 +151,23 @@ app.post('/auth/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
     
-    console.log('Login attempt for:', email);
-    
-    // Determine role based on email domain or specific emails for demo
-    let userRole = 'student';
-    let username = email.split('@')[0];
-    
-    // Demo teacher accounts - you can customize these for your Knox demo
-    const teacherEmails = [
-      'teacher@knox.nsw.edu.au',
-      'teacher@gmail.com',
-      'knox.teacher@gmail.com',
-      'demo.teacher@gmail.com'
-    ];
-    
-    const adminEmails = [
-      'admin@knox.nsw.edu.au',
-      'admin@gmail.com',
-      'knox.admin@gmail.com'
-    ];
-    
-    if (teacherEmails.includes(email.toLowerCase())) {
-      userRole = 'teacher';
-      username = 'Knox Teacher';
-    } else if (adminEmails.includes(email.toLowerCase())) {
-      userRole = 'admin';
-      username = 'Knox Admin';
+    // Find user in database
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
     }
     
-    // Role-based redirect function
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+    
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
+    
+    // Role-based redirect
     const getRedirectUrl = (role) => {
       switch(role) {
         case 'teacher':
@@ -154,34 +180,31 @@ app.post('/auth/login', async (req, res) => {
       }
     };
     
-    // Create token with role information
-    const token = jwt.sign(
-      { 
-        email, 
-        id: 'test-' + Date.now(),
-        role: userRole,
-        username: username
-      }, 
-      process.env.JWT_SECRET || 'test-secret',
-      { expiresIn: '24h' }
-    );
+    // Create JWT token with real user data
+    const token = jwt.sign({ 
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    }, process.env.JWT_SECRET || 'knox-vivify-secret', { 
+      expiresIn: '24h' 
+    });
     
-    console.log(`Login successful for: ${username} (Role: ${userRole})`);
+    console.log(`Login successful for: ${user.username} (Role: ${user.role})`);
     
     res.status(200).json({
       message: 'Login successful!',
       token: token,
       user: {
-        id: 'test-' + Date.now(),
-        email: email,
-        username: username,
-        role: userRole,
-        school: 'Knox Grammar School',
-        yearLevel: userRole === 'student' ? '10' : undefined
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        school: user.school,
+        yearLevel: user.yearLevel
       },
-      redirectTo: getRedirectUrl(userRole),
-      success: true,
-      test: true
+      redirectTo: getRedirectUrl(user.role),
+      success: true
     });
     
   } catch (error) {
@@ -189,6 +212,38 @@ app.post('/auth/login', async (req, res) => {
     res.status(500).json({ 
       message: 'Server error: ' + error.message 
     });
+  }
+});
+
+// Token verification endpoint for dashboard authentication
+app.post('/auth/verify-token', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ isValid: false, message: 'No token provided.' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'knox-vivify-secret');
+    
+    // Find the actual user to ensure they still exist
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) {
+      return res.status(401).json({ isValid: false, message: 'User not found.' });
+    }
+    
+    res.status(200).json({ 
+      isValid: true, 
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        school: user.school,
+        yearLevel: user.yearLevel
+      }
+    });
+  } catch (error) {
+    res.status(401).json({ isValid: false, message: 'Invalid token.' });
   }
 });
 
