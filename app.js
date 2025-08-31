@@ -73,12 +73,11 @@ app.use(helmet({
 
 // CORS configuration for Knox Grammar
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://vivify.au', 'https://www.vivify.au', 'https://vivify.knoxgrammar.nsw.edu.au', 'http://localhost:3000']
-    : 'http://localhost:3000',
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 }));
 
 // Body parsing middleware
