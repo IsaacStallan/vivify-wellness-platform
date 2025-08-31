@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS
 app.use(cors({
-  origin: ['https://vivify.au', 'https://www.vivify.au', 'http://localhost:3000'],
+  origin: ['https://vivify.au', 'https://www.vivify.au', 'https://vivifyeducation.netlify.app', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -114,7 +115,6 @@ app.post('/auth/login', async (req, res) => {
     console.log('Login attempt for:', email);
     
     // Create a test token (you'll need to import jsonwebtoken at the top)
-    const jwt = require('jsonwebtoken');
     const token = jwt.sign(
       { email, id: 'test-id' }, 
       process.env.JWT_SECRET || 'test-secret',
