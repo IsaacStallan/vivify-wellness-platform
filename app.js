@@ -46,6 +46,36 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Add this after your health check route
+app.post('/auth/signup', async (req, res) => {
+  try {
+    console.log('Signup attempt:', req.body);
+    
+    const { username, email, password, role } = req.body;
+    
+    // Basic validation
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+    
+    // For now, return success without database save (for testing)
+    res.status(201).json({
+      message: 'User registered successfully!',
+      user: {
+        username,
+        email,
+        role: role || 'student',
+        school: 'Knox Grammar School'
+      },
+      success: true
+    });
+    
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
+  }
+});
+
 // Simple test route for debugging
 app.post('/auth/signup', (req, res) => {
   console.log('Signup endpoint hit!');
