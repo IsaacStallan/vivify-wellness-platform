@@ -342,16 +342,27 @@
                         window.location.href = result.redirectTo; // This should redirect to teacher-dashboard.html
                     }
 
-                    if (response.ok) {
-                        // Store backend session data properly
+                    if (response.ok && result.success) {
+                        // Store ALL the required data that teacher dashboard expects
                         localStorage.setItem('userLoggedIn', 'true');
-                        localStorage.setItem('user', JSON.stringify(result.user)); // For admin dashboard
-                        localStorage.setItem('userProfile', JSON.stringify(result.user)); // For profile page
+                        localStorage.setItem('userRole', result.user.role);  // This was missing!
                         localStorage.setItem('authToken', result.token);
+                        localStorage.setItem('user', JSON.stringify(result.user));
+                        
+                        // Format userProfile exactly how teacher dashboard expects it
+                        const userProfile = {
+                            id: result.user.id,
+                            name: result.user.username,  // teacher dashboard looks for 'name' not 'username'
+                            email: result.user.email,
+                            role: result.user.role,
+                            school: result.user.school,
+                            yearLevel: result.user.yearLevel,
+                            department: result.user.department || 'Knox Grammar School'
+                        };
+                        localStorage.setItem('userProfile', JSON.stringify(userProfile));
                         
                         showMessage('Login successful! Redirecting...', 'success');
                         
-                        // Use backend's role-based redirect
                         setTimeout(() => {
                             window.location.href = result.redirectTo;
                         }, 1000);

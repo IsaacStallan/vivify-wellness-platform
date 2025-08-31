@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             try {
-                const response = await fetch('https://vivify-knox.onrender.com/auth/signup', {
+                fetch('https://vivify-wellness-platform.onrender.com/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
