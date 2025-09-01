@@ -257,6 +257,53 @@ app.get('/api/teacher/classes', async (req, res) => {
   }
 });
 
+// Add this to your app.js
+app.post('/api/student/join-class', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'knox-vivify-secret');
+    const student = await User.findById(decoded.id);
+    
+    if (!student || student.role !== 'student') {
+      return res.status(403).json({ message: 'Student access required' });
+    }
+    
+    const { classCode } = req.body;
+    
+    // Find teacher with this class code
+    const teacher = await User.findOne({ 
+      'classes.code': classCode.toUpperCase(),
+      'classes.active': true 
+    });
+    
+    if (!teacher) {
+      return res.status(404).json({ message: 'Invalid class code' });
+    }
+    
+    const classToJoin = teacher.classes.find(c => c.code === classCode.toUpperCase());
+    
+    // Add student to class
+    if (!classToJoin.students.includes(student._id.toString())) {
+      classToJoin.students.push(student._id.toString());
+      await teacher.save();
+    }
+    
+    res.json({ 
+      success: true, 
+      className: classToJoin.name,
+      teacher: teacher.username
+    });
+    
+  } catch (error) {
+    console.error('Join class error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Add API endpoint to create classes
 app.post('/api/teacher/create-class', async (req, res) => {
   try {
