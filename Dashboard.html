@@ -693,6 +693,95 @@
             transform: translateY(0);
         }
 
+        /* ADD this CSS to your dashboard.html <style> section to fix the join class UI: */
+
+        .join-class-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+        }
+
+        .join-class-title {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .join-class-form {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .class-code-input {
+            flex: 1;
+            background: #333;
+            border: 1px solid #555;
+            padding: 0.75rem;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .class-code-input:focus {
+            outline: none;
+            border-color: #f39c12;
+            box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2);
+        }
+
+        .class-code-input::placeholder {
+            color: #888;
+            text-transform: none;
+            letter-spacing: normal;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .join-class-btn {
+            background: #f39c12;
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .join-class-btn:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        .join-class-btn:active {
+            transform: translateY(0);
+        }
+
+        .join-class-hint {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin-top: 0.75rem;
+            line-height: 1.4;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .join-class-form {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .join-class-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -867,35 +956,22 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- My Classes Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">My Classes</h2>
+                    
+                    <div class="join-class-container">
+                        <h4 class="join-class-title">Join a New Class</h4>
+                        <div class="join-class-form">
+                            <input type="text" 
+                                id="classCodeInput" 
+                                class="class-code-input"
+                                placeholder="Enter class code (e.g., ABC123)"
+                                maxlength="6">
+                            <button onclick="joinClass()" class="join-class-btn">
+                                Join Class
+                            </button>
                         </div>
-                        <div class="card-content">
-                            <div id="studentClasses">
-                                <!-- Classes will load here -->
-                            </div>
-                            
-                            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #333;">
-                                <h4 style="color: #f39c12; margin-bottom: 1rem;">Join a New Class</h4>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <input type="text" 
-                                        id="classCodeInput" 
-                                        placeholder="Enter class code (e.g., ABC123)"
-                                        style="flex: 1; background: #333; border: 1px solid #555; padding: 0.75rem; border-radius: 8px; color: white; text-transform: uppercase;"
-                                        maxlength="6">
-                                    <button onclick="joinClass()" 
-                                            style="background: #f39c12; color: black; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
-                                        Join
-                                    </button>
-                                </div>
-                                <p style="font-size: 0.85rem; color: #a0a0a0; margin-top: 0.5rem;">
-                                    Get the class code from your teacher to join their wellness monitoring class.
-                                </p>
-                            </div>
-                        </div>
+                        <p class="join-class-hint">
+                            Get the class code from your teacher to join their wellness monitoring class.
+                        </p>
                     </div>
 
                     <!-- Daily Activities Checklist -->
@@ -1862,118 +1938,129 @@
        }
 
        // FIXED: Student Class Management Functions with string ID consistency
-       function loadStudentClasses() {
-           const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-           const allClasses = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
-           const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
-           
-           console.log('Loading student classes for:', userProfile.name, userProfile.id);
-           console.log('Available classes:', allClasses);
-           
-           // Fix: Convert user ID to string for consistent comparison
-           const userIdStr = String(userProfile.id);
-           
-           const studentClasses = allClasses.filter(cls => 
-               cls.students && cls.students.includes(userIdStr)
-           );
-           
-           console.log('Student enrolled in:', studentClasses);
-           
-           const container = document.getElementById('studentClasses');
-           if (!container) return;
-           
-           if (studentClasses.length === 0) {
-               container.innerHTML = `
-                   <div style="text-align: center; padding: 2rem; color: #888;">
-                       <i class="fas fa-graduation-cap" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                       <h4 style="color: #ccc; margin-bottom: 1rem;">No Classes Joined Yet</h4>
-                       <p>Ask your teacher for a class code to join their wellness program.</p>
-                   </div>
-               `;
-               return;
-           }
-           
-           container.innerHTML = studentClasses.map(cls => {
-               // Fix: Find teacher by converting IDs to strings
-               const teacher = allUsers.find(u => String(u.id) === String(cls.teacherId));
-               const teacherName = teacher ? teacher.name : 'Unknown Teacher';
-               
-               return `
-                   <div style="background: #333; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #27ae60;">
-                       <div style="color: #f39c12; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${cls.name}</div>
-                       <div style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem;">Teacher: ${teacherName}</div>
-                       <div style="color: #888; font-size: 0.8rem;">${cls.subject} • Year ${cls.yearLevel} • ${cls.students ? cls.students.length : 0} students</div>
-                   </div>
-               `;
-           }).join('');
-       }
+        function loadStudentClasses() {
+            const authToken = localStorage.getItem('authToken');
+            
+            if (!authToken) {
+                console.error('No auth token found');
+                const container = document.getElementById('studentClasses');
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #e74c3c;">
+                            <p>Please log in to view your classes</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+            
+            // Load classes from backend instead of localStorage
+            fetch('https://vivify-wellness-platform.onrender.com/api/student/classes', {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Student classes from backend:', result);
+                
+                const container = document.getElementById('studentClasses');
+                if (!container) return;
+                
+                const classes = result.classes || [];
+                
+                if (classes.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #888;">
+                            <i class="fas fa-graduation-cap" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <h4 style="color: #ccc; margin-bottom: 1rem;">No Classes Joined Yet</h4>
+                            <p>Ask your teacher for a class code to join their wellness program.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = classes.map(cls => {
+                    const teacherName = cls.teacherName || 'Unknown Teacher';
+                    
+                    return `
+                        <div style="background: #333; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #27ae60;">
+                            <div style="color: #f39c12; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${cls.name}</div>
+                            <div style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem;">Teacher: ${teacherName}</div>
+                            <div style="color: #888; font-size: 0.8rem;">${cls.subject || 'General'} • Year ${cls.yearLevel || 'N/A'}</div>
+                        </div>
+                    `;
+                }).join('');
+            })
+            .catch(error => {
+                console.error('Error loading student classes:', error);
+                const container = document.getElementById('studentClasses');
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #e74c3c;">
+                            <p>Error loading classes</p>
+                            <button onclick="loadStudentClasses()" style="background: #f39c12; color: black; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-top: 0.5rem;">
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+        }
 
        // FIXED: Enhanced joinClass function with proper error handling and ID consistency
-       window.joinClass = function() {
-           const classCodeInput = document.getElementById('classCodeInput');
-           if (!classCodeInput) return;
-           
-           const classCode = classCodeInput.value.trim().toUpperCase();
-           if (!classCode || classCode.length !== 6) {
-               alert('Please enter a valid 6-character class code');
-               return;
-           }
-           
-           const studentProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-           console.log('Student attempting to join class:', studentProfile);
-           
-           // Direct class joining logic (no ClassManager needed)
-           const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
-           const targetClass = classes.find(c => c.code === classCode && c.active);
-           
-           console.log('Found target class:', targetClass);
-           
-           if (!targetClass) {
-               alert('Invalid class code. Please check with your teacher.');
-               return;
-           }
-           
-           // Initialize students array if it doesn't exist
-           if (!targetClass.students) {
-               targetClass.students = [];
-           }
-           
-           // Convert IDs to strings for consistency
-           const studentIdStr = String(studentProfile.id);
-           if (targetClass.students.includes(studentIdStr)) {
-               alert('You are already enrolled in this class!');
-               return;
-           }
-           
-           // Add student to class
-           targetClass.students.push(studentIdStr);
-           
-           // Update the classes array
-           const updatedClasses = classes.map(c => c.id === targetClass.id ? targetClass : c);
-           localStorage.setItem('vivifyClasses', JSON.stringify(updatedClasses));
-           
-           // Update student's profile to track their classes
-           const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
-           const studentIndex = allUsers.findIndex(u => String(u.id) === studentIdStr);
-           
-           if (studentIndex !== -1) {
-               if (!allUsers[studentIndex].classes) {
-                   allUsers[studentIndex].classes = [];
-               }
-               if (!allUsers[studentIndex].classes.includes(targetClass.id)) {
-                   allUsers[studentIndex].classes.push(targetClass.id);
-               }
-               // Update last login time
-               allUsers[studentIndex].lastLogin = new Date().toISOString();
-               localStorage.setItem('vivifyUsers', JSON.stringify(allUsers));
-           }
-           
-           console.log(`Student ${studentIdStr} successfully joined class ${targetClass.name}`);
-           
-           alert(`Successfully joined "${targetClass.name}"!`);
-           classCodeInput.value = '';
-           loadStudentClasses(); // Refresh the classes display
-       };
+        window.joinClass = async function() {
+            const classCodeInput = document.getElementById('classCodeInput');
+            if (!classCodeInput) return;
+            
+            const classCode = classCodeInput.value.trim().toUpperCase();
+            if (!classCode || classCode.length !== 6) {
+                alert('Please enter a valid 6-character class code');
+                return;
+            }
+            
+            const studentProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const authToken = localStorage.getItem('authToken');
+            
+            console.log('Student attempting to join class:', { 
+                studentId: studentProfile.id, 
+                classCode: classCode,
+                hasToken: !!authToken 
+            });
+            
+            try {
+                // ALWAYS try backend API first (this is the correct approach for production)
+                const response = await fetch('https://vivify-wellness-platform.onrender.com/api/student/join-class', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ classCode })
+                });
+                
+                const result = await response.json();
+                console.log('Backend join result:', result);
+                
+                if (response.ok && result.success) {
+                    alert(`Successfully joined "${result.className}"!`);
+                    classCodeInput.value = '';
+                    
+                    // Force refresh the student classes display
+                    setTimeout(() => {
+                        loadStudentClasses();
+                    }, 500);
+                    return;
+                } else {
+                    console.log('Backend join failed:', result);
+                    alert(result.message || 'Invalid class code or server error');
+                    return;
+                }
+                
+            } catch (error) {
+                console.error('Backend API failed:', error);
+                alert('Unable to connect to server. Please check your internet connection.');
+                return;
+            }
+        };
 
        // REPLACE the DOMContentLoaded function at the bottom of Dashboard.html with this:
         document.addEventListener('DOMContentLoaded', async function() {

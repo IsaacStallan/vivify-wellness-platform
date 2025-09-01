@@ -256,8 +256,63 @@ app.get('/api/teacher/classes', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+// ADD these API endpoints to your app.js file:
 
-// Add this to your app.js
+// Get student's classes
+app.get('/api/student/classes', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'knox-vivify-secret');
+    const student = await User.findById(decoded.id);
+    
+    if (!student || student.role !== 'student') {
+      return res.status(403).json({ message: 'Student access required' });
+    }
+    
+    // Find all teachers and get classes where this student is enrolled
+    const teachers = await User.find({ 
+      role: 'teacher',
+      'classes.students': student._id.toString()
+    });
+    
+    const studentClasses = [];
+    
+    teachers.forEach(teacher => {
+      teacher.classes.forEach(cls => {
+        if (cls.students && cls.students.includes(student._id.toString())) {
+          studentClasses.push({
+            id: cls.id,
+            name: cls.name,
+            subject: cls.subject,
+            yearLevel: cls.yearLevel,
+            code: cls.code,
+            teacherName: teacher.username,
+            teacherId: teacher._id,
+            joinedAt: cls.joinedAt || new Date()
+          });
+        }
+      });
+    });
+    
+    console.log(`Found ${studentClasses.length} classes for student ${student.username}`);
+    
+    res.json({ 
+      success: true,
+      classes: studentClasses,
+      studentId: student._id
+    });
+    
+  } catch (error) {
+    console.error('Get student classes error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// REPLACE/UPDATE your existing join-class endpoint with this improved version:
 app.post('/api/student/join-class', async (req, res) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
@@ -274,6 +329,10 @@ app.post('/api/student/join-class', async (req, res) => {
     
     const { classCode } = req.body;
     
+    if (!classCode || classCode.length !== 6) {
+      return res.status(400).json({ message: 'Valid 6-character class code required' });
+    }
+    
     // Find teacher with this class code
     const teacher = await User.findOne({ 
       'classes.code': classCode.toUpperCase(),
@@ -281,26 +340,40 @@ app.post('/api/student/join-class', async (req, res) => {
     });
     
     if (!teacher) {
-      return res.status(404).json({ message: 'Invalid class code' });
+      return res.status(404).json({ message: 'Invalid class code. Please check with your teacher.' });
     }
     
     const classToJoin = teacher.classes.find(c => c.code === classCode.toUpperCase());
     
-    // Add student to class
-    if (!classToJoin.students.includes(student._id.toString())) {
-      classToJoin.students.push(student._id.toString());
-      await teacher.save();
+    // Check if student is already enrolled
+    if (classToJoin.students && classToJoin.students.includes(student._id.toString())) {
+      return res.status(400).json({ message: 'You are already enrolled in this class' });
     }
+    
+    // Add student to class
+    if (!classToJoin.students) {
+      classToJoin.students = [];
+    }
+    
+    classToJoin.students.push(student._id.toString());
+    classToJoin.updatedAt = new Date();
+    
+    // Save the teacher document
+    await teacher.save();
+    
+    console.log(`Student ${student.username} joined class ${classToJoin.name} (${classCode})`);
     
     res.json({ 
       success: true, 
       className: classToJoin.name,
-      teacher: teacher.username
+      teacher: teacher.username,
+      classId: classToJoin.id,
+      message: `Successfully joined ${classToJoin.name}`
     });
     
   } catch (error) {
     console.error('Join class error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error occurred. Please try again.' });
   }
 });
 
