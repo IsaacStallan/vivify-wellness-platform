@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plank - Exercise Guide | Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Exercise Detail Page Styles */
+        .exercise-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .exercise-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .exercise-hero .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-tag i {
+            color: #f39c12;
+        }
+
+        .exercise-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-heading {
+            color: #f39c12;
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        .exercise-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-details {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .overview-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            width: 150px;
+            color: #ddd;
+        }
+
+        .detail-value {
+            color: #aaa;
+        }
+
+        .overview-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #ddd;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .common-mistakes {
+            background-color: #331111;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .common-mistakes h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+        }
+
+        .mistake-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mistake-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .mistake-list li::before {
+            content: '✕';
+            color: #ff6b6b;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .mistake-list strong {
+            color: #ff6b6b;
+        }
+
+        .variations-section {
+            margin: 3rem 0;
+        }
+
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .variation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .variation-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .variation-info {
+            padding: 1.5rem;
+        }
+
+        .variation-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .variation-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .difficulty-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .difficulty-dot.active {
+            background-color: #f39c12;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .related-exercises {
+            margin: 3rem 0;
+        }
+
+        .related-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 1rem;
+        }
+
+        .related-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .related-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .related-info a i {
+            margin-left: 0.3rem;
+        }
+
+        .related-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-hero .meta-tags {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Fitness</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness Home</a>
+                                <a href="../strength.html" aria-label="Strength Training Page" class="active">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" aria-label="Flexibility Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Exercise Hero Section -->
+        <section class="exercise-hero">
+            <h1>Plank</h1>
+            <p>A fundamental isometric core exercise that builds strength, stability, and endurance</p>
+            
+            <div class="meta-tags">
+                <div class="meta-tag">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Core, Shoulders, Back</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Beginner to Advanced</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-tools"></i>
+                    <span>Bodyweight</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="exercise-content">
+            <!-- Overview Section -->
+            <h2 class="section-heading">Exercise Overview</h2>
+            <div class="exercise-overview">
+                <div class="overview-details">
+                    <h3>Exercise Details</h3>
+                    <ul class="detail-list">
+                        <li>
+                            <span class="detail-label">Primary Muscles:</span>
+                            <span class="detail-value">Transverse Abdominis, Rectus Abdominis</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Secondary Muscles:</span>
+                            <span class="detail-value">Erector Spinae, Deltoids, Rhomboids, Glutes, Quadriceps</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Equipment:</span>
+                            <span class="detail-value">None (Bodyweight)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">Isometric</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Experience Level:</span>
+                            <span class="detail-value">Beginner (with progressions for all levels)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Mechanics:</span>
+                            <span class="detail-value">Compound</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Force:</span>
+                            <span class="detail-value">Anti-Extension</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=600&q=80" alt="Plank Exercise">
+                </div>
+            </div>
+
+            <!-- Video Demonstration -->
+            <h2 class="section-heading">Video Demonstration</h2>
+            <div class="video-container">
+                <!-- This would be a real exercise video in production -->
+                <iframe src="https://www.youtube.com/embed/ASdvN_XEl_c" title="Plank Demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Step-by-Step Instructions -->
+            <h2 class="section-heading">How to Perform the Plank</h2>
+            <ol class="instruction-steps">
+                <li class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Starting Position</h4>
+                        <p>Begin by positioning yourself face down on the floor. Place your forearms on the ground with elbows directly beneath your shoulders, forming a 90-degree angle. Your forearms should be parallel to each other.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Establish Proper Alignment</h4>
+                        <p>Extend your legs straight behind you with toes tucked under. Your body should form a straight line from head to heels. Ensure your shoulders are directly above your elbows for optimal weight distribution.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Engage Your Core</h4>
+                        <p>Contract your abdominal muscles by drawing your navel toward your spine. This is the most crucial aspect of the plank. Think about creating tension throughout your midsection as if preparing to take a punch.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Activate Supporting Muscles</h4>
+                        <p>Engage your glutes by squeezing them gently. This helps stabilize your pelvis and prevents your lower back from sagging. Also, activate your quadriceps by pressing your thighs upward.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Check Your Posture</h4>
+                        <p>Keep your neck neutral by looking at a spot on the floor about a foot in front of your hands. Avoid letting your head drop or lifting it too high. Your shoulders should be relaxed, away from your ears.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Hold the Position</h4>
+                        <p>Maintain this position while breathing steadily. Start by holding for 20-30 seconds if you're a beginner, gradually increasing duration as your strength improves. Focus on quality over quantity—proper form for a shorter time is better than poor form for longer.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h4>Release with Control</h4>
+                        <p>When finished, carefully lower your knees to the ground and sit back on your heels to release tension in your back. Avoid collapsing or abruptly dropping to the floor.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- Training Tips -->
+            <section class="tips-section">
+                <h3>Form & Technique Tips</h3>
+                <ul class="tips-list">
+                    <li><strong>Neutral spine:</strong> Maintain a natural spine position—neither rounded nor excessively arched. Your body should form a straight line from head to heels.</li>
+                    <li><strong>Breathing:</strong> Continue to breathe normally throughout the hold. Holding your breath increases internal pressure and can elevate blood pressure unnecessarily.</li>
+                    <li><strong>Tension distribution:</strong> Focus on distributing tension evenly throughout your body rather than concentrating all effort in one area.</li>
+                    <li><strong>Head alignment:</strong> Keep your head in a neutral position by gazing at the floor about a foot in front of your hands, creating a natural cervical spine alignment.</li>
+                    <li><strong>Shoulder positioning:</strong> Keep your shoulders away from your ears to prevent unnecessary tension in the neck and upper trapezius.</li>
+                    <li><strong>Time progression:</strong> For beginners, start with 3 sets of 20-30 seconds and gradually increase by 5-10 seconds as your endurance improves.</li>
+                    <li><strong>Quality over duration:</strong> It's better to perform multiple shorter planks with perfect form than one long plank with compromised posture.</li>
+                    <li><strong>Core engagement cue:</strong> Imagine drawing your belly button toward your spine and slightly up toward your rib cage.</li>
+                </ul>
+            </section>
+
+            <!-- Common Mistakes -->
+            <section class="common-mistakes">
+                <h3>Common Mistakes to Avoid</h3>
+                <ul class="mistake-list">
+                    <li><strong>Sagging hips:</strong> Allowing your midsection to drop toward the floor reduces core engagement and places stress on the lower back. Keep your body in a straight line.</li>
+                    <li><strong>Elevated hips:</strong> Lifting your hips too high creates a pike position that disengages the core and shifts emphasis to the shoulders. Maintain a neutral alignment.</li>
+                    <li><strong>Collapsing shoulders:</strong> Letting your shoulders sink between your shoulder blades reduces stability and increases strain. Keep shoulders actively engaged and away from your ears.</li>
+                    <li><strong>Incorrect elbow position:</strong> Placing elbows too far forward or back changes the leverage and effectiveness. Position them directly under your shoulders.</li>
+                    <li><strong>Holding your breath:</strong> This is counterproductive and can cause unnecessary tension. Breathe steadily throughout the exercise.</li>
+                    <li><strong>Looking up or forward:</strong> This hyperextends your neck and can lead to strain. Keep your gaze directed at the floor to maintain neutral cervical alignment.</li>
+                    <li><strong>Rounding the upper back:</strong> This often happens when fatigue sets in and reduces core engagement. Focus on keeping your upper back flat.</li>
+                </ul>
+            </section>
+
+            <!-- Exercise Variations -->
+            <section class="variations-section">
+                <h2 class="section-heading">Plank Variations</h2>
+                <div class="variation-cards">
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1600881333166-1deb6e4e668b?auto=format&fit=crop&w=600&q=80" alt="Forearm Plank">
+                        <div class="variation-info">
+                            <h4>High Plank (Straight Arm Plank)</h4>
+                            <p>Performed with arms fully extended and hands directly beneath shoulders, emphasizing shoulder stability.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1597075941308-6265941b64fe?auto=format&fit=crop&w=600&q=80" alt="Side Plank">
+                        <div class="variation-info">
+                            <h4>Side Plank</h4>
+                            <p>Challenges lateral core stability by positioning the body sideways, supported on one forearm with feet stacked.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" alt="Copenhagen Plank">
+                        <div class="variation-info">
+                            <h4>Copenhagen Plank</h4>
+                            <p>A side plank variation with the top leg elevated on a bench or surface, intensely targeting the adductors and obliques.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?auto=format&fit=crop&w=600&q=80" alt="Plank with Leg Lift">
+                        <div class="variation-info">
+                            <h4>Plank with Leg Lift</h4>
+                            <p>Increases difficulty by raising one leg at a time while maintaining a stable core position.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=600&q=80" alt="RKC Plank">
+                        <div class="variation-info">
+                            <h4>RKC Plank (Hardstyle Plank)</h4>
+                            <p>An advanced variation that maximizes tension by actively contracting all major muscle groups simultaneously.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613591-2dd0a8f9f2c1?auto=format&fit=crop&w=600&q=80" alt="Plank with Shoulder Tap">
+                        <div class="variation-info">
+                            <h4>Plank with Shoulder Taps</h4>
+                            <p>Performed in high plank position, alternately lifting one hand to tap the opposite shoulder while maintaining stability.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Exercises -->
+            <section class="related-exercises">
+                <h2 class="section-heading">Related Exercises</h2>
+                <div class="related-cards">
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Dead Bug">
+                        <div class="related-info">
+                            <h4>Dead Bug</h4>
+                            <p>A supine core stability exercise that trains the same anti-extension function as the plank.</p>
+                            <a href="dead-bug.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=600&q=80" alt="Bird Dog">
+                        <div class="related-info">
+                            <h4>Bird Dog</h4>
+                            <p>A quadruped exercise that develops core stability while moving opposing limbs.</p>
+                            <a href="bird-dog.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1571019613530-aec73e95636d?auto=format&fit=crop&w=600&q=80" alt="Pallof Press">
+                        <div class="related-info">
+                            <h4>Pallof Press</h4>
+                            <p>An anti-rotation core exercise using resistance bands or cables to build rotational stability.</p>
+                            <a href="pallof-press.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1571019613538-3c3a380ecc9d?auto=format&fit=crop&w=600&q=80" alt="Mountain Climber">
+                        <div class="related-info">
+                            <h4>Mountain Climber</h4>
+                            <p>A dynamic movement performed from the plank position that adds cardiovascular challenge.</p>
+                            <a href="mountain-climber.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

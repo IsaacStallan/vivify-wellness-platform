@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Weight Management - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section with Community Focus */
+        .weight-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .weight-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .weight-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .weight-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Live Community Stats */
+        .weight-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .weight-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .weight-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .weight-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Healthy Habits Tracker */
+        .habits-tracker {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .tracker-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .tracker-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .habit-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .habit-card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .habit-card.completed {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .habit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .habit-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(243, 156, 18, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #f39c12;
+            transition: all 0.3s ease;
+        }
+
+        .habit-card.completed .habit-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .habit-check {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: transparent;
+        }
+
+        .habit-card.completed .habit-check {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .habit-title {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .habit-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+
+        .habit-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        .streak-counter {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Progress Dashboard */
+        .progress-dashboard {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .dashboard-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 1s ease;
+        }
+
+        .progress-note {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        /* Smart Goal Setting */
+        .goal-setting {
+            padding: 6rem 2rem;
+        }
+
+        .goal-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .goal-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .goal-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .goal-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .goal-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .generate-plan-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .generate-plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .goal-results {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .goal-results.active {
+            display: block;
+        }
+
+        /* Community Challenge */
+        .community-challenge {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .challenge-widget {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .challenge-progress {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .day-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .day-progress.completed {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .day-progress .day-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-progress .progress-icon {
+            font-size: 1.5rem;
+        }
+
+        .challenge-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .challenge-stat {
+            text-align: center;
+        }
+
+        .challenge-stat .number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .challenge-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Success Stories */
+        .success-stories {
+            padding: 6rem 2rem;
+        }
+
+        .stories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .story-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .story-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .story-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .story-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-item {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .metric-item .value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .metric-item .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* CTA Section */
+        .weight-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .weight-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .weight-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .weight-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-form {
+                grid-template-columns: 1fr;
+            }
+
+            .challenge-progress {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 0.25rem;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .challenge-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes countUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .count-up {
+            animation: countUp 0.6s ease-out;
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Community Focus -->
+        <section class="weight-hero fade-in-up">
+            <div class="hero-content">
+                <div class="weight-badge">Evidence-Based Wellness</div>
+                <h1>Healthy Weight Management</h1>
+                <p>Join thousands of students building sustainable, healthy habits through evidence-based approaches. Focus on wellness, energy, and long-term health rather than quick fixes.</p>
+                
+                <div class="weight-stats">
+                    <div class="weight-stat">
+                        <span class="stat-number" id="active-members">2,847</span>
+                        <span class="stat-label">Active Members</span>
+                    </div>
+                    <div class="weight-stat">
+                        <span class="stat-number" id="habits-tracked">156</span>
+                        <span class="stat-label">Habits Tracked Today</span>
+                    </div>
+                    <div class="weight-stat">
+                        <span class="stat-number" id="wellness-score">91%</span>
+                        <span class="stat-label">Report Better Wellness</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#tracker" class="btn btn-primary">Start Habit Tracking</a>
+                    <a href="#challenge" class="btn btn-secondary">Join Wellness Challenge</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Healthy Habits Tracker -->
+        <section class="habits-tracker fade-in-up">
+            <div class="tracker-container" id="tracker">
+                <h2 class="section-heading">Daily Wellness Habits</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track evidence-based habits that support healthy weight management, energy levels, and overall wellness. Build consistency one day at a time.</p>
+                
+                <div class="habits-grid">
+                    <div class="habit-card" onclick="toggleHabit(this, 'hydration')">
+                        <div class="habit-header">
+                            <div class="habit-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="habit-check">✓</div>
+                        </div>
+                        <div class="habit-title">Adequate Hydration</div>
+                        <div class="habit-description">Drink 8+ glasses of water throughout the day. Proper hydration supports metabolism and reduces false hunger signals.</div>
+                        <div class="habit-progress">
+                            <span class="progress-text">Today's Progress</span>
+                            <span class="streak-counter" id="hydration-streak">0 day streak</span>
+                        </div>
+                    </div>
+
+                    <div class="habit-card" onclick="toggleHabit(this, 'sleep')">
+                        <div class="habit-header">
+                            <div class="habit-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="habit-check">✓</div>
+                        </div>
+                        <div class="habit-title">Quality Sleep</div>
+                        <div class="habit-description">Get 7-9 hours of quality sleep. Good sleep regulates hunger hormones and supports healthy metabolism.</div>
+                        <div class="habit-progress">
+                            <span class="progress-text">Last Night</span>
+                            <span class="streak-counter" id="sleep-streak">0 day streak</span>
+                        </div>
+                    </div>
+
+                    <div class="habit-card" onclick="toggleHabit(this, 'movement')">
+                        <div class="habit-header">
+                            <div class="habit-icon">
+                                <i class="fas fa-walking"></i>
+                            </div>
+                            <div class="habit-check">✓</div>
+                        </div>
+                        <div class="habit-title">Daily Movement</div>
+                        <div class="habit-description">30+ minutes of physical activity. Focus on movement you enjoy - walking, dancing, sports, or gym workouts.</div>
+                        <div class="habit-progress">
+                            <span class="progress-text">Today's Activity</span>
+                            <span class="streak-counter" id="movement-streak">0 day streak</span>
+                        </div>
+                    </div>
+
+                    <div class="habit-card" onclick="toggleHabit(this, 'nutrition')">
+                        <div class="habit-header">
+                            <div class="habit-icon">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <div class="habit-check">✓</div>
+                        </div>
+                        <div class="habit-title">Balanced Nutrition</div>
+                        <div class="habit-description">Eat regular, balanced meals with protein, fiber, and healthy fats. Focus on nourishment over restriction.</div>
+                        <div class="habit-progress">
+                            <span class="progress-text">Today's Meals</span>
+                            <span class="streak-counter" id="nutrition-streak">0 day streak</span>
+                        </div>
+                    </div>
+
+                    <div class="habit-card" onclick="toggleHabit(this, 'mindfulness')">
+                        <div class="habit-header">
+                            <div class="habit-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="habit-check">✓</div>
+                        </div>
+                        <div class="habit-title">Mindful Eating</div>
+                        <div class="habit-description">Practice mindful eating - eating slowly, without distractions, and listening to hunger/fullness cues.</div>
+                        <div class="habit-progress">
+                            <span class="progress-text">Today's Practice</span>
+                            <span class="streak-counter" id="mindfulness-streak">0 day streak</span>
+                        </div>
+                    </div>
+
+                    <div class="habit-card" onclick="toggleHabit(this, 'stress')">
+                        <div class="habit-header">
+                            <div class="habit-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="habit-check">✓</div>
+                        </div>
+                        <div class="habit-title">Stress Management</div>
+                        <div class="habit-description">Practice stress reduction techniques like meditation, deep breathing, or journaling for mental wellness.</div>
+                        <div class="habit-progress">
+                            <span class="progress-text">Today's Practice</span>
+                            <span class="streak-counter" id="stress-streak">0 day streak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <div class="metric-value" id="daily-score">0/6</div>
+                    <div class="metric-label">Healthy Habits Completed Today</div>
+                    <button class="btn btn-primary" onclick="saveProgress()" id="save-progress-btn" style="display: none; margin-top: 1rem;">Save Today's Progress</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Dashboard -->
+        <section class="progress-dashboard fade-in-up">
+            <div class="dashboard-container">
+                <h2 class="section-heading">Your Wellness Journey</h2>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">Consistency Streak</div>
+                            <div class="card-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value" id="overall-streak">0</div>
+                        <div class="metric-label">Days of Healthy Habits</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;" id="streak-progress"></div>
+                        </div>
+                        <div class="progress-note">Build momentum by completing at least 4 habits daily</div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">Energy Levels</div>
+                            <div class="card-icon">
+                                <i class="fas fa-battery-full"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value" id="energy-score">0</div>
+                        <div class="metric-label">Weekly Energy Rating</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;" id="energy-progress"></div>
+                        </div>
+                        <div class="progress-note">Rate your energy levels daily to track improvements</div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">Wellness Score</div>
+                            <div class="card-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value" id="wellness-rating">0</div>
+                        <div class="metric-label">Overall Wellness Rating</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;" id="wellness-progress"></div>
+                        </div>
+                        <div class="progress-note">Based on habit consistency and self-reported wellness</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Smart Goal Setting -->
+        <section class="goal-setting fade-in-up">
+            <div class="goal-container">
+                <h2 class="section-heading">Personalized Wellness Goals</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Set healthy, sustainable goals based on your lifestyle and preferences. Focus on building habits that support long-term wellness.</p>
+                
+                <div class="goal-tabs">
+                    <div class="goal-tab active" onclick="switchGoalTab('wellness')">Overall Wellness</div>
+                    <div class="goal-tab" onclick="switchGoalTab('energy')">Energy & Vitality</div>
+                    <div class="goal-tab" onclick="switchGoalTab('habits')">Habit Building</div>
+                </div>
+
+                <div id="wellness" class="goal-form">
+                    <div class="form-group">
+                        <label>Primary Focus</label>
+                        <select id="primary-focus">
+                            <option value="energy">Increase Daily Energy</option>
+                            <option value="fitness">Improve Fitness Level</option>
+                            <option value="sleep">Better Sleep Quality</option>
+                            <option value="stress">Reduce Stress Levels</option>
+                            <option value="nutrition">Healthier Eating Habits</option>
+                            <option value="balance">Overall Life Balance</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Activity Level</label>
+                        <select id="activity-level">
+                            <option value="sedentary">Mostly Sedentary</option>
+                            <option value="light">Light Activity (1-2x/week)</option>
+                            <option value="moderate">Moderate Activity (3-4x/week)</option>
+                            <option value="active">Very Active (5+x/week)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Time Availability</label>
+                        <select id="time-available">
+                            <option value="minimal">Very Busy (15-30 min/day)</option>
+                            <option value="moderate">Moderate (30-60 min/day)</option>
+                            <option value="flexible">Flexible (60+ min/day)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Stress Level</label>
+                        <select id="stress-level">
+                            <option value="low">Low Stress</option>
+                            <option value="moderate">Moderate Stress</option>
+                            <option value="high">High Stress</option>
+                            <option value="very-high">Very High Stress</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sleep Quality</label>
+                        <select id="sleep-quality">
+                            <option value="poor">Poor (< 6 hours or restless)</option>
+                            <option value="fair">Fair (6-7 hours, some issues)</option>
+                            <option value="good">Good (7-8 hours, mostly restful)</option>
+                            <option value="excellent">Excellent (8+ hours, very restful)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Motivation Style</label>
+                        <select id="motivation-style">
+                            <option value="gradual">Gradual, Sustainable Changes</option>
+                            <option value="structured">Structured, Goal-Oriented</option>
+                            <option value="social">Community & Social Support</option>
+                            <option value="flexible">Flexible, Adaptive Approach</option>
+                        </select>
+                    </div>
+
+                    <button class="generate-plan-btn" onclick="generateWellnessPlan()">Create My Personalized Plan</button>
+                </div>
+                
+                <div class="goal-results" id="wellness-results">
+                    <h4 style="color: #f39c12; margin-bottom: 1rem;">Your Personalized Wellness Plan</h4>
+                    <div id="wellness-recommendations"></div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="startWellnessPlan()">Start My Wellness Journey</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Challenge -->
+        <section class="community-challenge fade-in-up">
+            <div class="challenge-widget" id="challenge">
+                <h3 class="challenge-title">21-Day Wellness Foundation Challenge</h3>
+                <p class="challenge-description">Join 2,847 students building sustainable wellness habits! Complete healthy daily habits for 21 days to build lasting positive changes. Focus on progress, not perfection.</p>
+                
+                <div class="challenge-progress">
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 1)">
+                        <div class="day-name">Day 1</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 2)">
+                        <div class="day-name">Day 2</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 3)">
+                        <div class="day-name">Day 3</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 4)">
+                        <div class="day-name">Day 4</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 5)">
+                        <div class="day-name">Day 5</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 6)">
+                        <div class="day-name">Day 6</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                    <div class="day-progress" onclick="toggleChallengeDay(this, 7)">
+                        <div class="day-name">Day 7</div>
+                        <div class="progress-icon">○</div>
+                    </div>
+                </div>
+                
+                <div class="challenge-stats">
+                    <div class="challenge-stat">
+                        <span class="number" id="challenge-day">1</span>
+                        <span class="label">Current Day</span>
+                    </div>
+                    <div class="challenge-stat">
+                        <span class="number" id="participants-active">2,847</span>
+                        <span class="label">Active Participants</span>
+                    </div>
+                    <div class="challenge-stat">
+                        <span class="number" id="community-rank">#--</span>
+                        <span class="label">Community Rank</span>
+                    </div>
+                </div>
+                
+                <div class="challenge-actions">
+                    <button class="btn btn-primary" onclick="joinWellnessChallenge()">Join Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewCommunityBoard()">Community Board</button>
+                    <button class="btn btn-secondary" onclick="shareWellnessJourney()">Share Progress</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Stories -->
+        <section class="success-stories fade-in-up">
+            <div class="stories-container">
+                <h2 class="section-heading">Student Wellness Success Stories</h2>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">JM</div>
+                            <div class="story-info">
+                                <h4>Jessica M.</h4>
+                                <p>Psychology • Year 3</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Focusing on healthy habits instead of restrictive dieting changed everything. I have more energy for studies, sleep better, and feel confident in my body. The community support keeps me motivated!"
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="value">87</span>
+                                <span class="label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="value">+40%</span>
+                                <span class="label">Energy Increase</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">DK</div>
+                            <div class="story-info">
+                                <h4>David K.</h4>
+                                <p>Engineering • Year 2</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The habit tracking approach made wellness feel achievable. Small daily actions built into huge improvements in my mood, energy, and academic performance. No more crash diets!"
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="value">156</span>
+                                <span class="label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="value">9.2/10</span>
+                                <span class="label">Wellness Score</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">AL</div>
+                            <div class="story-info">
+                                <h4>Amy L.</h4>
+                                <p>Business • Year 4</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Learning to focus on how I feel rather than just how I look was life-changing. The wellness community celebrates all kinds of progress, and I've built habits that will last a lifetime."
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="value">203</span>
+                                <span class="label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="value">+65%</span>
+                                <span class="label">Sleep Quality</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary" onclick="shareMyStory()">Share Your Success Story</button>
+                    <button class="btn btn-secondary" onclick="joinWellnessCommunity()">Join Wellness Community</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="weight-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Start Your Wellness Journey Today</h2>
+                <p class="cta-subtitle">Join 2,847 students building sustainable healthy habits through evidence-based wellness practices. Focus on feeling great, having energy, and building a positive relationship with your body.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="signup.html" class="btn btn-primary">Start Free Trial</a>
+                    <button class="btn btn-secondary" onclick="watchWellnessDemo()">Watch Wellness Demo</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Load saved progress and start updates
+            loadWellnessProgress();
+            startLiveUpdates();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+
+        // Live Data Updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                const activeMembers = document.getElementById('active-members');
+                const habitsTracked = document.getElementById('habits-tracked');
+                const participantsActive = document.getElementById('participants-active');
+                
+                if (activeMembers) {
+                    const currentVal = parseInt(activeMembers.textContent.replace(',', ''));
+                    activeMembers.textContent = (currentVal + Math.floor(Math.random() * 3)).toLocaleString();
+                }
+                
+                if (habitsTracked) {
+                    const currentVal = parseInt(habitsTracked.textContent);
+                    habitsTracked.textContent = currentVal + Math.floor(Math.random() * 5);
+                }
+                
+                if (participantsActive) {
+                    const currentVal = parseInt(participantsActive.textContent.replace(',', ''));
+                    participantsActive.textContent = (currentVal + Math.floor(Math.random() * 2)).toLocaleString();
+                }
+            }, 20000); // Update every 20 seconds
+        }
+
+        // Habit Tracking Functions
+        let completedHabits = new Set();
+        let habitStreaks = {
+            hydration: 0,
+            sleep: 0,
+            movement: 0,
+            nutrition: 0,
+            mindfulness: 0,
+            stress: 0
+        };
+
+        function toggleHabit(element, habitId) {
+            const check = element.querySelector('.habit-check');
+            const streakElement = document.getElementById(`${habitId}-streak`);
+            
+            if (completedHabits.has(habitId)) {
+                completedHabits.delete(habitId);
+                element.classList.remove('completed');
+                check.textContent = '✓';
+                check.style.color = 'transparent';
+            } else {
+                completedHabits.add(habitId);
+                element.classList.add('completed');
+                check.textContent = '✓';
+                check.style.color = '#000';
+                
+                // Increment streak
+                habitStreaks[habitId]++;
+                streakElement.textContent = `${habitStreaks[habitId]} day streak`;
+                
+                // Add animation
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 1000);
+            }
+            
+            updateDailyScore();
+            saveWellnessProgress();
+        }
+
+        function updateDailyScore() {
+            const dailyScore = document.getElementById('daily-score');
+            const saveBtn = document.getElementById('save-progress-btn');
+            const score = completedHabits.size;
+            
+            dailyScore.textContent = `${score}/6`;
+            dailyScore.classList.add('count-up');
+            setTimeout(() => dailyScore.classList.remove('count-up'), 600);
+            
+            if (score > 0) {
+                saveBtn.style.display = 'inline-block';
+            } else {
+                saveBtn.style.display = 'none';
+            }
+            
+            // Update progress bars
+            updateProgressDashboard();
+        }
+
+        function updateProgressDashboard() {
+            const streakElement = document.getElementById('overall-streak');
+            const streakProgress = document.getElementById('streak-progress');
+            const energyScore = document.getElementById('energy-score');
+            const energyProgress = document.getElementById('energy-progress');
+            const wellnessRating = document.getElementById('wellness-rating');
+            const wellnessProgress = document.getElementById('wellness-progress');
+            
+            // Calculate overall metrics
+            const totalDaysActive = Math.max(...Object.values(habitStreaks));
+            const averageCompletion = (completedHabits.size / 6) * 100;
+            const energyLevel = Math.min(10, 6 + (averageCompletion / 25));
+            const wellnessScore = Math.min(10, 5 + (averageCompletion / 20));
+            
+            streakElement.textContent = totalDaysActive;
+            streakProgress.style.width = Math.min(100, (totalDaysActive / 21) * 100) + '%';
+            
+            energyScore.textContent = energyLevel.toFixed(1);
+            energyProgress.style.width = (energyLevel / 10) * 100 + '%';
+            
+            wellnessRating.textContent = wellnessScore.toFixed(1);
+            wellnessProgress.style.width = (wellnessScore / 10) * 100 + '%';
+        }
+
+        function saveProgress() {
+            const btn = document.getElementById('save-progress-btn');
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = 'Progress Saved!';
+                setTimeout(() => {
+                    btn.textContent = 'Save Today\'s Progress';
+                    btn.disabled = false;
+                }, 2000);
+            }, 1000);
+        }
+
+        // Goal Setting Functions
+        function switchGoalTab(tabName) {
+            document.querySelectorAll('.goal-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            // Here you would show different goal forms based on the tab
+        }
+
+        function generateWellnessPlan() {
+            const focus = document.getElementById('primary-focus').value;
+            const activity = document.getElementById('activity-level').value;
+            const time = document.getElementById('time-available').value;
+            const stress = document.getElementById('stress-level').value;
+            const sleep = document.getElementById('sleep-quality').value;
+            const motivation = document.getElementById('motivation-style').value;
+            
+            const recommendations = generatePersonalizedRecommendations({
+                focus, activity, time, stress, sleep, motivation
+            });
+            
+            const resultsContainer = document.getElementById('wellness-results');
+            const recommendationsDiv = document.getElementById('wellness-recommendations');
+            
+            recommendationsDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    ${recommendations.map(rec => `
+                        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.5rem;">
+                            <h4 style="color: #f39c12; margin-bottom: 0.5rem;">${rec.category}</h4>
+                            <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.5;">${rec.recommendation}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            resultsContainer.classList.add('active');
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function generatePersonalizedRecommendations(prefs) {
+            const baseRecommendations = [
+                {
+                    category: "Daily Movement",
+                    recommendation: prefs.activity === 'sedentary' 
+                        ? "Start with 15-minute daily walks. Gradually increase to 30 minutes as it becomes routine."
+                        : "Maintain current activity and add 2 strength training sessions per week."
+                },
+                {
+                    category: "Sleep Optimization",
+                    recommendation: prefs.sleep === 'poor' 
+                        ? "Focus on consistent bedtime routine. Aim for 7-8 hours with no screens 1 hour before bed."
+                        : "Maintain current sleep schedule and consider sleep tracking for optimization."
+                },
+                {
+                    category: "Stress Management",
+                    recommendation: prefs.stress === 'high' 
+                        ? "Practice 10 minutes daily meditation or deep breathing. Consider counseling support."
+                        : "Continue current stress management and add weekly relaxation activities."
+                },
+                {
+                    category: "Nutrition Focus",
+                    recommendation: prefs.focus === 'energy' 
+                        ? "Eat regular meals with protein and complex carbs. Stay hydrated throughout the day."
+                        : "Focus on balanced meals with plenty of vegetables and adequate protein."
+                }
+            ];
+            
+            return baseRecommendations;
+        }
+
+        function startWellnessPlan() {
+            alert('Starting your personalized wellness plan! You\'ll receive daily reminders and progress tracking.');
+        }
+
+        // Challenge Functions
+        let challengeDaysCompleted = new Set();
+        let currentChallengeDay = 1;
+
+        function toggleChallengeDay(element, day) {
+            const icon = element.querySelector('.progress-icon');
+            
+            if (challengeDaysCompleted.has(day)) {
+                challengeDaysCompleted.delete(day);
+                element.classList.remove('completed');
+                icon.textContent = '○';
+            } else {
+                challengeDaysCompleted.add(day);
+                element.classList.add('completed');
+                icon.textContent = '✓';
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 1000);
+                
+                // Update challenge stats
+                updateChallengeStats();
+            }
+            
+            saveWellnessProgress();
+        }
+
+        function updateChallengeStats() {
+            const challengeDay = document.getElementById('challenge-day');
+            const communityRank = document.getElementById('community-rank');
+            
+            const completedCount = challengeDaysCompleted.size;
+            challengeDay.textContent = Math.max(1, completedCount);
+            
+            if (completedCount > 0) {
+                const rank = Math.max(1, 500 - (completedCount * 20) + Math.floor(Math.random() * 50));
+                communityRank.textContent = `#${rank}`;
+            }
+        }
+
+        function joinWellnessChallenge() {
+            alert('Welcome to the 21-Day Wellness Foundation Challenge! Focus on building sustainable habits that support your long-term health and happiness.');
+        }
+
+        function viewCommunityBoard() {
+            alert('Community Board:\n\nUpcoming Events:\n• Weekly Wellness Check-in - Friday 7PM\n• Healthy Recipe Share - Sunday 2PM\n• Study Break Yoga - Daily 3PM\n\nCelebrations:\n• 50+ students completed Week 1!\n• New wellness resources added\n• Community support growing strong!');
+        }
+
+        function shareWellnessJourney() {
+            const completed = challengeDaysCompleted.size;
+            const totalHabits = completedHabits.size;
+            alert(`Sharing your wellness journey: Day ${completed} of the 21-day challenge with ${totalHabits}/6 healthy habits completed today! Join me in building sustainable wellness habits.`);
+        }
+
+        // Progress Functions
+        function loadWellnessProgress() {
+            const saved = localStorage.getItem('wellnessProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                completedHabits = new Set(progress.completedHabits || []);
+                habitStreaks = progress.habitStreaks || habitStreaks;
+                challengeDaysCompleted = new Set(progress.challengeDaysCompleted || []);
+                
+                // Apply saved state to UI
+                completedHabits.forEach(habitId => {
+                    const habitCard = document.querySelector(`[onclick*="${habitId}"]`);
+                    if (habitCard) {
+                        habitCard.classList.add('completed');
+                        const check = habitCard.querySelector('.habit-check');
+                        check.style.color = '#000';
+                    }
+                });
+                
+                // Update streak displays
+                Object.keys(habitStreaks).forEach(habitId => {
+                    const streakElement = document.getElementById(`${habitId}-streak`);
+                    if (streakElement) {
+                        streakElement.textContent = `${habitStreaks[habitId]} day streak`;
+                    }
+                });
+                
+                // Update challenge display
+                challengeDaysCompleted.forEach(day => {
+                    const dayElement = document.querySelector(`[onclick*="toggleChallengeDay(this, ${day})"]`);
+                    if (dayElement) {
+                        dayElement.classList.add('completed');
+                        dayElement.querySelector('.progress-icon').textContent = '✓';
+                    }
+                });
+                
+                updateDailyScore();
+                updateChallengeStats();
+            }
+        }
+
+        function saveWellnessProgress() {
+            const progress = {
+                completedHabits: Array.from(completedHabits),
+                habitStreaks: habitStreaks,
+                challengeDaysCompleted: Array.from(challengeDaysCompleted),
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('wellnessProgress', JSON.stringify(progress));
+        }
+
+        // Success Story Functions
+        function shareMyStory() {
+            alert('Share your wellness transformation story! Inspire other students with your journey toward better health, energy, and wellbeing.');
+        }
+
+        function joinWellnessCommunity() {
+            alert('Welcome to the Wellness Community! Connect with thousands of students building healthy, sustainable habits together.');
+        }
+
+        function watchWellnessDemo() {
+            alert('Watch our demo showcasing evidence-based wellness approaches that focus on building healthy habits, improving energy, and supporting mental health rather than restrictive approaches.');
+        }
+
+        // Auto-save progress periodically
+        setInterval(saveWellnessProgress, 30000); // Save every 30 seconds
+    </script>
+</body>
+</html>

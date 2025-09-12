@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Community - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with index.html */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .left-nav a.active::after {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Main Container */
+        .community-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        /* Community Header */
+        .community-header {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .community-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .community-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .community-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Content Tabs */
+        .content-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-button {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .tab-button:hover, .tab-button.active {
+            border-color: #f39c12;
+            color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        /* Feed Section */
+        .feed-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Post Cards */
+        .post-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .post-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .post-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .post-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(243, 156, 18, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f39c12;
+            font-size: 1.2rem;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-username {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+
+        .post-meta {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .performance-badge {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-content {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .post-tag {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .post-action {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-family: inherit;
+        }
+
+        .post-action:hover {
+            color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .post-action.active {
+            color: #f39c12;
+        }
+
+        .post-engagement {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .sidebar-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Top Performers */
+        .top-performers {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .performer-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .performer-item:hover {
+            background: rgba(243, 156, 18, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .performer-rank {
+            color: #f39c12;
+            font-weight: 800;
+            font-size: 1.1rem;
+            min-width: 25px;
+        }
+
+        .performer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(243, 156, 18, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f39c12;
+        }
+
+        .performer-info {
+            flex: 1;
+        }
+
+        .performer-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .performer-score {
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Study Groups */
+        .study-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .study-group {
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .study-group:hover {
+            background: rgba(243, 156, 18, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .study-group-name {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .study-group-topic {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .study-group-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        .action-button.secondary {
+            background: transparent;
+            color: #f39c12;
+            border: 2px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .action-button.secondary:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            font-weight: 600;
+        }
+
+        .notification.info {
+            background: #3498db;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .community-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sidebar {
+                order: -1;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .community-container {
+                padding: 100px 1rem 2rem;
+            }
+
+            .community-header h1 {
+                font-size: 2rem;
+            }
+
+            .content-tabs {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .post-stats {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .post-actions {
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="habits-tracker.html">Daily Habits</a></li>
+                    <li><a href="community.html" class="active">Community</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link" class="hidden">Login</a></li>
+                    <li><a href="signup.html" id="signup-link" class="cta-nav hidden">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link">Profile</a></li>
+                    <li><a href="#" id="logout-link">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="community-container">
+        <div class="main-content">
+            <!-- Community Header -->
+            <div class="community-header fade-in-up">
+                <h1>Performance Community</h1>
+                <p>Connect with ambitious students, share winning strategies, and learn from the habits and techniques of high performers across Australia</p>
+            </div>
+
+            <!-- Content Tabs -->
+            <div class="content-tabs">
+                <button class="tab-button active" data-tab="feed">Latest Posts</button>
+                <button class="tab-button" data-tab="strategies">Winning Strategies</button>
+                <button class="tab-button" data-tab="study-notes">Study Resources</button>
+                <button class="tab-button" data-tab="challenges">Challenge Updates</button>
+            </div>
+
+            <!-- Feed Section -->
+            <div class="feed-section fade-in-up">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    Community Feed
+                </h2>
+
+                <div class="post-feed" id="postFeed">
+                    <!-- Strategy Share Post -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="post-user-info">
+                                <div class="post-username">Alex Chen</div>
+                                <div class="post-meta">
+                                    <span>Knox Grammar School</span>
+                                    <span>•</span>
+                                    <span>2 hours ago</span>
+                                    <div class="performance-badge">Top Performer</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Just hit a 45-day streak on my morning routine! The key was starting with just 20 minutes and gradually building up. Now I'm doing exercise + planning + reading all before 7 AM. Game changer for productivity.
+                        </div>
+                        <div class="post-tags">
+                            <span class="post-tag">#MorningRoutine</span>
+                            <span class="post-tag">#Productivity</span>
+                            <span class="post-tag">#StreakGoals</span>
+                        </div>
+                        <div class="post-stats">
+                            <div class="post-actions">
+                                <button class="post-action" data-action="like">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>47</span>
+                                </button>
+                                <button class="post-action" data-action="comment">
+                                    <i class="fas fa-comment"></i>
+                                    <span>12</span>
+                                </button>
+                                <button class="post-action" data-action="share">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </button>
+                            </div>
+                            <div class="post-engagement">
+                                Trending in #MorningRoutine
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Study Strategy Post -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="post-user-info">
+                                <div class="post-username">Sarah Kim</div>
+                                <div class="post-meta">
+                                    <span>Sydney Grammar</span>
+                                    <span>•</span>
+                                    <span>4 hours ago</span>
+                                    <div class="performance-badge">Study Expert</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            My active recall technique for HSC prep: After reading a chapter, I close the book and write everything I remember from memory. Then I check what I missed. Retention went from 60% to 90%!
+                        </div>
+                        <div class="post-tags">
+                            <span class="post-tag">#StudyTechniques</span>
+                            <span class="post-tag">#HSCPrep</span>
+                            <span class="post-tag">#ActiveRecall</span>
+                        </div>
+                        <div class="post-stats">
+                            <div class="post-actions">
+                                <button class="post-action" data-action="like">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>83</span>
+                                </button>
+                                <button class="post-action" data-action="comment">
+                                    <i class="fas fa-comment"></i>
+                                    <span>24</span>
+                                </button>
+                                <button class="post-action" data-action="bookmark">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span>Save</span>
+                                </button>
+                            </div>
+                            <div class="post-engagement">
+                                Hot topic in Study Groups
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge Achievement Post -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="post-user-info">
+                                <div class="post-username">James Wilson</div>
+                                <div class="post-meta">
+                                    <span>Shore School</span>
+                                    <span>•</span>
+                                    <span>6 hours ago</span>
+                                    <div class="performance-badge">Challenge Winner</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Completed the 30-Day Fitness Foundation challenge! Lost 3kg, gained serious energy, and my focus in class improved massively. The compound effect is real - physical fitness = mental performance.
+                        </div>
+                        <div class="post-tags">
+                            <span class="post-tag">#ChallengeComplete</span>
+                            <span class="post-tag">#FitnessWins</span>
+                            <span class="post-tag">#MentalClarity</span>
+                        </div>
+                        <div class="post-stats">
+                            <div class="post-actions">
+                                <button class="post-action" data-action="like">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>156</span>
+                                </button>
+                                <button class="post-action" data-action="comment">
+                                    <i class="fas fa-comment"></i>
+                                    <span>31</span>
+                                </button>
+                                <button class="post-action" data-action="kudos">
+                                    <i class="fas fa-medal"></i>
+                                    <span>Kudos</span>
+                                </button>
+                            </div>
+                            <div class="post-engagement">
+                                Inspiring 200+ students
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Management Post -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="post-user-info">
+                                <div class="post-username">Emma Davis</div>
+                                <div class="post-meta">
+                                    <span>Presbyterian Ladies</span>
+                                    <span>•</span>
+                                    <span>8 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Time-blocking changed my life! I assign specific time slots for each subject and break every 45 mins. Went from 8 hours of unfocused study to 5 hours of laser-focused work. Quality > quantity always.
+                        </div>
+                        <div class="post-tags">
+                            <span class="post-tag">#TimeManagement</span>
+                            <span class="post-tag">#StudyEfficiency</span>
+                            <span class="post-tag">#TimeBlocking</span>
+                        </div>
+                        <div class="post-stats">
+                            <div class="post-actions">
+                                <button class="post-action" data-action="like">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>92</span>
+                                </button>
+                                <button class="post-action" data-action="comment">
+                                    <i class="fas fa-comment"></i>
+                                    <span>18</span>
+                                </button>
+                                <button class="post-action" data-action="share">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </button>
+                            </div>
+                            <div class="post-engagement">
+                                Featured strategy
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Top Performers -->
+            <div class="sidebar-card fade-in-up">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-medal"></i>
+                    Top Performers This Week
+                </h3>
+                <div class="top-performers">
+                    <div class="performer-item">
+                        <div class="performer-rank">1</div>
+                        <div class="performer-avatar">
+                            <i class="fas fa-crown" style="color: #f39c12;"></i>
+                        </div>
+                                                    <div class="performer-info">
+                                <div class="performer-name">Alex Chen</div>
+                                <div class="performer-score">2,450 points</div>
+                            </div>
+                        </div>
+                        <div class="performer-item">
+                            <div class="performer-rank">2</div>
+                            <div class="performer-avatar">
+                                <i class="fas fa-medal" style="color: #c0c0c0;"></i>
+                            </div>
+                            <div class="performer-info">
+                                <div class="performer-name">Sarah Kim</div>
+                                <div class="performer-score">2,380 points</div>
+                            </div>
+                        </div>
+                        <div class="performer-item">
+                            <div class="performer-rank">3</div>
+                            <div class="performer-avatar">
+                                <i class="fas fa-medal" style="color: #cd7f32;"></i>
+                            </div>
+                            <div class="performer-info">
+                                <div class="performer-name">James Wilson</div>
+                                <div class="performer-score">2,290 points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Groups -->
+            <div class="sidebar-card fade-in-up">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-users"></i>
+                    Active Study Groups
+                </h3>
+                <div class="study-groups">
+                    <div class="study-group">
+                        <div class="study-group-name">HSC Mathematics</div>
+                        <div class="study-group-topic">Advanced calculus problem solving</div>
+                        <div class="study-group-meta">
+                            <span>47 members</span>
+                            <span>Active now</span>
+                        </div>
+                    </div>
+                    <div class="study-group">
+                        <div class="study-group-name">Chemistry Masters</div>
+                        <div class="study-group-topic">Organic chemistry mechanisms</div>
+                        <div class="study-group-meta">
+                            <span>32 members</span>
+                            <span>2 new posts</span>
+                        </div>
+                    </div>
+                    <div class="study-group">
+                        <div class="study-group-name">English Excellence</div>
+                        <div class="study-group-topic">Essay writing techniques</div>
+                        <div class="study-group-meta">
+                            <span>68 members</span>
+                            <span>5 new posts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="sidebar-card fade-in-up">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-bolt"></i>
+                    Quick Actions
+                </h3>
+                <div class="quick-actions">
+                    <button class="action-button" onclick="createPost()">
+                        <i class="fas fa-plus"></i>
+                        Share a Strategy
+                    </button>
+                    <button class="action-button secondary" onclick="joinStudyGroup()">
+                        <i class="fas fa-users"></i>
+                        Join Study Group
+                    </button>
+                    <button class="action-button secondary" onclick="viewLeaderboard()">
+                        <i class="fas fa-trophy"></i>
+                        View Full Leaderboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCommunity();
+            setupTabSwitching();
+            loadCommunityFeed();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            // Logout functionality
+            document.getElementById('logout-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.href = 'index.html';
+            });
+        });
+
+        function initializeCommunity() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                window.location.href = 'login.html?redirect=community';
+                return;
+            }
+        }
+
+        function setupTabSwitching() {
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Switch content based on tab
+                    const tabType = tab.dataset.tab;
+                    switchFeedContent(tabType);
+                });
+            });
+        }
+
+        function switchFeedContent(type) {
+            const feedTitle = document.querySelector('.section-title');
+            const feedIcon = feedTitle.querySelector('i');
+            
+            switch(type) {
+                case 'feed':
+                    feedIcon.className = 'fas fa-fire';
+                    feedTitle.childNodes[2].textContent = 'Community Feed';
+                    break;
+                case 'strategies':
+                    feedIcon.className = 'fas fa-lightbulb';
+                    feedTitle.childNodes[2].textContent = 'Winning Strategies';
+                    break;
+                case 'study-notes':
+                    feedIcon.className = 'fas fa-book';
+                    feedTitle.childNodes[2].textContent = 'Study Resources';
+                    break;
+                case 'challenges':
+                    feedIcon.className = 'fas fa-trophy';
+                    feedTitle.childNodes[2].textContent = 'Challenge Updates';
+                    break;
+            }
+            
+            // Track activity for dashboard
+            if (window.vivifyTracker) {
+                window.vivifyTracker.trackActivity('community_tab_switch', 'social', `Switched to ${type} tab`, 2);
+            }
+        }
+
+        function loadCommunityFeed() {
+            // Add interaction handlers to existing posts
+            const postActions = document.querySelectorAll('.post-action');
+            postActions.forEach(action => {
+                action.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const actionType = this.dataset.action;
+                    switch(actionType) {
+                        case 'like':
+                            handleLike(this);
+                            break;
+                        case 'comment':
+                            handleComment(this);
+                            break;
+                        case 'share':
+                            handleShare(this);
+                            break;
+                        case 'bookmark':
+                            handleBookmark(this);
+                            break;
+                        case 'kudos':
+                            handleKudos(this);
+                            break;
+                    }
+                });
+            });
+        }
+
+        function handleLike(button) {
+            const countElement = button.querySelector('span');
+            const currentCount = parseInt(countElement.textContent);
+            
+            // Toggle like state
+            if (button.classList.contains('liked')) {
+                button.classList.remove('liked');
+                countElement.textContent = currentCount - 1;
+                button.classList.remove('active');
+            } else {
+                button.classList.add('liked');
+                button.classList.add('active');
+                countElement.textContent = currentCount + 1;
+                
+                // Add small animation
+                button.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 200);
+                
+                // Track activity for dashboard
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('community_like', 'social', 'Liked a community post', 3);
+                }
+            }
+        }
+
+        function handleComment(button) {
+            showNotification('Comment feature coming soon! Share your thoughts in study groups.', 'info');
+        }
+
+        function handleShare(button) {
+            showNotification('Post shared to your network!', 'success');
+            
+            // Track activity for dashboard
+            if (window.vivifyTracker) {
+                window.vivifyTracker.trackActivity('community_share', 'social', 'Shared a community post', 5);
+            }
+        }
+
+        function handleBookmark(button) {
+            if (button.classList.contains('bookmarked')) {
+                button.classList.remove('bookmarked');
+                button.classList.remove('active');
+                showNotification('Removed from saved posts', 'info');
+            } else {
+                button.classList.add('bookmarked');
+                button.classList.add('active');
+                showNotification('Post saved to your collection!', 'success');
+                
+                // Track activity for dashboard
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('community_bookmark', 'social', 'Bookmarked a community post', 2);
+                }
+            }
+        }
+
+        function handleKudos(button) {
+            const countElement = button.querySelector('span');
+            
+            if (!button.classList.contains('kudos-given')) {
+                button.classList.add('kudos-given');
+                button.classList.add('active');
+                showNotification('Kudos given! Great way to motivate peers.', 'success');
+                
+                // Track activity for dashboard
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('community_kudos', 'social', 'Gave kudos to a peer', 10);
+                }
+            }
+        }
+
+        function createPost() {
+            showNotification('Post creation feature coming soon! Share your winning strategies with the community.', 'info');
+        }
+
+        function joinStudyGroup() {
+            showNotification('Study group finder coming soon! Connect with peers studying similar subjects.', 'info');
+        }
+
+        function viewLeaderboard() {
+            // Redirect to challenges page with leaderboard focus
+            window.location.href = 'challenges.html#leaderboard';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Remove after delay
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Track community engagement for dashboard
+        if (window.vivifyTracker) {
+            window.vivifyTracker.trackActivity('community_visit', 'social', 'Visited performance community', 5);
+        }
+
+        // Add some interaction tracking
+        document.querySelectorAll('.study-group').forEach(group => {
+            group.addEventListener('click', function() {
+                showNotification(`Joining ${this.querySelector('.study-group-name').textContent}...`, 'info');
+            });
+        });
+
+        document.querySelectorAll('.performer-item').forEach(performer => {
+            performer.addEventListener('click', function() {
+                const name = this.querySelector('.performer-name').textContent;
+                showNotification(`Viewing ${name}'s profile...`, 'info');
+            });
+        });
+    </script>
+</body>
+</html>

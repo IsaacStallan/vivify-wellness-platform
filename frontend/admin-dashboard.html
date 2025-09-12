@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Vivify</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f39c12;
+            text-decoration: none;
+        }
+
+        .admin-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(34, 34, 34, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #f39c12;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #27ae60;
+        }
+
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+
+        .admin-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .admin-card {
+            background: rgba(34, 34, 34, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #222;
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: #333;
+            border: 1px solid #444;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            background: #444;
+            transform: translateY(-1px);
+            color: #f39c12;
+        }
+
+        .action-btn i {
+            font-size: 1.5rem;
+        }
+
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .user-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f39c12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .user-details h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .user-details p {
+            color: #a0a0a0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-small:hover {
+            opacity: 0.8;
+        }
+
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            color: #ffffff;
+            font-weight: 500;
+            margin: 0 0 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            color: #a0a0a0;
+            font-size: 0.8rem;
+        }
+
+        .system-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .system-stat {
+            background: #222;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .report-card {
+            background: #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+            border-color: #f39c12;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">Vivify</a>
+        <div class="navbar-menu">
+            <span class="admin-badge">ADMIN</span>
+            <a href="dashboard.html" class="nav-link">Student View</a>
+            <a href="teacher-dashboard.html" class="nav-link">Teacher View</a>
+            <a href="profile.html" class="nav-link">Profile</a>
+            <a href="#" onclick="logout()" class="nav-link">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Administrator Dashboard</h1>
+            <p class="page-subtitle">Manage and monitor the Vivify performance platform for Australian students</p>
+        </div>
+
+        <!-- Platform Statistics -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon" style="color: #3498db;"></i>
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Total Students</div>
+                <div class="stat-change positive">+12% this month</div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-chalkboard-teacher stat-icon" style="color: #27ae60;"></i>
+                <div class="stat-number" id="totalTeachers">0</div>
+                <div class="stat-label">Active Teachers</div>
+                <div class="stat-change positive">+3 this week</div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-graduation-cap stat-icon" style="color: #9b59b6;"></i>
+                <div class="stat-number" id="totalSchools">0</div>
+                <div class="stat-label">Partner Schools</div>
+                <div class="stat-change positive">+2 this month</div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-heart stat-icon" style="color: #e74c3c;"></i>
+                <div class="stat-number" id="engagementRate">0%</div>
+                <div class="stat-label">Daily Engagement</div>
+                <div class="stat-change positive">+5% improvement</div>
+            </div>
+        </div>
+
+        <!-- Admin Sections -->
+        <div class="admin-sections">
+            <!-- User Management -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-users"></i>
+                        User Management
+                    </h3>
+                    <button class="btn-small btn-primary" onclick="showAddUserModal()">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="quick-actions">
+                        <a href="#" class="action-btn" onclick="viewAllStudents()">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>View Students</span>
+                        </a>
+                        <a href="#" class="action-btn" onclick="viewAllTeachers()">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>View Teachers</span>
+                        </a>
+                        <a href="#" class="action-btn" onclick="moderateContent()">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Moderate Content</span>
+                        </a>
+                        <a href="#" class="action-btn" onclick="managePermissions()">
+                            <i class="fas fa-key"></i>
+                            <span>Permissions</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platform Analytics -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Platform Analytics
+                    </h3>
+                    <select class="form-select" style="width: auto;" onchange="updateAnalytics(this.value)">
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="quarter">This Quarter</option>
+                    </select>
+                </div>
+                <div class="card-content">
+                    <div class="system-stats">
+                        <div class="system-stat">
+                            <div style="font-size: 1.5rem; color: #3498db; margin-bottom: 0.5rem;">2,847</div>
+                            <div style="color: #a0a0a0; font-size: 0.8rem;">performance Assessments</div>
+                        </div>
+                        <div class="system-stat">
+                            <div style="font-size: 1.5rem; color: #27ae60; margin-bottom: 0.5rem;">1,243</div>
+                            <div style="color: #a0a0a0; font-size: 0.8rem;">Fitness Sessions</div>
+                        </div>
+                        <div class="system-stat">
+                            <div style="font-size: 1.5rem; color: #e67e22; margin-bottom: 0.5rem;">892</div>
+                            <div style="color: #a0a0a0; font-size: 0.8rem;">Focus & Resilience Check-ins</div>
+                        </div>
+                    </div>
+                    <div class="reports-grid">
+                        <div class="report-card" onclick="generateReport('engagement')">
+                            <i class="fas fa-chart-bar" style="color: #3498db; font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                            <h4 style="color: #ffffff; margin-bottom: 0.5rem;">Engagement Report</h4>
+                            <p style="color: #a0a0a0; font-size: 0.8rem;">User activity and participation</p>
+                        </div>
+                        <div class="report-card" onclick="generateReport('performance')">
+                            <i class="fas fa-heart" style="color: #e74c3c; font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                            <h4 style="color: #ffffff; margin-bottom: 0.5rem;">performance Trends</h4>
+                            <p style="color: #a0a0a0; font-size: 0.8rem;">Focus & Resilience and fitness metrics</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity and Alerts -->
+        <div class="admin-sections">
+            <!-- Recent Activity -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-clock"></i>
+                        Recent Activity
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="activity-feed" id="adminActivityFeed">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Alerts & Support -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        System Alerts & Support
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="activity-feed" id="systemAlerts">
+                        <!-- Alerts will be loaded here -->
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <button class="btn-small btn-primary" onclick="viewSupportTickets()" style="width: 100%;">
+                            <i class="fas fa-life-ring"></i> View Support Tickets
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management -->
+        <div class="admin-card full-width">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-cogs"></i>
+                    Platform Management
+                </h3>
+            </div>
+            <div class="card-content">
+                <div class="quick-actions" style="grid-template-columns: repeat(4, 1fr);">
+                    <a href="#" class="action-btn" onclick="manageContent()">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit Content</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="managePrograms()">
+                        <i class="fas fa-dumbbell"></i>
+                        <span>Fitness Programs</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="manageMentalHealth()">
+                        <i class="fas fa-brain"></i>
+                        <span>Focus & Resilience</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="manageNutrition()">
+                        <i class="fas fa-apple-alt"></i>
+                        <span>Nutrition Plans</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="manageAssessments()">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Assessments</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="manageNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="viewSystemHealth()">
+                        <i class="fas fa-server"></i>
+                        <span>System Health</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        <span>Export Data</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            loadDashboardData();
+            loadRecentActivity();
+            loadSystemAlerts();
+        });
+
+        function checkAdminAuth() {
+            const user = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            if (!user.id || user.role !== 'admin') {
+                alert('Admin access required. Redirecting to login.');
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+
+        function loadDashboardData() {
+            // Simulate loading platform statistics
+            setTimeout(() => {
+                document.getElementById('totalUsers').textContent = '1,247';
+                document.getElementById('totalTeachers').textContent = '42';
+                document.getElementById('totalSchools').textContent = '8';
+                document.getElementById('engagementRate').textContent = '73%';
+            }, 500);
+        }
+
+        function loadRecentActivity() {
+            const activities = [
+                {
+                    icon: 'fas fa-user-plus',
+                    iconColor: '#27ae60',
+                    title: 'New student registered: Emma Williams',
+                    time: '5 minutes ago'
+                },
+                {
+                    icon: 'fas fa-exclamation-triangle',
+                    iconColor: '#e67e22',
+                    title: 'High stress levels detected for Year 11 cohort',
+                    time: '15 minutes ago'
+                },
+                {
+                    icon: 'fas fa-dumbbell',
+                    iconColor: '#3498db',
+                    title: 'New HIIT workout program published',
+                    time: '1 hour ago'
+                },
+                {
+                    icon: 'fas fa-brain',
+                    iconColor: '#9b59b6',
+                    title: '23 students completed mindfulness session',
+                    time: '2 hours ago'
+                },
+                {
+                    icon: 'fas fa-apple-alt',
+                    iconColor: '#27ae60',
+                    title: 'Meal prep planner updated with winter recipes',
+                    time: '4 hours ago'
+                }
+            ];
+
+            const feed = document.getElementById('adminActivityFeed');
+            feed.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: ${activity.iconColor}20; color: ${activity.iconColor};">
+                        <i class="${activity.icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadSystemAlerts() {
+            const alerts = [
+                {
+                    icon: 'fas fa-server',
+                    iconColor: '#27ae60',
+                    title: 'System performance: All systems operational',
+                    time: 'Last checked: 2 minutes ago'
+                },
+                {
+                    icon: 'fas fa-shield-alt',
+                    iconColor: '#e67e22',
+                    title: '3 pending content moderation requests',
+                    time: 'Requires attention'
+                },
+                {
+                    icon: 'fas fa-life-ring',
+                    iconColor: '#3498db',
+                    title: '2 new support tickets from teachers',
+                    time: '1 hour ago'
+                }
+            ];
+
+            const alertsContainer = document.getElementById('systemAlerts');
+            alertsContainer.innerHTML = alerts.map(alert => `
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: ${alert.iconColor}20; color: ${alert.iconColor};">
+                        <i class="${alert.icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">${alert.title}</div>
+                        <div class="activity-time">${alert.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Admin Functions
+        function viewAllStudents() {
+            alert('Opening student management interface...');
+            // Navigate to student management page
+        }
+
+        function viewAllTeachers() {
+            alert('Opening teacher management interface...');
+            // Navigate to teacher management page
+        }
+
+        function moderateContent() {
+            alert('Opening content moderation panel...');
+            // Navigate to moderation interface
+        }
+
+        function managePermissions() {
+            alert('Opening permissions management...');
+        }
+
+        function manageContent() {
+            alert('Opening content management system...');
+        }
+
+        function managePrograms() {
+            alert('Opening fitness program management...');
+        }
+
+        function manageMentalHealth() {
+            alert('Opening Focus & Resilience resource management...');
+        }
+
+        function manageNutrition() {
+            alert('Opening nutrition content management...');
+        }
+
+        function manageAssessments() {
+            alert('Opening assessment management...');
+        }
+
+        function manageNotifications() {
+            alert('Opening notification management...');
+        }
+
+        function viewSystemHealth() {
+            alert('Opening system health dashboard...');
+        }
+
+        function exportData() {
+            alert('Preparing data export...');
+        }
+
+        function generateReport(type) {
+            alert(`Generating ${type} report...`);
+        }
+
+        function showAddUserModal() {
+            alert('Opening add user dialog...');
+        }
+
+        function viewSupportTickets() {
+            alert('Opening support ticket system...');
+        }
+
+        function updateAnalytics(period) {
+            console.log('Updating analytics for period:', period);
+            // Update analytics based on selected period
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

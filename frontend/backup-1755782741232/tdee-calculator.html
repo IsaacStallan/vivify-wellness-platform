@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDEE Calculator - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* TDEE Calculator Specific Styles */
+        .calculator-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .calculator-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .calculator-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .calculator-form {
+            flex: 1;
+            min-width: 300px;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .calculator-form h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            color: #ddd;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #f39c12;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #e67e22;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .calculate-btn {
+            margin-top: 1rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .results-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .results {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .result-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .result-card h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-unit {
+            font-size: 1rem;
+            color: #aaa;
+        }
+
+        .result-card p {
+            color: #ddd;
+            margin-top: 1rem;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .goal-adjustments {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .goal-adjustments h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .goal-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .goal-table th, 
+        .goal-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+
+        .goal-table th {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .macro-calculator {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #333;
+            border-radius: 50%;
+            border-top-color: #f39c12;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .info-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .formula-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            color: #ddd;
+        }
+
+        .formula-card h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .formula {
+            font-family: monospace;
+            background-color: #222;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ddd;
+            margin: 1.5rem 0;
+        }
+
+        .activity-table th, 
+        .activity-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .activity-table th {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tips-container {
+            margin-top: 4rem;
+        }
+
+        .tips-container h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tip-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .tip-card i {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            margin-top: 4rem;
+        }
+
+        .faq-section h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .faq-item {
+            background-color: #222;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            color: #f39c12;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active:after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: #ddd;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" class="active" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="calculator-hero">
+            <h1>TDEE Calculator</h1>
+            <p>Calculate your Total Daily Energy Expenditure to understand your caloric needs and create a nutrition plan that supports your academic, fitness, and performance goals.</p>
+        </section>
+
+        <!-- Calculator Section -->
+        <section class="container">
+            <h2 class="section-title">Calculate Your Energy Needs</h2>
+            
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <h3>Enter Your Information</h3>
+                    <form id="tdee-form">
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="male" checked> Male
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="female"> Female
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="15" max="100" placeholder="Years" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Height</label>
+                            <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                                <div style="flex: 1;">
+                                    <input type="number" id="height-cm" name="height-cm" min="100" max="250" placeholder="cm" required>
+                                </div>
+                                <div style="text-align: center; padding-top: 0.5rem; color: #ddd;">
+                                    or
+                                </div>
+                                <div style="flex: 1; display: flex; gap: 0.5rem;">
+                                    <input type="number" id="height-ft" name="height-ft" min="3" max="8" placeholder="ft">
+                                    <input type="number" id="height-in" name="height-in" min="0" max="11" placeholder="in">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Weight</label>
+                            <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                                <div style="flex: 1;">
+                                    <input type="number" id="weight-kg" name="weight-kg" min="30" max="300" placeholder="kg" required>
+                                </div>
+                                <div style="text-align: center; padding-top: 0.5rem; color: #ddd;">
+                                    or
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="number" id="weight-lb" name="weight-lb" min="66" max="660" placeholder="lb">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activity">Activity Level</label>
+                            <select id="activity" name="activity" required>
+                                <option value="">Select Your Activity Level</option>
+                                <option value="1.2">Sedentary (Little to no exercise)</option>
+                                <option value="1.375">Lightly Active (Light exercise 1-3 days/week)</option>
+                                <option value="1.55">Moderately Active (Moderate exercise 3-5 days/week)</option>
+                                <option value="1.725">Very Active (Hard exercise 6-7 days/week)</option>
+                                <option value="1.9">Extremely Active (Very hard exercise & physical job or 2x training)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goal">Fitness Goal</label>
+                            <select id="goal" name="goal">
+                                <option value="">Select Your Goal (Optional)</option>
+                                <option value="maintain">Maintain Current Weight</option>
+                                <option value="lose-mild">Mild Weight Loss (0.25kg/0.5lb per week)</option>
+                                <option value="lose-moderate">Moderate Weight Loss (0.5kg/1lb per week)</option>
+                                <option value="lose-aggressive">Aggressive Weight Loss (1kg/2lb per week)</option>
+                                <option value="gain-mild">Mild Weight Gain (0.25kg/0.5lb per week)</option>
+                                <option value="gain-moderate">Moderate Weight Gain (0.5kg/1lb per week)</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block calculate-btn">Calculate TDEE</button>
+                    </form>
+                </div>
+                
+                <div class="results-container">
+                    <!-- Loading Spinner -->
+                    <div class="loading" id="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Calculating your energy needs...</p>
+                    </div>
+                    
+                    <!-- Results Display -->
+                    <div class="results" id="tdee-results">
+                        <h3>Your Energy Expenditure Results</h3>
+                        
+                        <div class="result-card">
+                            <h4>Basal Metabolic Rate (BMR)</h4>
+                            <div class="result-value" id="bmr-value">1,742</div>
+                            <div class="result-unit">calories/day</div>
+                            <p>Your BMR is the number of calories your body needs to perform basic, life-sustaining functions while at rest. This includes breathing, circulation, cell production, and other basic metabolic processes.</p>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Total Daily Energy Expenditure (TDEE)</h4>
+                            <div class="result-value" id="tdee-value">2,613</div>
+                            <div class="result-unit">calories/day</div>
+                            <p>Your TDEE is an estimation of how many calories you burn per day when your activity level is factored in. This is your maintenance calorie level - the amount needed to maintain your current weight.</p>
+                        </div>
+                        
+                        <div class="goal-adjustments" id="goal-section">
+                            <h4>Calorie Targets Based on Goals</h4>
+                            <table class="goal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Goal</th>
+                                        <th>Daily Calories</th>
+                                        <th>Weekly Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Weight Loss (Aggressive)</td>
+                                        <td id="aggressive-loss">1,613</td>
+                                        <td>-1kg/-2lb</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weight Loss (Moderate)</td>
+                                        <td id="moderate-loss">2,113</td>
+                                        <td>-0.5kg/-1lb</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weight Loss (Mild)</td>
+                                        <td id="mild-loss">2,363</td>
+                                        <td>-0.25kg/-0.5lb</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Maintenance</strong></td>
+                                        <td id="maintenance"><strong>2,613</strong></td>
+                                        <td>No change</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weight Gain (Mild)</td>
+                                        <td id="mild-gain">2,863</td>
+                                        <td>+0.25kg/+0.5lb</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weight Gain (Moderate)</td>
+                                        <td id="moderate-gain">3,113</td>
+                                        <td>+0.5kg/+1lb</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class="macro-calculator">
+                                <a href="macro-calculator.html" class="btn">Calculate My Macros <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn" id="save-results">
+                                <i class="fas fa-save"></i> Save Results
+                            </button>
+                            <button class="btn" id="print-results">
+                                <i class="fas fa-print"></i> Print Results
+                            </button>
+                            <button class="btn" id="recalculate">
+                                <i class="fas fa-redo"></i> Recalculate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Section -->
+            <div class="info-card">
+                <h3>Understanding TDEE and Energy Balance</h3>
+                <p>Total Daily Energy Expenditure (TDEE) represents the total amount of energy (calories) your body uses in a 24-hour period. Understanding your TDEE helps you create a nutrition plan that aligns with your goals, whether maintaining weight, losing fat, or gaining muscle.</p>
+                
+                <p>Your TDEE consists of several components:</p>
+                <ul>
+                    <li><strong>Basal Metabolic Rate (BMR):</strong> Calories burned at complete rest (60-70% of TDEE)</li>
+                    <li><strong>Thermic Effect of Food (TEF):</strong> Energy used in digesting food (10-15% of TDEE)</li>
+                    <li><strong>Exercise Activity (EA):</strong> Calories burned during intentional exercise</li>
+                    <li><strong>Non-Exercise Activity Thermogenesis (NEAT):</strong> Energy used for all non-exercise movement (fidgeting, walking, standing)</li>
+                </ul>
+                
+                <div class="formula-card">
+                    <h4>Calculation Method: Mifflin-St Jeor Equation</h4>
+                    <div class="formula">
+                        <p>For Men: BMR = (10 × weight in kg) + (6.25 × height in cm) - (5 × age in years) + 5</p>
+                        <p>For Women: BMR = (10 × weight in kg) + (6.25 × height in cm) - (5 × age in years) - 161</p>
+                        <p>TDEE = BMR × Activity Multiplier</p>
+                    </div>
+                    <p>This calculator uses the Mifflin-St Jeor Equation, which research has shown to be more accurate than other formulas for most individuals. The activity multiplier accounts for all activity beyond your BMR.</p>
+                </div>
+                
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Activity Level</th>
+                            <th>Description</th>
+                            <th>Multiplier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sedentary</td>
+                            <td>Little to no exercise, desk job</td>
+                            <td>1.2</td>
+                        </tr>
+                        <tr>
+                            <td>Lightly Active</td>
+                            <td>Light exercise/sports 1-3 days/week</td>
+                            <td>1.375</td>
+                        </tr>
+                        <tr>
+                            <td>Moderately Active</td>
+                            <td>Moderate exercise/sports 3-5 days/week</td>
+                            <td>1.55</td>
+                        </tr>
+                        <tr>
+                            <td>Very Active</td>
+                            <td>Hard exercise/sports 6-7 days/week</td>
+                            <td>1.725</td>
+                        </tr>
+                        <tr>
+                            <td>Extremely Active</td>
+                            <td>Very hard daily exercise and physical job or 2x training</td>
+                            <td>1.9</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>Important Note for Students:</strong> Student life can involve irregular schedules, varying stress levels, and changing activity patterns throughout the semester. Monitor your progress and adjust your calorie intake based on real-world results. Remember that calculators provide estimates - your individual needs may vary.</p>
+            </div>
+        </section>
+        
+        <!-- Tips Section -->
+        <section class="container tips-container">
+            <h2>Student Tips for Energy Balance</h2>
+            
+            <div class="tips-list">
+                <div class="tip-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Academic Performance & Energy</h3>
+                    <p>Your brain consumes roughly 20% of your daily calories. Consistently eating too few calories can impair cognitive function, memory, and concentration. During intense study periods like midterms and finals, ensure you're fueling adequately to support mental performance.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Dining Hall Strategy</h3>
+                    <p>Use your calculated TDEE to guide dining hall choices. Focus on protein at each meal (eggs, lean meats, beans, tofu), include plenty of vegetables and fruits, choose whole grains, and monitor portion sizes of calorie-dense items like sauces, desserts, and fried foods.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Tracking Without Obsession</h3>
+                    <p>While tracking calories can be educational, it's not necessary to count every calorie long-term. Consider periodic tracking (1-2 weeks) to calibrate your awareness, then focus on portion sizes, meal timing, and food quality for sustainable habits.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-apple-alt"></i>
+                    <h3>Nutrient Density vs. Calories</h3>
+                    <p>Not all calories provide equal nutrition. Prioritize nutrient-dense foods like vegetables, fruits, lean proteins, whole grains, and healthy fats. These foods provide essential vitamins, minerals, and fiber that support overall health, energy levels, and cognitive function.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-moon"></i>
+                    <h3>Sleep's Impact on Energy Balance</h3>
+                    <p>Poor sleep increases hunger hormones and decreases fullness signals, making it harder to maintain energy balance. Prioritize 7-9 hours of quality sleep whenever possible. Late-night study sessions with minimal sleep can lead to increased cravings and impaired food choices.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Seasonal Adjustments</h3>
+                    <p>Your activity levels and caloric needs may change with the seasons. Many students are more active in spring and fall semesters, less active during exam periods, and may have different patterns during summer. Reassess your TDEE when your routine changes significantly.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Section -->
+        <section class="container faq-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate is the TDEE calculator?</div>
+                <div class="faq-answer">
+                    <p>TDEE calculators provide a reasonable starting point, typically within 5-15% accuracy for most people. The calculation is based on established formulas and population averages, but individual factors like metabolism, body composition, and specific activity patterns can affect your actual energy expenditure.</p>
+                    <p>For best results:</p>
+                    <ul>
+                        <li>Use the calculator as a starting point</li>
+                        <li>Track your weight, energy levels, and performance for 2-3 weeks</li>
+                        <li>Adjust your calorie intake based on observed results</li>
+                        <li>Recalculate when significant changes occur in weight, activity, or schedule</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Should I eat the same number of calories every day?</div>
+                <div class="faq-answer">
+                    <p>Not necessarily. Your caloric needs fluctuate day to day based on activity levels, stress, sleep quality, and even the menstrual cycle for females. Many people find success with calorie cycling - eating more on active days and less on sedentary days.</p>
+                    <p>Some approaches include:</p>
+                    <ul>
+                        <li><strong>Daily averages:</strong> Focus on your weekly average intake rather than strict daily targets</li>
+                        <li><strong>Activity-based adjustments:</strong> Eat 100-300 more calories on workout days, fewer on rest days</li>
+                        <li><strong>Intuitive approach:</strong> Once you understand general portion sizes for your needs, practice tuning into hunger and fullness cues</li>
+                    </ul>
+                    <p>For students with irregular schedules, flexibility is particularly important.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I build muscle and lose fat at the same time?</div>
+                <div class="faq-answer">
+                    <p>Yes, though it's generally more challenging than focusing on one goal at a time. This process, known as body recomposition, is most achievable in specific scenarios:</p>
+                    <ul>
+                        <li>Beginners to strength training</li>
+                        <li>Those returning to exercise after a long break</li>
+                        <li>Individuals with higher body fat percentages</li>
+                        <li>People using advanced nutrition timing strategies</li>
+                    </ul>
+                    <p>For body recomposition:</p>
+                    <ul>
+                        <li>Eat at a very slight deficit (100-200 calories below TDEE)</li>
+                        <li>Consume adequate protein (1.6-2.2g per kg of bodyweight)</li>
+                        <li>Follow a progressive resistance training program</li>
+                        <li>Ensure sufficient recovery and sleep</li>
+                        <li>Be patient - progress is slower than dedicated bulking or cutting phases</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Should I adjust my calories during exam periods?</div>
+                <div class="faq-answer">
+                    <p>Exam periods present unique nutritional considerations for students:</p>
+                    <ul>
+                        <li><strong>Potentially lower activity:</strong> If you're moving less due to long study hours, your TDEE may decrease slightly</li>
+                        <li><strong>Increased mental energy:</strong> Your brain consumes significant energy during intense cognitive tasks</li>
+                        <li><strong>Stress factors:</strong> Stress can increase or decrease appetite and affect digestion</li>
+                    </ul>
+                    <p>Recommendations for exam periods:</p>
+                    <ul>
+                        <li>Maintain consistent, balanced nutrition rather than dramatic calorie cutting</li>
+                        <li>Consider a small reduction (100-200 calories) if activity drops significantly</li>
+                        <li>Focus on nutrient-dense foods that support cognitive function</li>
+                        <li>Plan regular meals to maintain energy and blood sugar levels</li>
+                        <li>Prioritize adequate protein intake for satiety and brain function</li>
+                    </ul>
+                    <p>After exams, reassess and adjust based on your regular routine.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What should I do if the calculator results don't match my experience?</div>
+                <div class="faq-answer">
+                    <p>If you're consistently eating at your calculated maintenance calories but seeing unexpected weight changes:</p>
+                    <ol>
+                        <li><strong>Verify your tracking:</strong> Check portion sizes, account for cooking oils, sauces, beverages, and snacks</li>
+                        <li><strong>Reassess activity level:</strong> You may be more or less active than the selected category</li>
+                        <li><strong>Consider individual factors:</strong> Some people have slightly faster or slower metabolisms due to genetics, hormones, or medication</li>
+                        <li><strong>Monitor trends, not daily fluctuations:</strong> Water retention, digestive contents, and hormonal cycles can cause weight to fluctuate by 1-2kg day to day</li>
+                    </ol>
+                    <p>Adjust your estimated TDEE based on real-world results:</p>
+                    <ul>
+                        <li>If consistently gaining unintended weight: Reduce by 200-300 calories</li>
+                        <li>If consistently losing unintended weight: Increase by 200-300 calories</li>
+                        <li>Reassess after 1-2 weeks with the new target</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+            
+            // Height and weight unit conversion
+            const heightCmInput = document.getElementById('height-cm');
+            const heightFtInput = document.getElementById('height-ft');
+            const heightInInput = document.getElementById('height-in');
+            const weightKgInput = document.getElementById('weight-kg');
+            const weightLbInput = document.getElementById('weight-lb');
+            
+            // Convert ft/in to cm
+            function updateHeightCm() {
+                if (heightFtInput.value && heightInInput.value) {
+                    const totalInches = (parseInt(heightFtInput.value) * 12) + parseInt(heightInInput.value);
+                    const cm = Math.round(totalInches * 2.54);
+                    heightCmInput.value = cm;
+                }
+            }
+            
+            // Convert cm to ft/in
+            function updateHeightFtIn() {
+                if (heightCmInput.value) {
+                    const totalInches = Math.round(parseInt(heightCmInput.value) / 2.54);
+                    const feet = Math.floor(totalInches / 12);
+                    const inches = totalInches % 12;
+                    heightFtInput.value = feet;
+                    heightInInput.value = inches;
+                }
+            }
+            
+            // Convert lb to kg
+            function updateWeightKg() {
+                if (weightLbInput.value) {
+                    const kg = Math.round(parseInt(weightLbInput.value) / 2.205);
+                    weightKgInput.value = kg;
+                }
+            }
+            
+            // Convert kg to lb
+            function updateWeightLb() {
+                if (weightKgInput.value) {
+                    const lb = Math.round(parseInt(weightKgInput.value) * 2.205);
+                    weightLbInput.value = lb;
+                }
+            }
+            
+            // Set up event listeners for unit conversion
+            heightFtInput.addEventListener('input', updateHeightCm);
+            heightInInput.addEventListener('input', updateHeightCm);
+            heightCmInput.addEventListener('input', updateHeightFtIn);
+            weightLbInput.addEventListener('input', updateWeightKg);
+            weightKgInput.addEventListener('input', updateWeightLb);
+            
+            // Form submission
+            const tdeeForm = document.getElementById('tdee-form');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const tdeeResults = document.getElementById('tdee-results');
+            
+            tdeeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading spinner
+                loadingSpinner.style.display = 'block';
+                tdeeResults.style.display = 'none';
+                
+                // Get form values
+                const gender = document.querySelector('input[name="gender"]:checked').value;
+                const age = parseInt(document.getElementById('age').value);
+                const height = parseInt(document.getElementById('height-cm').value);
+                const weight = parseInt(document.getElementById('weight-kg').value);
+                const activityLevel = parseFloat(document.getElementById('activity').value);
+                
+                // Calculate BMR using Mifflin-St Jeor Equation
+                let bmr;
+                if (gender === 'male') {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+                } else {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                }
+                
+                // Calculate TDEE
+                const tdee = Math.round(bmr * activityLevel);
+                
+                // Calculate goal-based calorie targets
+                const aggressiveLoss = Math.round(tdee - 1000);
+                const moderateLoss = Math.round(tdee - 500);
+                const mildLoss = Math.round(tdee - 250);
+                const maintenance = tdee;
+                const mildGain = Math.round(tdee + 250);
+                const moderateGain = Math.round(tdee + 500);
+                
+                // Simulate a delay to show loading spinner
+                setTimeout(function() {
+                    // Update results
+                    document.getElementById('bmr-value').textContent = Math.round(bmr).toLocaleString();
+                    document.getElementById('tdee-value').textContent = tdee.toLocaleString();
+                    document.getElementById('aggressive-loss').textContent = aggressiveLoss.toLocaleString();
+                    document.getElementById('moderate-loss').textContent = moderateLoss.toLocaleString();
+                    document.getElementById('mild-loss').textContent = mildLoss.toLocaleString();
+                    document.getElementById('maintenance').textContent = maintenance.toLocaleString();
+                    document.getElementById('mild-gain').textContent = mildGain.toLocaleString();
+                    document.getElementById('moderate-gain').textContent = moderateGain.toLocaleString();
+                    
+                    // Hide spinner and show results
+                    loadingSpinner.style.display = 'none';
+                    tdeeResults.style.display = 'block';
+                }, 1000);
+            });
+            
+            // Action buttons
+            const saveResultsBtn = document.getElementById('save-results');
+            const printResultsBtn = document.getElementById('print-results');
+            const recalculateBtn = document.getElementById('recalculate');
+            
+            saveResultsBtn.addEventListener('click', function() {
+                // In a real implementation, this would save to a user profile
+                alert('Your TDEE results have been saved to your profile!');
+            });
+            
+            printResultsBtn.addEventListener('click', function() {
+                window.print();
+            });
+            
+            recalculateBtn.addEventListener('click', function() {
+                tdeeResults.style.display = 'none';
+                window.scrollTo({
+                    top: document.querySelector('.calculator-form').offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // FAQ functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const isOpen = this.classList.contains('active');
+                    
+                    // Close all FAQs
+                    document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+                    document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+                    
+                    // If it wasn't open before, open it
+                    if (!isOpen) {
+                        this.classList.add('active');
+                        answer.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

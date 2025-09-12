@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calisthenics Training - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .calisthenics-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .calisthenics-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .calisthenics-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .calisthenics-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+            color: #000;
+        }
+
+        /* Stats Section */
+        .calisthenics-stats {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-content p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .benefit-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Exercise Types Section */
+        .exercise-types-section {
+            padding: 6rem 2rem;
+        }
+
+        .exercise-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 4rem auto 0;
+        }
+
+        .exercise-type-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .exercise-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .exercise-type-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .exercise-type-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .exercise-type-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .exercise-type-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .exercise-type-info h3 {
+            margin: 0 0 1rem 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .exercise-type-info p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .exercise-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .view-details {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        /* Progression Section */
+        .progression-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .progression-container {
+            max-width: 1000px;
+            margin: 4rem auto 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .progression-path {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .progression-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            font-weight: 800;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 6rem 2rem;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 4rem auto 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .calisthenics-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .calisthenics-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .calisthenics-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .exercise-types {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .exercise-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .progression-step {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section -->
+        <section class="calisthenics-hero fade-in-up">
+            <div class="hero-content">
+                <div class="calisthenics-badge">Bodyweight Mastery</div>
+                <h1>Calisthenics Excellence</h1>
+                <p>Master bodyweight training to build functional strength, flexibility, and complete body control. Develop the physical foundation for elite performance using your body as the ultimate training tool.</p>
+                <a href="#exercise-types" class="btn btn-primary">Start Training</a>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="calisthenics-stats fade-in-up">
+            <div class="stats-container">
+                <h2 class="stats-title">Calisthenics Training Results</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Equipment Free</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Muscle Activation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Movement Patterns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Training Access</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section fade-in-up">
+            <h2 class="section-heading">Master Bodyweight Training</h2>
+            <div class="intro-content">
+                <p>Calisthenics is the art of using your bodyweight as resistance to build strength, mobility, and body control. This training method develops functional strength that translates directly to real-world movement and athletic performance.</p>
+                <p>Unlike traditional weight training that isolates muscles, calisthenics engages multiple muscle groups simultaneously, promoting balanced development and improved coordination. Perfect for students who want effective training without gym access or equipment costs.</p>
+                <p>From basic push-ups to advanced human flags, calisthenics offers infinite progression possibilities while building the kind of practical strength that enhances every aspect of physical performance.</p>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section fade-in-up">
+            <div class="benefits-container">
+                <h2 class="section-heading">Elite Calisthenics Benefits</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h3>Functional Strength</h3>
+                        <p>Build real-world applicable strength that improves everyday movement patterns and athletic performance across all activities.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h3>Zero Cost Training</h3>
+                        <p>No gym membership or equipment required. Train anywhere with just your bodyweight and basic surfaces like floors and bars.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Train Anywhere</h3>
+                        <p>Dorm rooms, parks, beaches, hotels - calisthenics adapts to any environment, making consistency easy for busy students.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Mind-Body Connection</h3>
+                        <p>Develop superior proprioception, body awareness, and neurological coordination through complex movement patterns.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Balanced Development</h3>
+                        <p>Promote proportional muscle growth and address strength imbalances through natural, compound movement patterns.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </div>
+                        <h3>Enhanced Mobility</h3>
+                        <p>Improve flexibility and joint range of motion through dynamic movements that strengthen muscles through full ranges.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise Types Section -->
+        <section class="exercise-types-section fade-in-up">
+            <div class="exercise-types-container">
+                <h2 class="section-heading" id="exercise-types">Master These Movement Patterns</h2>
+                <div class="exercise-types">
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1598971639058-a66ef7dd9a70?auto=format&fit=crop&w=600&q=80" alt="Push-Ups">
+                        <div class="exercise-type-info">
+                            <h3>Push-Up Progressions</h3>
+                            <p>Master horizontal pushing movements from basic wall push-ups to advanced one-arm variations. Build chest, shoulder, and tricep strength.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner-Advanced</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/push-ups.html" class="btn btn-primary view-details">Master Push-Ups</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Pull-Ups">
+                        <div class="exercise-type-info">
+                            <h3>Pull-Up Mastery</h3>
+                            <p>Develop elite pulling strength progressing from assisted pull-ups to muscle-ups. Build back, bicep, and forearm power.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate-Advanced</span>
+                                <span>Equipment: Pull-up bar</span>
+                            </div>
+                            <a href="/exercises/pull-ups.html" class="btn btn-primary view-details">Master Pull-Ups</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&fit=crop&w=600&q=80" alt="Squats">
+                        <div class="exercise-type-info">
+                            <h3>Squat Progressions</h3>
+                            <p>Build lower body strength and mobility from basic squats to pistol squats. Develop quad, hamstring, and glute power.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner-Advanced</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/squats.html" class="btn btn-primary view-details">Master Squats</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1589955791915-526198ae4ee9?auto=format&fit=crop&w=600&q=80" alt="Dips">
+                        <div class="exercise-type-info">
+                            <h3>Dip Variations</h3>
+                            <p>Master vertical pushing movements from assisted dips to ring dips. Build tremendous tricep, chest, and shoulder strength.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate-Advanced</span>
+                                <span>Equipment: Parallel bars</span>
+                            </div>
+                            <a href="/exercises/dips.html" class="btn btn-primary view-details">Master Dips</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Handstand">
+                        <div class="exercise-type-info">
+                            <h3>Handstand Training</h3>
+                            <p>Develop complete body control and shoulder strength through handstand progressions. Master balance and coordination.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Advanced</span>
+                                <span>Equipment: Wall (optional)</span>
+                            </div>
+                            <a href="/exercises/handstands.html" class="btn btn-primary view-details">Master Handstands</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1584863231364-a543ee4685a8?auto=format&fit=crop&w=600&q=80" alt="Core Training">
+                        <div class="exercise-type-info">
+                            <h3>Core Mastery</h3>
+                            <p>Build elite core strength through planks, L-sits, and advanced abdominal exercises. Develop the foundation for all movement.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner-Advanced</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/core.html" class="btn btn-primary view-details">Master Core</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progression Section -->
+        <section class="progression-section fade-in-up">
+            <div class="progression-container">
+                <h2 class="section-heading">Calisthenics Progression Path</h2>
+                <h3 style="color: #f39c12; margin-bottom: 2rem;">Master Bodyweight Training Systematically</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem; line-height: 1.6;">Unlike weight training where progression means adding more weight, calisthenics uses leverage, range of motion, and movement complexity to increase difficulty. Follow this systematic progression path:</p>
+                
+                <div class="progression-path">
+                    <div class="progression-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Master Foundation Movements</h4>
+                            <p>Begin with basic patterns: push-ups, pull-ups, squats, lunges, and planks. Focus on perfect form and full range of motion before advancing.</p>
+                            <p style="font-style: italic; color: #f39c12;">Example: Wall push-ups → Knee push-ups → Standard push-ups → Diamond push-ups</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progression-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Leverage Manipulation</h4>
+                            <p>Change body position to increase difficulty. Elevate feet, change hand placement, or modify angles to create mechanical disadvantage.</p>
+                            <p style="font-style: italic; color: #f39c12;">Example: Standard push-ups → Decline push-ups → Pike push-ups → Handstand push-ups</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progression-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Tempo and Control</h4>
+                            <p>Slow down movements, especially the eccentric phase. Increase time under tension to build strength and muscle control.</p>
+                            <p style="font-style: italic; color: #f39c12;">Example: 1-second pull-ups → 3-second eccentric → 5-second eccentric → Pause reps</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progression-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Unilateral Training</h4>
+                            <p>Progress to single-limb exercises once bilateral versions become manageable. Develop balance and address strength imbalances.</p>
+                            <p style="font-style: italic; color: #f39c12;">Example: Regular squats → Assisted pistol squats → Full pistol squats → Shrimp squats</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progression-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Dynamic Elements</h4>
+                            <p>Add explosive movements and transitions. Develop power and coordination through plyometric variations.</p>
+                            <p style="font-style: italic; color: #f39c12;">Example: Regular dips → Explosive dips → Russian dips → Korean dips</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progression-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Complex Movements</h4>
+                            <p>Combine multiple exercises into flowing sequences. Master advanced skills like muscle-ups, front levers, and human flags.</p>
+                            <p style="font-style: italic; color: #f39c12;">Example: Pull-up + Dip = Muscle-up, or combining handstand + push-up + press to handstand</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section fade-in-up">
+            <div class="faq-container">
+                <h2 class="section-heading">Training Questions Answered</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can calisthenics build muscle like weight training?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, calisthenics can build significant muscle mass when properly programmed. While traditional weights may offer easier progressive overload for hypertrophy, calisthenics provides excellent muscle development through progressive variations, increased time under tension, and full-body compound movements. Many advanced practitioners develop impressive physiques rivaling traditional bodybuilders.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>I can't do a pull-up yet. How should I start?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Start with preparatory exercises: (1) Negative pull-ups - jump to the top and lower slowly, (2) Australian/inverted rows using a horizontal bar, (3) Band-assisted pull-ups to reduce body weight, (4) Dead hangs to build grip strength, (5) Scapular pulls to activate the proper muscles. Practice these 2-3 times weekly, gradually reducing assistance until you achieve your first full pull-up.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How long does it take to see progress in calisthenics?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Strength improvements typically become noticeable within 2-4 weeks of consistent training. Visible physical changes usually appear after 6-12 weeks. Advanced skills like muscle-ups or front levers may require months or years of dedicated practice. Progress varies based on starting fitness level, consistency, nutrition, and recovery. Remember that progress isn't always linear - be patient and consistent.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is calisthenics better for students than gym training?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For many students, calisthenics offers significant advantages: no gym fees, train anywhere (dorm rooms, parks), no travel time, develops functional strength, and scales to any fitness level. It's particularly beneficial for busy schedules and limited budgets. However, the "better" choice depends on your goals, preferences, and available resources. Many students benefit from combining both approaches when possible.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How often should I train calisthenics?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For full-body workouts, train 3-4 times per week with rest days between sessions. If using split routines (push/pull/legs), you can train 5-6 days weekly while allowing each muscle group adequate recovery. Listen to your body - persistent soreness, decreased performance, or fatigue indicate you need more recovery. Proper nutrition, sleep, and stress management significantly impact recovery capacity.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="calisthenics-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Master Your Body Today</h2>
+                <p class="cta-subtitle">Join thousands of students building elite strength and body control through progressive calisthenics training. Start your bodyweight mastery journey now.</p>
+                <a href="signup.html" class="btn btn-primary">Start Training</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    const icon = question.querySelector('i');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    document.querySelectorAll('.faq-question i').forEach(i => {
+                        i.classList.remove('fa-chevron-up');
+                        i.classList.add('fa-chevron-down');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+   </script>
+</body>
+</html>

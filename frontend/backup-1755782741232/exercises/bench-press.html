@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bench Press - Exercise Guide | Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Exercise Detail Page Styles */
+        .exercise-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .exercise-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .exercise-hero .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-tag i {
+            color: #f39c12;
+        }
+
+        .exercise-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-heading {
+            color: #f39c12;
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        .exercise-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-details {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .overview-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            width: 120px;
+            color: #ddd;
+        }
+
+        .detail-value {
+            color: #aaa;
+        }
+
+        .overview-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #ddd;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .common-mistakes {
+            background-color: #331111;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .common-mistakes h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+        }
+
+        .mistake-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mistake-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .mistake-list li::before {
+            content: '✕';
+            color: #ff6b6b;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .mistake-list strong {
+            color: #ff6b6b;
+        }
+
+        .variations-section {
+            margin: 3rem 0;
+        }
+
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .variation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .variation-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .variation-info {
+            padding: 1.5rem;
+        }
+
+        .variation-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .variation-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .difficulty-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .difficulty-dot.active {
+            background-color: #f39c12;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .related-exercises {
+            margin: 3rem 0;
+        }
+
+        .related-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 1rem;
+        }
+
+        .related-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .related-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .related-info a i {
+            margin-left: 0.3rem;
+        }
+
+        .related-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-hero .meta-tags {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Fitness</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness Home</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" aria-label="Flexibility Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Exercise Hero Section -->
+        <section class="exercise-hero">
+            <h1>Bench Press</h1>
+            <p>A fundamental compound exercise for developing upper body strength and muscle mass</p>
+            
+            <div class="meta-tags">
+                <div class="meta-tag">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Chest, Shoulders, Triceps</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Intermediate</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-tools"></i>
+                    <span>Barbell, Bench</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="exercise-content">
+            <!-- Overview Section -->
+            <h2 class="section-heading">Exercise Overview</h2>
+            <div class="exercise-overview">
+                <div class="overview-details">
+                    <h3>Exercise Details</h3>
+                    <ul class="detail-list">
+                        <li>
+                            <span class="detail-label">Primary Muscle:</span>
+                            <span class="detail-value">Pectoralis Major (Chest)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Secondary Muscles:</span>
+                            <span class="detail-value">Anterior Deltoids (Front Shoulders), Triceps</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Equipment:</span>
+                            <span class="detail-value">Barbell, Bench, Rack</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">Compound</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Experience Level:</span>
+                            <span class="detail-value">Intermediate</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Mechanics:</span>
+                            <span class="detail-value">Push</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Force:</span>
+                            <span class="detail-value">Push (Horizontal)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Bench Press Exercise">
+                </div>
+            </div>
+
+            <!-- Video Demonstration -->
+            <h2 class="section-heading">Video Demonstration</h2>
+            <div class="video-container">
+                <!-- This would be a real exercise video in production -->
+                <iframe src="https://www.youtube.com/embed/vcBig73ojpE" title="Bench Press Demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Step-by-Step Instructions -->
+            <h2 class="section-heading">How to Perform the Bench Press</h2>
+            <ol class="instruction-steps">
+                <li class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Equipment Setup</h4>
+                        <p>Ensure the barbell is racked at an appropriate height. Add weight plates to the barbell as needed, securing them with collars. Adjust the bench so it aligns with the barbell.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Starting Position</h4>
+                        <p>Lie flat on the bench with your feet firmly planted on the ground. Position yourself so that your eyes are directly under the barbell. Grip the bar with hands slightly wider than shoulder-width apart, with palms facing away from you.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Unrack the Bar</h4>
+                        <p>Take a deep breath, brace your core, and unrack the bar by straightening your arms. Move the bar horizontally until it's directly over your shoulders or upper chest.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Lowering Phase</h4>
+                        <p>Keeping your wrists straight and elbows at approximately a 45-75 degree angle from your torso, slowly lower the bar to your mid-chest (around nipple level). This should take about 2 seconds.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Bottom Position</h4>
+                        <p>Lightly touch the bar to your chest without bouncing. Maintain tension in your chest, shoulders, and triceps throughout this position.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Pressing Phase</h4>
+                        <p>Push the bar away from your chest by extending your elbows and driving through your upper back into the bench. Exhale as you push. Focus on pushing the bar up and slightly back so that it ends up over your shoulders at the top position.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h4>Top Position</h4>
+                        <p>At the top of the movement, your arms should be fully extended but not locked out, with the barbell directly over your shoulders.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <h4>Repeat & Rack</h4>
+                        <p>Perform the desired number of repetitions by repeating steps 4-7. After completing your set, rack the barbell by moving it horizontally back to the rack position and carefully lowering it onto the supports.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- Training Tips -->
+            <section class="tips-section">
+                <h3>Form & Technique Tips</h3>
+                <ul class="tips-list">
+                    <li><strong>Back position:</strong> Maintain a natural arch in your lower back (not excessive). Your upper back and glutes should remain in contact with the bench throughout the movement.</li>
+                    <li><strong>Feet placement:</strong> Keep your feet flat on the floor, ideally positioned under your knees or slightly behind them to help maintain stability and generate leg drive.</li>
+                    <li><strong>Shoulder blades:</strong> Retract and depress your shoulder blades (squeeze them together and down) before unracking the bar to create a stable base and reduce shoulder stress.</li>
+                    <li><strong>Bar path:</strong> The bar should follow a slight diagonal path rather than strictly vertical, starting over your shoulders and ending at your mid-chest.</li>
+                    <li><strong>Breathing:</strong> Inhale during the lowering phase and exhale during the pressing phase. Maintain core tension throughout.</li>
+                    <li><strong>Grip width:</strong> A wider grip emphasizes chest development, while a narrower grip places more emphasis on the triceps.</li>
+                    <li><strong>Wrist position:</strong> Keep your wrists straight (not bent backward) to prevent strain and maintain proper force transfer.</li>
+                    <li><strong>Elbow tuck:</strong> Avoid flaring your elbows excessively to protect your shoulders. Aim for an angle of about 45-75 degrees relative to your torso.</li>
+                </ul>
+            </section>
+
+            <!-- Common Mistakes -->
+            <section class="common-mistakes">
+                <h3>Common Mistakes to Avoid</h3>
+                <ul class="mistake-list">
+                    <li><strong>Bouncing the bar off your chest:</strong> This reduces muscle tension and can lead to injury. Control the weight throughout the movement.</li>
+                    <li><strong>Excessive arching:</strong> While some arch in the lower back is beneficial, extreme arching to reduce range of motion is improper technique and can strain your back.</li>
+                    <li><strong>Lifting your hips off the bench:</strong> Keep your glutes in contact with the bench throughout the movement to maintain proper form and target the intended muscles.</li>
+                    <li><strong>Flaring elbows too wide:</strong> This places excessive stress on the shoulder joints. Keep elbows at approximately 45-75 degrees from your body.</li>
+                    <li><strong>Inconsistent bar path:</strong> The bar should follow the same path for each repetition. Avoid letting the bar drift forward over your face or down toward your stomach.</li>
+                    <li><strong>Failing to retract shoulder blades:</strong> This reduces stability and can lead to shoulder impingement. Always "pack" your shoulders before beginning the lift.</li>
+                    <li><strong>Using too much weight:</strong> Sacrificing form for heavier weights increases injury risk and reduces effectiveness. Progress gradually and prioritize proper technique.</li>
+                </ul>
+            </section>
+
+            <!-- Exercise Variations -->
+            <section class="variations-section">
+                <h2 class="section-heading">Bench Press Variations</h2>
+                <div class="variation-cards">
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?auto=format&fit=crop&w=600&q=80" alt="Incline Bench Press">
+                        <div class="variation-info">
+                            <h4>Incline Bench Press</h4>
+                            <p>Performed on a bench at a 30-45 degree angle to target the upper chest and front deltoids more effectively.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058918140-57020e606528?auto=format&fit=crop&w=600&q=80" alt="Decline Bench Press">
+                        <div class="variation-info">
+                            <h4>Decline Bench Press</h4>
+                            <p>Using a bench set at a downward angle to emphasize the lower portion of the chest muscles.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1584466977773-e625c37cdd50?auto=format&fit=crop&w=600&q=80" alt="Dumbbell Bench Press">
+                        <div class="variation-info">
+                            <h4>Dumbbell Bench Press</h4>
+                            <p>Using dumbbells instead of a barbell for a greater range of motion and to address muscle imbalances.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Close-Grip Bench Press">
+                        <div class="variation-info">
+                            <h4>Close-Grip Bench Press</h4>
+                            <p>Placing hands closer together on the bar to emphasize triceps engagement over chest activation.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Exercises -->
+            <section class="related-exercises">
+                <h2 class="section-heading">Related Exercises</h2>
+                <div class="related-cards">
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1598971639058-a66ef7dd9a70?auto=format&fit=crop&w=600&q=80" alt="Push-Up">
+                        <div class="related-info">
+                            <h4>Push-Up</h4>
+                            <p>A bodyweight alternative that targets similar muscle groups with no equipment required.</p>
+                            <a href="push-up.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1598266663439-2056e6900338?auto=format&fit=crop&w=600&q=80" alt="Dumbbell Flyes">
+                        <div class="related-info">
+                            <h4>Dumbbell Flyes</h4>
+                            <p>An isolation exercise for the chest that creates greater stretch and focus on the pectorals.</p>
+                            <a href="dumbbell-flyes.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?auto=format&fit=crop&w=600&q=80" alt="Chest Press Machine">
+                        <div class="related-info">
+                            <h4>Chest Press Machine</h4>
+                            <p>A guided alternative to free weights that provides stability and is great for beginners.</p>
+                            <a href="chest-press-machine.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1596357395217-80de13130e92?auto=format&fit=crop&w=600&q=80" alt="Cable Chest Flyes">
+                        <div class="related-info">
+                            <h4>Cable Chest Flyes</h4>
+                            <p>Provides constant tension throughout the movement for optimal muscle development.</p>
+                            <a href="cable-chest-flyes.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Hub - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Additional Nutrition-specific styles */
+        .nutrition-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=1920&q=80");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .nutrition-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .nutrition-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .nutrition-categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 3rem 2rem;
+        }
+
+        .nutrition-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .nutrition-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 16px rgba(0,0,0,0.3);
+        }
+
+        .nutrition-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .nutrition-card-content {
+            padding: 1.5rem;
+        }
+
+        .nutrition-card h2 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.5rem;
+        }
+
+        .nutrition-card p {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+            height: 80px;
+        }
+
+        .nutrition-card .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .nutrition-card .btn:hover {
+            background-color: #e67e22;
+        }
+
+        .features-section {
+            background-color: #111;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .features-section h2 {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #f39c12;
+        }
+
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            flex: 1 1 300px;
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-item p {
+            color: #ddd;
+            font-size: 1rem;
+        }
+
+        .meal-generator {
+            background-color: #222;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 10px;
+            margin: 3rem auto;
+            max-width: 800px;
+        }
+
+        .meal-generator h2 {
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+        }
+
+        .meal-generator p {
+            margin-bottom: 2rem;
+            color: #ddd;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22;
+            transform: scale(1.05);
+        }
+        
+        .calculator-tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            background-color: #111;
+            margin: 1rem 0;
+        }
+        
+        .calculator-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .calculator-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .calculator-icon {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .calculator-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .calculator-card p {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nutrition-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nutrition-categories {
+                gap: 1rem;
+            }
+            
+            .nutrition-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" class="active" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="nutrition-hero">
+            <h1>Fuel Your Body, Feed Your Potential</h1>
+            <p>Discover the science of nutrition, learn about balanced meal planning, and explore dietary approaches that support your academic success, fitness goals, and overall wellbeing.</p>
+            <a href="#nutrition-types" class="cta-button">Explore Nutrition Approaches</a>
+        </section>
+
+        <!-- Nutrition Categories Section -->
+        <section id="nutrition-types">
+            <h2 class="section-title">Nutrition Approaches</h2>
+            <div class="nutrition-categories">
+                <div class="nutrition-card">
+                    <img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80" alt="Balanced Nutrition">
+                    <div class="nutrition-card-content">
+                        <h2>Balanced Nutrition</h2>
+                        <p>Learn the fundamentals of a balanced diet with proper macronutrient ratios and micronutrient essentials for optimal health and performance.</p>
+                        <a href="balanced-nutrition.html" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+            <div class="nutrition-card">
+                <img src="https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&fit=crop&w=600&q=80" alt="Bulking Diets">
+                <div class="nutrition-card-content">
+                    <h2>Bulking Diets</h2>
+                    <p>Strategic approaches to increase muscle mass with caloric surplus, protein timing, and nutrient optimization for lean muscle growth.</p>
+                    <a href="bulking-diets.html" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="nutrition-card">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80" alt="Cutting & Fat Loss">
+                <div class="nutrition-card-content">
+                    <h2>Cutting & Fat Loss</h2>
+                    <p>Evidence-based approaches to reduce body fat while preserving muscle mass through strategic caloric deficit and macronutrient manipulation.</p>
+                    <a href="cutting-diets.html" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="nutrition-card">
+                <img src="https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?auto=format&fit=crop&w=600&q=80" alt="Meal Prepping">
+                <div class="nutrition-card-content">
+                    <h2>Meal Prepping</h2>
+                    <p>Master the art of efficient meal preparation with budget-friendly recipes, storage tips, and time-saving strategies for busy students.</p>
+                    <a href="meal-prep.html" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="nutrition-card">
+                <img src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&w=600&q=80" alt="Brain Foods">
+                <div class="nutrition-card-content">
+                    <h2>Brain Foods</h2>
+                    <p>Discover foods and nutrients that enhance cognitive function, improve memory, and boost concentration for academic excellence.</p>
+                    <a href="brain-foods.html" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="nutrition-card">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80" alt="Plant-Based Eating">
+                <div class="nutrition-card-content">
+                    <h2>Plant-Based Eating</h2>
+                    <p>Learn how to meet your nutritional needs with plant-based approaches, from flexitarian to vegan diets, with complete protein combinations.</p>
+                    <a href="plant-based.html" class="btn">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nutrition Calculator Tools -->
+        <section>
+            <h2 class="section-title">Nutrition Calculators & Tools</h2>
+            <div class="calculator-tools">
+                <div class="calculator-card">
+                    <div class="calculator-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>TDEE Calculator</h3>
+                    <p>Calculate your Total Daily Energy Expenditure to determine your maintenance calorie needs based on activity level.</p>
+                    <a href="tdee-calculator.html" class="btn">Calculate Now</a>
+                </div>
+                
+                <div class="calculator-card">
+                    <div class="calculator-icon">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                    <h3>Macro Calculator</h3>
+                    <p>Find your ideal macronutrient ratios based on your goals, whether building muscle, losing fat, or maintaining weight.</p>
+                    <a href="macro-calculator.html" class="btn">Calculate Now</a>
+                </div>
+                
+                <div class="calculator-card">
+                    <div class="calculator-icon">
+                        <i class="fas fa-percent"></i>
+                    </div>
+                    <h3>Body Fat Estimator</h3>
+                    <p>Estimate your body fat percentage to help determine appropriate nutrition and fitness goals for your body composition.</p>
+                    <a href="bodyfat-calculator.html" class="btn">Calculate Now</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="section-title">Why Choose Our Nutrition Resources</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Evidence-Based Approach</h3>
+                    <p>All nutrition information is backed by scientific research and regularly updated to reflect the latest findings in nutritional science.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Personalized Plans</h3>
+                    <p>Access nutrition plans that adapt to your unique needs, dietary preferences, and lifestyle as a student.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Student-Friendly Recipes</h3>
+                    <p>Discover budget-conscious, time-efficient recipes that require minimal cooking experience and basic kitchen equipment.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your nutrition habits, track your progress, and make adjustments to optimize your health and fitness outcomes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meal Plan Generator CTA -->
+        <section class="meal-generator">
+            <h2>Create Your Personalized Meal Plan</h2>
+            <p>Answer a few questions about your goals, dietary preferences, and schedule to receive a customized weekly meal plan with shopping lists and prep instructions.</p>
+            <a href="meal-plan-generator.html" class="cta-button">Build My Meal Plan</a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

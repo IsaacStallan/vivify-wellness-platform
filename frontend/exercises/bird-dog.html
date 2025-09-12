@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bird Dog - Exercise Guide | Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Exercise Detail Page Styles */
+        .exercise-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .exercise-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .exercise-hero .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-tag i {
+            color: #f39c12;
+        }
+
+        .exercise-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-heading {
+            color: #f39c12;
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        .exercise-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-details {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .overview-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            width: 120px;
+            color: #ddd;
+        }
+
+        .detail-value {
+            color: #aaa;
+        }
+
+        .overview-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #ddd;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .common-mistakes {
+            background-color: #331111;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .common-mistakes h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+        }
+
+        .mistake-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mistake-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .mistake-list li::before {
+            content: '✕';
+            color: #ff6b6b;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .mistake-list strong {
+            color: #ff6b6b;
+        }
+
+        .variations-section {
+            margin: 3rem 0;
+        }
+
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .variation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .variation-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .variation-info {
+            padding: 1.5rem;
+        }
+
+        .variation-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .variation-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .difficulty-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .difficulty-dot.active {
+            background-color: #f39c12;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .related-exercises {
+            margin: 3rem 0;
+        }
+
+        .related-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 1rem;
+        }
+
+        .related-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .related-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .related-info a i {
+            margin-left: 0.3rem;
+        }
+
+        .related-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-hero .meta-tags {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+            }
+        }
+    </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Fitness</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness Home</a>
+                                <a href="../calisthenics.html" aria-label="Calisthenics Page">Calisthenics</a>
+                                <a href="../core.html" aria-label="Core Training Page">Core Training</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Exercise Hero Section -->
+        <section class="exercise-hero">
+            <h1>Bird Dog</h1>
+            <p>A fundamental core stability exercise that improves balance, coordination, and strengthens the back and abdominal muscles</p>
+            
+            <div class="meta-tags">
+                <div class="meta-tag">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Core, Lower Back, Glutes</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Beginner</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-tools"></i>
+                    <span>No Equipment</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="exercise-content">
+            <!-- Overview Section -->
+            <h2 class="section-heading">Exercise Overview</h2>
+            <div class="exercise-overview">
+                <div class="overview-details">
+                    <h3>Exercise Details</h3>
+                    <ul class="detail-list">
+                        <li>
+                            <span class="detail-label">Primary Muscles:</span>
+                            <span class="detail-value">Erector Spinae, Rectus Abdominis, Glutes</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Secondary Muscles:</span>
+                            <span class="detail-value">Shoulders, Hip Flexors, Hamstrings</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Equipment:</span>
+                            <span class="detail-value">None Required (Exercise Mat Recommended)</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">Core Stability, Balance</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Experience Level:</span>
+                            <span class="detail-value">Beginner</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Mechanics:</span>
+                            <span class="detail-value">Anti-Rotation</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Force:</span>
+                            <span class="detail-value">Isometric/Dynamic</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=600&q=80" alt="Bird Dog Exercise">
+                </div>
+            </div>
+
+            <!-- Video Demonstration -->
+            <h2 class="section-heading">Video Demonstration</h2>
+            <div class="video-container">
+                <!-- This would be a real exercise video in production -->
+                <iframe src="https://www.youtube.com/embed/wiFNA3sqjCA" title="Bird Dog Demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Step-by-Step Instructions -->
+            <h2 class="section-heading">How to Perform the Bird Dog</h2>
+            <ol class="instruction-steps">
+                <li class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Starting Position</h4>
+                        <p>Begin on your hands and knees in a tabletop position. Your hands should be directly under your shoulders, and your knees should be directly under your hips. Keep your back flat (in a neutral position) and your neck aligned with your spine, looking down at the floor.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Core Engagement</h4>
+                        <p>Engage your core by drawing your navel toward your spine. This creates stability in your midsection and helps protect your lower back throughout the movement. Maintain this engagement throughout the exercise.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Extend Opposite Limbs</h4>
+                        <p>While keeping your core engaged and your back flat, simultaneously extend your right arm forward (parallel to the floor) and your left leg backward (also parallel to the floor). Reach long through your fingertips and heel.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Hold the Position</h4>
+                        <p>Hold this extended position for 3-5 seconds. Focus on maintaining balance and stability while keeping your hips and shoulders square to the floor (not rotating). Your arm and leg should be fully extended but not locked at the joints.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Return to Starting Position</h4>
+                        <p>Slowly return your extended arm and leg back to the starting tabletop position, maintaining control throughout the movement.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Alternate Sides</h4>
+                        <p>Repeat the movement with the opposite limbs, extending your left arm forward and your right leg backward. This completes one repetition on each side.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h4>Breathing Technique</h4>
+                        <p>Coordinate your breathing with the movement. Inhale as you prepare, exhale as you extend your arm and leg, and inhale as you return to the starting position. Proper breathing helps maintain core stability and focus.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- Training Tips -->
+            <section class="tips-section">
+                <h3>Form & Technique Tips</h3>
+                <ul class="tips-list">
+                    <li><strong>Keep your back neutral:</strong> Maintain a flat back throughout the exercise. Avoid arching or rounding your spine, which can reduce effectiveness and potentially cause discomfort.</li>
+                    <li><strong>Hips and shoulders square:</strong> Resist the tendency to rotate your hips or shoulders when extending your limbs. Keeping them level and parallel to the floor properly engages your anti-rotation core muscles.</li>
+                    <li><strong>Stable base:</strong> Keep your supporting hand firmly planted with fingers spread, and your supporting knee directly under your hip.</li>
+                    <li><strong>Extension height:</strong> Keep your extended limbs at or slightly below torso height. Raising them too high can cause lower back arching.</li>
+                    <li><strong>Head position:</strong> Maintain a neutral neck position by looking at a spot on the floor about a foot in front of your hands. Your neck should be a natural extension of your spine.</li>
+                    <li><strong>Core engagement cue:</strong> Imagine pulling your belly button up toward your spine while keeping your ribcage down to ensure proper core engagement.</li>
+                    <li><strong>Controlled movement:</strong> Perform the exercise slowly and with control rather than using momentum. Quality is more important than quantity.</li>
+                    <li><strong>Balanced effort:</strong> Focus on equal effort between your arm and leg extensions. One shouldn't feel significantly more challenging than the other.</li>
+                </ul>
+            </section>
+
+            <!-- Common Mistakes -->
+            <section class="common-mistakes">
+                <h3>Common Mistakes to Avoid</h3>
+                <ul class="mistake-list">
+                    <li><strong>Arching the lower back:</strong> Allowing your back to arch during the extension phase places stress on the lumbar spine. Maintain core engagement to keep your back flat.</li>
+                    <li><strong>Rotating the hips:</strong> As you extend your leg, your hip may want to rotate up. Keep both hips level and facing the floor throughout the movement.</li>
+                    <li><strong>Sagging shoulders:</strong> Letting your shoulders sag or hunch during arm extension compromises form and reduces effectiveness. Keep your shoulders away from your ears and engaged.</li>
+                    <li><strong>Raising limbs too high:</strong> Lifting the arm or leg significantly above torso height often leads to compensation and poor form. Keep extensions parallel to the floor.</li>
+                    <li><strong>Moving too quickly:</strong> Rushing through repetitions reduces stability benefits. Focus on slow, controlled movements with deliberate holds at full extension.</li>
+                    <li><strong>Forgetting to breathe:</strong> Holding your breath during the exercise increases tension and makes stabilization more difficult. Maintain a steady breathing pattern throughout.</li>
+                    <li><strong>Insufficient core engagement:</strong> Simply going through the motion without activating your core muscles diminishes the exercise's benefits. Actively engage your core throughout.</li>
+                </ul>
+            </section>
+
+            <!-- Exercise Variations -->
+            <section class="variations-section">
+                <h2 class="section-heading">Bird Dog Variations</h2>
+                <div class="variation-cards">
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=600&q=80" alt="Single Limb Bird Dog">
+                        <div class="variation-info">
+                            <h4>Single Limb Bird Dog</h4>
+                            <p>A simpler version where you extend either just one arm or just one leg at a time, perfect for beginners building stability.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=600&q=80" alt="Bird Dog with Elbow to Knee">
+                        <div class="variation-info">
+                            <h4>Bird Dog with Elbow to Knee</h4>
+                            <p>After extending the limbs, bring your arm and leg back and connect your elbow to knee beneath your torso before extending again.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=600&q=80" alt="Bird Dog with Hold and Pulse">
+                        <div class="variation-info">
+                            <h4>Bird Dog with Hold and Pulse</h4>
+                            <p>At the extended position, hold for 3-5 seconds, then perform small pulses (1-2 inches) with both limbs to increase muscle activation.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613452-b1ff04565650?auto=format&fit=crop&w=600&q=80" alt="Weighted Bird Dog">
+                        <div class="variation-info">
+                            <h4>Weighted Bird Dog</h4>
+                            <p>Adding light weights (1-3 lbs) to the hand and/or ankle to increase resistance and challenge stability further.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Exercises -->
+            <section class="related-exercises">
+                <h2 class="section-heading">Related Exercises</h2>
+                <div class="related-cards">
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Dead Bug">
+                        <div class="related-info">
+                            <h4>Dead Bug</h4>
+                            <p>A supine core stability exercise that similarly challenges the body to maintain spinal position while moving opposing limbs.</p>
+                            <a href="dead-bug.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1584863231364-a543ee4685a8?auto=format&fit=crop&w=600&q=80" alt="Plank">
+                        <div class="related-info">
+                            <h4>Plank</h4>
+                            <p>An isometric core exercise that builds the foundation of core stability needed for many dynamic movements.</p>
+                            <a href="plank.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1571019613591-2dd0a8f9f2c1?auto=format&fit=crop&w=600&q=80" alt="Glute Bridge">
+                        <div class="related-info">
+                            <h4>Glute Bridge</h4>
+                            <p>A posterior chain exercise that strengthens the glutes and lower back, complementing the Bird Dog's focus.</p>
+                            <a href="glute-bridge.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Superman">
+                        <div class="related-info">
+                            <h4>Superman</h4>
+                            <p>A prone back exercise that targets the erector spinae muscles and complements Bird Dog's focus on posterior chain strength.</p>
+                            <a href="superman.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> </body>
+</html>

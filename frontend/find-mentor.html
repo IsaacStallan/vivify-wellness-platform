@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Find a Mentor - Vivify</title>
+   
+    
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .mentor-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .mentor-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .mentor-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2.5rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+           padding-bottom: 0.5rem;
+           border-bottom: 2px solid #333;
+       }
+
+       .mentor-container {
+           max-width: 1400px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .search-filters {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin-bottom: 3rem;
+           display: flex;
+           flex-wrap: wrap;
+           gap: 1.5rem;
+           align-items: center;
+       }
+
+       .filter-group {
+           display: flex;
+           flex-direction: column;
+           min-width: 200px;
+       }
+
+       .filter-group label {
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .filter-group select,
+       .filter-group input {
+           padding: 0.8rem;
+           border: 2px solid #444;
+           border-radius: 5px;
+           background-color: #333;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .filter-group select:focus,
+       .filter-group input:focus {
+           outline: none;
+           border-color: #f39c12;
+       }
+
+       .search-btn {
+           padding: 1rem 2rem;
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           border-radius: 5px;
+           font-size: 1rem;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+           margin-top: 1.5rem;
+       }
+
+       .search-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .mentor-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .mentor-card {
+           background-color: #222;
+           border-radius: 15px;
+           padding: 2rem;
+           transition: transform 0.3s, box-shadow 0.3s;
+           box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+           position: relative;
+           overflow: hidden;
+       }
+
+       .mentor-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 12px 20px rgba(0,0,0,0.3);
+       }
+
+       .mentor-header {
+           display: flex;
+           align-items: center;
+           margin-bottom: 1.5rem;
+       }
+
+       .mentor-avatar {
+           width: 80px;
+           height: 80px;
+           border-radius: 50%;
+           background: linear-gradient(45deg, #f39c12, #e67e22);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 2rem;
+           color: white;
+           font-weight: bold;
+           margin-right: 1rem;
+           border: 3px solid #333;
+       }
+
+       .mentor-info h3 {
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-size: 1.3rem;
+       }
+
+       .mentor-year {
+           color: #3498db;
+           font-weight: 600;
+           margin-bottom: 0.3rem;
+       }
+
+       .mentor-major {
+           color: #ccc;
+           font-size: 0.9rem;
+       }
+
+       .mentor-stats {
+           display: flex;
+           justify-content: space-between;
+           margin: 1rem 0;
+           padding: 1rem;
+           background-color: #333;
+           border-radius: 8px;
+       }
+
+       .stat-item {
+           text-align: center;
+       }
+
+       .stat-number {
+           color: #f39c12;
+           font-size: 1.5rem;
+           font-weight: bold;
+       }
+
+       .stat-label {
+           color: #ccc;
+           font-size: 0.8rem;
+       }
+
+       .mentor-specialties {
+           margin: 1rem 0;
+       }
+
+       .specialty-tag {
+           display: inline-block;
+           background-color: #3498db;
+           color: white;
+           padding: 0.3rem 0.8rem;
+           border-radius: 15px;
+           font-size: 0.8rem;
+           margin: 0.2rem;
+       }
+
+       .mentor-bio {
+           color: #ddd;
+           line-height: 1.6;
+           margin: 1rem 0;
+           font-style: italic;
+       }
+
+       .mentor-actions {
+           display: flex;
+           gap: 1rem;
+           margin-top: 1.5rem;
+       }
+
+       .connect-btn {
+           flex: 1;
+           padding: 0.8rem;
+           background-color: #27ae60;
+           color: white;
+           border: none;
+           border-radius: 5px;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .connect-btn:hover {
+           background-color: #219a52;
+       }
+
+       .view-profile-btn {
+           flex: 1;
+           padding: 0.8rem;
+           background-color: transparent;
+           color: #f39c12;
+           border: 2px solid #f39c12;
+           border-radius: 5px;
+           font-weight: bold;
+           cursor: pointer;
+           transition: all 0.3s;
+       }
+
+       .view-profile-btn:hover {
+           background-color: #f39c12;
+           color: black;
+       }
+
+       .availability-indicator {
+           position: absolute;
+           top: 1rem;
+           right: 1rem;
+           width: 12px;
+           height: 12px;
+           border-radius: 50%;
+           background-color: #27ae60;
+       }
+
+       .availability-indicator.busy {
+           background-color: #e74c3c;
+       }
+
+       .availability-indicator.limited {
+           background-color: #f39c12;
+       }
+
+       .mentor-matching {
+           background-color: #2c3e50;
+           padding: 3rem 2rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+           text-align: center;
+       }
+
+       .matching-content {
+           max-width: 800px;
+           margin: 0 auto;
+       }
+
+       .matching-steps {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .step-card {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           width: 200px;
+           text-align: center;
+           position: relative;
+       }
+
+       .step-number {
+           background-color: #f39c12;
+           color: black;
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-weight: bold;
+           font-size: 1.2rem;
+           margin: 0 auto 1rem;
+       }
+
+       .step-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .step-card p {
+           color: #ecf0f1;
+           font-size: 0.9rem;
+       }
+
+       .mentor-categories {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           gap: 1rem;
+           margin: 2rem 0;
+       }
+
+       .category-filter {
+           padding: 0.8rem 1.5rem;
+           background-color: #333;
+           color: #ddd;
+           border: none;
+           border-radius: 25px;
+           cursor: pointer;
+           transition: all 0.3s;
+       }
+
+       .category-filter.active {
+           background-color: #f39c12;
+           color: black;
+       }
+
+       .category-filter:hover {
+           background-color: #f39c12;
+           color: black;
+       }
+
+       .no-results {
+           text-align: center;
+           color: #ccc;
+           padding: 3rem;
+           background-color: #222;
+           border-radius: 10px;
+           margin: 2rem 0;
+       }
+
+       .no-results i {
+           font-size: 4rem;
+           color: #444;
+           margin-bottom: 1rem;
+       }
+
+       .success-stories {
+           background-color: #27ae60;
+           color: white;
+           padding: 3rem 2rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+       }
+
+       .stories-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .story-card {
+           background-color: rgba(255, 255, 255, 0.1);
+           border-radius: 10px;
+           padding: 2rem;
+           text-align: center;
+       }
+
+       .story-quote {
+           font-style: italic;
+           margin-bottom: 1rem;
+           line-height: 1.6;
+       }
+
+       .story-author {
+           font-weight: bold;
+           opacity: 0.9;
+       }
+
+       .modal {
+           display: none;
+           position: fixed;
+           z-index: 1000;
+           left: 0;
+           top: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0,0,0,0.7);
+       }
+
+       .modal-content {
+           background-color: #222;
+           margin: 5% auto;
+           padding: 2rem;
+           border-radius: 10px;
+           width: 90%;
+           max-width: 600px;
+           color: white;
+           position: relative;
+       }
+
+       .close {
+           color: #aaa;
+           float: right;
+           font-size: 28px;
+           font-weight: bold;
+           cursor: pointer;
+           position: absolute;
+           top: 1rem;
+           right: 1.5rem;
+       }
+
+       .close:hover {
+           color: #f39c12;
+       }
+
+       .modal h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .form-group {
+           margin-bottom: 1.5rem;
+       }
+
+       .form-group label {
+           display: block;
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .form-group input,
+       .form-group textarea,
+       .form-group select {
+           width: 100%;
+           padding: 0.8rem;
+           border: 2px solid #444;
+           border-radius: 5px;
+           background-color: #333;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .form-group textarea {
+           resize: vertical;
+           height: 120px;
+       }
+
+       .submit-btn {
+           width: 100%;
+           padding: 1rem;
+           background-color: #27ae60;
+           color: white;
+           border: none;
+           border-radius: 5px;
+           font-size: 1.1rem;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .submit-btn:hover {
+           background-color: #219a52;
+       }
+
+       @keyframes fadeInUp {
+           to {
+               opacity: 1;
+               transform: translateY(0);
+           }
+       }
+       
+       .mentor-card {
+           transition: all 0.3s ease;
+       }
+       
+       .mentor-card:hover .mentor-avatar {
+           transform: scale(1.1);
+           transition: transform 0.3s ease;
+       }
+       
+       .specialty-tag {
+           transition: all 0.3s ease;
+       }
+       
+       .specialty-tag:hover {
+           background-color: #f39c12;
+           color: black;
+           transform: scale(1.05);
+       }
+       
+       .search-filters {
+           animation: slideInDown 0.8s ease forwards;
+       }
+       
+       @keyframes slideInDown {
+           from {
+               opacity: 0;
+               transform: translateY(-30px);
+           }
+           to {
+               opacity: 1;
+               transform: translateY(0);
+           }
+       }
+
+       @media (max-width: 768px) {
+           .mentor-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .search-filters {
+               flex-direction: column;
+               align-items: stretch;
+           }
+           
+           .filter-group {
+               min-width: 100%;
+           }
+           
+           .mentor-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .matching-steps {
+               flex-direction: column;
+               align-items: center;
+           }
+           
+           .step-card {
+               width: 100%;
+               max-width: 300px;
+           }
+       }
+   </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                               <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="mentor-hero">
+           <h1>Find Your Perfect Mentor</h1>
+           <p>Connect with experienced upperclassmen who understand your journey. Get guidance on academics, career planning, student life, and personal development from students who've been where you are.</p>
+       </section>
+
+       <!-- How It Works Section -->
+       <section class="mentor-matching">
+           <div class="matching-content">
+               <h2 class="section-title" style="color: #f39c12; border-bottom-color: #f39c12;">How Mentor Matching Works</h2>
+               <div class="matching-steps">
+                   <div class="step-card">
+                       <div class="step-number">1</div>
+                       <h4>Browse Mentors</h4>
+                       <p>Explore mentor profiles, read their bios, and check their expertise areas and availability.</p>
+                   </div>
+                   
+                   <div class="step-card">
+                       <div class="step-number">2</div>
+                       <h4>Send a Request</h4>
+                       <p>Send a personalized connection request explaining what you're looking for and why you chose them.</p>
+                   </div>
+                   
+                   <div class="step-card">
+                       <div class="step-number">3</div>
+                       <h4>Connect & Chat</h4>
+                       <p>Once accepted, start chatting! Schedule your first meeting and begin your mentorship journey.</p>
+                   </div>
+                   
+                   <div class="step-card">
+                       <div class="step-number">4</div>
+                       <h4>Grow Together</h4>
+                       <p>Regular check-ins, goal setting, and ongoing support to help you succeed in your academic and personal goals.</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Search and Filters -->
+       <div class="mentor-container">
+           <h2 class="section-title">Find Your Mentor</h2>
+           
+           <div class="search-filters">
+               <div class="filter-group">
+                   <label for="mentorSearch">Search Mentors</label>
+                   <input type="text" id="mentorSearch" placeholder="Search by name, bio, or specialty...">
+               </div>
+               
+               <div class="filter-group">
+                   <label for="majorFilter">Major/Field</label>
+                   <select id="majorFilter">
+                       <option value="">All Majors</option>
+                       <option value="computer-science">Computer Science</option>
+                       <option value="engineering">Engineering</option>
+                       <option value="business">Business</option>
+                       <option value="psychology">Psychology</option>
+                       <option value="biology">Biology</option>
+                       <option value="mathematics">Mathematics</option>
+                       <option value="english">English/Literature</option>
+                       <option value="history">History</option>
+                       <option value="art">Art & Design</option>
+                       <option value="music">Music</option>
+                       <option value="medicine">Medicine</option>
+                       <option value="law">Law</option>
+                   </select>
+               </div>
+               
+               <div class="filter-group">
+                   <label for="yearFilter">Year Level</label>
+                   <select id="yearFilter">
+                       <option value="">Any Year</option>
+                       <option value="2">2nd Year</option>
+                       <option value="3">3rd Year</option>
+                       <option value="4">4th Year</option>
+                       <option value="masters">Masters</option>
+                       <option value="phd">PhD</option>
+                   </select>
+               </div>
+               
+               <div class="filter-group">
+                   <label for="specialtyFilter">Expertise Area</label>
+                   <select id="specialtyFilter">
+                       <option value="">All Areas</option>
+                       <option value="academic">Academic Success</option>
+                       <option value="career">Career Planning</option>
+                       <option value="research">Research</option>
+                       <option value="internships">Internships</option>
+                       <option value="study-abroad">Study Abroad</option>
+                       <option value="mental-health">Focus & Resilience</option>
+                       <option value="leadership">Leadership</option>
+                       <option value="entrepreneurship">Entrepreneurship</option>
+                       <option value="networking">Networking</option>
+                       <option value="time-management">Time Management</option>
+                   </select>
+               </div>
+               
+               <div class="filter-group">
+                   <label for="availabilityFilter">Availability</label>
+                   <select id="availabilityFilter">
+                       <option value="">Any Availability</option>
+                       <option value="available">Available Now</option>
+                       <option value="limited">Limited Availability</option>
+                   </select>
+               </div>
+               
+               <button class="search-btn" onclick="filterMentors()">
+                   <i class="fas fa-search"></i> Search Mentors
+               </button>
+           </div>
+
+           <!-- Category Filters -->
+           <div class="mentor-categories">
+               <button class="category-filter active" data-category="all">All Mentors</button>
+               <button class="category-filter" data-category="academic">Academic</button>
+               <button class="category-filter" data-category="career">Career</button>
+               <button class="category-filter" data-category="personal">Personal Development</button>
+               <button class="category-filter" data-category="research">Research</button>
+               <button class="category-filter" data-category="leadership">Leadership</button>
+           </div>
+
+           <!-- Mentor Grid -->
+           <div class="mentor-grid" id="mentorGrid">
+               <!-- Mentors will be populated by JavaScript -->
+           </div>
+
+           <!-- No Results Message -->
+           <div class="no-results" id="noResults" style="display: none;">
+               <i class="fas fa-search"></i>
+               <h3>No mentors found</h3>
+               <p>Try adjusting your search filters or browse all mentors to find someone who matches your needs.</p>
+           </div>
+       </div>
+
+       <!-- Success Stories -->
+       <section class="success-stories">
+           <h2 class="section-title" style="color: white; border-bottom-color: white;">Success Stories</h2>
+           <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem;">Hear from students who found their perfect mentors through Vivify</p>
+           
+           <div class="stories-grid">
+               <div class="story-card">
+                   <div class="story-quote">"My mentor Sarah helped me navigate my first year anxiety and taught me study techniques that improved my grades by 15%. She's become both a guide and a friend!"</div>
+                   <div class="story-author">- Emma, 1st Year Psychology</div>
+               </div>
+               
+               <div class="story-card">
+                   <div class="story-quote">"Through my mentor's connections, I landed an amazing internship at a tech startup. He showed me how to network effectively and build my professional portfolio."</div>
+                   <div class="story-author">- James, 2nd Year Computer Science</div>
+               </div>
+               
+               <div class="story-card">
+                   <div class="story-quote">"My mentor helped me choose between grad school and entering the workforce. Her insights about the industry were invaluable for making this huge decision."</div>
+                   <div class="story-author">- Priya, 3rd Year Biology</div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Connection Request Modal -->
+       <div id="connectionModal" class="modal">
+           <div class="modal-content">
+               <span class="close">&times;</span>
+               <h3>Send Connection Request</h3>
+               <form id="connectionForm">
+                   <div class="form-group">
+                       <label for="mentorName">Mentor</label>
+                       <input type="text" id="mentorName" readonly>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="requestSubject">Subject</label>
+                       <input type="text" id="requestSubject" placeholder="What you'd like help with" required>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="requestMessage">Personal Message</label>
+                       <textarea id="requestMessage" placeholder="Tell them why you chose them and what you hope to achieve together..." required></textarea>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="meetingPreference">Preferred Meeting Style</label>
+                       <select id="meetingPreference">
+                           <option value="in-person">In-Person</option>
+                           <option value="video-call">Video Call</option>
+                           <option value="phone">Phone Call</option>
+                           <option value="text">Text/Messaging</option>
+                           <option value="flexible">Flexible</option>
+                       </select>
+                   </div>
+                   
+                   <button type="submit" class="submit-btn">Send Request</button>
+               </form>
+           </div>
+       </div>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2025 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       // Sample mentor data
+       const mentors = [
+           {
+               id: 1,
+               name: "Sarah Chen",
+               year: "3rd Year",
+               major: "Psychology",
+               avatar: "SC",
+               rating: 4.9,
+               mentees: 12,
+               sessions: 48,
+               specialties: ["Academic Success", "Focus & Resilience", "Time Management"],
+               bio: "I struggled with anxiety in my first year and developed effective coping strategies. Now I help other students find balance and succeed academically.",
+               availability: "available",
+               categories: ["academic", "personal"]
+           },
+           {
+               id: 2,
+               name: "Marcus Johnson",
+               year: "4th Year",
+               major: "Computer Science",
+               avatar: "MJ",
+               rating: 4.8,
+               mentees: 15,
+               sessions: 67,
+               specialties: ["Career Planning", "Internships", "Networking", "Programming"],
+               bio: "Software engineer with internship experience at Google and Microsoft. Passionate about helping students break into tech.",
+               availability: "available",
+               categories: ["career", "academic"]
+           },
+           {
+               id: 3,
+               name: "Emma Rodriguez",
+               year: "Masters",
+               major: "Business",
+               avatar: "ER",
+               rating: 5.0,
+               mentees: 8,
+               sessions: 32,
+               specialties: ["Entrepreneurship", "Leadership", "Research"],
+               bio: "Started my own business during undergrad. Now pursuing MBA while mentoring aspiring entrepreneurs.",
+               availability: "limited",
+               categories: ["career", "leadership", "research"]
+           },
+           {
+               id: 4,
+               name: "David Kim",
+               year: "PhD",
+               major: "Biology",
+               avatar: "DK",
+               rating: 4.7,
+               mentees: 6,
+               sessions: 28,
+               specialties: ["Research", "Grad School", "Academic Writing"],
+               bio: "PhD candidate in molecular biology. Happy to guide students interested in research and graduate studies.",
+               availability: "available",
+               categories: ["academic", "research"]
+           },
+           {
+               id: 5,
+               name: "Sophia Williams",
+               year: "3rd Year",
+               major: "Engineering",
+               avatar: "SW",
+               rating: 4.9,
+               mentees: 10,
+               sessions: 41,
+               specialties: ["Study Abroad", "Leadership", "STEM Success"],
+               bio: "Studied abroad in Germany, president of Engineering Society. Love helping students explore opportunities.",
+               availability: "available",
+               categories: ["academic", "leadership"]
+           },
+           {
+               id: 6,
+               name: "Alex Thompson",
+               year: "4th Year",
+               major: "English",
+               avatar: "AT",
+               rating: 4.8,
+               mentees: 9,
+               sessions: 35,
+               specialties: ["Writing", "Academic Success", "Career Planning"],
+               bio: "Published author and editor of the university magazine. Passionate about helping students improve their writing.",
+               availability: "limited",
+               categories: ["academic", "career"]
+           },
+           {
+               id: 7,
+               name: "Zoe Martinez",
+               year: "Masters",
+               major: "Art & Design",
+               avatar: "ZM",
+               rating: 4.9,
+               mentees: 7,
+               sessions: 29,
+               specialties: ["Creative Process", "Portfolio Development", "Art Careers"],
+               bio: "Fine arts graduate working as a freelance designer. I help creative students build portfolios and navigate the art world.",
+               availability: "available",
+               categories: ["career", "academic"]
+           },
+           {
+               id: 8,
+               name: "Ryan O'Connor",
+               year: "4th Year",
+               major: "Business",
+               avatar: "RO",
+               rating: 4.6,
+               mentees: 14,
+               sessions: 52,
+               specialties: ["Finance", "Networking", "Professional Development"],
+               bio: "Finance major with internships at major investment banks. I love helping students break into the finance industry.",
+               availability: "limited",
+               categories: ["career", "academic"]
+           }
+       ];
+
+       let filteredMentors = [...mentors];
+       let selectedCategory = 'all';
+
+       // Initialize page
+       document.addEventListener('DOMContentLoaded', function() {
+           displayMentors(mentors);
+           setupEventListeners();
+           
+           // Login status check
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+       });
+
+       function displayMentors(mentorsToShow) {
+           const mentorGrid = document.getElementById('mentorGrid');
+           const noResults = document.getElementById('noResults');
+           
+           if (mentorsToShow.length === 0) {
+               mentorGrid.innerHTML = '';
+               noResults.style.display = 'block';
+               return;
+           }
+           
+           noResults.style.display = 'none';
+           
+           mentorGrid.innerHTML = mentorsToShow.map(mentor => `
+               <div class="mentor-card" data-mentor-id="${mentor.id}">
+                   <div class="availability-indicator ${mentor.availability}"></div>
+                   <div class="mentor-header">
+                       <div class="mentor-avatar">${mentor.avatar}</div>
+                       <div class="mentor-info">
+                           <h3>${mentor.name}</h3>
+                           <div class="mentor-year">${mentor.year}</div>
+                           <div class="mentor-major">${mentor.major}</div>
+                       </div>
+                   </div>
+                   
+                   <div class="mentor-stats">
+                       <div class="stat-item">
+                           <div class="stat-number">${mentor.rating}</div>
+                           <div class="stat-label">Rating</div>
+                       </div>
+                       <div class="stat-item">
+                           <div class="stat-number">${mentor.mentees}</div>
+                           <div class="stat-label">Mentees</div>
+                       </div>
+                       <div class="stat-item">
+                           <div class="stat-number">${mentor.sessions}</div>
+                           <div class="stat-label">Sessions</div>
+                       </div>
+                   </div>
+                   
+                   <div class="mentor-specialties">
+                       ${mentor.specialties.map(specialty => `<span class="specialty-tag">${specialty}</span>`).join('')}
+                   </div>
+                   
+                   <div class="mentor-bio">"${mentor.bio}"</div>
+                   
+                   <div class="mentor-actions">
+                       <button class="connect-btn" onclick="openConnectionModal('${mentor.name}', ${mentor.id})">
+                           <i class="fas fa-user-plus"></i> Connect
+                       </button>
+                       <button class="view-profile-btn" onclick="viewMentorProfile(${mentor.id})">
+                           <i class="fas fa-eye"></i> View Profile
+                       </button>
+                   </div>
+               </div>
+           `).join('');
+
+           // Add entrance animations
+           setTimeout(() => {
+               const mentorCards = document.querySelectorAll('.mentor-card');
+               mentorCards.forEach((card, index) => {
+                   card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
+                   card.style.opacity = '0';
+                   card.style.transform = 'translateY(20px)';
+               });
+           }, 100);
+       }
+
+       function setupEventListeners() {
+           // Category filter buttons
+           document.querySelectorAll('.category-filter').forEach(button => {
+               button.addEventListener('click', function() {
+                   document.querySelectorAll('.category-filter').forEach(btn => btn.classList.remove('active'));
+                   this.classList.add('active');
+                   selectedCategory = this.dataset.category;
+                   filterMentors();
+               });
+           });
+
+           // Search input
+           document.getElementById('mentorSearch').addEventListener('input', function() {
+               filterMentors();
+           });
+
+           // Modal functionality
+           const modal = document.getElementById('connectionModal');
+           const closeBtn = document.querySelector('.close');
+           
+           closeBtn.onclick = function() {
+               modal.style.display = 'none';
+           }
+           
+           window.onclick = function(event) {
+               if (event.target === modal) {
+                   modal.style.display = 'none';
+               }
+           }
+
+           // Connection form submission
+           document.getElementById('connectionForm').addEventListener('submit', function(e) {
+               e.preventDefault();
+               submitConnectionRequest();
+           });
+       }
+
+       function filterMentors() {
+           const searchTerm = document.getElementById('mentorSearch').value.toLowerCase();
+           const majorFilter = document.getElementById('majorFilter').value;
+           const yearFilter = document.getElementById('yearFilter').value;
+           const specialtyFilter = document.getElementById('specialtyFilter').value;
+           const availabilityFilter = document.getElementById('availabilityFilter').value;
+
+           filteredMentors = mentors.filter(mentor => {
+               // Search term filter
+               if (searchTerm && !mentor.name.toLowerCase().includes(searchTerm) &&
+                   !mentor.bio.toLowerCase().includes(searchTerm) &&
+                   !mentor.major.toLowerCase().includes(searchTerm) &&
+                   !mentor.specialties.some(specialty => specialty.toLowerCase().includes(searchTerm))) {
+                   return false;
+               }
+
+               // Category filter
+               if (selectedCategory !== 'all' && !mentor.categories.includes(selectedCategory)) {
+                   return false;
+               }
+               
+               // Major filter
+               if (majorFilter && !mentor.major.toLowerCase().includes(majorFilter.replace('-', ' '))) {
+                   return false;
+               }
+               
+               // Year filter
+               if (yearFilter) {
+                   if (yearFilter === 'masters' && !mentor.year.includes('Masters')) return false;
+                   if (yearFilter === 'phd' && !mentor.year.includes('PhD')) return false;
+                   if (/^\d+$/.test(yearFilter) && !mentor.year.includes(yearFilter)) return false;
+               }
+               
+               // Specialty filter
+               if (specialtyFilter) {
+                   const specialtyMatch = mentor.specialties.some(specialty => 
+                       specialty.toLowerCase().includes(specialtyFilter.replace('-', ' '))
+                   );
+                   if (!specialtyMatch) return false;
+               }
+               
+               // Availability filter
+               if (availabilityFilter && mentor.availability !== availabilityFilter) {
+                   return false;
+               }
+               
+               return true;
+           });
+
+           displayMentors(filteredMentors);
+       }
+
+       function openConnectionModal(mentorName, mentorId) {
+           const modal = document.getElementById('connectionModal');
+           document.getElementById('mentorName').value = mentorName;
+           document.getElementById('connectionForm').dataset.mentorId = mentorId;
+           modal.style.display = 'block';
+       }
+
+       function submitConnectionRequest() {
+           const mentorId = document.getElementById('connectionForm').dataset.mentorId;
+           const subject = document.getElementById('requestSubject').value;
+           const message = document.getElementById('requestMessage').value;
+           const meetingPreference = document.getElementById('meetingPreference').value;
+           
+           // Here you would typically send this data to your backend
+           console.log('Connection request sent:', {
+               mentorId,
+               subject,
+               message,
+               meetingPreference
+           });
+           
+           // Show success message
+           alert('Connection request sent successfully! Your mentor will receive your message and respond within 24-48 hours.');
+           
+           // Close modal and reset form
+           document.getElementById('connectionModal').style.display = 'none';
+           document.getElementById('connectionForm').reset();
+       }
+
+       function viewMentorProfile(mentorId) {
+           // This would typically navigate to a detailed profile page
+           // For now, we'll show more detailed information
+           const mentor = mentors.find(m => m.id === mentorId);
+           if (mentor) {
+               const availabilityText = mentor.availability === 'available' ? 'Available now' : 
+                                       mentor.availability === 'limited' ? 'Limited availability' : 'Currently busy';
+               
+               alert(`${mentor.name}'s Profile:  Year: ${mentor.year} Major: ${mentor.major} Rating: ${mentor.rating}/5 stars Mentees: ${mentor.mentees} current mentees Sessions Completed: ${mentor.sessions}  Specialties: ${mentor.specialties.join(' • ')}  Bio: ${mentor.bio}  Availability: ${availabilityText}  Click "Connect" to send them a message!`);
+           }
+       }
+
+       // Add smooth scrolling for internal links
+       document.addEventListener('DOMContentLoaded', function() {
+           document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+               anchor.addEventListener('click', function (e) {
+                   e.preventDefault();
+                   const target = document.querySelector(this.getAttribute('href'));
+                   if (target) {
+                       target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+       });
+   </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> </body>
+</html>

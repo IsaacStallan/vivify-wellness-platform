@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Stretching - Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Dynamic Stretching specific styles */
+        .stretching-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1599447322412-6c600f4104d4?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .stretching-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .stretching-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-heading {
+            text-align: center;
+            color: #f39c12;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .benefits-container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .benefits-container h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .vs-static {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .vs-content {
+            padding: 2rem;
+        }
+        
+        .vs-content h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #444;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: #333;
+            color: #f39c12;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+
+        .stretches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .stretch-card {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .stretch-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .stretch-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stretch-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .stretch-details p {
+            color: #ddd;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .stretch-meta {
+            display: flex;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .guidelines-container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .guidelines-container h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .guidelines-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guidelines-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .guidelines-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background-color: #1a365d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box h4 {
+            color: #63b3ed;
+            margin-top: 0;
+        }
+
+        .highlight-box p {
+            color: #ddd;
+            margin-bottom: 0;
+        }
+
+        .routine-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .routine-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .routine-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .routine-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .routine-details {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .routine-details h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .routine-details ul {
+            color: #ddd;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .routine-details li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .stretching-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stretches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stretch-card {
+                grid-template-columns: 1fr;
+            }
+
+            .stretch-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" class="active" aria-label="Flexibility Training Page">Flexibility</a>
+                                <a href="../endurance.html" aria-label="Endurance Training Page">Endurance</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="stretching-hero">
+            <h1>Dynamic Stretching</h1>
+            <p>Prepare your body for movement, enhance performance, and warm up effectively with active stretching techniques</p>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <h2 class="section-heading">What is Dynamic Stretching?</h2>
+            <p>Dynamic stretching involves controlled, active movements that take your joints and muscles through their full range of motion. Unlike static stretching, where you hold a position, dynamic stretching incorporates movement patterns that mimic the activity you're about to perform.</p>
+            <p>These active movements gradually increase in reach, speed, or both, helping to increase muscle temperature, enhance nervous system activation, and prepare your body for more intense activity. Dynamic stretching serves as an effective transition between your resting state and more vigorous exercise.</p>
+            <p>For students, dynamic stretching is particularly valuable before physical activity classes, between long periods of sitting, or as a quick energy boost when studying fatigue sets in. It can help counteract the negative effects of sedentary behavior while preparing your body for more active pursuits.</p>
+        </section>
+
+        <!-- Benefits Section -->
+        <div class="benefits-container">
+            <h3>Benefits of Dynamic Stretching</h3>
+            <ul class="benefits-list">
+                <li><strong>Increased Body Temperature:</strong> Active movements increase blood flow and muscle temperature, preparing tissues for more intense activity.</li>
+                <li><strong>Enhanced Neuromuscular Activation:</strong> Engages the nervous system to improve muscle recruitment and coordination for better performance.</li>
+                <li><strong>Sport-Specific Preparation:</strong> Mimics movements you'll use in your upcoming activity, creating more specific readiness.</li>
+                <li><strong>Improved Range of Motion:</strong> Actively moving through full ranges increases joint mobility for the session ahead.</li>
+                <li><strong>Reduced Injury Risk:</strong> Properly prepares muscles, tendons, and joints for the demands of exercise.</li>
+                <li><strong>Mental Preparation:</strong> Helps create a mind-body connection and focus before workouts or athletic events.</li>
+                <li><strong>Time Efficiency:</strong> Combines warming up and mobility work into one effective routine.</li>
+                <li><strong>Energy Boost:</strong> The active nature of these movements can increase alertness and energy levels—perfect for combating study fatigue.</li>
+            </ul>
+        </div>
+
+        <!-- Dynamic vs. Static Comparison -->
+        <div class="vs-static">
+            <div class="vs-content">
+                <h3>Dynamic vs. Static Stretching: When to Use Each</h3>
+                <p>Understanding the differences between dynamic and static stretching will help you implement each type at the appropriate time for maximum benefit:</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th>Dynamic Stretching</th>
+                        <th>Static Stretching</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Movement Type</strong></td>
+                        <td>Active, continuous movement</td>
+                        <td>Stationary, held positions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duration</strong></td>
+                        <td>8-12 repetitions per movement</td>
+                        <td>15-60 seconds per stretch</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best Timing</strong></td>
+                        <td>Before exercise (warm-up)</td>
+                        <td>After exercise (cool-down)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Goal</strong></td>
+                        <td>Prepare for activity</td>
+                        <td>Increase long-term flexibility</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Effect on Performance</strong></td>
+                        <td>Enhances power, strength, and speed</td>
+                        <td>May temporarily decrease power if done before activity</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Energy Requirement</strong></td>
+                        <td>Higher (active movement)</td>
+                        <td>Lower (passive holding)</td>
+                    </tr>
+                </table>
+                
+                <div class="highlight-box">
+                    <h4>Student Tip: Optimal Stretching Strategy</h4>
+                    <p>For best results, incorporate both types into your routine: use dynamic stretching before workouts or athletic activities, and static stretching after exercise or during dedicated flexibility sessions. If you only have time for one type before a workout, prioritize dynamic stretching.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Dynamic Stretches -->
+        <h2 class="section-heading">Essential Dynamic Stretches</h2>
+        <div class="stretches-grid">
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1434596922112-19c563067271?auto=format&fit=crop&w=600&q=80" alt="Leg Swings">
+                </div>
+                <div class="stretch-details">
+                    <h3>Leg Swings (Front to Back)</h3>
+                    <p>Dynamically stretches the hip flexors and hamstrings while activating the core for balance.</p>
+                    <p><strong>How to perform:</strong> Stand beside a wall for support. Swing one leg forward and backward in a controlled manner, gradually increasing the height of the swing. Keep your torso upright and core engaged. Perform 10-12 swings per leg.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Reps: 10-12 per leg</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1599058917662-ec561acd97d8?auto=format&fit=crop&w=600&q=80" alt="Arm Circles">
+                </div>
+                <div class="stretch-details">
+                    <h3>Arm Circles</h3>
+                    <p>Warms up the shoulders and upper back, improving mobility in the shoulder joint.</p>
+                    <p><strong>How to perform:</strong> Stand with feet shoulder-width apart. Extend both arms out to the sides and make small circles, gradually increasing the size. Perform forward circles for 10 seconds, then reverse direction for another 10 seconds. Complete 2-3 sets.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Duration: 10 seconds per direction</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&fit=crop&w=600&q=80" alt="Walking Lunges">
+                </div>
+                <div class="stretch-details">
+                    <h3>Walking Lunges with Rotation</h3>
+                    <p>Dynamically stretches the hip flexors and quadriceps while engaging the core through rotation.</p>
+                    <p><strong>How to perform:</strong> Step forward into a lunge position. As you lunge, rotate your torso toward the front leg, then return to center as you stand up. Continue walking forward, alternating legs. Perform 8-10 lunges per side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Intermediate</span>
+                        <span>Reps: 8-10 per side</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1596357395217-80de13130e92?auto=format&fit=crop&w=600&q=80" alt="Torso Twists">
+                </div>
+                <div class="stretch-details">
+                    <h3>Standing Torso Twists</h3>
+                    <p>Improves rotational mobility in the spine and warms up the core and obliques.</p>
+                    <p><strong>How to perform:</strong> Stand with feet slightly wider than shoulder-width apart, arms extended out to the sides or hands lightly clasped in front of your chest. Rotate your torso from side to side in a controlled manner. Perform 10-12 twists per side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Reps: 10-12 per side</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1571019613591-2dd0a8f9f2c1?auto=format&fit=crop&w=600&q=80" alt="Inchworm">
+                </div>
+                <div class="stretch-details">
+                    <h3>Inchworm</h3>
+                    <p>A full-body dynamic stretch that targets hamstrings, calves, shoulders, and core.</p>
+                    <p><strong>How to perform:</strong> Stand tall, then bend forward and place your hands on the floor. Walk your hands forward until you reach a plank position. Hold briefly, then walk your hands back toward your feet and stand up. Repeat 6-8 times.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Intermediate</span>
+                        <span>Reps: 6-8</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="High Knees">
+                </div>
+                <div class="stretch-details">
+                    <h3>High Knees</h3>
+                    <p>Activates the hip flexors and quadriceps while raising the heart rate and body temperature.</p>
+                    <p><strong>How to perform:</strong> Stand in place and lift your knees toward your chest in an alternating running motion. Keep your core tight and focus on height rather than speed initially. Perform for 20-30 seconds.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Duration: 20-30 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=600&q=80" alt="Arm Crossovers">
+                </div>
+                <div class="stretch-details">
+                    <h3>Dynamic Arm Crossovers</h3>
+                    <p>Stretches the chest, shoulders, and upper back through active movement.</p>
+                    <p><strong>How to perform:</strong> Stand with arms extended to the sides. Swing your arms across your chest in a horizontal motion, alternating which arm is on top. Focus on controlled movement with gradually increasing range. Perform 10-12 repetitions.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Reps: 10-12</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1598575468023-d594d8edb4f4?auto=format&fit=crop&w=600&q=80" alt="Hip Circles">
+                </div>
+                <div class="stretch-details">
+                    <h3>Hip Circles</h3>
+                    <p>Improves mobility in the hip joint through circular movement patterns.</p>
+                    <p><strong>How to perform:</strong> Stand on one leg (hold onto something for balance if needed) and lift the other knee to hip height. Rotate the lifted leg in circles, making smooth, controlled movements. Perform 8-10 circles in each direction, then switch legs.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner-Intermediate</span>
+                        <span>Reps: 8-10 per direction, each leg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guidelines Section -->
+        <div class="guidelines-container">
+            <h3>Dynamic Stretching Guidelines</h3>
+            <ul class="guidelines-list">
+                <li><strong>Start Slow, Progress Gradually:</strong> Begin with smaller movements and gradually increase range and speed as your body warms up.</li>
+                <li><strong>Focus on Form:</strong> Maintain proper posture and technique throughout each movement to maximize benefits and prevent injury.</li>
+                <li><strong>Breathe Naturally:</strong> Coordinate your breathing with the movements, avoiding breath-holding which can increase tension.</li>
+                <li><strong>Move Through Full Range:</strong> Aim to move through your complete available range of motion (without forcing beyond it).</li>
+                <li><strong>Include Sport-Specific Movements:</strong> Incorporate movements that relate to your planned activity for more targeted preparation.</li>
+                <li><strong>Maintain Control:</strong> Dynamic doesn't mean jerky or ballistic—movements should be smooth and controlled.</li>
+                <li><strong>Complete 8-12 Repetitions:</strong> For most dynamic stretches, 8-12 repetitions per side is sufficient to prepare the tissues.</li>
+                <li><strong>Sequence Properly:</strong> Start with simpler movements and progress to more complex or intense ones.</li>
+                <li><strong>Allow 5-10 Minutes:</strong> A complete dynamic warm-up routine should take 5-10 minutes for optimal preparation.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h4>Student Benefit: Break from Studying</h4>
+                <p>Dynamic stretching provides an excellent mental and physical break during long study sessions. Even 3-5 minutes of movement can increase blood flow to the brain, reduce mental fatigue, and help maintain focus when returning to academic work.</p>
+            </div>
+        </div>
+
+        <!-- Sample Routines -->
+        <section class="routine-section">
+            <h2 class="section-heading">Dynamic Stretching Routines for Students</h2>
+            
+            <div class="routine-card">
+                <h3>Pre-Workout Dynamic Warm-Up</h3>
+                <p>A comprehensive routine to prepare your body for exercise by gradually increasing heart rate, body temperature, and joint mobility.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 8-10 minutes</li>
+                        <li><strong>When to Use:</strong> Before workouts, sports, or physical activity</li>
+                        <li><strong>Exercises (10 reps each):</strong>
+                            <ol>
+                                <li>Arm circles (forward and backward)</li>
+                                <li>Torso twists</li>
+                                <li>Hip circles (each leg)</li>
+                                <li>Leg swings (forward/back, then side to side)</li>
+                                <li>Walking lunges with rotation</li>
+                                <li>Inchworms</li>
+                                <li>High knees (30 seconds)</li>
+                                <li>Butt kicks (30 seconds)</li>
+                            </ol>
+                        </li>
+                        <li><strong>Flow:</strong> Move from top to bottom (upper body to lower body), gradually increasing intensity</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>5-Minute Study Break Energizer</h3>
+                <p>A quick routine to break up long periods of sitting during study sessions, designed to restore energy and improve focus.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 5 minutes</li>
+                        <li><strong>When to Use:</strong> Every 60-90 minutes during study sessions</li>
+                        <li><strong>Exercises:</strong>
+                            <ol>
+                                <li>Neck rolls (5 in each direction)</li>
+                                <li>Shoulder circles (10 forward, 10 backward)</li>
+                                <li>Standing side bends (8 per side)</li>
+                                <li>Standing hamstring curls (10 per leg)</li>
+                                <li>Marching in place (30 seconds)</li>
+                                <li>Standing quad stretches with leg swings (8 per leg)</li>
+                            </ol>
+                        </li>
+                        <li><strong>Benefits:</strong> Increases blood flow, reduces stiffness from sitting, improves mental alertness, reduces eye strain</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>Morning Mobility Routine</h3>
+                <p>Start your day by energizing your body and preparing for daily activities with this quick morning sequence.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 7-8 minutes</li>
+                        <li><strong>When to Use:</strong> Shortly after waking up</li>
+                        <li><strong>Exercises:</strong>
+                            <ol>
+                                <li>Gentle spinal rolls (8 repetitions)</li>
+                                <li>Arm reaches (10 repetitions)</li>
+                                <li>Standing cat-cow stretches (8 repetitions)</li>
+                                <li>Hip circles (8 per direction, each leg)</li>
+                                <li>Standing knee to chest pulls (8 per side)</li>
+                                <li>Torso twists (10 per side)</li>
+                                <li>Gentle jumping jacks (20 repetitions)</li>
+                            </ol>
+                        </li>
+                        <li><strong>Benefits:</strong> Increases alertness, improves morning stiffness, begins the day with movement</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> </body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .right-nav a.active {
+            color: #f39c12;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        /* Main Form Section */
+        .form-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 6rem 2rem 2rem;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%);
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-container h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-container > p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1.5rem 0;
+            letter-spacing: 0.01em;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .success-message {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .demo-section {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(243, 156, 18, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .demo-section p {
+            color: #f39c12;
+            margin: 0 0 1rem 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .demo-btn {
+            background: transparent;
+            border: 1px solid #f39c12;
+            color: #f39c12;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .demo-btn:hover {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin: 0.8rem 0;
+        }
+
+        .form-footer a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #e67e22;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .form-section {
+                padding: 5rem 1rem 2rem;
+                min-height: calc(100vh - 100px);
+            }
+
+            .form-container {
+                padding: 2.5rem 2rem;
+                margin: 1rem;
+                border-radius: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .form-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .submit-btn {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Vivify">
+    <meta name="theme-color" content="#f39c12">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" class="active">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav">Start Training</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-container fade-in-up">
+            <div class="login-header">
+                <div class="login-badge">Performance Training</div>
+                <h1>Welcome Back</h1>
+                <p>Continue building your competitive edge</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #f39c12;"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="Enter your email" 
+                        aria-label="Email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock" style="margin-right: 0.5rem; color: #f39c12;"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="Enter your password" 
+                        aria-label="Password">
+                </div>
+
+                <button type="submit" id="loginBtn" class="submit-btn">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
+                    Continue Training
+                </button>
+            </form>
+
+            <div id="message" style="display:none;"></div>
+            
+            <div class="demo-section">
+                <p><i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Try the Demo</p>
+                <button type="button" class="demo-btn" onclick="loginAsDemo()">
+                    Experience Performance Training
+                </button>
+            </div>
+            
+            <div class="form-footer">
+                <p>Don't have an account? <a href="signup.html">Start your training journey</a></p>
+                <p><a href="reset-password.html" id="forgotPassword">Forgot your password?</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+    </footer>
+
+    <script>
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function loginAsDemo() {
+            const demoBtn = document.querySelector('.demo-btn');
+            demoBtn.textContent = 'Creating demo account...';
+            demoBtn.disabled = true;
+            
+            // Simulate demo login
+            setTimeout(() => {
+                // Create demo user data
+                const demoUser = {
+                    id: 'demo_' + Date.now(),
+                    name: 'Demo Student',
+                    email: 'demo@vivify.com',
+                    school: 'Knox Grammar School',
+                    yearLevel: '10',
+                    username: 'Demo Student'
+                };
+                
+                // Set demo authentication
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('authToken', 'demo_token_' + Date.now());
+                localStorage.setItem('username', demoUser.name);
+                localStorage.setItem('userProfile', JSON.stringify(demoUser));
+                
+                // Set demo baseline assessment as needed
+                localStorage.setItem('needsBaselineAssessment', 'true');
+                
+                showMessage('Demo account created! Starting your performance assessment...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'performance-baseline-assessment.html';
+                }, 1500);
+            }, 1500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Check if already logged in
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                const hasPerformanceData = localStorage.getItem('performanceData');
+                if (hasPerformanceData) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'performance-baseline-assessment.html';
+                }
+                return;
+            }
+            
+            // Check for URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('message')) {
+                const message = urlParams.get('message');
+                
+                if (message === 'signup-success') {
+                    showMessage('Account created successfully! You can now log in.', 'success');
+                } else if (message === 'verified') {
+                    showMessage('Email verified successfully! You can now log in.', 'success');
+                } else if (message === 'password-reset') {
+                    showMessage('Password reset successfully! You can now log in with your new password.', 'success');
+                } else if (message === 'logout') {
+                    showMessage('You have been logged out successfully.', 'success');
+                }
+            }
+
+            // Login form handler
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+
+                if (!email || !password) {
+                    showMessage('Please enter both email and password.');
+                    return;
+                }
+
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Signing In...';
+                loginBtn.disabled = true;
+                loginForm.classList.add('loading');
+
+                try {
+                    // For development/demo - you'll need to update this endpoint
+                    const response = await fetch('/api/auth/login', { 
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network error');
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success && result.token) {
+                        // Store user authentication data
+                        localStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('authToken', result.token);
+                        localStorage.setItem('username', result.user.username);
+                        
+                        // Format userProfile for the platform
+                        const userProfile = {
+                            id: result.user.id,
+                            name: result.user.username,
+                            email: result.user.email,
+                            school: result.user.school || 'Knox Grammar School',
+                            yearLevel: result.user.yearLevel || '',
+                        };
+                        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                        
+                        // Check if user needs baseline assessment
+                        const hasPerformanceData = localStorage.getItem('performanceData');
+                        const needsAssessment = !hasPerformanceData;
+                        
+                        if (needsAssessment) {
+                            localStorage.setItem('needsBaselineAssessment', 'true');
+                            showMessage('Welcome! Let\'s set up your performance baseline...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'performance-baseline-assessment.html';
+                            }, 1500);
+                        } else {
+                            showMessage('Welcome back! Redirecting to your dashboard...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 1000);
+                        }
+                        
+                    } else {
+                        throw new Error(result.message || 'Login failed');
+                    }
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    
+                    // For demo purposes - simulate login with any email/password
+                    if (email && password) {
+                        const demoUser = {
+                            id: 'user_' + Date.now(),
+                            name: email.split('@')[0],
+                            email: email,
+                            school: 'Knox Grammar School',
+                            yearLevel: '10',
+                            username: email.split('@')[0]
+                        };
+                        
+                        localStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('authToken', 'demo_token_' + Date.now());
+                        localStorage.setItem('username', demoUser.name);
+                        localStorage.setItem('userProfile', JSON.stringify(demoUser));
+                        
+                        const hasPerformanceData = localStorage.getItem('performanceData');
+                        if (!hasPerformanceData) {
+                            localStorage.setItem('needsBaselineAssessment', 'true');
+                            showMessage('Welcome! Let\'s set up your performance baseline...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'performance-baseline-assessment.html';
+                            }, 1500);
+                        } else {
+                            showMessage('Welcome back! Redirecting to your dashboard...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 1000);
+                        }
+                    } else {
+                        showMessage(error.message || 'Please check your email and password and try again.');
+                    }
+                } finally {
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Continue Training';
+                    loginBtn.disabled = false;
+                    loginForm.classList.remove('loading');
+                }
+            });
+            
+            // Add smooth scrolling and animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

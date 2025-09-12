@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Intelligence - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section with Gamification */
+        .financial-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .financial-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .financial-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .financial-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Student Achievement Stats */
+        .achievement-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .achievement-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .achievement-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .achievement-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Money Challenge Widget */
+        .money-challenge {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .challenge-timer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .challenge-participants {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .participant-stat {
+            text-align: center;
+        }
+
+        .participant-stat .number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .participant-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        /* Financial Skill Cards with Gamification */
+        .financial-skills {
+            padding: 6rem 2rem;
+        }
+
+        .skills-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(243, 156, 18, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #f39c12;
+        }
+
+        .skill-level {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .skill-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .skill-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .skill-progress {
+            margin-bottom: 2rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .challenge-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .challenge-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .challenge-item:hover {
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .challenge-item.completed {
+            background: rgba(39, 174, 96, 0.2);
+        }
+
+        .challenge-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .challenge-item.completed .challenge-checkbox {
+            background: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .challenge-item.completed .challenge-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .challenge-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .challenge-item.completed .challenge-text {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Money Tracker */
+        .money-tracker {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .tracker-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .tracker-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tracker-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tracker-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .tracker-content {
+            display: none;
+        }
+
+        .tracker-content.active {
+            display: block;
+        }
+
+        .spending-input {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .money-input {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .money-input:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .money-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .summary-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Student Success Stories */
+        .success-stories {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .story-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .story-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .story-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .story-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-item {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* CTA Section */
+        .financial-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .financial-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .financial-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .achievement-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tracker-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .spending-input {
+                grid-template-columns: 1fr;
+            }
+
+            .money-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Community Stats -->
+        <section class="financial-hero fade-in-up">
+            <div class="hero-content">
+                <div class="financial-badge">💰 Elite Money Training</div>
+                <h1>Build Financial Intelligence</h1>
+                <p>Join 892 ambitious students building elite money habits through gamified challenges. Track spending, build savings streaks, and compete in financial literacy challenges while building real-world wealth skills.</p>
+                
+                <div class="achievement-stats">
+                    <div class="achievement-stat">
+                        <span class="stat-number">892</span>
+                        <span class="stat-label">Students Building Wealth</span>
+                    </div>
+                    <div class="achievement-stat">
+                        <span class="stat-number">67</span>
+                        <span class="stat-label">Active Saving Streaks</span>
+                    </div>
+                    <div class="achievement-stat">
+                        <span class="stat-number">$2.3M</span>
+                        <span class="stat-label">Community Savings Goal</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#money-challenge" class="btn btn-primary">Start Money Challenge</a>
+                    <a href="#financial-skills" class="btn btn-secondary">Explore Skills</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Money Challenge -->
+        <section class="money-challenge fade-in-up">
+            <div class="challenge-widget" id="money-challenge">
+                <div class="challenge-header">
+                    <h3 class="challenge-title">💸 Week-Long Spending Awareness Challenge</h3>
+                    <div class="challenge-timer" id="challenge-timer">Ends in 3 days</div>
+                </div>
+                
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem; text-align: center;">Track every dollar you spend for 7 days and join 234 students building money awareness! Compare spending patterns and discover your money habits.</p>
+                
+                <div class="challenge-participants">
+                    <div class="participant-stat">
+                        <span class="number">234</span>
+                        <span class="label">Participants</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">$47</span>
+                        <span class="label">Avg Daily Spend</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">5.2</span>
+                        <span class="label">Days Completed</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="joinSpendingChallenge()">Join Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewSpendingLeaderboard()">View Leaderboard</button>
+                    <button class="btn btn-secondary" onclick="shareChallenge()">Invite Friends</button>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Financial Skills Section -->
+        <section class="financial-skills fade-in-up">
+            <div class="skills-container" id="financial-skills">
+                <h2 class="section-heading">Master Elite Money Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="skill-level">Beginner</div>
+                        </div>
+                        <h3>Smart Budgeting</h3>
+                        <p>Master the 50/30/20 rule and build budgeting habits that stick. Track expenses like a pro and never overspend again.</p>
+                        
+                        <div class="skill-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>2/5 challenges</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-items">
+                            <div class="challenge-item completed" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Track all expenses for 7 days</div>
+                            </div>
+                            <div class="challenge-item completed" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Create your first budget plan</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Stick to budget for 2 weeks</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Set up automatic savings</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Build $500 emergency fund</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;">Continue Training</button>
+                    </div>
+ 
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="skill-level">Intermediate</div>
+                        </div>
+                        <h3>Elite Saving Habits</h3>
+                        <p>Build wealth through strategic saving habits. Master the pay-yourself-first principle and automate your financial future.</p>
+                        
+                        <div class="skill-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>0/5 challenges</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-items">
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Save $50 in your first month</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Open high-yield savings account</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Build 30-day saving streak</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Automate weekly savings</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Reach $1000 milestone</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;">Start Training</button>
+                    </div>
+ 
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <h3>Investment Fundamentals</h3>
+                        <p>Start building wealth early with smart investment habits. Learn index funds, compound interest, and long-term thinking.</p>
+                        
+                        <div class="skill-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>0/5 challenges</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-items">
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Complete investment basics course</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Research 3 index funds</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Calculate compound interest gains</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Open investment account</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Make first $100 investment</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;">Unlock Level</button>
+                    </div>
+ 
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="skill-level">Beginner</div>
+                        </div>
+                        <h3>Credit Mastery</h3>
+                        <p>Build excellent credit from day one. Master responsible credit use and avoid the debt traps that catch most students.</p>
+                        
+                        <div class="skill-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>0/5 challenges</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-items">
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Learn credit score basics</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Check your credit report</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Research student credit cards</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Make first responsible purchase</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Pay balance in full 3 months</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;">Start Training</button>
+                    </div>
+ 
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="skill-level">Intermediate</div>
+                        </div>
+                        <h3>Student Loan Strategy</h3>
+                        <p>Master student loans before they master you. Learn repayment strategies, forgiveness programs, and debt optimization.</p>
+                        
+                        <div class="skill-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>0/5 challenges</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-items">
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Understand your loan terms</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Research repayment options</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Calculate total loan cost</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Set up auto-pay discount</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Make extra payment</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;">Start Training</button>
+                    </div>
+ 
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="skill-level">Beginner</div>
+                        </div>
+                        <h3>Tax Intelligence</h3>
+                        <p>Master taxes like a pro. Maximize refunds, understand deductions, and never fear tax season again.</p>
+                        
+                        <div class="skill-progress">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>0/5 challenges</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-items">
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Learn tax basics (W-2, 1099)</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Organize tax documents</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Research student deductions</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">File first tax return</div>
+                            </div>
+                            <div class="challenge-item" onclick="toggleChallenge(this)">
+                                <div class="challenge-checkbox"></div>
+                                <div class="challenge-text">Maximize refund legally</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;">Start Training</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Money Tracker Tool -->
+        <section class="money-tracker fade-in-up">
+            <div class="tracker-container">
+                <h2 class="section-heading">Money Tracker & Analytics</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track your spending like an elite performer. Build awareness, spot patterns, and compete with other students building better money habits.</p>
+                
+                <div class="tracker-tabs">
+                    <div class="tracker-tab active" onclick="switchTab('daily')">Today</div>
+                    <div class="tracker-tab" onclick="switchTab('weekly')">This Week</div>
+                    <div class="tracker-tab" onclick="switchTab('goals')">Savings Goals</div>
+                </div>
+ 
+                <div id="daily" class="tracker-content active">
+                    <div class="spending-input">
+                        <input type="number" class="money-input" placeholder="Amount spent (e.g. $12.50)" id="daily-amount">
+                        <button class="add-btn" onclick="addSpending('daily')">+ Add Expense</button>
+                    </div>
+                    
+                    <div class="money-summary">
+                        <div class="summary-item">
+                            <div class="summary-amount" id="today-spent">$0.00</div>
+                            <div class="summary-label">Spent Today</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount" id="daily-budget">$25.00</div>
+                            <div class="summary-label">Daily Budget</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount" id="daily-remaining">$25.00</div>
+                            <div class="summary-label">Remaining</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount" id="daily-streak">7</div>
+                            <div class="summary-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <div id="weekly" class="tracker-content">
+                    <div class="money-summary">
+                        <div class="summary-item">
+                            <div class="summary-amount">$142.50</div>
+                            <div class="summary-label">Spent This Week</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount">$175.00</div>
+                            <div class="summary-label">Weekly Budget</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount">$32.50</div>
+                            <div class="summary-label">Under Budget</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount">18.6%</div>
+                            <div class="summary-label">Savings Rate</div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <div id="goals" class="tracker-content">
+                    <div class="money-summary">
+                        <div class="summary-item">
+                            <div class="summary-amount">$347</div>
+                            <div class="summary-label">Emergency Fund</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount">$1,000</div>
+                            <div class="summary-label">Goal Amount</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount">34.7%</div>
+                            <div class="summary-label">Progress</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-amount">16</div>
+                            <div class="summary-label">Weeks to Goal</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn btn-primary">View Detailed Analytics</button>
+                    <button class="btn btn-secondary">Compare with Friends</button>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Student Success Stories -->
+        <section class="success-stories fade-in-up">
+            <div class="stories-container">
+                <h2 class="section-heading">Elite Money Success Stories</h2>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">AS</div>
+                            <div class="story-info">
+                                <h4>Alex S.</h4>
+                                <p>Year 11, Sydney Grammar</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The spending tracker helped me realize I was wasting $200/month on impulse buys. Now I've saved $1,200 in 6 months and I'm building actual wealth habits!"
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">156</span>
+                                <span class="metric-label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">$1,247</span>
+                                <span class="metric-label">Saved</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">MK</div>
+                            <div class="story-info">
+                                <h4>Maya K.</h4>
+                                <p>Year 12, Melbourne High</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The investment challenges got me started early. I'm 17 and already have $2,000 in index funds. My friends think I'm crazy but I'll be rich by 30!"
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">89</span>
+                                <span class="metric-label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">$2,156</span>
+                                <span class="metric-label">Invested</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">JL</div>
+                            <div class="story-info">
+                                <h4>Jake L.</h4>
+                                <p>Year 10, Brisbane Grammar</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The credit mastery course saved me from making huge mistakes. I built a 720+ credit score by 18 while my friends are getting rejected for basic cards."
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">234</span>
+                                <span class="metric-label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">742</span>
+                                <span class="metric-label">Credit Score</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary">Share Your Success Story</button>
+                    <button class="btn btn-secondary">Join Elite Money Community</button>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- CTA Section -->
+        <section class="financial-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Build Your Financial Foundation Today</h2>
+                <p class="cta-subtitle">Join 892 ambitious students using gamified challenges to build elite money habits. Track, compete, and master the financial skills that create lifelong wealth.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="signup.html" class="btn btn-primary">Start Free Challenge</a>
+                    <button class="btn btn-secondary" onclick="shareWithFriends()">Invite Friends</button>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Load saved progress
+            loadUserProgress();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Add click handlers for all skill card buttons
+            document.querySelectorAll('.skill-card .btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const skillCard = this.closest('.skill-card');
+                    const skillTitle = skillCard.querySelector('h3').textContent;
+                    handleSkillAction(this, skillTitle);
+                });
+            });
+            
+            // Add click handlers for tracker buttons
+            document.querySelectorAll('.tracker-container .btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleTrackerAction(this.textContent.trim());
+                });
+            });
+            
+            // Add click handlers for success story buttons
+            document.querySelectorAll('.success-stories .btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleSuccessAction(this.textContent.trim());
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+
+        // Challenge Functions
+        let userSpending = 0;
+        let currentTab = 'daily';
+        let completedChallenges = new Set();
+
+        function joinSpendingChallenge() {
+            alert('💰 Spending Challenge accepted!\n\nYou\'re now part of the 7-day spending awareness challenge. Track every expense and see how you compare to 234 other students!\n\n🎯 Goal: Build complete spending awareness\n🏆 Reward: +50 XP and Financial Awareness Badge');
+            
+            // Mark challenge as joined
+            localStorage.setItem('spendingChallengeJoined', 'true');
+            
+            // Update button text
+            event.target.textContent = 'Challenge Active! 🔥';
+            event.target.style.background = 'rgba(39, 174, 96, 0.8)';
+        }
+
+        function viewSpendingLeaderboard() {
+            const leaderboardData = `
+🏆 SPENDING CHALLENGE LEADERBOARD 🏆
+
+📊 Top Money Trackers This Week:
+
+1. 🥇 Sarah K. (Melbourne Grammar) - 7/7 days tracked
+2. 🥈 Alex M. (Sydney Boys) - 7/7 days tracked  
+3. 🥉 Emma T. (Brisbane Girls) - 6/7 days tracked
+4. Jake L. (Knox Grammar) - 6/7 days tracked
+5. Maya P. (Perth Modern) - 5/7 days tracked
+
+📈 Your Stats:
+- Rank: #12 out of 234 students
+- Days Tracked: 5/7
+- Avg Daily Spend: $31.20
+- Community Avg: $47.00
+- You're spending 34% less than average! 🎉
+
+💡 Tip: Track 2 more days to break into top 10!
+            `;
+            alert(leaderboardData);
+        }
+
+        function shareChallenge() {
+            const shareText = `I'm building elite money habits on Vivify! 💰\n\nJoin me in the 7-day spending awareness challenge - track expenses, compete with other students, and build financial intelligence.\n\nCurrent rank: #12 out of 234 students 📈\n\n${window.location.origin}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join my Money Challenge!',
+                    text: shareText,
+                    url: window.location.origin
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('💰 Challenge invite copied to clipboard!\n\nShare it with your friends to compete together in building elite money habits!');
+                });
+            }
+        }
+
+        function handleSkillAction(button, skillTitle) {
+            const buttonText = button.textContent.trim();
+            
+            switch(buttonText) {
+                case 'Continue Training':
+                    alert(`🚀 Continuing ${skillTitle} Training!\n\n📚 Next up:\n• Complete budget review workshop\n• Take spending personality quiz\n• Join advanced budgeting community\n\n🎯 Complete these to unlock the next skill level!`);
+                    break;
+                    
+                case 'Start Training':
+                    alert(`🔥 Starting ${skillTitle} Training!\n\n📋 Your Training Plan:\n• Watch introduction video (5 min)\n• Complete first challenge\n• Join skill-specific community\n• Track daily progress\n\n🏆 Estimated time to mastery: 2-3 weeks`);
+                    // Mark as started
+                    button.textContent = 'Training Started 🎯';
+                    button.style.background = 'rgba(39, 174, 96, 0.8)';
+                    break;
+                    
+                case 'Unlock Level':
+                    alert(`🔒 ${skillTitle} Level Locked!\n\n📊 Requirements to unlock:\n• Complete Smart Budgeting (40% done)\n• Complete Elite Saving Habits (0% done)\n• Maintain 30-day money tracking streak\n\n💪 Keep building your foundation skills first!`);
+                    break;
+                    
+                default:
+                    alert(`Training for ${skillTitle} will begin shortly! 🚀`);
+            }
+        }
+
+        function handleTrackerAction(actionText) {
+            switch(actionText) {
+                case 'View Detailed Analytics':
+                    showDetailedAnalytics();
+                    break;
+                case 'Compare with Friends':
+                    showFriendComparison();
+                    break;
+                default:
+                    alert('Feature coming soon! 🔧');
+            }
+        }
+
+        function showDetailedAnalytics() {
+            const analyticsData = `
+📊 YOUR DETAILED MONEY ANALYTICS 📊
+
+💰 SPENDING BREAKDOWN (This Week):
+- Food & Dining: $67.50 (47%)
+- Transportation: $28.00 (20%)
+- Entertainment: $25.00 (18%)
+- Shopping: $15.00 (11%)
+- Other: $7.00 (4%)
+
+📈 TRENDS & INSIGHTS:
+- Your spending decreased 23% this week
+- You're saving $12 more per week than last month
+- Strongest spending day: Friday ($45.60)
+- Best saving day: Tuesday ($8.20)
+
+🎯 PERSONALIZED RECOMMENDATIONS:
+- Try meal prepping to reduce food costs
+- You're doing great with entertainment budgeting!
+- Consider carpooling to cut transport costs
+
+🏆 ACHIEVEMENTS UNLOCKED:
+✅ Week-long tracker (Day 7/7)
+✅ Under-budget warrior (3 days this week)
+✅ Savings streak champion (14 days)
+
+Keep up the elite money habits! 💪
+            `;
+            alert(analyticsData);
+        }
+
+        function showFriendComparison() {
+            const comparisonData = `
+👥 FRIEND COMPARISON DASHBOARD 👥
+
+🔥 YOUR MONEY HABIT STREAKS:
+You: 14 days 🔥
+Jake M.: 21 days 🔥🔥
+Sarah K.: 8 days 🔥
+Alex T.: 45 days 🔥🔥🔥
+
+💰 AVERAGE DAILY SPENDING:
+You: $31.20 ⭐ (34% below group avg)
+Jake M.: $41.50
+Sarah K.: $52.30
+Alex T.: $28.90 ⭐ (38% below group avg)
+
+📊 SAVINGS RATE:
+You: 18.6% 📈
+Group Average: 12.4%
+Top Performer: Alex T. (22.1%) 🏆
+
+🎯 FRIEND CHALLENGES:
+- Beat Jake's 21-day streak (7 days to go!)
+- Match Alex's savings rate
+- Join Sarah in "No-Spend Sunday" challenge
+
+💡 You're doing better than 67% of your friends!
+            `;
+            alert(comparisonData);
+        }
+
+        function handleSuccessAction(actionText) {
+            switch(actionText) {
+                case 'Share Your Success Story':
+                    shareSuccessStory();
+                    break;
+                case 'Join Elite Money Community':
+                    joinCommunity();
+                    break;
+                default:
+                    alert('Feature coming soon! 🔧');
+            }
+        }
+
+        function shareSuccessStory() {
+            const userStory = prompt(`🌟 SHARE YOUR SUCCESS STORY! 🌟
+
+Tell other students how Vivify helped you build better money habits:
+
+Examples:
+- "Saved my first $500 in 3 months!"
+- "Learned to budget and stopped overspending"
+- "Built a 45-day tracking streak"
+
+Your story (keep it under 150 characters):`);
+            
+            if (userStory && userStory.trim()) {
+                alert(`🎉 SUCCESS STORY SUBMITTED! 🎉
+
+Your story: "${userStory}"
+
+✅ Story will be reviewed and featured
+✅ +100 XP awarded for sharing
+✅ Inspiring the community badge unlocked
+
+Thank you for inspiring other students! 💪`);
+            }
+        }
+
+        function joinCommunity() {
+            alert(`🚀 JOINING ELITE MONEY COMMUNITY! 🚀
+
+Welcome to the exclusive community of students building wealth habits!
+
+🎯 COMMUNITY FEATURES:
+- Daily money challenges
+- Student success spotlights  
+- Expert Q&A sessions
+- Investment study groups
+- Scholarship opportunities
+
+📱 ACCESS:
+- Discord server invite sent
+- Weekly newsletter subscribed
+- Mobile app notifications enabled
+
+💪 Ready to build wealth with 892 ambitious students!`);
+        }
+
+        function toggleChallenge(element) {
+            element.classList.toggle('completed');
+            
+            // Add success animation
+            if (element.classList.contains('completed')) {
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 1000);
+                
+                // Track completion
+                const challengeText = element.querySelector('.challenge-text').textContent;
+                completedChallenges.add(challengeText);
+                
+                // Show success notification
+                showChallengeSuccess(challengeText);
+            } else {
+                const challengeText = element.querySelector('.challenge-text').textContent;
+                completedChallenges.delete(challengeText);
+            }
+            
+            // Update progress bar
+            const skillCard = element.closest('.skill-card');
+            updateSkillProgress(skillCard);
+            
+            // Save progress
+            saveUserProgress();
+        }
+
+        function showChallengeSuccess(challengeText) {
+            const xpReward = Math.floor(Math.random() * 20) + 10; // 10-30 XP
+            alert(`🎉 CHALLENGE COMPLETED! 🎉
+
+✅ ${challengeText}
+
+🏆 REWARDS:
+- +${xpReward} XP earned
+- Progress updated
+- Streak maintained
+
+💪 Keep building those elite money habits!`);
+        }
+
+        function updateSkillProgress(skillCard) {
+            const challenges = skillCard.querySelectorAll('.challenge-item');
+            const completed = skillCard.querySelectorAll('.challenge-item.completed');
+            const progress = (completed.length / challenges.length) * 100;
+            
+            const progressFill = skillCard.querySelector('.progress-fill');
+            const progressLabel = skillCard.querySelector('.progress-label span:last-child');
+            
+            progressFill.style.width = progress + '%';
+            progressLabel.textContent = `${completed.length}/${challenges.length} challenges`;
+            
+            // Update button based on progress
+            const button = skillCard.querySelector('.btn');
+            if (progress === 100) {
+                button.textContent = 'Skill Mastered! 🏆';
+                button.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+            } else if (progress > 0 && button.textContent === 'Start Training') {
+                button.textContent = 'Continue Training';
+                button.style.background = 'rgba(39, 174, 96, 0.8)';
+            }
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tracker-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tracker-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function addSpending(type) {
+            const input = document.getElementById(`${type}-amount`);
+            const amount = parseFloat(input.value);
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('💰 Please enter a valid amount (e.g., 12.50)');
+                return;
+            }
+            
+            userSpending += amount;
+            
+            // Update display
+            updateSpendingDisplay();
+            
+            // Clear input
+            input.value = '';
+            
+            // Save progress
+            saveUserProgress();
+            
+            // Success feedback with XP
+            const xpGain = Math.ceil(amount / 10); // 1 XP per $10 spent tracked
+            alert(`✅ Expense Added: $${amount.toFixed(2)}
+
+🎯 PROGRESS UPDATED:
+- Total today: $${userSpending.toFixed(2)}
+- +${xpGain} XP for tracking
+- Streak maintained
+
+💪 Keep tracking to build money awareness!`);
+            
+            // Check for achievements
+            checkSpendingAchievements();
+        }
+
+        function checkSpendingAchievements() {
+            const dailyBudget = parseFloat(document.getElementById('daily-budget').textContent.replace('$', ''));
+            
+            if (userSpending <= dailyBudget && userSpending > 0) {
+                setTimeout(() => {
+                    alert(`🏆 ACHIEVEMENT UNLOCKED! 🏆
+
+"Budget Master"
+Stayed within daily budget while tracking all expenses!
+
+🎁 REWARDS:
+- +50 bonus XP
+- Budget Master badge
+- Streak multiplier activated
+
+You're building elite money habits! 💪`);
+                }, 1000);
+            }
+        }
+
+        function updateSpendingDisplay() {
+            const dailyBudget = parseFloat(document.getElementById('daily-budget').textContent.replace('$', ''));
+            const remaining = Math.max(0, dailyBudget - userSpending);
+            
+            document.getElementById('today-spent').textContent = `$${userSpending.toFixed(2)}`;
+            document.getElementById('daily-remaining').textContent = `$${remaining.toFixed(2)}`;
+            
+            // Update colors based on spending status
+            const todaySpent = document.getElementById('today-spent');
+            const dailyRemaining = document.getElementById('daily-remaining');
+            
+            if (userSpending > dailyBudget) {
+                todaySpent.style.color = '#e74c3c';
+                dailyRemaining.style.color = '#e74c3c';
+                dailyRemaining.textContent = `-$${(userSpending - dailyBudget).toFixed(2)}`;
+            } else if (userSpending > dailyBudget * 0.8) {
+                todaySpent.style.color = '#f39c12';
+                dailyRemaining.style.color = '#f39c12';
+            } else {
+                todaySpent.style.color = '#27ae60';
+                dailyRemaining.style.color = '#f39c12';
+            }
+        }
+
+        function saveUserProgress() {
+            const progress = {
+                spending: userSpending,
+                challenges: Array.from(completedChallenges),
+                currentTab: currentTab,
+                lastUpdated: Date.now()
+            };
+            
+            localStorage.setItem('financialProgress', JSON.stringify(progress));
+        }
+
+        function loadUserProgress() {
+            const saved = localStorage.getItem('financialProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                
+                // Restore spending
+                userSpending = progress.spending || 0;
+                updateSpendingDisplay();
+                
+                // Restore completed challenges
+                completedChallenges = new Set(progress.challenges || []);
+                progress.challenges?.forEach(challengeText => {
+                    const challengeItems = document.querySelectorAll('.challenge-item');
+                    challengeItems.forEach(item => {
+                        if (item.querySelector('.challenge-text').textContent === challengeText) {
+                            item.classList.add('completed');
+                        }
+                    });
+                });
+                
+                // Update all progress bars
+                document.querySelectorAll('.skill-card').forEach(updateSkillProgress);
+            }
+        }
+
+        function shareWithFriends() {
+            const shareText = `I'm building elite money habits on Vivify! 💰
+
+📊 My Progress:
+- ${completedChallenges.size} challenges completed
+- $${userSpending.toFixed(2)} tracked today
+- Building financial intelligence daily
+
+Join 892+ students mastering money through gamified challenges: ${window.location.origin}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join me on Vivify!',
+                    text: shareText,
+                    url: window.location.origin
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('💰 Invite link copied to clipboard!\n\nShare your financial success with friends!');
+                });
+            }
+        }
+
+        // Initialize display on load
+        setTimeout(() => {
+            updateSpendingDisplay();
+        }, 500);
+
+        // Simulated real-time updates for community stats
+        function updateCommunityStats() {
+            const baseStats = {
+                students: 892,
+                streaks: 67,
+                savings: 2.3
+            };
+            
+            setInterval(() => {
+                const variation = () => Math.floor(Math.random() * 3);
+                
+                const statsElements = document.querySelectorAll('.achievement-stat .stat-number');
+                if (statsElements.length >= 3) {
+                    statsElements[0].textContent = baseStats.students + variation();
+                    statsElements[1].textContent = baseStats.streaks + variation();
+                }
+            }, 30000);
+        }
+
+        // Start community stats updates
+        updateCommunityStats();
+</script>
+</body>
+</html>

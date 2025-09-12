@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Networking Events - Vivify</title>
+   
+    
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .networking-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                       url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .networking-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .networking-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+           line-height: 1.6;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2.5rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+           padding-bottom: 0.5rem;
+           border-bottom: 2px solid #333;
+       }
+
+       .content-section {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .search-filters {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           display: flex;
+           flex-wrap: wrap;
+           gap: 1rem;
+           align-items: center;
+       }
+
+       .filter-group {
+           display: flex;
+           flex-direction: column;
+           gap: 0.5rem;
+       }
+
+       .filter-group label {
+           color: #f39c12;
+           font-weight: 600;
+           font-size: 0.9rem;
+       }
+
+       .filter-group select,
+       .filter-group input {
+           padding: 0.8rem;
+           border: 1px solid #444;
+           border-radius: 5px;
+           background-color: #333;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .filter-group select:focus,
+       .filter-group input:focus {
+           outline: none;
+           border-color: #f39c12;
+       }
+
+       .search-btn {
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           padding: 0.8rem 2rem;
+           border-radius: 5px;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+           align-self: flex-end;
+       }
+
+       .search-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .events-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+           gap: 2rem;
+           margin: 3rem 0;
+       }
+
+       .event-card {
+           background-color: #222;
+           border-radius: 10px;
+           overflow: hidden;
+           transition: transform 0.3s, box-shadow 0.3s;
+           box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+           border-left: 4px solid #f39c12;
+       }
+
+       .event-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 12px 16px rgba(0,0,0,0.3);
+       }
+
+       .event-header {
+           padding: 1.5rem;
+           border-bottom: 1px solid #333;
+       }
+
+       .event-date {
+           background-color: #f39c12;
+           color: black;
+           padding: 0.5rem 1rem;
+           border-radius: 5px;
+           font-weight: bold;
+           font-size: 0.9rem;
+           display: inline-block;
+           margin-bottom: 1rem;
+       }
+
+       .event-title {
+           color: #f39c12;
+           font-size: 1.3rem;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .event-organizer {
+           color: #ccc;
+           font-size: 0.9rem;
+       }
+
+       .event-content {
+           padding: 1.5rem;
+       }
+
+       .event-details {
+           display: flex;
+           flex-direction: column;
+           gap: 0.8rem;
+           margin-bottom: 1.5rem;
+       }
+
+       .event-detail {
+           display: flex;
+           align-items: center;
+           gap: 0.8rem;
+           color: #ddd;
+           font-size: 0.9rem;
+       }
+
+       .event-detail i {
+           color: #f39c12;
+           width: 16px;
+           text-align: center;
+       }
+
+       .event-description {
+           color: #ccc;
+           line-height: 1.5;
+           margin-bottom: 1.5rem;
+       }
+
+       .event-tags {
+           display: flex;
+           flex-wrap: wrap;
+           gap: 0.5rem;
+           margin-bottom: 1.5rem;
+       }
+
+       .event-tag {
+           background-color: #333;
+           color: #f39c12;
+           padding: 0.3rem 0.8rem;
+           border-radius: 15px;
+           font-size: 0.8rem;
+           border: 1px solid #f39c12;
+       }
+
+       .event-actions {
+           display: flex;
+           gap: 1rem;
+       }
+
+       .btn-register {
+           flex: 1;
+           background-color: #27ae60;
+           color: white;
+           border: none;
+           padding: 0.8rem;
+           border-radius: 5px;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .btn-register:hover {
+           background-color: #219a52;
+       }
+
+       .btn-save {
+           background-color: transparent;
+           color: #f39c12;
+           border: 2px solid #f39c12;
+           padding: 0.8rem 1.5rem;
+           border-radius: 5px;
+           cursor: pointer;
+           transition: all 0.3s;
+       }
+
+       .btn-save:hover {
+           background-color: #f39c12;
+           color: black;
+       }
+
+       .event-types {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 3rem;
+           margin: 3rem 0;
+       }
+
+       .types-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .type-card {
+           background-color: #222;
+           padding: 2rem;
+           border-radius: 10px;
+           text-align: center;
+           transition: transform 0.3s;
+       }
+
+       .type-card:hover {
+           transform: translateY(-3px);
+       }
+
+       .type-icon {
+           font-size: 3rem;
+           margin-bottom: 1rem;
+       }
+
+       .career-fairs .type-icon { color: #3498db; }
+       .industry-meetups .type-icon { color: #e74c3c; }
+       .conferences .type-icon { color: #9b59b6; }
+       .workshops .type-icon { color: #27ae60; }
+       .alumni-events .type-icon { color: #f39c12; }
+       .startup-events .type-icon { color: #e67e22; }
+
+       .type-card h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .type-card p {
+           color: #ddd;
+           line-height: 1.6;
+           margin-bottom: 1.5rem;
+       }
+
+       .type-card ul {
+           text-align: left;
+           color: #ccc;
+           padding-left: 1.5rem;
+       }
+
+       .type-card li {
+           margin-bottom: 0.5rem;
+       }
+
+       .networking-tips {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 3rem;
+           margin: 3rem 0;
+       }
+
+       .tips-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .tip-card {
+           background-color: #34495e;
+           padding: 2rem;
+           border-radius: 10px;
+           border-left: 4px solid #f39c12;
+       }
+
+       .tip-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+           display: flex;
+           align-items: center;
+           gap: 0.5rem;
+       }
+
+       .tip-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+       }
+
+       .saved-events {
+           background-color: #27ae60;
+           color: white;
+           padding: 3rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+           text-align: center;
+       }
+
+       .saved-list {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 1rem;
+           margin: 2rem 0;
+       }
+
+       .saved-item {
+           background-color: rgba(255, 255, 255, 0.1);
+           padding: 1rem;
+           border-radius: 5px;
+           text-align: left;
+       }
+
+       .saved-item h4 {
+           margin-bottom: 0.5rem;
+       }
+
+       .saved-item p {
+           font-size: 0.9rem;
+           opacity: 0.9;
+       }
+
+       .online-platforms {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 3rem;
+           margin: 3rem 0;
+       }
+
+       .platforms-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .platform-card {
+           background-color: #2c3e50;
+           padding: 2rem;
+           border-radius: 10px;
+           text-align: center;
+       }
+
+       .platform-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .platform-card p {
+           color: #ecf0f1;
+           margin-bottom: 1.5rem;
+       }
+
+       .platform-link {
+           background-color: #f39c12;
+           color: black;
+           padding: 0.8rem 1.5rem;
+           text-decoration: none;
+           border-radius: 5px;
+           font-weight: bold;
+           transition: background-color 0.3s;
+       }
+
+       .platform-link:hover {
+           background-color: #e67e22;
+       }
+
+       .cta-button {
+           display: inline-block;
+           padding: 1rem 2rem;
+           background-color: #f39c12;
+           color: #000;
+           text-decoration: none;
+           border-radius: 5px;
+           font-weight: 700;
+           font-size: 1.1rem;
+           transition: background-color 0.3s;
+           margin: 1rem 0.5rem;
+       }
+
+       .cta-button:hover {
+           background-color: #e67e22;
+       }
+
+       .no-events {
+           text-align: center;
+           color: #ccc;
+           padding: 3rem;
+           background-color: #222;
+           border-radius: 10px;
+       }
+
+       .no-events i {
+           font-size: 4rem;
+           color: #444;
+           margin-bottom: 1rem;
+       }
+
+       @media (max-width: 768px) {
+           .networking-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .search-filters {
+               flex-direction: column;
+               align-items: stretch;
+           }
+           
+           .filter-group {
+               width: 100%;
+           }
+           
+           .search-btn {
+               align-self: stretch;
+           }
+           
+           .event-actions {
+               flex-direction: column;
+           }
+       }
+   </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                               <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="networking-hero">
+           <h1>Networking Events & Opportunities</h1>
+           <p>Discover professional networking events, career fairs, industry meetups, and workshops happening near you. Build meaningful connections that will advance your career and expand your professional network.</p>
+           <a href="#find-events" class="cta-button">Find Events</a>
+       </section>
+
+       <!-- Search and Filters -->
+       <section id="find-events" class="content-section">
+           <h2 class="section-title">Find Networking Events</h2>
+           <div class="search-filters">
+               <div class="filter-group">
+                   <label for="location">Location</label>
+                   <select id="location">
+                       <option value="">All Locations</option>
+                       <option value="sydney">Sydney, NSW</option>
+                       <option value="melbourne">Melbourne, VIC</option>
+                       <option value="brisbane">Brisbane, QLD</option>
+                       <option value="perth">Perth, WA</option>
+                       <option value="adelaide">Adelaide, SA</option>
+                       <option value="canberra">Canberra, ACT</option>
+                       <option value="hobart">Hobart, TAS</option>
+                       <option value="darwin">Darwin, NT</option>
+                       <option value="online">Online Events</option>
+                   </select>
+               </div>
+               
+               <div class="filter-group">
+                   <label for="industry">Industry</label>
+                   <select id="industry">
+                       <option value="">All Industries</option>
+                       <option value="technology">Technology</option>
+                       <option value="finance">Finance & Banking</option>
+                       <option value="healthcare">Healthcare</option>
+                       <option value="marketing">Marketing & Media</option>
+                       <option value="engineering">Engineering</option>
+                       <option value="education">Education</option>
+                       <option value="consulting">Consulting</option>
+                       <option value="startups">Startups</option>
+                       <option value="government">Government</option>
+                       <option value="nonprofit">Non-Profit</option>
+                   </select>
+               </div>
+               
+               <div class="filter-group">
+                   <label for="event-type">Event Type</label>
+                   <select id="event-type">
+                       <option value="">All Types</option>
+                       <option value="career-fair">Career Fair</option>
+                       <option value="meetup">Industry Meetup</option>
+                       <option value="conference">Conference</option>
+                       <option value="workshop">Workshop</option>
+                       <option value="alumni">Alumni Event</option>
+                       <option value="startup">Startup Event</option>
+                       <option value="panel">Panel Discussion</option>
+                       <option value="social">Social Mixer</option>
+                   </select>
+               </div>
+               
+               <div class="filter-group">
+                   <label for="date-range">Date Range</label>
+                   <select id="date-range">
+                       <option value="upcoming">Next 30 Days</option>
+                       <option value="week">This Week</option>
+                       <option value="month">This Month</option>
+                       <option value="quarter">Next 3 Months</option>
+                   </select>
+               </div>
+               
+               <button class="search-btn" onclick="searchEvents()">
+                   <i class="fas fa-search"></i> Search Events
+               </button>
+           </div>
+       </section>
+
+       <!-- Events Grid -->
+       <section class="content-section">
+           <div id="events-container">
+               <div class="events-grid" id="events-grid">
+                   <!-- Events will be populated by JavaScript -->
+               </div>
+           </div>
+       </section>
+
+       <!-- Event Types Guide -->
+       <section class="event-types">
+           <h2 class="section-title">Types of Networking Events</h2>
+           <div class="types-grid">
+               <div class="type-card career-fairs">
+                   <div class="type-icon">
+                       <i class="fas fa-briefcase"></i>
+                   </div>
+                   <h3>Career Fairs</h3>
+                   <p>Meet multiple employers in one location, learn about job opportunities, and submit resumes directly.</p>
+                   <ul>
+                       <li>Multiple companies in one venue</li>
+                       <li>On-the-spot interviews possible</li>
+                       <li>Great for exploring different industries</li>
+                       <li>Usually free for students</li>
+                   </ul>
+               </div>
+
+               <div class="type-card industry-meetups">
+                   <div class="type-icon">
+                       <i class="fas fa-users"></i>
+                   </div>
+                   <h3>Industry Meetups</h3>
+                   <p>Informal gatherings of professionals in specific industries to share knowledge and connect.</p>
+                   <ul>
+                       <li>Casual, friendly atmosphere</li>
+                       <li>Learn about industry trends</li>
+                       <li>Meet peers and mentors</li>
+                       <li>Often include food and drinks</li>
+                   </ul>
+               </div>
+
+               <div class="type-card conferences">
+                   <div class="type-icon">
+                       <i class="fas fa-microphone"></i>
+                   </div>
+                   <h3>Professional Conferences</h3>
+                   <p>Large-scale events with speakers, workshops, and extensive networking opportunities.</p>
+                   <ul>
+                       <li>Industry leaders as speakers</li>
+                       <li>Latest trends and innovations</li>
+                       <li>Structured networking sessions</li>
+                       <li>Student discounts often available</li>
+                   </ul>
+               </div>
+
+               <div class="type-card workshops">
+                   <div class="type-icon">
+                       <i class="fas fa-tools"></i>
+                   </div>
+                   <h3>Workshops & Skills Sessions</h3>
+                   <p>Hands-on learning experiences that also provide networking opportunities with instructors and peers.</p>
+                   <ul>
+                       <li>Learn practical skills</li>
+                       <li>Small group interactions</li>
+                       <li>Expert instructors</li>
+                       <li>Portfolio building opportunities</li>
+                   </ul>
+               </div>
+
+               <div class="type-card alumni-events">
+                   <div class="type-icon">
+                       <i class="fas fa-graduation-cap"></i>
+                   </div>
+                   <h3>Alumni Networks</h3>
+                   <p>Connect with graduates from your university who are established in their careers.</p>
+                   <ul>
+                       <li>Shared university connection</li>
+                       <li>Mentorship opportunities</li>
+                       <li>Industry insights</li>
+                       <li>Job referral possibilities</li>
+                   </ul>
+               </div>
+
+               <div class="type-card startup-events">
+                   <div class="type-icon">
+                       <i class="fas fa-rocket"></i>
+                   </div>
+                   <h3>Startup & Innovation Events</h3>
+                   <p>Dynamic events featuring entrepreneurs, investors, and innovation-focused professionals.</p>
+                   <ul>
+                       <li>Entrepreneurial mindset</li>
+                       <li>Pitch competitions</li>
+                       <li>Innovation showcases</li>
+                       <li>Investor connections</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+
+       <!-- Networking Tips -->
+       <section class="networking-tips">
+           <h2 class="section-title" style="color: #f39c12;">Networking Event Success Tips</h2>
+           <div class="tips-grid">
+               <div class="tip-card">
+                   <h4><i class="fas fa-bullseye"></i> Before the Event</h4>
+                   <p>Research attendees on LinkedIn, prepare your elevator pitch, bring business cards or have digital contact info ready, and set specific goals for connections you want to make.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h4><i class="fas fa-handshake"></i> During the Event</h4>
+                   <p>Arrive early when people are more approachable, ask open-ended questions, listen more than you talk, and focus on how you can help others rather than just what they can do for you.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h4><i class="fas fa-envelope"></i> After the Event</h4>
+                   <p>Follow up within 24-48 hours with a personalized message, connect on LinkedIn with a note about where you met, and suggest specific ways to continue the relationship.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h4><i class="fas fa-comments"></i> Conversation Starters</h4>
+                   <p>"What brings you to this event?" "What trends are you seeing in your industry?" "What's the most exciting project you're working on?" Remember to share your own insights too.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h4><i class="fas fa-user-tie"></i> Professional Presence</h4>
+                   <p>Dress appropriately for the event type, maintain good eye contact and posture, put your phone away during conversations, and carry yourself with confidence.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h4><i class="fas fa-heart"></i> Authentic Connections</h4>
+                   <p>Be genuinely interested in others, find common ground beyond work, be yourself rather than trying to impress, and focus on building relationships, not collecting contacts.</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Online Platforms -->
+       <section class="online-platforms">
+           <h2 class="section-title" style="color: #f39c12;">Online Networking Platforms</h2>
+           <p style="color: #ecf0f1; text-align: center; margin-bottom: 2rem;">Discover and join networking events through these popular Australian platforms:</p>
+           
+           <div class="platforms-grid">
+               <div class="platform-card">
+                   <h4>Meetup.com</h4>
+                   <p>Find local professional meetups and networking groups in your city. Search by industry, interest, or skill level.</p>
+                   <a href="https://www.meetup.com/find/au--sydney--events/networking/" class="platform-link" target="_blank">Browse Events</a>
+               </div>
+
+               <div class="platform-card">
+                   <h4>Eventbrite</h4>
+                   <p>Discover professional conferences, workshops, and networking events across Australia. Filter by location and industry.</p>
+                   <a href="https://www.eventbrite.com.au" class="platform-link" target="_blank">Find Events</a>
+               </div>
+
+               <div class="platform-card">
+                   <h4>LinkedIn Events</h4>
+                   <p>Professional networking events and webinars. Great for industry-specific gatherings and virtual networking.</p>
+                   <a href="https://www.linkedin.com/events" class="platform-link" target="_blank">View Events</a>
+               </div>
+
+               <div class="platform-card">
+                   <h4>Industry Australia</h4>
+                   <p>Professional association events, industry conferences, and government networking initiatives across Australia.</p>
+                   <a href="#" class="platform-link">Explore Options</a>
+               </div>
+
+               <div class="platform-card">
+                   <h4>University Career Services</h4>
+                   <p>Your university's career center hosts exclusive networking events, career fairs, and industry panels for students.</p>
+                   <a href="#" class="platform-link">Visit Career Center</a>
+               </div>
+
+               <div class="platform-card">
+                   <h4>Young Professionals Groups</h4>
+                   <p>City-specific young professional associations like Young Professionals Sydney, Melbourne Young Professionals Network.</p>
+                   <a href="#" class="platform-link">Find Your City</a>
+               </div>
+           </div>
+       </section>
+
+       <!-- Saved Events -->
+       <section class="saved-events" id="saved-events-section" style="display: none;">
+           <h2>Your Saved Events</h2>
+           <p>Keep track of events you're interested in attending:</p>
+           <div class="saved-list" id="saved-events-list">
+               <!-- Saved events will be populated here -->
+           </div>
+       </section>
+
+       <!-- CTA Section -->
+       <section class="content-section" style="text-align: center;">
+           <h2 class="section-title">Start Networking Today</h2>
+           <p style="color: #ddd; font-size: 1.2rem; margin-bottom: 2rem;">Your network is your net worth. Begin building meaningful professional relationships that will benefit your entire career.</p>
+           <a href="professional-skills.html" class="cta-button">Build Networking Skills</a>
+           <a href="career-resources.html" class="cta-button">Career Resources</a>
+           <a href="interview-preparation.html" class="cta-button">Interview Prep</a>
+       </section>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       // Sample networking events data
+       const networkingEvents = [
+           {
+               id: 1,
+               title: "Tech Networking Night Sydney",
+               organizer: "Sydney Tech Meetup",
+               date: "2024-08-15",
+               time: "18:00",
+               location: "sydney",
+               venue: "Startup Hub Sydney, CBD",
+               industry: "technology",
+               type: "meetup",
+               description: "Join fellow tech professionals for an evening of networking, drinks, and insights into the latest trends in Australian tech. Perfect for students and early-career professionals.",
+               tags: ["Tech", "Startups", "Programming", "AI"],
+               attendees: 120,
+               price: "Free",
+               link: "#"
+           },
+           {
+               id: 2,
+               title: "Melbourne Finance Graduate Career Fair",
+               organizer: "Financial Services Council",
+               date: "2024-08-22",
+               time: "10:00",
+               location: "melbourne",
+               venue: "Melbourne Convention Centre",
+               industry: "finance",
+               type: "career-fair",
+               description: "Meet recruiters from Australia's top financial institutions. Bring your resume and be prepared for on-the-spot interviews. Graduate positions available.",
+               tags: ["Banking", "Investment", "Graduates", "Jobs"],
+               attendees: 500,
+               price: "Free for students",
+               link: "#"
+           },
+           {
+               id: 3,
+               title: "Healthcare Innovation Workshop",
+               organizer: "Australian Healthcare Association",
+               date: "2024-08-18",
+               time: "09:00",
+               location: "brisbane",
+               venue: "Queensland University of Technology",
+               industry: "healthcare",
+               type: "workshop",
+               description: "Hands-on workshop exploring digital health innovations. Network with healthcare professionals and learn about emerging technologies in medical field.",
+               tags: ["Digital Health", "Innovation", "Medical Tech"],
+               attendees: 80,
+               price: "$50 (Students $20)",
+               link: "#"
+           },
+           {
+               id: 4,
+               title: "Young Professionals Marketing Mixer",
+               organizer: "Marketing Institute of Australia",
+               date: "2024-08-20",
+               time: "17:30",
+               location: "sydney",
+               venue: "Circular Quay, Sydney Harbour",
+               industry: "marketing",
+               type: "social",
+               description: "Sunset networking event for marketing professionals under 30. Enjoy harbour views while connecting with peers and industry leaders in advertising and digital marketing.",
+               tags: ["Digital Marketing", "Advertising", "Social Media", "Young Professionals"],
+               attendees: 150,
+               price: "$45",
+               link: "#"
+           },
+           {
+               id: 5,
+               title: "Engineering Excellence Conference",
+               organizer: "Engineers Australia",
+               date: "2024-09-05",
+               time: "08:30",
+               location: "perth",
+               venue: "Perth Convention Centre",
+               industry: "engineering",
+               type: "conference",
+               description: "Two-day conference featuring keynote speakers, technical sessions, and extensive networking opportunities for engineering students and professionals.",
+               tags: ["Civil Engineering", "Mechanical", "Software", "Mining"],
+               attendees: 800,
+               price: "$150 (Students $50)",
+               link: "#"
+           },
+           {
+               id: 6,
+               title: "Startup Pitch Night & Networking",
+               organizer: "Adelaide Entrepreneurs",
+               date: "2024-08-25",
+               time: "18:00",
+               location: "adelaide",
+               venue: "Innovation Hub Adelaide",
+               industry: "startups",
+               type: "startup",
+               description: "Watch local startups pitch to investors, then network with entrepreneurs, investors, and business mentors. Great for aspiring entrepreneurs.",
+               tags: ["Entrepreneurship", "Investment", "Innovation", "Business"],
+               attendees: 200,
+               price: "$25",
+               link: "#"
+           },
+           {
+               id: 7,
+               title: "Virtual Global Tech Summit",
+               organizer: "International Tech Alliance",
+               date: "2024-08-30",
+               time: "14:00",
+               location: "online",
+               venue: "Online Event",
+               industry: "technology",
+               type: "conference",
+               description: "Join professionals worldwide for discussions on AI, blockchain, and emerging technologies. Perfect for international networking from home.",
+               tags: ["AI", "Blockchain", "Remote Work", "Global"],
+               attendees: 2000,
+               price: "Free",
+               link: "#"
+           },
+           {
+               id: 8,
+               title: "Government Graduate Information Session",
+               organizer: "Australian Public Service Commission",
+               date: "2024-08-28",
+               time: "13:00",
+               location: "canberra",
+               venue: "Parliament House, Canberra",
+               industry: "government",
+               type: "career-fair",
+               description: "Learn about graduate opportunities in the Australian Public Service. Meet current graduates and hiring managers from various departments.",
+               tags: ["Public Service", "Policy", "Graduates", "Government"],
+               attendees: 300,
+               price: "Free",
+               link: "#"
+           }
+       ];
+
+       // Event management functions
+       function searchEvents() {
+           const location = document.getElementById('location').value;
+           const industry = document.getElementById('industry').value;
+           const eventType = document.getElementById('event-type').value;
+           const dateRange = document.getElementById('date-range').value;
+
+           let filteredEvents = networkingEvents.filter(event => {
+               let matches = true;
+               
+               if (location && event.location !== location) matches = false;
+               if (industry && event.industry !== industry) matches = false;
+               if (eventType && event.type !== eventType) matches = false;
+               
+               // Date filtering would go here (simplified for demo)
+               
+               return matches;
+           });
+
+           displayEvents(filteredEvents);
+       }
+
+       function displayEvents(events) {
+           const eventsGrid = document.getElementById('events-grid');
+           
+           if (events.length === 0) {
+               eventsGrid.innerHTML = `
+                   <div class="no-events">
+                       <i class="fas fa-calendar-times"></i>
+                       <h3>No events found</h3>
+                       <p>Try adjusting your search filters or check back later for new events.</p>
+                   </div>
+               `;
+               return;
+           }
+
+           eventsGrid.innerHTML = events.map(event => `
+               <div class="event-card" data-event-id="${event.id}">
+                   <div class="event-header">
+                       <div class="event-date">${formatDate(event.date)} at ${event.time}</div>
+                       <h3 class="event-title">${event.title}</h3>
+                       <p class="event-organizer">by ${event.organizer}</p>
+                   </div>
+                   <div class="event-content">
+                       <div class="event-details">
+                           <div class="event-detail">
+                               <i class="fas fa-map-marker-alt"></i>
+                               <span>${event.venue}</span>
+                           </div>
+                           <div class="event-detail">
+                               <i class="fas fa-users"></i>
+                               <span>${event.attendees} attendees expected</span>
+                           </div>
+                           <div class="event-detail">
+                               <i class="fas fa-dollar-sign"></i>
+                               <span>${event.price}</span>
+                           </div>
+                       </div>
+                       <p class="event-description">${event.description}</p>
+                       <div class="event-tags">
+                           ${event.tags.map(tag => `<span class="event-tag">${tag}</span>`).join('')}
+                       </div>
+                       <div class="event-actions">
+                           <button class="btn-register" onclick="registerForEvent(${event.id})">
+                               Register / Learn More
+                           </button>
+                           <button class="btn-save" onclick="saveEvent(${event.id})" data-saved="false">
+                               <i class="fas fa-bookmark"></i> Save
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           `).join('');
+       }
+
+       function formatDate(dateString) {
+           const date = new Date(dateString);
+           return date.toLocaleDateString('en-AU', { 
+               weekday: 'short', 
+               month: 'short', 
+               day: 'numeric' 
+           });
+       }
+
+       function registerForEvent(eventId) {
+           const event = networkingEvents.find(e => e.id === eventId);
+           if (event) {
+               // In a real app, this would open the registration link
+               alert(`Registration for "${event.title}" would open here. In a real app, this would redirect to the event registration page.`);
+               
+               // Track registration interest
+               let registeredEvents = JSON.parse(localStorage.getItem('registeredEvents')) || [];
+               if (!registeredEvents.includes(eventId)) {
+                   registeredEvents.push(eventId);
+                   localStorage.setItem('registeredEvents', JSON.stringify(registeredEvents));
+               }
+           }
+       }
+
+       function saveEvent(eventId) {
+           const button = document.querySelector(`[data-event-id="${eventId}"] .btn-save`);
+           const event = networkingEvents.find(e => e.id === eventId);
+           
+           let savedEvents = JSON.parse(localStorage.getItem('savedEvents')) || [];
+           
+           if (savedEvents.includes(eventId)) {
+               // Remove from saved
+               savedEvents = savedEvents.filter(id => id !== eventId);
+               button.innerHTML = '<i class="fas fa-bookmark"></i> Save';
+               button.style.backgroundColor = 'transparent';
+               button.style.color = '#f39c12';
+           } else {
+               // Add to saved
+               savedEvents.push(eventId);
+               button.innerHTML = '<i class="fas fa-bookmark"></i> Saved';
+               button.style.backgroundColor = '#f39c12';
+               button.style.color = 'black';
+           }
+           
+           localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+           updateSavedEventsDisplay();
+       }
+
+       function updateSavedEventsDisplay() {
+           const savedEvents = JSON.parse(localStorage.getItem('savedEvents')) || [];
+           const savedSection = document.getElementById('saved-events-section');
+           const savedList = document.getElementById('saved-events-list');
+           
+           if (savedEvents.length === 0) {
+               savedSection.style.display = 'none';
+               return;
+           }
+           
+           savedSection.style.display = 'block';
+           
+           const savedEventDetails = savedEvents.map(eventId => {
+               return networkingEvents.find(e => e.id === eventId);
+           }).filter(Boolean);
+           
+           savedList.innerHTML = savedEventDetails.map(event => `
+               <div class="saved-item">
+                   <h4>${event.title}</h4>
+                   <p>${formatDate(event.date)} • ${event.venue}</p>
+               </div>
+           `).join('');
+       }
+
+       function loadSavedEventStates() {
+           const savedEvents = JSON.parse(localStorage.getItem('savedEvents')) || [];
+           
+           savedEvents.forEach(eventId => {
+               const button = document.querySelector(`[data-event-id="${eventId}"] .btn-save`);
+               if (button) {
+                   button.innerHTML = '<i class="fas fa-bookmark"></i> Saved';
+                   button.style.backgroundColor = '#f39c12';
+                   button.style.color = 'black';
+               }
+           });
+       }
+
+       // Initialize page
+       document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           // Update UI based on login status
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           // Handle logout
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+
+           // Display all events initially
+           displayEvents(networkingEvents);
+           
+           // Load saved event states
+           setTimeout(() => {
+               loadSavedEventStates();
+               updateSavedEventsDisplay();
+           }, 100);
+
+           // Auto-search when filters change
+           document.getElementById('location').addEventListener('change', searchEvents);
+           document.getElementById('industry').addEventListener('change', searchEvents);
+           document.getElementById('event-type').addEventListener('change', searchEvents);
+           document.getElementById('date-range').addEventListener('change', searchEvents);
+
+           // Show networking tip
+           setTimeout(showNetworkingTip, 3000);
+       });
+
+       function showNetworkingTip() {
+           const tips = [
+               "Quality connections > quantity of business cards! 🤝",
+               "Follow up within 48 hours for best results! ⏰",
+               "Listen more than you speak - people love being heard! 👂",
+               "Your next opportunity might be one conversation away! 🚀",
+               "Networking is about building relationships, not just collecting contacts! 💼"
+           ];
+           
+           const randomTip = tips[Math.floor(Math.random() * tips.length)];
+           
+           const tipDiv = document.createElement('div');
+           tipDiv.style.cssText = `
+               position: fixed;
+               bottom: 20px;
+               left: 20px;
+               background: linear-gradient(135deg, #9b59b6, #8e44ad);
+               color: white;
+               padding: 1rem 1.5rem;
+               border-radius: 10px;
+               max-width: 300px;
+               box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+               z-index: 999;
+               font-weight: 600;
+           `;
+           
+           tipDiv.innerHTML = `
+               🌟 ${randomTip}
+               <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; margin-left: 1rem;">×</button>
+           `;
+           
+           document.body.appendChild(tipDiv);
+           
+           setTimeout(() => {
+               if (tipDiv.parentElement) {
+                   tipDiv.remove();
+               }
+           }, 8000);
+       }
+
+       // Simulate real-time event updates
+       function simulateEventUpdates() {
+           setInterval(() => {
+               // Randomly update attendee counts
+               networkingEvents.forEach(event => {
+                   if (Math.random() < 0.3) { // 30% chance to update
+                       event.attendees += Math.floor(Math.random() * 5);
+                   }
+               });
+               
+               // Re-display current events if they're being shown
+               const currentFilters = {
+                   location: document.getElementById('location').value,
+                   industry: document.getElementById('industry').value,
+                   eventType: document.getElementById('event-type').value
+               };
+               
+               if (currentFilters.location || currentFilters.industry || currentFilters.eventType) {
+                   searchEvents();
+               } else {
+                   displayEvents(networkingEvents);
+                   loadSavedEventStates();
+               }
+           }, 30000); // Update every 30 seconds
+       }
+
+       // Start simulated updates
+       setTimeout(simulateEventUpdates, 5000);
+   </script>
+</body>
+</html>

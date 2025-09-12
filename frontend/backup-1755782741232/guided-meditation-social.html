@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Confidence Meditation - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .meditation-hero {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .meditation-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .meditation-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .meditation-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .meditation-benefits {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .meditation-benefits h2 {
+            color: #e74c3c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .benefits-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ecf0f1;
+            font-size: 1rem;
+        }
+
+        .meditation-player {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.2);
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: floatHeart 8s infinite linear;
+            opacity: 0;
+            color: #e74c3c;
+        }
+
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .heart:nth-child(4) { left: 70%; animation-delay: 1s; }
+        .heart:nth-child(5) { left: 80%; animation-delay: 3s; }
+        .heart:nth-child(6) { left: 90%; animation-delay: 5s; }
+
+        @keyframes floatHeart {
+            0% { 
+                transform: translateY(100vh) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(-100px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .player-title {
+            color: #e74c3c;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .duration-display {
+            color: #bdc3c7;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-visualization {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            position: relative;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(231, 76, 60, 0.4);
+            transition: all 0.5s ease;
+        }
+
+        .social-visualization.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 80px rgba(231, 76, 60, 0.6);
+        }
+
+        .confidence-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: confidencePulse 4s ease-in-out infinite;
+        }
+
+        @keyframes confidencePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .confidence-icon {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .social-instruction {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #e74c3c;
+            margin-top: 1.5rem;
+            transition: color 0.5s ease;
+        }
+
+        .meditation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .control-btn.play {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .control-btn.pause {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .control-btn.reset {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .meditation-script {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            max-height: 350px;
+            overflow-y: auto;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .script-section {
+            margin-bottom: 2rem;
+            opacity: 0.5;
+            transition: opacity 0.5s ease;
+        }
+
+        .script-section.active {
+            opacity: 1;
+            color: #f4f6f7;
+        }
+
+        .script-section h4 {
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: #333;
+            height: 6px;
+            border-radius: 3px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-techniques {
+            background: #222;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .technique-card {
+            background: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .technique-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .technique-card ul {
+            padding-left: 1.5rem;
+        }
+
+        .technique-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tip-category {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tip-category h4 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-resources {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #333;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-card i {
+            font-size: 2rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .back-link {
+            background: transparent;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 2rem 0;
+        }
+
+        .back-link:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .meditation-instructions {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .meditation-instructions h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .meditation-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .meditation-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 200px;
+                justify-content: center;
+            }
+            
+            .social-visualization {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .confidence-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .confidence-icon {
+                font-size: 2rem;
+            }
+            
+            .content-section {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" class="active" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="meditation-hero">
+                <div class="hero-content">
+                    <div class="meditation-badge">
+                        <i class="fas fa-users"></i> Social Confidence
+                    </div>
+                    <h1>Social Confidence Meditation</h1>
+                    <p>Build inner confidence, reduce social anxiety, and develop meaningful connections with others. Perfect for students who feel nervous in social situations, presentations, or group activities.</p>
+                </div>
+            </section>
+
+            <div class="content-section">
+                <!-- Benefits Section -->
+                <div class="meditation-benefits">
+                    <h2><i class="fas fa-heart"></i> Benefits of Social Confidence Meditation</h2>
+                    <p>Research shows that mindfulness and confidence-building meditation can significantly improve social interactions and reduce anxiety.</p>
+                    <div class="benefits-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">60%</span>
+                            <div class="stat-label">Reduction in Social Anxiety</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">45%</span>
+                            <div class="stat-label">Improved Self-Confidence</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">30%</span>
+                            <div class="stat-label">Better Communication Skills</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meditation Player -->
+                <div class="meditation-player">
+                <div class="floating-hearts">
+                    <div class="heart">💖</div>
+                    <div class="heart">🤝</div>
+                    <div class="heart">😊</div>
+                    <div class="heart">💪</div>
+                    <div class="heart">✨</div>
+                    <div class="heart">🌟</div>
+                </div>
+                
+                <h2 class="player-title">12-Minute Social Confidence Meditation</h2>
+                <div class="duration-display">Duration: 12:00 minutes</div>
+                
+                <div class="social-visualization" id="socialVisualization">
+                    <div class="confidence-circle" id="confidenceCircle">
+                        <div class="confidence-icon" id="confidenceIcon">🤝</div>
+                    </div>
+                </div>
+                
+                <div class="social-instruction" id="socialInstruction">Prepare to Build Confidence</div>
+
+                <div class="meditation-controls">
+                    <button class="control-btn play" id="playBtn">
+                        <i class="fas fa-play"></i> Start Meditation
+                    </button>
+                    <button class="control-btn pause" id="pauseBtn" style="display: none;">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="control-btn reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span>12:00</span>
+                </div>
+            </div>
+
+            <!-- Meditation Script -->
+            <div class="meditation-script" id="meditationScript">
+                <h3 style="color: #e74c3c; text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-scroll"></i> Social Confidence Meditation Script
+                </h3>
+                
+                <div class="script-section active" data-time="0">
+                    <h4>Welcome & Grounding (0:00 - 2:00)</h4>
+                    <p>Welcome to this social confidence meditation. Find a comfortable seated position, either at your desk or in a quiet space. You might be preparing for a presentation, worried about social situations, or just wanting to feel more confident around others.</p>
+                    <p>Close your eyes and take three deep breaths. Remember, you are worthy of connection, friendship, and belonging. Your voice matters, and you have valuable contributions to make.</p>
+                </div>
+
+                <div class="script-section" data-time="120">
+                    <h4>Self-Compassion Building (2:00 - 4:30)</h4>
+                    <p>Place one hand on your heart and feel its steady rhythm. This heart has carried you through every challenge so far. Repeat silently: "I am enough exactly as I am. I deserve kindness from myself and others."</p>
+                    <p>Think of a time when a friend felt nervous about something social. What would you say to them? Now offer that same compassion to yourself. You're not alone in feeling nervous – it's a normal human experience.</p>
+                </div>
+
+                <div class="script-section" data-time="270">
+                    <h4>Confidence Visualization (4:30 - 7:00)</h4>
+                    <p>Imagine yourself in an upcoming social situation. See yourself walking in with your shoulders relaxed, your head held high. Notice how you're breathing calmly and steadily.</p>
+                    <p>Visualize making eye contact with someone and smiling genuinely. See yourself listening actively to others and contributing meaningfully to conversations. You feel grounded, present, and authentically yourself.</p>
+                </div>
+
+                <div class="script-section" data-time="420">
+                    <h4>Social Strengths Affirmation (7:00 - 9:30)</h4>
+                    <p>Think about your unique qualities that make you a good friend or classmate. Maybe you're a great listener, have a good sense of humor, or are thoughtful and caring. These are real strengths that others appreciate.</p>
+                    <p>Repeat: "I have something valuable to offer. My presence is a gift. I can connect with others authentically. I choose to be curious about others rather than worried about their judgment."</p>
+                </div>
+
+                <div class="script-section" data-time="570">
+                    <h4>Integration & Closing (9:30 - 12:00)</h4>
+                    <p>Take a moment to set an intention for your next social interaction. Perhaps it's to ask one genuine question, to share something authentic about yourself, or simply to be present and kind.</p>
+                    <p>Remember, confidence isn't about being perfect or never feeling nervous. It's about being yourself despite the nervousness. Take three final deep breaths, wiggle your fingers and toes, and when you're ready, open your eyes.</p>
+                </div>
+                            </div>
+
+                <!-- Social Confidence Techniques -->
+                <div class="social-techniques">
+                    <h2 style="color: #e74c3c; text-align: center; margin-bottom: 2rem;">
+                        <i class="fas fa-lightbulb"></i> Social Confidence Building Techniques
+                    </h2>
+                    <div class="techniques-grid">
+                        <div class="technique-card">
+                            <h4><i class="fas fa-comments"></i> Conversation Starters</h4>
+                            <ul>
+                                <li>Ask open-ended questions about interests, classes, or weekend plans</li>
+                                <li>Share something genuine about yourself first</li>
+                                <li>Comment on shared experiences (school events, assignments, etc.)</li>
+                                <li>Practice active listening - focus on understanding, not just responding</li>
+                            </ul>
+                        </div>
+
+                        <div class="technique-card">
+                            <h4><i class="fas fa-shield-alt"></i> Confidence Anchoring</h4>
+                            <ul>
+                                <li>Create a confident posture (shoulders back, feet grounded)</li>
+                                <li>Use a personal confidence phrase or mantra</li>
+                                <li>Remember past social successes, however small</li>
+                                <li>Focus on being curious about others rather than judgment</li>
+                            </ul>
+                        </div>
+
+                        <div class="technique-card">
+                            <h4><i class="fas fa-mask"></i> Managing Social Anxiety</h4>
+                            <ul>
+                                <li>Use the 5-4-3-2-1 grounding technique when feeling overwhelmed</li>
+                                <li>Practice box breathing (4-4-4-4 count)</li>
+                                <li>Challenge negative thoughts with evidence-based thinking</li>
+                                <li>Start with smaller social goals and build up gradually</li>
+                            </ul>
+                        </div>
+
+                        <div class="technique-card">
+                            <h4><i class="fas fa-graduation-cap"></i> School-Specific Tips</h4>
+                            <ul>
+                                <li>Arrive early to class to have natural conversation opportunities</li>
+                                <li>Join clubs or activities aligned with your interests</li>
+                                <li>Partner with classmates for study groups or projects</li>
+                                <li>Practice presentation skills in smaller, safer groups first</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Tips -->
+                <h2 style="color: #e74c3c; text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-star"></i> Daily Social Confidence Tips
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-category">
+                        <h4><i class="fas fa-clock"></i> Before Social Situations</h4>
+                        <p>Take 5 deep breaths, remind yourself of your positive qualities, and set one small, achievable social goal for the interaction.</p>
+                    </div>
+
+                    <div class="tip-category">
+                        <h4><i class="fas fa-eye"></i> During Conversations</h4>
+                        <p>Make gentle eye contact, ask follow-up questions, and remember that most people are focused on themselves, not judging you.</p>
+                    </div>
+
+                    <div class="tip-category">
+                        <h4><i class="fas fa-heart"></i> After Social Interactions</h4>
+                        <p>Acknowledge yourself for trying, reflect on what went well, and avoid harsh self-criticism. Growth takes practice!</p>
+                    </div>
+
+                    <div class="tip-category">
+                        <h4><i class="fas fa-users"></i> Building Connections</h4>
+                        <p>Focus on quality over quantity. One genuine connection is more valuable than many superficial interactions.</p>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="meditation-instructions">
+                    <h3><i class="fas fa-info-circle"></i> How to Use This Meditation</h3>
+                    <p><strong>Best Times:</strong> Before social events, presentations, or when feeling socially anxious</p>
+                    <p><strong>Setting:</strong> Find a quiet space where you can sit comfortably and won't be interrupted</p>
+                    <p><strong>Frequency:</strong> Practice 2-3 times per week, or whenever you need a confidence boost</p>
+                    <p><strong>Tip:</strong> Try this meditation before group projects, social events, or presentations for maximum benefit</p>
+                </div>
+
+                <!-- Related Resources -->
+                <div class="related-resources">
+                    <h2 style="color: #e74c3c; text-align: center; margin-bottom: 1rem;">
+                        <i class="fas fa-link"></i> Related Resources
+                    </h2>
+                    <p style="text-align: center; margin-bottom: 2rem;">Explore more tools to support your social confidence and mental wellbeing</p>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <i class="fas fa-brain"></i>
+                            <h4>Anxiety Management</h4>
+                            <p>Learn techniques to manage general anxiety and stress</p>
+                            <a href="anxiety-management.html" class="cta-button">Explore Tools</a>
+                        </div>
+
+                        <div class="resource-card">
+                            <i class="fas fa-microphone"></i>
+                            <h4>Presentation Skills</h4>
+                            <p>Build confidence for public speaking and presentations</p>
+                            <a href="presentation-skills.html" class="cta-button">Learn More</a>
+                        </div>
+
+                        <div class="resource-card">
+                            <i class="fas fa-moon"></i>
+                            <h4>Sleep Meditation</h4>
+                            <p>Improve sleep quality to support mental wellbeing</p>
+                            <a href="guided-meditation-sleep.html" class="cta-button">Try Meditation</a>
+                        </div>
+
+                        <div class="resource-card">
+                            <i class="fas fa-leaf"></i>
+                            <h4>All Meditations</h4>
+                            <p>Browse our complete library of guided meditations</p>
+                            <a href="guided-meditations.html" class="cta-button">View Library</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="guided-meditations.html" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Back to All Meditations
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Vivify. Supporting Australian students' health and wellbeing.</p>
+            <ul class="footer-links">
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        let meditationTimer;
+        let currentTime = 0;
+        let totalTime = 720; // 12 minutes in seconds
+        let isPlaying = false;
+        let currentSection = 0;
+
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const socialVisualization = document.getElementById('socialVisualization');
+        const confidenceCircle = document.getElementById('confidenceCircle');
+        const confidenceIcon = document.getElementById('confidenceIcon');
+        const socialInstruction = document.getElementById('socialInstruction');
+        const scriptSections = document.querySelectorAll('.script-section');
+
+        const instructions = [
+            "Prepare to Build Confidence",
+            "Welcome & Ground Yourself",
+            "Practice Self-Compassion", 
+            "Visualize Social Success",
+            "Affirm Your Strengths",
+            "Set Your Social Intention"
+        ];
+
+        const icons = ["🤝", "🧘‍♀️", "💖", "✨", "💪", "🌟"];
+
+        const sectionTimes = [0, 120, 270, 420, 570]; // Start times for each section
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateProgress() {
+            const progress = (currentTime / totalTime) * 100;
+            progressFill.style.width = `${progress}%`;
+            currentTimeDisplay.textContent = formatTime(currentTime);
+        }
+
+        function updateVisualization() {
+            // Update instruction text and icon based on time
+            let instructionIndex = 0;
+            for (let i = sectionTimes.length - 1; i >= 0; i--) {
+                if (currentTime >= sectionTimes[i]) {
+                    instructionIndex = i;
+                    break;
+                }
+            }
+            
+            socialInstruction.textContent = instructions[instructionIndex];
+            confidenceIcon.textContent = icons[instructionIndex];
+
+            // Add pulsing effect during active meditation
+            if (isPlaying) {
+                socialVisualization.classList.add('active');
+            } else {
+                socialVisualization.classList.remove('active');
+            }
+        }
+
+        function updateScript() {
+            // Update active script section
+            scriptSections.forEach((section, index) => {
+                const sectionTime = parseInt(section.dataset.time);
+                if (currentTime >= sectionTime && (index === scriptSections.length - 1 || currentTime < parseInt(scriptSections[index + 1].dataset.time))) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        }
+
+        function startMeditation() {
+            if (!isPlaying) {
+                isPlaying = true;
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'flex';
+                
+                meditationTimer = setInterval(() => {
+                    currentTime++;
+                    updateProgress();
+                    updateVisualization();
+                    updateScript();
+                    
+                    if (currentTime >= totalTime) {
+                        completeMeditation();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseMeditation() {
+            if (isPlaying) {
+                isPlaying = false;
+                clearInterval(meditationTimer);
+                playBtn.style.display = 'flex';
+                pauseBtn.style.display = 'none';
+                socialVisualization.classList.remove('active');
+            }
+        }
+
+        function resetMeditation() {
+            pauseMeditation();
+            currentTime = 0;
+            updateProgress();
+            updateVisualization();
+            updateScript();
+            socialInstruction.textContent = instructions[0];
+            confidenceIcon.textContent = icons[0];
+        }
+
+        function completeMeditation() {
+            pauseMeditation();
+            socialInstruction.textContent = "Meditation Complete! 🌟";
+            socialVisualization.classList.remove('active');
+            
+            // Track completion for analytics/dashboard
+            if (window.vivifyTracker) {
+                window.vivifyTracker.trackMeditationComplete();
+            }
+            
+            // Show completion message
+            setTimeout(() => {
+                alert("🎉 Great job! You've completed the Social Confidence Meditation. Remember to carry this sense of calm confidence with you into your social interactions.");
+            }, 1000);
+        }
+
+        // Event listeners
+        playBtn.addEventListener('click', startMeditation);
+        pauseBtn.addEventListener('click', pauseMeditation);
+        resetBtn.addEventListener('click', resetMeditation);
+
+        // Initialize
+        updateProgress();
+        updateVisualization();
+        updateScript();
+
+        // Page load tracking
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.vivifyTracker) {
+                window.vivifyTracker.trackActivity('social_meditation_visit', 'mental', 'Social confidence meditation page visited', 5);
+            }
+        });
+
+        // Simple meditation audio simulation (replace with actual audio file)
+        function playMeditationAudio() {
+            // In a real implementation, you would load and play an actual audio file
+            // For now, this is a placeholder for the meditation audio functionality
+            console.log("Playing social confidence meditation audio...");
+        }
+
+        // Log meditation play to user history
+        function logMeditationPlay() {
+            const meditationData = {
+                title: 'Social Confidence Meditation',
+                instructor: 'Dr. Sarah Chen',
+                duration: '12:00',
+                timestamp: Date.now(),
+                type: 'social_confidence'
+            };
+            
+            // Store in local storage for dashboard tracking
+            let meditationLog = JSON.parse(localStorage.getItem('meditationLog')) || [];
+            meditationLog.push(meditationData);
+            localStorage.setItem('meditationLog', JSON.stringify(meditationLog));
+        }
+
+        // Enhanced visualization effects
+        function createFloatingElements() {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach((heart, index) => {
+                heart.style.animationDelay = `${index * 1.5}s`;
+            });
+        }
+
+        // Call on page load
+        createFloatingElements();
+
+        // Keyboard shortcuts for accessibility
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (isPlaying) {
+                    pauseMeditation();
+                } else {
+                    startMeditation();
+                }
+            } else if (e.code === 'KeyR') {
+                e.preventDefault();
+                resetMeditation();
+            }
+        });
+
+        // Add touch support for mobile
+        let touchStartY = 0;
+        socialVisualization.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        socialVisualization.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            
+            if (Math.abs(diff) > 50) { // Swipe threshold
+                if (diff > 0) {
+                    // Swipe up - start meditation
+                    if (!isPlaying) startMeditation();
+                } else {
+                    // Swipe down - pause meditation
+                    if (isPlaying) pauseMeditation();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

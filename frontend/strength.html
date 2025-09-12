@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strength Training - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .strength-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .strength-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .strength-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .strength-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+            color: #000;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-content p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .benefit-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Exercise Categories Section */
+        .exercise-section {
+            padding: 6rem 2rem;
+        }
+
+        .exercise-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .exercise-tabs {
+            margin-top: 4rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 3rem;
+            gap: 1rem;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .tab-button:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+            color: #f39c12;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-color: transparent;
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .exercise-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .exercise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .exercise-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .exercise-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .exercise-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .exercise-info h3 {
+            margin: 0 0 1rem 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .exercise-info p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .exercise-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .view-details {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        /* Workout Plans Section */
+        .plans-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .plans-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .plan-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .plan-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .plan-card h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .plan-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .plan-details {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .plan-details li {
+            padding: 0.75rem 0;
+            color: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .plan-details li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-details strong {
+            color: #f39c12;
+        }
+
+        .plan-button {
+            margin-top: auto;
+            align-self: center;
+        }
+
+        /* Tips Section */
+        .tips-section {
+            padding: 6rem 2rem;
+        }
+
+        .tips-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 2rem;
+            padding-left: 3rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+        }
+
+        .tips-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 1.2rem;
+            top: 0;
+        }
+
+        .tips-list strong {
+            color: #ffffff;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 4rem auto 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .strength-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .strength-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .exercise-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section -->
+        <section class="strength-hero fade-in-up">
+            <div class="hero-content">
+                <div class="strength-badge">💪 Elite Strength Training</div>
+                <h1>Build Elite Strength</h1>
+                <p>Develop the functional strength and physical presence of a high performer. Master progressive resistance training protocols designed to build muscle, boost metabolism, and create the physical foundation for peak performance.</p>
+                <a href="#exercise-library" class="btn btn-primary">Start Training</a>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section fade-in-up">
+            <h2 class="section-heading">Master Strength Development</h2>
+            <div class="intro-content">
+                <p>Strength training is the foundation of physical excellence. Progressive resistance training builds lean muscle mass, increases bone density, and creates the metabolic advantages that support peak performance in all areas of life.</p>
+                <p>Our strength protocols are designed for ambitious students who want maximum results in minimum time. Build the physical strength and confidence that sets elite performers apart from their peers.</p>
+                <p>From foundational movements to advanced techniques, master the strength training methods used by athletes, executives, and high achievers to maintain their competitive edge.</p>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section fade-in-up">
+            <div class="benefits-container">
+                <h2 class="section-heading">Elite Strength Benefits</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h3>Lean Muscle Development</h3>
+                        <p>Build functional muscle mass that enhances your physique, strength, and metabolic rate for sustained energy and performance.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3>Metabolic Advantage</h3>
+                        <p>Increase your basal metabolic rate to burn more calories at rest, supporting optimal body composition and energy levels.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bone"></i>
+                        </div>
+                        <h3>Bone Density</h3>
+                        <p>Strengthen your skeletal system for improved posture, reduced injury risk, and long-term physical resilience.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Mental Toughness</h3>
+                        <p>Develop the discipline, focus, and mental resilience that transfers from the gym to academic and life challenges.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Injury Prevention</h3>
+                        <p>Build balanced strength and stability to reduce injury risk and maintain peak physical function throughout demanding schedules.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Performance Confidence</h3>
+                        <p>Develop the physical presence and confidence that comes from strength training, enhancing your performance in all areas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise Categories Section -->
+        <section class="exercise-section fade-in-up">
+            <div class="exercise-container">
+                <h2 class="section-heading" id="exercise-library">Elite Exercise Library</h2>
+                <div class="exercise-tabs">
+                    <div class="tabs-nav">
+                        <button class="tab-button active" data-tab="chest">Chest</button>
+                        <button class="tab-button" data-tab="back">Back</button>
+                        <button class="tab-button" data-tab="legs">Legs</button>
+                        <button class="tab-button" data-tab="shoulders">Shoulders</button>
+                        <button class="tab-button" data-tab="arms">Arms</button>
+                        <button class="tab-button" data-tab="core">Core</button>
+                    </div>
+
+                    <!-- Chest Exercises -->
+                    <div class="tab-content active" id="chest">
+                        <div class="exercise-grid">
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Bench Press">
+                                <div class="exercise-info">
+                                    <h3>Bench Press</h3>
+                                    <p>The foundational chest exercise for building upper body power and strength. Master this compound movement for elite chest development.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell, Bench</span>
+                                    </div>
+                                    <a href="exercises/bench-press.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Push-Up">
+                                <div class="exercise-info">
+                                    <h3>Elite Push-Up Variations</h3>
+                                    <p>Master bodyweight chest training with progressive push-up variations that build functional strength and endurance.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner-Advanced</span>
+                                        <span>Equipment: None</span>
+                                    </div>
+                                    <a href="exercises/push-up.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" alt="Dumbbell Flyes">
+                                <div class="exercise-info">
+                                    <h3>Dumbbell Flyes</h3>
+                                    <p>Isolate and sculpt the chest muscles through a wide range of motion for enhanced muscle definition and strength.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Dumbbells, Bench</span>
+                                    </div>
+                                    <a href="exercises/dumbbell-flyes.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?auto=format&fit=crop&w=600&q=80" alt="Incline Bench Press">
+                                <div class="exercise-info">
+                                    <h3>Incline Bench Press</h3>
+                                    <p>Target the upper chest for complete pectoral development and a well-balanced, powerful physique.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell, Incline Bench</span>
+                                    </div>
+                                    <a href="exercises/incline-bench.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Back Exercises -->
+                    <div class="tab-content" id="back">
+                        <div class="exercise-grid">
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" alt="Pull-Up">
+                                <div class="exercise-info">
+                                    <h3>Pull-Up Mastery</h3>
+                                    <p>The ultimate bodyweight back exercise. Build elite upper body strength and the impressive V-shaped physique of a high performer.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Advanced</span>
+                                        <span>Equipment: Pull-up Bar</span>
+                                    </div>
+                                    <a href="exercises/pull-up.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1598575468023-d594d8edb4f4?auto=format&fit=crop&w=600&q=80" alt="Bent Over Row">
+                                <div class="exercise-info">
+                                    <h3>Bent Over Row</h3>
+                                    <p>Build thick, powerful back muscles and improve posture with this fundamental rowing movement.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell</span>
+                                    </div>
+                                    <a href="exercises/bent-over-row.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1609899537878-88d5ba422bd6?auto=format&fit=crop&w=600&q=80" alt="Lat Pulldown">
+                                <div class="exercise-info">
+                                    <h3>Lat Pulldown</h3>
+                                    <p>Develop the wide, powerful back that creates the elite physique and presence of a high achiever.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Cable Machine</span>
+                                    </div>
+                                    <a href="exercises/lat-pulldown.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1599058918842-02036c280a55?auto=format&fit=crop&w=600&q=80" alt="Seated Row">
+                                <div class="exercise-info">
+                                    <h3>Seated Row</h3>
+                                    <p>Build mid-back thickness and improve posture for the confident presence that commands respect.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Cable Machine</span>
+                                    </div>
+                                    <a href="exercises/seated-row.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Legs Exercises -->
+                    <div class="tab-content" id="legs">
+                        <div class="exercise-grid">
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80" alt="Barbell Squat">
+                                <div class="exercise-info">
+                                    <h3>Barbell Squat</h3>
+                                    <p>The king of lower body exercises. Build powerful legs and core strength with this foundational movement pattern.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell, Squat Rack</span>
+                                    </div>
+                                    <a href="exercises/barbell-squat.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=600&q=80" alt="Deadlift">
+                                <div class="exercise-info">
+                                    <h3>Deadlift</h3>
+                                    <p>The ultimate full-body strength exercise. Develop total-body power and the mental toughness of elite athletes.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Advanced</span>
+                                        <span>Equipment: Barbell</span>
+                                    </div>
+                                    <a href="exercises/deadlift.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1574680178549-c08dd7c35770?auto=format&fit=crop&w=600&q=80" alt="Leg Press">
+                                <div class="exercise-info">
+                                    <h3>Leg Press</h3>
+                                    <p>Build massive quadriceps strength and size with this machine-based powerhouse movement.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Leg Press Machine</span>
+                                    </div>
+                                    <a href="exercises/leg-press.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1606889463941-54d3db0bc465?auto=format&fit=crop&w=600&q=80" alt="Romanian Deadlift">
+                                <div class="exercise-info">
+                                    <h3>Romanian Deadlift</h3>
+                                    <p>Target the posterior chain for balanced leg development, injury prevention, and athletic power.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell</span>
+                                    </div>
+                                    <a href="exercises/romanian-deadlift.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shoulders Exercises -->
+                    <div class="tab-content" id="shoulders">
+                        <div class="exercise-grid">
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?auto=format&fit=crop&w=600&q=80" alt="Shoulder Press">
+                                <div class="exercise-info">
+                                    <h3>Shoulder Press</h3>
+                                    <p>Build powerful, well-rounded shoulders with this fundamental vertical pressing movement.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell/Dumbbells</span>
+                                    </div>
+                                    <a href="exercises/shoulder-press.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" alt="Lateral Raise">
+                                <div class="exercise-info">
+                                    <h3>Lateral Raise</h3>
+                                    <p>Sculpt impressive shoulder width and definition with this targeted isolation exercise.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Dumbbells</span>
+                                    </div>
+                                    <a href="exercises/lateral-raises.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=600&q=80" alt="Face Pull">
+                                <div class="exercise-info">
+                                    <h3>Face Pull</h3>
+                                    <p>Strengthen rear delts and improve posture for the confident bearing of a high performer.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Cable Machine</span>
+                                    </div>
+                                    <a href="exercises/face-pull.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="Upright Row">
+                                <div class="exercise-info">
+                                    <h3>Upright Row</h3>
+                                    <p>Build powerful trap and deltoid development for an impressive upper body silhouette.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Barbell/Dumbbells</span>
+                                    </div>
+                                    <a href="exercises/upright-rows.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Arms Exercises -->
+                    <div class="tab-content" id="arms">
+                        <div class="exercise-grid">
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1581009137042-c552e485697a?auto=format&fit=crop&w=600&q=80" alt="Bicep Curl">
+                                <div class="exercise-info">
+                                    <h3>Bicep Curl</h3>
+                                    <p>Build impressive arm strength and definition with this classic bicep-building exercise.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Dumbbells/Barbell</span>
+                                    </div>
+                                    <a href="exercises/bicep-curl.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1589955791915-526198ae4ee9?auto=format&fit=crop&w=600&q=80" alt="Tricep Dip">
+                                <div class="exercise-info">
+                                    <h3>Tricep Dip</h3>
+                                    <p>Develop powerful triceps and functional pushing strength with this compound bodyweight movement.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Parallel Bars/Bench</span>
+                                    </div>
+                                    <a href="exercises/tricep-dip.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1584863231364-a543ee4685a8?auto=format&fit=crop&w=600&q=80" alt="Skull Crusher">
+                                <div class="exercise-info">
+                                    <h3>Skull Crusher</h3>
+                                    <p>Isolate and strengthen all three heads of the triceps for complete arm development.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: EZ Bar/Dumbbells</span>
+                                    </div>
+                                    <a href="exercises/skull-crusher.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" alt="Hammer Curl">
+                                <div class="exercise-info">
+                                    <h3>Hammer Curl</h3>
+                                    <p>Build forearm strength and bicep thickness with this powerful variation of the classic curl.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner</span>
+                                        <span>Equipment: Dumbbells</span>
+                                    </div>
+                                    <a href="exercises/hammer-curl.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Exercises -->
+                    <div class="tab-content" id="core">
+                        <div class="exercise-grid">
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=600&q=80" alt="Plank">
+                                <div class="exercise-info">
+                                    <h3>Elite Plank Variations</h3>
+                                    <p>Build core stability and endurance with progressive plank variations for total core strength.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Beginner-Advanced</span>
+                                        <span>Equipment: None</span>
+                                    </div>
+                                    <a href="exercises/plank.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1571019613538-3c3a380ecc9d?auto=format&fit=crop&w=600&q=80" alt="Russian Twist">
+                                <div class="exercise-info">
+                                    <h3>Russian Twist</h3>
+                                    <p>Develop rotational core strength and power for enhanced athletic performance and stability.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Intermediate</span>
+                                        <span>Equipment: Optional Weight</span>
+                                    </div>
+                                    <a href="exercises/russian-twist.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Hanging Leg Raise">
+                                <div class="exercise-info">
+                                    <h3>Hanging Leg Raise</h3>
+                                    <p>Master this advanced core exercise for exceptional abdominal strength and definition.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Advanced</span>
+                                        <span>Equipment: Pull-up Bar</span>
+                                    </div>
+                                    <a href="exercises/hanging-leg-raise.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-card">
+                                <img src="https://images.unsplash.com/photo-1603287681836-b174ce5074c2?auto=format&fit=crop&w=600&q=80" alt="Ab Wheel Rollout">
+                                <div class="exercise-info">
+                                    <h3>Ab Wheel Rollout</h3>
+                                    <p>Challenge your entire core with this demanding exercise that builds elite abdominal strength.</p>
+                                    <div class="exercise-meta">
+                                        <span>Difficulty: Advanced</span>
+                                        <span>Equipment: Ab Wheel</span>
+                                    </div>
+                                    <a href="exercises/ab-rollout.html" class="btn btn-primary view-details">Master Exercise</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workout Plans Section -->
+        <section class="plans-section fade-in-up">
+            <div class="plans-container">
+                <h2 class="section-heading">Elite Training Programs</h2>
+                <div class="plan-cards">
+                    <div class="plan-card">
+                        <h3>Foundation Builder</h3>
+                        <p class="plan-description">Perfect for beginners building their first strength foundation. Focus on form mastery and progressive development.</p>
+                        <ul class="plan-details">
+                            <li><strong>Duration:</strong> <span>8 weeks</span></li>
+                            <li><strong>Frequency:</strong> <span>3 workouts per week</span></li>
+                            <li><strong>Focus:</strong> <span>Full-body fundamentals</span></li>
+                            <li><strong>Equipment:</strong> <span>Basic gym setup</span></li>
+                        </ul>
+                        <a href="programs/foundation-builder.html" class="btn btn-primary plan-button">Start Program</a>
+                    </div>
+
+                    <div class="plan-card">
+                        <h3>Elite Muscle Builder</h3>
+                        <p class="plan-description">Advanced hypertrophy program designed for maximum muscle development and physique enhancement.</p>
+                        <ul class="plan-details">
+                            <li><strong>Duration:</strong> <span>12 weeks</span></li>
+                            <li><strong>Frequency:</strong> <span>4-5 workouts per week</span></li>
+                            <li><strong>Focus:</strong> <span>Muscle growth, definition</span></li>
+                            <li><strong>Equipment:</strong> <span>Full gym recommended</span></li>
+                        </ul>
+                        <a href="programs/elite-muscle-builder.html" class="btn btn-primary plan-button">Start Program</a>
+                    </div>
+
+                    <div class="plan-card">
+                        <h3>Performance Strength</h3>
+                        <p class="plan-description">Elite strength and power development program for peak athletic and life performance.</p>
+                        <ul class="plan-details">
+                            <li><strong>Duration:</strong> <span>10 weeks</span></li>
+                            <li><strong>Frequency:</strong> <span>4 workouts per week</span></li>
+                            <li><strong>Focus:</strong> <span>Maximum strength, power</span></li>
+                            <li><strong>Equipment:</strong> <span>Barbell essentials</span></li>
+                        </ul>
+                        <a href="programs/performance-strength.html" class="btn btn-primary plan-button">Start Program</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tips Section -->
+        <section class="tips-section fade-in-up">
+            <div class="tips-container">
+                <h2 class="section-heading">Elite Training Principles</h2>
+                <ul class="tips-list">
+                    <li><strong>Master form first:</strong> Perfect technique before adding weight. Elite performers prioritize quality over ego lifting.</li>
+                    <li><strong>Progressive overload:</strong> Continuously challenge your muscles with gradual increases in weight, reps, or training difficulty.</li>
+                    <li><strong>Recovery is growth:</strong> Allow 48-72 hours between training the same muscle groups. Muscles grow during rest, not training.</li>
+                    <li><strong>Fuel performance:</strong> Consume adequate protein (1g per pound of body weight) and total calories to support muscle growth.</li>
+                    <li><strong>Consistency wins:</strong> Regular, moderate training produces better results than sporadic, extreme sessions.</li>
+                    <li><strong>Track everything:</strong> Log weights, reps, and progress to ensure continuous improvement and motivation.</li>
+                    <li><strong>Warm up properly:</strong> Prepare your body with dynamic movement and progressive loading before heavy lifts.</li>
+                    <li><strong>Listen to your body:</strong> Distinguish between productive muscle fatigue and potential injury signals.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section fade-in-up">
+            <div class="faq-container">
+                <h2 class="section-heading">Training Questions Answered</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How often should I strength train as a beginner?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For beginners, 2-3 strength training sessions per week with at least one day of rest between workouts is optimal. This allows your body to adapt to the training stimulus while providing adequate recovery time. Full-body workouts are recommended initially to build a foundation of strength across all major muscle groups.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Will strength training make me too bulky?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Significant muscle bulk requires specific training, nutrition, and often favorable genetics. Most people who strength train develop lean, toned physiques rather than bulky ones. Building substantial muscle mass takes dedicated effort over many months or years, not something that happens accidentally from regular strength training.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How much weight should I start with?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Select a weight that allows you to complete your target repetitions with proper form, where the last 2-3 reps feel challenging but achievable. If you can easily complete more than your target reps, increase the weight. If you can't reach your target reps with good form, decrease the weight. Progressive overload is key to continued improvement.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What should I eat around my workouts?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Before training (1-2 hours prior), consume a balanced meal with carbohydrates for energy and moderate protein. After training (within 1-2 hours), prioritize protein (20-30g) to support muscle repair and recovery, along with carbohydrates to replenish energy stores. Proper hydration before, during, and after training is essential.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>When will I see results from strength training?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Strength gains typically appear within 2-3 weeks as your nervous system adapts. Visible physical changes usually begin after 4-8 weeks of consistent training, depending on your starting point, genetics, nutrition, and program intensity. Progress photos and measurements can help track changes that might be difficult to notice day-to-day.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    const icon = question.querySelector('i');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    document.querySelectorAll('.faq-question i').forEach(i => {
+                        i.classList.remove('fa-chevron-up');
+                        i.classList.add('fa-chevron-down');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+   </script>
+</body>
+</html>

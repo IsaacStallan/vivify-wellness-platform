@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Performance Challenges - Vivify</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;overflow-x:hidden}
+    header{position:fixed;top:0;width:100%;background:rgba(10,10,10,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.1);z-index:1000;transition:all .3s ease}
+    nav{max-width:1400px;margin:0 auto;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+    .left-nav{display:flex;align-items:center;gap:3rem}
+    .logo a{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+    .left-nav ul,.right-nav ul{display:flex;list-style:none;gap:2rem;align-items:center}
+    .left-nav a,.right-nav a{color:#fff;text-decoration:none;font-weight:500;transition:all .3s ease;position:relative}
+    .left-nav a:hover,.right-nav a:hover{color:#f39c12}
+    .left-nav a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:linear-gradient(135deg,#f39c12,#e67e22);transition:width .3s ease}
+    .left-nav a:hover::after,.left-nav a.active::after{width:100%}
+    .hidden{display:none!important}
+
+    .challenges-container{max-width:1400px;margin:0 auto;padding:120px 2rem 2rem}
+
+    .challenges-hero{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem 2rem;margin-bottom:3rem;text-align:center;position:relative;overflow:hidden}
+    .challenges-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22)}
+    .challenges-hero h1{font-size:3rem;font-weight:800;background:linear-gradient(135deg,#fff,#f39c12);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem}
+    .challenges-hero p{color:rgba(255,255,255,.7);font-size:1.2rem;max-width:700px;margin:0 auto 2rem;line-height:1.6}
+    .hero-stats{display:flex;justify-content:center;gap:4rem;margin-top:2rem}
+    .hero-stat{text-align:center}
+    .hero-stat-value{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:.5rem}
+    .hero-stat-label{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+
+    .filter-tabs{display:flex;gap:1rem;margin-bottom:3rem;flex-wrap:wrap;overflow-x:auto;padding-bottom:.5rem}
+    .filter-tab{background:transparent;border:2px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:.75rem 1.5rem;border-radius:50px;cursor:pointer;transition:all .3s ease;font-weight:500;white-space:nowrap;font-family:inherit}
+    .filter-tab:hover,.filter-tab.active{border-color:#f39c12;color:#f39c12;background:rgba(243,156,18,.1)}
+
+    .challenge-sections{display:flex;flex-direction:column;gap:3rem}
+    .challenge-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem 2rem;position:relative;overflow:hidden}
+    .challenge-section::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22);transform:scaleX(0);transition:transform .4s ease}
+    .challenge-section:hover::before{transform:scaleX(1)}
+    .section-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem}
+    .section-title{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#fff,#f39c12);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:.75rem}
+    .section-description{color:rgba(255,255,255,.7);font-size:1rem;margin-top:.5rem;line-height:1.5}
+
+    .challenges-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:2rem}
+    .challenge-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:2rem;transition:all .4s ease;position:relative;overflow:hidden}
+    .challenge-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22);transform:scaleX(0);transition:transform .4s ease}
+    .challenge-card:hover::before{transform:scaleX(1)}
+    .challenge-card:hover{transform:translateY(-10px);background:rgba(243,156,18,.05);border-color:rgba(243,156,18,.2)}
+    .challenge-card.featured{border-color:#f39c12;background:rgba(243,156,18,.05)}
+    .challenge-card.featured::before{transform:scaleX(1)}
+    .challenge-card.featured::after{content:'FEATURED';position:absolute;top:1.5rem;right:1.5rem;background:linear-gradient(135deg,#f39c12,#e67e22);color:#000;padding:.35rem .85rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .challenge-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+    .challenge-info h3{color:#fff;font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+    .challenge-difficulty{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.7);font-size:.85rem;font-weight:500}
+    .difficulty-dots{display:flex;gap:3px}
+    .difficulty-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}
+    .difficulty-dot.active{background:#f39c12}
+    .challenge-badge{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:.35rem .85rem;border-radius:50px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .challenge-badge.weekly{background:rgba(52,152,219,.2);color:#3498db}
+    .challenge-badge.monthly{background:rgba(155,89,182,.2);color:#9b59b6}
+    .challenge-badge.ongoing{background:rgba(39,174,96,.2);color:#27ae60}
+    .challenge-description{color:rgba(255,255,255,.8);margin-bottom:1.5rem;line-height:1.5;font-size:.95rem}
+    .challenge-stats{display:flex;justify-content:space-between;margin-bottom:1.5rem;padding:1.25rem;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+    .challenge-stat{text-align:center}
+    .challenge-stat-value{font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:.25rem}
+    .challenge-stat-label{font-size:.75rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+    .challenge-progress{margin-bottom:2rem}
+    .progress-header{display:flex;justify-content:space-between;margin-bottom:.75rem}
+    .progress-text{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500}
+    .progress-percentage{color:#f39c12;font-weight:700;font-size:.9rem}
+    .progress-bar{background:rgba(255,255,255,.1);height:8px;border-radius:4px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,#f39c12,#e67e22);transition:width .3s ease;border-radius:4px}
+    .challenge-actions{display:flex;gap:1rem;align-items:center}
+    .btn{padding:.75rem 1.5rem;border-radius:50px;font-weight:600;cursor:pointer;transition:all .3s ease;border:none;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-family:inherit}
+    .btn-primary{background:linear-gradient(135deg,#f39c12,#e67e22);color:#000;flex:1}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(243,156,18,.4)}
+    .btn-secondary{background:transparent;color:#f39c12;border:2px solid rgba(243,156,18,.2);padding:.5rem;width:45px;height:45px;border-radius:50%}
+    .btn-secondary:hover{background:rgba(243,156,18,.1);border-color:rgba(243,156,18,.4)}
+    .progress-btn{background:#3498db;color:#fff;padding:.5rem 1rem;border-radius:25px;border:none;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .3s ease}
+    .progress-btn:hover{background:#2980b9;transform:translateY(-1px)}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+    .btn.completed{background:#27ae60!important;color:#fff!important}
+    .btn.in-progress{background:#3498db!important;color:#fff!important}
+
+    .leaderboard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem 2rem;margin-top:3rem;position:relative;overflow:hidden}
+    .leaderboard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22)}
+    .leaderboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+    .leaderboard-list{display:flex;flex-direction:column;gap:1rem}
+    .leaderboard-item{display:flex;align-items:center;padding:1.25rem;background:rgba(255,255,255,.03);border-radius:12px;transition:all .3s ease;border:1px solid rgba(255,255,255,.1)}
+    .leaderboard-item:hover{background:rgba(243,156,18,.1);border-color:rgba(243,156,18,.2);transform:translateY(-2px)}
+    .leaderboard-item.current-user{border-color:#f39c12;background:rgba(243,156,18,.1)}
+    .leaderboard-rank{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-width:50px}
+    .leaderboard-avatar{width:50px;height:50px;border-radius:50%;background:rgba(243,156,18,.1);display:flex;align-items:center;justify-content:center;margin:0 1rem;color:#f39c12;font-size:1.2rem}
+    .leaderboard-info{flex:1}
+    .leaderboard-name{color:#fff;font-weight:600;margin-bottom:.25rem;font-size:1rem}
+    .leaderboard-school{color:rgba(255,255,255,.7);font-size:.85rem}
+    .leaderboard-score{color:#f39c12;font-weight:700;font-size:1.1rem}
+    .overall-score{display:flex;flex-direction:column;align-items:flex-end;gap:.25rem}
+    .level-badge{background:linear-gradient(135deg,#f39c12,#e67e22);color:#000;padding:.2rem .5rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in-up{animation:fadeInUp .6s ease-out}
+    .notification{position:fixed;top:100px;right:20px;background:#27ae60;color:#fff;padding:1rem 1.5rem;border-radius:50px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:1000;opacity:0;transform:translateY(-20px);transition:all .3s ease;max-width:350px;font-weight:600}
+    .notification.info{background:#3498db}
+    .notification.error{background:#e74c3c}
+    .notification.show{opacity:1;transform:translateY(0)}
+
+    @media (max-width:768px){
+      .left-nav ul,.right-nav ul{display:none}
+      .challenges-container{padding:100px 1rem 2rem}
+      .challenges-hero{padding:2rem 1rem}
+      .challenges-hero h1{font-size:2rem}
+      .hero-stats{flex-direction:column;gap:1.5rem}
+      .challenges-grid{grid-template-columns:1fr}
+      .challenge-stats{flex-direction:column;gap:1rem}
+      .challenge-actions{flex-direction:column}
+      .section-title{font-size:1.5rem}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="left-nav">
+      <div class="logo"><a href="index.html">Vivify</a></div>
+      <ul>
+        <li><a href="habits-tracker.html">Daily Habits</a></li>
+        <li><a href="challenges.html" class="active">Challenges</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+    <div class="right-nav">
+      <ul>
+        <li><a href="login.html" id="login-link" class="hidden">Login</a></li>
+        <li><a href="signup.html" id="signup-link" class="cta-nav hidden">Start Training</a></li>
+        <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+        <li><a href="profile.html" id="profile-link">Profile</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main class="challenges-container">
+  <!-- Hero -->
+  <div class="challenges-hero fade-in-up">
+    <h1>Performance Challenges</h1>
+    <p>Push your limits, compete with peers, and unlock your peak potential through structured challenges designed for ambitious students</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value" id="activeChallenges">0</span>
+        <span class="hero-stat-label">Active Challenges</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value" id="completedChallenges">0</span>
+        <span class="hero-stat-label">Completed</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value" id="totalPoints">0</span>
+        <span class="hero-stat-label">Total Points</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-filter="all">All Challenges</button>
+    <button class="filter-tab" data-filter="featured">Featured</button>
+    <button class="filter-tab" data-filter="weekly">Weekly</button>
+    <button class="filter-tab" data-filter="monthly">Monthly</button>
+    <button class="filter-tab" data-filter="ongoing">Ongoing</button>
+  </div>
+
+  <!-- Sections (kept as your original cards) -->
+  <div class="challenge-sections">
+
+    <!-- Physical -->
+    <div class="challenge-section fade-in-up">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="fas fa-dumbbell"></i>Physical Performance</h2>
+          <p class="section-description">Build strength, endurance, and energy optimization for peak physical performance</p>
+        </div>
+      </div>
+
+      <div class="challenges-grid">
+        <!-- Fitness Foundation -->
+        <div class="challenge-card featured" data-challenge="fitness-foundation">
+          <div class="challenge-header">
+            <div class="challenge-info">
+              <h3>30-Day Fitness Foundation</h3>
+              <div class="challenge-difficulty">
+                <span>Beginner</span>
+                <div class="difficulty-dots">
+                  <div class="difficulty-dot active"></div><div class="difficulty-dot"></div><div class="difficulty-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="challenge-badge monthly">Monthly</div>
+          </div>
+
+          <p class="challenge-description">
+            Build a solid fitness foundation with 30 minutes of daily physical activity. Track workouts, measure progress, and develop the exercise habit that elite performers maintain.
+          </p>
+
+          <div class="challenge-stats">
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="fitness-foundation-participants">0</span>
+              <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="fitness-foundation-days">23</span>
+              <span class="challenge-stat-label">Days Left</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">500</span>
+              <span class="challenge-stat-label">Points</span>
+            </div>
+          </div>
+
+          <div class="challenge-progress">
+            <div class="progress-header">
+              <span class="progress-text">Your Progress</span>
+              <span class="progress-percentage" id="fitness-foundation-progress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="fitness-foundation-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="challenge-actions">
+            <button class="btn btn-primary" id="fitness-foundation-btn" onclick="joinChallenge('fitness-foundation')">Join Challenge</button>
+            <button class="progress-btn" id="fitness-foundation-progress-btn" onclick="logProgress('fitness-foundation')" style="display:none;">Log Progress</button>
+            <button class="btn btn-secondary" onclick="viewChallenge('fitness-foundation')" title="View Details"><i class="fas fa-info"></i></button>
+          </div>
+        </div>
+
+        <!-- Morning Energy -->
+        <div class="challenge-card" data-challenge="morning-energy">
+          <div class="challenge-header">
+            <div class="challenge-info">
+              <h3>Morning Energy Boost</h3>
+              <div class="challenge-difficulty">
+                <span>Beginner</span>
+                <div class="difficulty-dots">
+                  <div class="difficulty-dot active"></div><div class="difficulty-dot"></div><div class="difficulty-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="challenge-badge weekly">Weekly</div>
+          </div>
+
+          <p class="challenge-description">
+            Start each day with 10 minutes of movement to boost energy and mental clarity. Choose from stretching, yoga, or light cardio.
+          </p>
+
+          <div class="challenge-stats">
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="morning-energy-participants">0</span>
+              <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="morning-energy-days">4</span>
+              <span class="challenge-stat-label">Days Left</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">150</span>
+              <span class="challenge-stat-label">Points</span>
+            </div>
+          </div>
+
+          <div class="challenge-progress">
+            <div class="progress-header">
+              <span class="progress-text">Your Progress</span>
+              <span class="progress-percentage" id="morning-energy-progress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="morning-energy-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="challenge-actions">
+            <button class="btn btn-primary" id="morning-energy-btn" onclick="joinChallenge('morning-energy')">Join Challenge</button>
+            <button class="progress-btn" id="morning-energy-progress-btn" onclick="logProgress('morning-energy')" style="display:none;">Log Progress</button>
+            <button class="btn btn-secondary" onclick="viewChallenge('morning-energy')" title="View Details"><i class="fas fa-info"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mental -->
+    <div class="challenge-section fade-in-up">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="fas fa-brain"></i>Mental Focus & Resilience</h2>
+          <p class="section-description">Develop concentration, stress resilience, and mental toughness for peak cognitive performance</p>
+        </div>
+      </div>
+
+      <div class="challenges-grid">
+        <!-- Deep Work -->
+        <div class="challenge-card" data-challenge="deep-work">
+          <div class="challenge-header">
+            <div class="challenge-info">
+              <h3>Deep Work Mastery</h3>
+              <div class="challenge-difficulty">
+                <span>Intermediate</span>
+                <div class="difficulty-dots">
+                  <div class="difficulty-dot active"></div><div class="difficulty-dot active"></div><div class="difficulty-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="challenge-badge weekly">Weekly</div>
+          </div>
+
+          <p class="challenge-description">
+            Complete 90-minute focused work sessions without distractions. Build the concentration skills that separate high performers from the rest.
+          </p>
+
+          <div class="challenge-stats">
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="deep-work-participants">0</span>
+              <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="deep-work-days">2</span>
+              <span class="challenge-stat-label">Days Left</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">200</span>
+              <span class="challenge-stat-label">Points</span>
+            </div>
+          </div>
+
+          <div class="challenge-progress">
+            <div class="progress-header">
+              <span class="progress-text">Your Progress</span>
+              <span class="progress-percentage" id="deep-work-progress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="deep-work-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="challenge-actions">
+            <button class="btn btn-primary" id="deep-work-btn" onclick="joinChallenge('deep-work')">Join Challenge</button>
+            <button class="progress-btn" id="deep-work-progress-btn" onclick="logProgress('deep-work')" style="display:none;">Log Progress</button>
+            <button class="btn btn-secondary" onclick="viewChallenge('deep-work')" title="View Details"><i class="fas fa-info"></i></button>
+          </div>
+        </div>
+
+        <!-- Stress Resilience -->
+        <div class="challenge-card" data-challenge="stress-resilience">
+          <div class="challenge-header">
+            <div class="challenge-info">
+              <h3>Stress Resilience Training</h3>
+              <div class="challenge-difficulty">
+                <span>Beginner</span>
+                <div class="difficulty-dots">
+                  <div class="difficulty-dot active"></div><div class="difficulty-dot"></div><div class="difficulty-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="challenge-badge ongoing">Ongoing</div>
+          </div>
+
+          <p class="challenge-description">
+            Build mental resilience through daily mindfulness practice and stress management techniques. Learn to perform under pressure.
+          </p>
+
+          <div class="challenge-stats">
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="stress-resilience-participants">0</span>
+              <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">∞</span>
+              <span class="challenge-stat-label">Duration</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">10</span>
+              <span class="challenge-stat-label">Daily Points</span>
+            </div>
+          </div>
+
+          <div class="challenge-progress">
+            <div class="progress-header">
+              <span class="progress-text">This Week</span>
+              <span class="progress-percentage" id="stress-resilience-progress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="stress-resilience-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="challenge-actions">
+            <button class="btn btn-primary" id="stress-resilience-btn" onclick="joinChallenge('stress-resilience')">Join Challenge</button>
+            <button class="progress-btn" id="stress-resilience-progress-btn" onclick="logProgress('stress-resilience')" style="display:none;">Log Progress</button>
+            <button class="btn btn-secondary" onclick="viewChallenge('stress-resilience')" title="View Details"><i class="fas fa-info"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Excellence Habits -->
+    <div class="challenge-section fade-in-up">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="fas fa-chart-line"></i>Excellence Habits</h2>
+          <p class="section-description">Master the daily systems and routines of high achievers for sustained excellence</p>
+        </div>
+      </div>
+
+      <div class="challenges-grid">
+        <!-- Elite Morning -->
+        <div class="challenge-card featured" data-challenge="elite-morning">
+          <div class="challenge-header">
+            <div class="challenge-info">
+              <h3>Elite Morning Routine</h3>
+              <div class="challenge-difficulty">
+                <span>Advanced</span>
+                <div class="difficulty-dots">
+                  <div class="difficulty-dot active"></div><div class="difficulty-dot active"></div><div class="difficulty-dot active"></div>
+                </div>
+              </div>
+            </div>
+            <div class="challenge-badge monthly">Monthly</div>
+          </div>
+
+          <p class="challenge-description">
+            Master the morning routine of high performers: exercise, planning, learning, and focused work within the first 3 hours of your day.
+          </p>
+
+          <div class="challenge-stats">
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="elite-morning-participants">0</span>
+              <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="elite-morning-days">18</span>
+              <span class="challenge-stat-label">Days Left</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">750</span>
+              <span class="challenge-stat-label">Points</span>
+            </div>
+          </div>
+
+          <div class="challenge-progress">
+            <div class="progress-header">
+              <span class="progress-text">Your Progress</span>
+              <span class="progress-percentage" id="elite-morning-progress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="elite-morning-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="challenge-actions">
+            <button class="btn btn-primary" id="elite-morning-btn" onclick="joinChallenge('elite-morning')">Join Challenge</button>
+            <button class="progress-btn" id="elite-morning-progress-btn" onclick="logProgress('elite-morning')" style="display:none;">Log Progress</button>
+            <button class="btn btn-secondary" onclick="viewChallenge('elite-morning')" title="View Details"><i class="fas fa-info"></i></button>
+          </div>
+        </div>
+
+        <!-- Time Mastery -->
+        <div class="challenge-card" data-challenge="time-mastery">
+          <div class="challenge-header">
+            <div class="challenge-info">
+              <h3>Time Mastery Challenge</h3>
+              <div class="challenge-difficulty">
+                <span>Intermediate</span>
+                <div class="difficulty-dots">
+                  <div class="difficulty-dot active"></div><div class="difficulty-dot active"></div><div class="difficulty-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="challenge-badge weekly">Weekly</div>
+          </div>
+
+          <p class="challenge-description">
+            Track every hour and optimize your time allocation. Identify time wasters and maximize high-impact activities like top performers.
+          </p>
+
+          <div class="challenge-stats">
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="time-mastery-participants">0</span>
+              <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value" id="time-mastery-days">5</span>
+              <span class="challenge-stat-label">Days Left</span>
+            </div>
+            <div class="challenge-stat">
+              <span class="challenge-stat-value">300</span>
+              <span class="challenge-stat-label">Points</span>
+            </div>
+          </div>
+
+          <div class="challenge-progress">
+            <div class="progress-header">
+              <span class="progress-text">Your Progress</span>
+              <span class="progress-percentage" id="time-mastery-progress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="time-mastery-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="challenge-actions">
+            <button class="btn btn-primary" id="time-mastery-btn" onclick="joinChallenge('time-mastery')">Join Challenge</button>
+            <button class="progress-btn" id="time-mastery-progress-btn" onclick="logProgress('time-mastery')" style="display:none;">Log Progress</button>
+            <button class="btn btn-secondary" onclick="viewChallenge('time-mastery')" title="View Details"><i class="fas fa-info"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overall Performance Leaderboard -->
+  <div class="leaderboard fade-in-up">
+    <div class="leaderboard-header">
+      <h2 class="section-title"><i class="fas fa-trophy"></i>Overall Performance Leaderboard</h2>
+      <button class="btn btn-secondary" onclick="viewFullLeaderboard()" title="View Full Leaderboard"><i class="fas fa-external-link-alt"></i></button>
+    </div>
+    <div class="leaderboard-list" id="leaderboardList"></div>
+  </div>
+</main>
+
+<script>
+/** -----------------------------
+ *  Minimal state (no fake seeds)
+ *  ----------------------------*/
+let userId = null;                       // stable per-device id
+let currentUserName = null;              // display name
+let userChallenges = {};                 // { [challengeId]: {...} }
+let challengeStats = { active: 0, completed: 0, totalPoints: 0 };
+let leaderboard = [];                    // fetched from backend
+const participantsDefaults = {
+  'fitness-foundation': 0, 'morning-energy': 0, 'deep-work': 0,
+  'stress-resilience': 0, 'elite-morning': 0, 'time-mastery': 0
+};
+
+// challenge catalog (unchanged)
+const challenges = {
+  'fitness-foundation': { name:'30-Day Fitness Foundation', type:'monthly', category:'physical', duration:30, points:500, requirements:['Complete 30 minutes of physical activity daily','Track workout intensity','Log energy levels'], goalType:'daily', totalGoal:30 },
+  'morning-energy':     { name:'Morning Energy Boost',      type:'weekly',  category:'physical', duration:7,  points:150, requirements:['10 minutes morning movement','Before 8 AM','Track energy levels'], goalType:'daily', totalGoal:7 },
+  'deep-work':          { name:'Deep Work Mastery',         type:'weekly',  category:'mental',   duration:7,  points:200, requirements:['90-minute focused sessions','No distractions','Track productivity'], goalType:'daily', totalGoal:7 },
+  'stress-resilience':  { name:'Stress Resilience Training',type:'ongoing', category:'mental',   duration:'ongoing', points:10, requirements:['Daily mindfulness practice','Stress management techniques','Mood tracking'], goalType:'daily', totalGoal:7 },
+  'elite-morning':      { name:'Elite Morning Routine',     type:'monthly', category:'habits',   duration:30, points:750, requirements:['Exercise within 3 hours','Planning session','Learning time','Focused work'], goalType:'daily', totalGoal:30 },
+  'time-mastery':       { name:'Time Mastery Challenge',    type:'weekly',  category:'habits',   duration:7,  points:300, requirements:['Track every hour','Identify time wasters','Optimize high-impact activities'], goalType:'daily', totalGoal:7 }
+};
+
+/** -----------------------------
+ *  Helpers
+ *  ----------------------------*/
+function showNotification(message, type='info'){
+  const n=document.createElement('div');
+  n.className=`notification ${type}`; n.style.whiteSpace='pre-line'; n.textContent=message;
+  document.body.appendChild(n);
+  setTimeout(()=>n.classList.add('show'),100);
+  setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),300);},5000);
+}
+function getOrCreateUserId(){
+  let id=localStorage.getItem('vivifyUserId');
+  if(!id){
+    id='user_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+    localStorage.setItem('vivifyUserId', id);
+    // best-effort register
+    fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:id,displayName:'Student'})}).catch(()=>{});
+  }
+  return id;
+}
+
+/** -----------------------------
+ *  Backend I/O
+ *  ----------------------------*/
+async function fetchUser(){
+  try{
+    const res=await fetch(`/api/user/${userId}`);
+    if(!res.ok) throw new Error('User not found');
+    const data=await res.json();
+    currentUserName = data.displayName || 'You';
+    userChallenges  = data.userChallenges || {};
+    challengeStats  = data.challengeStats || {active:0,completed:0,totalPoints:0};
+  }catch(e){
+    // initialize user record if missing
+    currentUserName = localStorage.getItem('username') || 'You';
+    await fetch(`/api/user/${userId}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        userId, displayName: currentUserName,
+        userChallenges: {}, challengeStats: {active:0,completed:0,totalPoints:0},
+        overallScore: 0, level: 1
+      })
+    }).catch(()=>{});
+  }
+}
+async function saveUser(){
+  try{
+    // derive computed user summary for leaderboard
+    const computed = computeCurrentUserSummary();
+    await fetch(`/api/user/${userId}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        userId, displayName: currentUserName,
+        userChallenges, challengeStats,
+        overallScore: computed.overallScore,
+        level: computed.level,
+        habitStreak: computed.habitStreak,
+        fitnessScore: computed.fitnessScore,
+        nutritionScore: computed.nutritionScore,
+        mentalScore: computed.mentalScore,
+        lifeSkillsScore: computed.lifeSkillsScore
+      })
+    });
+  }catch(e){ console.error('Failed to save user',e); }
+}
+async function fetchLeaderboard(){
+  try{
+    const res=await fetch('/api/leaderboard');
+    if(!res.ok) throw new Error('bad leaderboard');
+    leaderboard = await res.json();
+  }catch(e){
+    leaderboard = []; // fallback; UI will show loading/empty
+  }
+}
+async function fetchParticipants(){
+  // If you add a real endpoint later, wire it here.
+  // For now, leave zeros or compute from leaderboard.
+  const counts = {...participantsDefaults};
+  try{
+    // derive per-challenge participant counts from user data if your backend exposes it later
+    // noop for now
+  }catch(e){}
+  Object.entries(counts).forEach(([id,count])=>{
+    const el=document.getElementById(`${id}-participants`);
+    if(el) el.textContent = (count||0).toLocaleString();
+  });
+}
+
+/** -----------------------------
+ *  Scoring & UI updates
+ *  ----------------------------*/
+function calculateOverallScore(user){
+  const challengeMultiplier=1.0, habitMultiplier=0.8, fitnessMultiplier=0.6, nutritionMultiplier=0.6, mentalMultiplier=0.7, lifeSkillsMultiplier=0.5;
+  const levelBonus=(user.level||1)*50;
+  return Math.round(
+    (user.challengePoints||0)*challengeMultiplier +
+    (user.habitStreak||0)*habitMultiplier +
+    (user.fitnessScore||0)*fitnessMultiplier +
+    (user.nutritionScore||0)*nutritionMultiplier +
+    (user.mentalScore||0)*mentalMultiplier +
+    (user.lifeSkillsScore||0)*lifeSkillsMultiplier +
+    levelBonus
+  );
+}
+function computeCurrentUserSummary(){
+  // simple derivation from challengeStats (same as your prior heuristic)
+  const cp=challengeStats.totalPoints||0;
+  const summary={
+    challengePoints: cp,
+    level: Math.floor(cp/100)+1,
+    habitStreak: Math.floor(cp/50),
+    fitnessScore: Math.floor(cp*0.8),
+    nutritionScore: Math.floor(cp*0.7),
+    mentalScore: Math.floor(cp*0.6),
+    lifeSkillsScore: Math.floor(cp*0.5)
+  };
+  summary.overallScore = calculateOverallScore(summary);
+  return summary;
+}
+function updateChallengeStats(){
+  const active = Object.keys(userChallenges).filter(id => userChallenges[id]?.joined && !userChallenges[id]?.completed).length;
+  const completed = Object.keys(userChallenges).filter(id => userChallenges[id]?.completed).length;
+
+  let totalPoints = 0;
+  for (const id of Object.keys(userChallenges)){
+    const uc=userChallenges[id]; const ch=challenges[id];
+    if(!uc || !ch) continue;
+    if(uc.completed){ totalPoints += ch.points; }
+    else if(uc.joined && ch.type==='ongoing'){ totalPoints += (uc.dailyProgress||0)*(ch.points); }
+  }
+  challengeStats = {active, completed, totalPoints};
+
+  const a=document.getElementById('activeChallenges');
+  const c=document.getElementById('completedChallenges');
+  const p=document.getElementById('totalPoints');
+  if(a) a.textContent=active;
+  if(c) c.textContent=completed;
+  if(p) p.textContent=totalPoints;
+}
+function updateAllChallengeCards(){
+  Object.keys(challenges).forEach(updateChallengeCard);
+}
+function updateChallengeCard(challengeId){
+  const uc=userChallenges[challengeId]; const ch=challenges[challengeId];
+  const btn=document.getElementById(`${challengeId}-btn`);
+  const pbtn=document.getElementById(`${challengeId}-progress-btn`);
+  const fill=document.getElementById(`${challengeId}-fill`);
+  const text=document.getElementById(`${challengeId}-progress`);
+  if(!btn||!ch) return;
+
+  if(uc?.joined){
+    if(uc.completed){
+      btn.textContent='Completed ✓'; btn.className='btn completed'; btn.disabled=true; if(pbtn) pbtn.style.display='none';
+    }else{
+      btn.textContent='In Progress'; btn.className='btn in-progress'; btn.disabled=true; if(pbtn) pbtn.style.display='inline-block';
+    }
+    const progress=calcProgress(challengeId);
+    if(fill) fill.style.width=progress+'%';
+    if(text) text.textContent=progress+'%';
+  }else{
+    btn.textContent='Join Challenge'; btn.className='btn btn-primary'; btn.disabled=false;
+    if(pbtn) pbtn.style.display='none';
+    if(fill) fill.style.width='0%';
+    if(text) text.textContent='0%';
+  }
+}
+function calcProgress(challengeId){
+  const uc=userChallenges[challengeId]; const ch=challenges[challengeId];
+  if(!uc?.joined||!ch) return 0;
+  if(ch.type==='ongoing') return Math.min(100, Math.round((uc.dailyProgress||0)/7*100));
+  return Math.min(100, Math.round((uc.completedDays||0)/(ch.totalGoal||1)*100));
+}
+function updateLeaderboardDisplay(){
+  const list=document.getElementById('leaderboardList');
+  if(!list) return;
+  list.innerHTML='';
+
+  if(!Array.isArray(leaderboard) || leaderboard.length===0){
+    list.innerHTML='<p style="color:rgba(255,255,255,.7);text-align:center;padding:2rem;">No leaderboard data yet.</p>';
+    return;
+  }
+
+  // ensure current user is visible if present
+  const youIdx = leaderboard.findIndex(u => u.userId===userId);
+  if(youIdx===-1){
+    const summary=computeCurrentUserSummary();
+    leaderboard.push({
+      userId, displayName: currentUserName||'You', school: '—',
+      overallScore: summary.overallScore, level: summary.level
+    });
+  }
+
+  leaderboard.sort((a,b)=>(b.overallScore||0)-(a.overallScore||0));
+  const top = leaderboard.slice(0,10);
+
+  top.forEach((u,idx)=>{
+    const item=document.createElement('div');
+    item.className='leaderboard-item';
+    if(u.userId===userId) item.classList.add('current-user');
+
+    let icon='<i class="fas fa-user"></i>';
+    if(idx===0) icon='<i class="fas fa-crown" style="color:#f39c12;"></i>';
+    else if(idx===1) icon='<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
+    else if(idx===2) icon='<i class="fas fa-medal" style="color:#cd7f32;"></i>';
+
+    item.innerHTML=`
+      <div class="leaderboard-rank">${idx+1}</div>
+      <div class="leaderboard-avatar">${icon}</div>
+      <div class="leaderboard-info">
+        <div class="leaderboard-name">${u.displayName||'Student'}${u.userId===userId?' (You)':''}</div>
+        <div class="leaderboard-school">${u.school||''}</div>
+      </div>
+      <div class="overall-score">
+        <div class="leaderboard-score">${(u.overallScore||0).toLocaleString()}</div>
+        <div class="level-badge">Level ${u.level||1}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+/** -----------------------------
+ *  Actions
+ *  ----------------------------*/
+async function joinChallenge(challengeId){
+  const ch=challenges[challengeId];
+  if(!ch) return showNotification('Challenge not found','error');
+
+  if(userChallenges[challengeId]?.joined){
+    showNotification('You are already in this challenge','info'); return;
+  }
+
+  userChallenges[challengeId]={ joined:true, startDate:new Date().toISOString(), completedDays:0, dailyProgress:0, completed:false, lastLogDate:null };
+  updateChallengeStats(); updateChallengeCard(challengeId); await saveUser();
+  showNotification(`Joined ${ch.name}!`,'success');
+}
+async function logProgress(challengeId){
+  const ch=challenges[challengeId]; const uc=userChallenges[challengeId];
+  if(!ch||!uc?.joined) return showNotification('Join the challenge first','info');
+
+  const today=new Date().toDateString();
+  if(uc.lastLogDate===today) return showNotification('Already logged today','info');
+  uc.lastLogDate=today;
+
+  if(ch.type==='ongoing'){
+    uc.dailyProgress=(uc.dailyProgress||0)+1; challengeStats.totalPoints += ch.points;
+    showNotification(`Progress logged! +${ch.points} points`,'success');
+  }else{
+    uc.completedDays=(uc.completedDays||0)+1;
+    if(uc.completedDays >= (ch.totalGoal||0)){ uc.completed=true; challengeStats.totalPoints += ch.points; showNotification(`Challenge completed! +${ch.points} points`,'success'); }
+    else{ showNotification('Daily progress logged! Keep going!','success'); }
+  }
+  updateChallengeStats(); updateChallengeCard(challengeId); await saveUser(); updateLeaderboardDisplay();
+}
+function viewChallenge(challengeId){
+  const ch=challenges[challengeId]; if(!ch) return;
+  showNotification(`${ch.name}:\n• ${ch.requirements.join('\n• ')}\nReward: ${ch.points} points`,'info');
+}
+function viewFullLeaderboard(){
+  const me = leaderboard.find(u=>u.userId===userId);
+  const summary = me ? {
+    challengePoints: me.challengeStats?.totalPoints,
+    habitStreak: me.habitStreak, fitnessScore: me.fitnessScore,
+    nutritionScore: me.nutritionScore, mentalScore: me.mentalScore,
+    lifeSkillsScore: me.lifeSkillsScore, level: me.level
+  } : computeCurrentUserSummary();
+
+  showNotification(
+    `Your Overall Score Breakdown:
+• Challenges: ${summary.challengePoints||0}
+• Habits: ${summary.habitStreak||0}
+• Fitness: ${summary.fitnessScore||0}
+• Nutrition: ${summary.nutritionScore||0}
+• Mental: ${summary.mentalScore||0}
+• Life Skills: ${summary.lifeSkillsScore||0}
+• Level Bonus: ${(summary.level||1)*50}`,
+    'info'
+  );
+}
+
+/** -----------------------------
+ *  Init
+ *  ----------------------------*/
+document.addEventListener('DOMContentLoaded', async () => {
+  // logout
+  const logout=document.getElementById('logout-link');
+  if(logout){ logout.addEventListener('click',e=>{e.preventDefault(); localStorage.clear(); window.location.href='index.html';}); }
+
+  // tabs
+  document.querySelectorAll('.filter-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      filterChallenges(tab.dataset.filter);
+    });
+  });
+
+  // animations
+  const obs=new IntersectionObserver((ents)=>{
+    ents.forEach(ent=>{ if(ent.isIntersecting){ ent.target.style.opacity='1'; ent.target.style.transform='translateY(0)'; } });
+  },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.fade-in-up').forEach(el=>{
+    el.style.opacity='0'; el.style.transform='translateY(30px)'; el.style.transition='opacity .8s ease, transform .8s ease'; obs.observe(el);
+  });
+
+  userId = getOrCreateUserId();
+  currentUserName = localStorage.getItem('username') || 'You';
+
+  await fetchUser();            // hydrate userChallenges/challengeStats if present
+  updateChallengeStats();
+  updateAllChallengeCards();
+
+  await fetchLeaderboard();     // from backend
+  updateLeaderboardDisplay();
+
+  await fetchParticipants();    // optional; zeros for now
+
+  // if you use the separate leaderboard-system.js, it can coexist without conflict
+});
+
+function filterChallenges(filter){
+  document.querySelectorAll('.challenge-card').forEach(card=>{
+    if(filter==='all'){ card.style.display='block'; return; }
+    if(filter==='featured'){ card.style.display=card.classList.contains('featured')?'block':'none'; return; }
+    const badge=card.querySelector('.challenge-badge'); const text=badge?badge.textContent.toLowerCase():'';
+    card.style.display = text===filter ? 'block' : 'none';
+  });
+}
+
+// optional: track page visit
+if(window.vivifyTracker){
+  window.vivifyTracker.trackActivity('challenges_visit','challenges','Visited challenges page',5);
+}
+</script>
+
+<!-- (Optional) If you keep the separate system, include it after this page's script -->
+<!-- <script src="/js/leaderboard-system.js"></script> -->
+</body>
+</html>

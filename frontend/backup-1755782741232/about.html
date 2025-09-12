@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Vivify - Student Performance Platform</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- iOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="performance Hub">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#f39c12">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#f39c12">
+
+    <!-- Viewport for PWA -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- Preload PWA installer script -->
+    <link rel="preload" href="/pwa-install.js" as="script">
+    <style>
+
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* About page specific styles */
+        .about-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .about-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .about-section {
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .mission-values {
+            margin-bottom: 4rem;
+        }
+        
+        .mission-values p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .value-card {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .value-icon {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #f39c12;
+        }
+        
+        .founder-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .founder-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background-color: #333;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 5px solid #f39c12;
+        }
+        
+        .founder-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .founder-bio {
+            max-width: 800px;
+        }
+        
+        .founder-bio h3 {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .founder-bio p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .how-it-works {
+            margin-bottom: 4rem;
+        }
+        
+        .how-it-works p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .steps-container {
+            margin-top: 3rem;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
+        
+        .step-number {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #f39c12;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 2rem;
+        }
+        
+        .step-content h3 {
+            font-size: 1.5rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .step-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        
+        .contact-section {
+            text-align: center;
+        }
+        
+        .contact-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .contact-method {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            width: 250px;
+            transition: transform 0.3s;
+        }
+        
+        .contact-method:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-method h3 {
+            font-size: 1.3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-method p, .contact-method a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .contact-method a:hover {
+            color: #f39c12;
+        }
+        
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" class="active">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html">Fitness</a>
+                                <a href="nutrition.html">Nutrition</a>
+                                <a href="focus-resilience.html">Focus & Resilience</a>
+                                <a href="life-mastery.html">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboard-link" style="display: none;">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink">Profile</a></li>
+                        <li><a href="#" id="logoutLink">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="about-hero">
+            <h1>About Vivify</h1>
+            <p>Empowering students to thrive through holistic performance resources and personalized support.</p>
+        </section>
+
+        <main>
+            <!-- Mission and Values -->
+            <section class="about-section mission-values">
+                <h2 class="section-title">Our Mission</h2>
+                <p>Vivify was created with a simple but powerful mission: to support the complete wellbeing of students throughout their academic journey. We believe that success in education requires more than just academic excellence—it demands a balanced approach to physical health, mental wellbeing, nutrition, and life skills.</p>
+                
+                <p>College and university life presents unique challenges that can impact student performance. From managing stress during exam periods to maintaining healthy habits with limited time and resources, these challenges can affect academic performance and overall quality of life. Vivify aims to address these challenges by providing accessible, practical, and evidence-based resources tailored specifically for the student experience.</p>
+                
+                <h3 style="color: #f39c12; text-align: center; margin: 3rem 0 2rem;">Our Core Values</h3>
+                
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Holistic Approach</h3>
+                        <p>We address performance from all angles—physical, mental, nutritional, and social—because true wellbeing requires balance across all areas of life.</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Accessibility</h3>
+                        <p>We believe performance resources should be available to all students regardless of background, providing practical solutions that work within student constraints.</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h3>Evidence-Based</h3>
+                        <p>Our resources and recommendations are grounded in scientific research and best practices in health, fitness, nutrition, and psychology.</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h3>Personalization</h3>
+                        <p>We recognize each student's journey is unique, offering customizable tools and recommendations that adapt to individual needs and goals.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Founder Section -->
+            <section class="about-section founder-section">
+                <h2 class="section-title">Meet the Founder</h2>
+                <div class="founder-image">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=500&q=80" alt="Isaac Stallan - Vivify Founder">
+                </div>
+                <div class="founder-bio">
+                    <h3>Isaac Stallan</h3>
+                    <p>As the founder and developer of Vivify, I created this platform based on my own experiences navigating the challenges of student life. Throughout my educational journey, I observed how performance directly impacts academic performance and overall happiness, yet comprehensive resources tailored to student needs were often lacking or scattered.</p>
+                    
+                    <p>With a background in technology and a passion for holistic health, I developed Vivify as a one-stop solution to address the unique performance challenges that students face. My goal was to create something that I wish I had during my own studies—a platform that understands the constraints of student life while providing practical, accessible tools for maintaining physical health, mental wellbeing, proper nutrition, and essential life skills.</p>
+                    
+                    <p>Vivify represents my commitment to supporting students in achieving their full potential by empowering them with the resources they need to thrive both academically and personally. I believe that when students are well in all aspects of their lives, they're better positioned to succeed in their educational pursuits and beyond.</p>
+                </div>
+            </section>
+            
+            <!-- How It Works -->
+            <section class="about-section how-it-works">
+                <h2 class="section-title">How Vivify Works</h2>
+                <p>Vivify provides a comprehensive performance ecosystem designed specifically for the unique needs and constraints of student life. Our platform integrates multiple dimensions of wellbeing into a single, easy-to-use resource hub that adapts to your individual journey.</p>
+                
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Personalized Assessment</h3>
+                            <p>Begin with our comprehensive performance assessment that evaluates your current habits, challenges, and goals across physical, mental, nutritional, and life skill dimensions. This creates your baseline and helps identify priority areas for improvement.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Customized Dashboard</h3>
+                            <p>Based on your assessment, we generate a personalized dashboard that tracks your progress and provides tailored recommendations. Your dashboard evolves with you, adjusting to your changing needs throughout the academic year.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Resource Access</h3>
+                            <p>Explore our extensive library of articles, videos, tools, and guided programs across our four pillars: Fitness, Nutrition, Focus & Resilience, and Life Skills. All resources are designed with student constraints in mind—limited time, budget, and space.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Progress Tracking</h3>
+                            <p>Monitor your performance journey with intuitive tracking tools that celebrate achievements and help identify areas for improvement. Regular check-ins help you stay accountable and adjust your approach as needed.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Contact Information -->
+            <section class="about-section contact-section">
+                <h2 class="section-title">Get in Touch</h2>
+                <p>Have questions, feedback, or suggestions? We'd love to hear from you! Reach out through any of the following channels:</p>
+                
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p><a href="mailto:Vivify@gmail.com">Vivify@gmail.com</a></p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <h3>Contact Form</h3>
+                        <p><a href="contact.html">Submit a message</a></p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Support</h3>
+                        <p><a href="support.html">Visit support center</a></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboard-link').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

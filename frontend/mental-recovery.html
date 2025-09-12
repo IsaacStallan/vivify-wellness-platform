@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Recovery - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .recovery-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .recovery-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .recovery-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .recovery-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Live Recovery Stats */
+        .recovery-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .recovery-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .recovery-stat::before {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        .recovery-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .recovery-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Mental Battery Monitor */
+        .battery-monitor {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .battery-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .battery-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mental-battery {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .battery-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(180deg, #27ae60, #2ecc71);
+            transition: all 0.5s ease;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .battery-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .battery-tip {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .battery-status {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f39c12;
+        }
+
+        .energy-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .energy-input {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .energy-input:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .energy-input.drain {
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        .energy-input.recharge {
+            border-color: rgba(39, 174, 96, 0.3);
+        }
+
+        .energy-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .energy-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .energy-description {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .energy-slider {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        /* Recovery Activities */
+        .recovery-activities {
+            padding: 6rem 2rem;
+        }
+
+        .activities-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .activity-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .activity-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .activity-icon {
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .activity-icon i {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .activity-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .activity-description {
+            padding: 0 2rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .activity-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-stat {
+            text-align: center;
+        }
+
+        .activity-stat .number {
+            display: block;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .activity-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .activity-actions {
+            padding: 1.5rem 2rem 2rem;
+            text-align: center;
+        }
+
+        /* Recovery Challenge */
+        .recovery-challenge {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .challenge-timer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .challenge-participants {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .participant-stat {
+            text-align: center;
+        }
+
+        .participant-stat .number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .participant-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Recovery Plan Builder */
+        .recovery-planner {
+            padding: 6rem 2rem;
+        }
+
+        .planner-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .plan-builder {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-top: 3rem;
+        }
+
+        .plan-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .plan-step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .plan-step:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .plan-step.selected {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: rgba(243, 156, 18, 0.5);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .step-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .custom-plan {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            display: none;
+        }
+
+        .custom-plan.active {
+            display: block;
+        }
+
+        /* Progress Tracking */
+        .recovery-progress {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .progress-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .progress-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .progress-chart {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .chart-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f39c12;
+        }
+
+        .energy-trend {
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trend-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3));
+            border-radius: 12px 12px 0 0;
+            transition: all 0.5s ease;
+        }
+
+        .recovery-score {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .recovery-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .recovery-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .recovery-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .energy-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-charts {
+                grid-template-columns: 1fr;
+            }
+
+            .challenge-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .challenge-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes batteryCharge {
+            0% { height: 0%; }
+            100% { height: var(--battery-level); }
+        }
+
+        .battery-charging {
+            animation: batteryCharge 2s ease-out;
+        }
+
+        @keyframes energyPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .energy-pulse {
+            animation: energyPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes trendGrow {
+            0% { height: 0%; }
+            100% { height: 60%; }
+        }
+
+        .trend-animation {
+            animation: trendGrow 1.5s ease-out;
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Live Recovery Stats -->
+        <section class="recovery-hero fade-in-up">
+            <div class="hero-content">
+                <div class="recovery-badge">🔋 Elite Mental Recovery</div>
+                <h1>Optimize Mental Recovery</h1>
+                <p>Join 534 students mastering the art of mental recharge through evidence-based recovery techniques, energy management, and personalized restoration plans. Recover smarter, not harder.</p>
+                
+                <div class="recovery-stats">
+                    <div class="recovery-stat">
+                        <span class="stat-number" id="live-recoverers">534</span>
+                        <span class="stat-label">Students Recovering</span>
+                    </div>
+                    <div class="recovery-stat">
+                        <span class="stat-number" id="energy-sessions">42</span>
+                        <span class="stat-label">Active Sessions</span>
+                    </div>
+                    <div class="recovery-stat">
+                        <span class="stat-number" id="recovery-boost">84%</span>
+                        <span class="stat-label">Avg Energy Boost</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#battery-monitor" class="btn btn-primary">Check Energy Level</a>
+                    <a href="#challenge" class="btn btn-secondary">Join Challenge</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mental Battery Monitor -->
+        <section class="battery-monitor fade-in-up">
+            <div class="battery-container" id="battery-monitor">
+                <h2 class="section-heading">🔋 Mental Energy Monitor</h2>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track your mental energy levels and get personalized recovery recommendations. Monitor what drains and recharges your mental battery!</p>
+                
+                <div class="mental-battery">
+                    <div class="battery-tip"></div>
+                    <div class="battery-fill" id="battery-fill" style="height: 70%;"></div>
+                    <div class="battery-percentage" id="battery-percentage">70%</div>
+                </div>
+                
+                <div class="battery-status" id="battery-status">Optimal Energy</div>
+                
+                <div class="energy-inputs">
+                    <div class="energy-input recharge" onclick="adjustEnergy(this, 10)">
+                        <div class="energy-icon">😴</div>
+                        <div class="energy-label">Quality Sleep</div>
+                        <div class="energy-description">8+ hours of restful sleep</div>
+                        <input type="range" class="energy-slider" min="0" max="10" value="8" oninput="updateEnergyValue(this)">
+                    </div>
+                    
+                    <div class="energy-input recharge" onclick="adjustEnergy(this, 8)">
+                        <div class="energy-icon">🧘</div>
+                        <div class="energy-label">Mindfulness</div>
+                        <div class="energy-description">Meditation or breathing exercises</div>
+                        <input type="range" class="energy-slider" min="0" max="10" value="5" oninput="updateEnergyValue(this)">
+                    </div>
+                    
+                    <div class="energy-input recharge" onclick="adjustEnergy(this, 6)">
+                        <div class="energy-icon">🏃</div>
+                        <div class="energy-label">Physical Activity</div>
+                        <div class="energy-description">Exercise or movement</div>
+                        <input type="range" class="energy-slider" min="0" max="10" value="6" oninput="updateEnergyValue(this)">
+                    </div>
+                    
+                    <div class="energy-input drain" onclick="adjustEnergy(this, -8)">
+                        <div class="energy-icon">📱</div>
+                        <div class="energy-label">Screen Time</div>
+                        <div class="energy-description">Social media & entertainment</div>
+                        <input type="range" class="energy-slider" min="0" max="10" value="7" oninput="updateEnergyValue(this)">
+                    </div>
+                    
+                    <div class="energy-input drain" onclick="adjustEnergy(this, -6)">
+                        <div class="energy-icon">😰</div>
+                        <div class="energy-label">Stress Level</div>
+                        <div class="energy-description">Academic or social pressure</div>
+                        <input type="range" class="energy-slider" min="0" max="10" value="4" oninput="updateEnergyValue(this)">
+                    </div>
+                    
+                    <div class="energy-input recharge" onclick="adjustEnergy(this, 7)">
+                        <div class="energy-icon">👥</div>
+                        <div class="energy-label">Social Connection</div>
+                        <div class="energy-description">Quality time with friends</div>
+                        <input type="range" class="energy-slider" min="0" max="10" value="6" oninput="updateEnergyValue(this)">
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="generateRecoveryPlan()">Generate My Recovery Plan</button>
+                    <button class="btn btn-secondary" onclick="startEnergyChallenge()">Start 7-Day Energy Challenge</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Activities -->
+        <section class="recovery-activities fade-in-up">
+            <div class="activities-container">
+                <h2 class="section-heading">🎯 Elite Recovery Training</h2>
+                <div class="activities-grid">
+                    <div class="activity-card" onclick="startActivity('meditation')">
+                        <div class="activity-icon">
+                            <i class="fas fa-om"></i>
+                        </div>
+                        <h3>Guided Meditation</h3>
+                        <div class="activity-description">
+                            Join live meditation sessions with other high-performers. Build mental clarity and stress resilience.
+                        </div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="number">127</span>
+                                <span class="label">Active Now</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">5-20</span>
+                                <span class="label">Minutes</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">+15</span>
+                                <span class="label">Energy Boost</span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary">Join Session</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" onclick="startActivity('breathing')">
+                        <div class="activity-icon">
+                            <i class="fas fa-wind"></i>
+                        </div>
+                        <h3>Elite Breathing</h3>
+                        <div class="activity-description">
+                            Master breathing techniques used by Navy SEALs and Olympic athletes for peak performance under pressure.
+                        </div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="number">89</span>
+                                <span class="label">Training Now</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">3-10</span>
+                                <span class="label">Minutes</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">+12</span>
+                                <span class="label">Focus Boost</span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary">Start Training</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" onclick="startActivity('visualization')">
+                        <div class="activity-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Performance Visualization</h3>
+                        <div class="activity-description">
+                            Mental rehearsal techniques used by elite athletes to optimize performance and build confidence.
+                        </div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="number">156</span>
+                                <span class="label">Visualizing</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">10-15</span>
+                                <span class="label">Minutes</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">+18</span>
+                                <span class="label">Confidence</span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary">Begin Visualization</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" onclick="startActivity('cold-exposure')">
+                        <div class="activity-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <h3>Cold Exposure Training</h3>
+                        <div class="activity-description">
+                            Build mental toughness and stress resilience with guided cold exposure protocols used by elite performers.
+                        </div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="number">67</span>
+                                <span class="label">Training</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">2-5</span>
+                                <span class="label">Minutes</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">+25</span>
+                                <span class="label">Resilience</span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary">Start Challenge</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" onclick="startActivity('journal')">
+                        <div class="activity-icon">
+                            <i class="fas fa-pen"></i>
+                        </div>
+                        <h3>Performance Journaling</h3>
+                        <div class="activity-description">
+                            Structured reflection and goal-setting used by top performers to optimize daily habits and mindset.
+                        </div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="number">234</span>
+                                <span class="label">Journaling</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">5-15</span>
+                                <span class="label">Minutes</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">+20</span>
+                                <span class="label">Clarity</span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary">Open Journal</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" onclick="startActivity('nature')">
+                        <div class="activity-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <h3>Nature Immersion</h3>
+                        <div class="activity-description">
+                            Guided outdoor activities and nature connection exercises for mental restoration and creativity boost.
+                        </div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="number">78</span>
+                                <span class="label">Exploring</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">15-60</span>
+                                <span class="label">Minutes</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="number">+22</span>
+                                <span class="label">Creativity</span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary">Find Activities</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Challenge -->
+        <section class="recovery-challenge fade-in-up">
+            <div class="challenge-widget" id="challenge">
+                <div class="challenge-header">
+                    <h3 class="challenge-title">🔥 7-Day Mental Resilience Challenge</h3>
+                    <div class="challenge-timer" id="challenge-timer">5 days left</div>
+                </div>
+                
+                <p class="challenge-description">Join 1,247 students building unbreakable mental resilience! Complete daily recovery practices, track your energy levels, and compete for the weekly leaderboard crown. Your mind is your competitive advantage.</p>
+                
+                <div class="challenge-participants">
+                    <div class="participant-stat">
+                        <span class="number">1,247</span>
+                        <span class="label">Participants</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">789</span>
+                        <span class="label">Completed Today</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">#12</span>
+                        <span class="label">Your Rank</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">94%</span>
+                        <span class="label">Success Rate</span>
+                    </div>
+                </div>
+                
+                <div class="challenge-actions">
+                    <button class="btn btn-primary" onclick="joinResilienceChallenge()">Accept Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewRecoveryLeaderboard()">View Leaderboard</button>
+                    <button class="btn btn-secondary" onclick="inviteToChallenge()">Invite Friends</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Plan Builder -->
+        <section class="recovery-planner fade-in-up">
+            <div class="planner-container">
+                <h2 class="section-heading">🎯 Personalized Recovery Plan</h2>
+                <div class="plan-builder">
+                    <h3 style="text-align: center; margin-bottom: 2rem; color: #f39c12;">Build Your Elite Recovery Protocol</h3>
+                    
+                    <div class="plan-steps">
+                        <div class="plan-step" onclick="selectPlanStep(this, 'morning')">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Morning Reset</div>
+                            <div class="step-description">Start your day with energy optimization</div>
+                        </div>
+                        
+                        <div class="plan-step" onclick="selectPlanStep(this, 'midday')">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Midday Recharge</div>
+                            <div class="step-description">Combat afternoon energy dips</div>
+                        </div>
+                        
+                        <div class="plan-step" onclick="selectPlanStep(this, 'evening')">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Evening Recovery</div>
+                            <div class="step-description">Optimize rest and preparation</div>
+                        </div>
+                        
+                        <div class="plan-step" onclick="selectPlanStep(this, 'weekly')">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Weekly Deep Recovery</div>
+                            <div class="step-description">Intensive restoration sessions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="custom-plan" id="custom-plan">
+                        <h4 style="color: #f39c12; margin-bottom: 1rem;">Your Custom Recovery Plan</h4>
+                        <div id="plan-content">
+                            <p>Select a recovery timeframe above to see your personalized recommendations!</p>
+                        </div>
+                        <div style="text-align: center; margin-top: 2rem;">
+                            <button class="btn btn-primary" onclick="saveRecoveryPlan()">Save & Start Plan</button>
+                            <button class="btn btn-secondary" onclick="shareRecoveryPlan()">Share with Team</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Tracking -->
+        <section class="recovery-progress fade-in-up">
+            <div class="progress-container">
+                <h2 class="section-heading">📊 Recovery Analytics</h2>
+                <div class="progress-charts">
+                    <div class="progress-chart">
+                        <div class="chart-title">Energy Trend (7 Days)</div>
+                        <div class="energy-trend">
+                            <div class="trend-line trend-animation"></div>
+                        </div>
+                        <div class="recovery-score" id="energy-trend-score">78%</div>
+                        <div class="score-label">Average Energy Level</div>
+                    </div>
+                    
+                    <div class="progress-chart">
+                        <div class="chart-title">Recovery Streak</div>
+                        <div class="recovery-score" id="recovery-streak">12</div>
+                        <div class="score-label">Days Consecutive</div>
+                        <div style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8);">
+                            🔥 You're on fire! Keep building that resilience momentum.
+                        </div>
+                    </div>
+                    
+                    <div class="progress-chart">
+                        <div class="chart-title">Resilience Score</div>
+                        <div class="recovery-score" id="resilience-score">8.7</div>
+                        <div class="score-label">Out of 10</div>
+                        <div style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8);">
+                            🎯 Elite level! You're in the top 15% of students.
+                        </div>
+                    </div>
+                    
+                    <div class="progress-chart">
+                        <div class="chart-title">Community Impact</div>
+                        <div class="recovery-score" id="community-rank">#47</div>
+                        <div class="score-label">Global Ranking</div>
+                        <div style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8);">
+                            🏆 You've inspired 23 teammates this week!
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary" onclick="viewDetailedAnalytics()">View Detailed Analytics</button>
+                    <button class="btn btn-secondary" onclick="exportProgress()">Export Progress Report</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Initialize battery level
+            updateBatteryLevel();
+            
+            // Start live stats updates
+            startLiveStatsUpdates();
+            
+            // Load saved progress
+            loadRecoveryProgress();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+
+        // Battery Management
+        let currentBatteryLevel = 70;
+
+        function updateBatteryLevel() {
+            const batteryFill = document.getElementById('battery-fill');
+            const batteryPercentage = document.getElementById('battery-percentage');
+            const batteryStatus = document.getElementById('battery-status');
+            
+            batteryFill.style.height = currentBatteryLevel + '%';
+            batteryPercentage.textContent = currentBatteryLevel + '%';
+            
+            // Update battery color and status based on level
+            if (currentBatteryLevel >= 80) {
+                batteryFill.style.background = 'linear-gradient(180deg, #27ae60, #2ecc71)';
+                batteryStatus.textContent = '🚀 Elite Energy';
+                batteryStatus.style.color = '#27ae60';
+            } else if (currentBatteryLevel >= 60) {
+                batteryFill.style.background = 'linear-gradient(180deg, #f39c12, #e67e22)';
+                batteryStatus.textContent = '⚡ Good Energy';
+                batteryStatus.style.color = '#f39c12';
+            } else if (currentBatteryLevel >= 40) {
+                batteryFill.style.background = 'linear-gradient(180deg, #e67e22, #d35400)';
+                batteryStatus.textContent = '⚠️ Low Energy';
+                batteryStatus.style.color = '#e67e22';
+            } else {
+                batteryFill.style.background = 'linear-gradient(180deg, #e74c3c, #c0392b)';
+                batteryStatus.textContent = '🔋 Critical - Need Recovery';
+                batteryStatus.style.color = '#e74c3c';
+            }
+            
+            // Add charging animation
+            batteryFill.classList.add('battery-charging');
+            setTimeout(() => batteryFill.classList.remove('battery-charging'), 2000);
+        }
+
+        function adjustEnergy(element, change) {
+            currentBatteryLevel = Math.max(0, Math.min(100, currentBatteryLevel + change));
+            updateBatteryLevel();
+            
+            // Add visual feedback
+            element.classList.add('energy-pulse');
+            setTimeout(() => element.classList.remove('energy-pulse'), 1000);
+            
+            // Save to localStorage
+            localStorage.setItem('mentalBatteryLevel', currentBatteryLevel);
+        }
+
+        function updateEnergyValue(slider) {
+            const value = parseInt(slider.value);
+            const energyInput = slider.closest('.energy-input');
+            
+            if (energyInput.classList.contains('recharge')) {
+                // Higher values for recharge activities increase energy
+                const energyBoost = Math.floor(value * 1.5);
+                adjustEnergy(energyInput, energyBoost - 7); // Normalize around middle value
+            } else {
+                // Higher values for drain activities decrease energy
+                const energyDrain = Math.floor(value * -1.2);
+                adjustEnergy(energyInput, energyDrain + 6); // Normalize around middle value
+            }
+        }
+
+        // Live Stats Updates
+        function startLiveStatsUpdates() {
+            setInterval(() => {
+                // Simulate live user counts
+                updateLiveStat('live-recoverers', 530, 540);
+                updateLiveStat('energy-sessions', 38, 45);
+                updateRandomPercentage('recovery-boost', 82, 87);
+            }, 5000);
+        }
+
+        function updateLiveStat(elementId, min, max) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const newValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                element.textContent = newValue;
+            }
+        }
+
+        function updateRandomPercentage(elementId, min, max) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const newValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                element.textContent = newValue + '%';
+            }
+        }
+
+        // Recovery Activities
+        function startActivity(activityType) {
+            const activities = {
+                'meditation': 'Starting guided meditation session... 🧘‍♀️',
+                'breathing': 'Initializing elite breathing protocol... 💨',
+                'visualization': 'Loading performance visualization training... 👁️',
+                'cold-exposure': 'Preparing cold exposure challenge... ❄️',
+                'journal': 'Opening your performance journal... ✍️',
+                'nature': 'Finding nature immersion activities near you... 🌿'
+            };
+            
+            alert(activities[activityType] || 'Starting recovery activity...');
+            
+            // Simulate energy boost
+            adjustEnergy(document.querySelector('.energy-input'), Math.floor(Math.random() * 15) + 10);
+        }
+
+        // Challenge Functions
+        function joinResilienceChallenge() {
+            alert('🔥 Resilience Challenge accepted! You\'ll receive daily recovery tasks and compete with 1,247 other students. Let\'s build unbreakable mental strength!');
+            
+            // Update local progress
+            const currentStreak = parseInt(localStorage.getItem('recoveryStreak') || '0');
+            localStorage.setItem('recoveryStreak', currentStreak + 1);
+            document.getElementById('recovery-streak').textContent = currentStreak + 1;
+        }
+
+        function viewRecoveryLeaderboard() {
+            alert('🏆 Opening Recovery Leaderboard...\n\n#1 Alex M. - 847 points\n#2 Sarah K. - 823 points\n#3 Jordan L. - 798 points\n...\n#12 You - 756 points\n\nKeep pushing to break into the top 10!');
+        }
+
+        function inviteToChallenge() {
+            alert('📤 Invite your friends to join the Mental Resilience Challenge! Share your referral code: RESILIENT2025');
+        }
+
+        // Recovery Plan Builder
+        let selectedPlanStep = null;
+
+        function selectPlanStep(element, stepType) {
+            // Remove previous selection
+            document.querySelectorAll('.plan-step').forEach(step => step.classList.remove('selected'));
+            
+            // Select current step
+            element.classList.add('selected');
+            selectedPlanStep = stepType;
+            
+            // Show custom plan
+            const customPlan = document.getElementById('custom-plan');
+            const planContent = document.getElementById('plan-content');
+            
+            const planTemplates = {
+                'morning': `
+                    <h5 style="color: #f39c12; margin-bottom: 1rem;">☀️ Morning Energy Protocol</h5>
+                    <ul style="text-align: left; color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                        <li>🌅 5-minute mindful awakening (upon waking)</li>
+                        <li>🧘 Box breathing: 4-4-4-4 pattern (3 minutes)</li>
+                        <li>💪 Energy activation sequence (light movement)</li>
+                        <li>🎯 Intention setting and goal visualization</li>
+                        <li>📱 Digital detox for first 30 minutes</li>
+                    </ul>
+                `,
+                'midday': `
+                    <h5 style="color: #f39c12; margin-bottom: 1rem;">⚡ Midday Recharge Protocol</h5>
+                    <ul style="text-align: left; color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                        <li>🔋 Energy check-in and battery assessment</li>
+                        <li>🌊 Power breathing session (2-3 minutes)</li>
+                        <li>🚶 Movement break or micro-workout</li>
+                        <li>🥗 Mindful nutrition timing</li>
+                        <li>💭 Mental reset and refocus exercise</li>
+                    </ul>
+                `,
+                'evening': `
+                    <h5 style="color: #f39c12; margin-bottom: 1rem;">🌙 Evening Recovery Protocol</h5>
+                    <ul style="text-align: left; color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                        <li>📝 Performance review and gratitude journaling</li>
+                        <li>🧘 Progressive muscle relaxation</li>
+                        <li>📱 Digital sunset (screens off 1 hour before bed)</li>
+                        <li>🛁 Recovery routine (warm shower/bath)</li>
+                        <li>😴 Sleep optimization checklist</li>
+                    </ul>
+                `,
+                'weekly': `
+                    <h5 style="color: #f39c12; margin-bottom: 1rem;">🏔️ Weekly Deep Recovery</h5>
+                    <ul style="text-align: left; color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                        <li>🌿 Extended nature immersion (2+ hours)</li>
+                        <li>🧊 Cold exposure training session</li>
+                        <li>📱 Complete digital detox period</li>
+                        <li>🎨 Creative flow activities</li>
+                        <li>👥 Deep social connection time</li>
+                        <li>📊 Weekly recovery analytics review</li>
+                    </ul>
+                `
+            };
+            
+            planContent.innerHTML = planTemplates[stepType];
+            customPlan.classList.add('active');
+        }
+
+        function saveRecoveryPlan() {
+            if (!selectedPlanStep) {
+                alert('Please select a recovery timeframe first!');
+                return;
+            }
+            
+            localStorage.setItem('recoveryPlan', selectedPlanStep);
+            alert('🎯 Recovery plan saved! You\'ll receive reminders and tracking for your selected protocol. Building elite mental resilience starts now!');
+        }
+
+        function shareRecoveryPlan() {
+            if (!selectedPlanStep) {
+                alert('Please select a recovery plan first!');
+                return;
+            }
+            
+            alert('📤 Sharing your recovery plan with your team! They\'ll be able to see your protocol and join you in building mental resilience.');
+        }
+
+        // Progress Functions
+        function generateRecoveryPlan() {
+            const batteryLevel = currentBatteryLevel;
+            let recommendations = [];
+            
+            if (batteryLevel < 40) {
+                recommendations = [
+                    '🔋 PRIORITY: Immediate energy restoration needed',
+                    '😴 Focus on sleep optimization (8+ hours tonight)',
+                    '🧘 Start with 5-minute breathing exercises',
+                    '📱 Implement digital detox for 2 hours',
+                    '🚶 Gentle movement or short walk'
+                ];
+            } else if (batteryLevel < 70) {
+               recommendations = [
+                   '⚡ MODERATE: Build sustainable energy habits',
+                   '🧘 Daily 10-15 minute meditation practice',
+                   '💪 Add light exercise to your routine',
+                   '📝 Start performance journaling',
+                   '🌿 Schedule weekly nature immersion',
+                   '👥 Prioritize quality social connections'
+               ];
+           } else {
+               recommendations = [
+                   '🚀 ELITE: Optimize for peak performance',
+                   '🏔️ Challenge yourself with cold exposure',
+                   '🧠 Advanced visualization techniques',
+                   '📊 Track detailed recovery metrics',
+                   '👑 Mentor other students in recovery',
+                   '🎯 Set ambitious resilience goals'
+               ];
+           }
+           
+           alert('🎯 Your Personalized Recovery Plan:\n\n' + recommendations.join('\n\n') + '\n\nPlan saved to your dashboard!');
+           
+           // Save to localStorage
+           localStorage.setItem('personalizedRecoveryPlan', JSON.stringify(recommendations));
+           localStorage.setItem('planGeneratedDate', new Date().toISOString());
+       }
+
+       function startEnergyChallenge() {
+           alert('🔥 7-Day Energy Challenge Started!\n\nDaily Goals:\n• Track energy levels 3x daily\n• Complete 1 recovery activity\n• Maintain 70%+ battery average\n• Share progress with team\n\nRewards:\n🏆 Elite Resilience Badge\n⭐ +500 Performance Points\n👑 Leaderboard Recognition');
+           
+           // Initialize challenge in localStorage
+           localStorage.setItem('energyChallenge', JSON.stringify({
+               startDate: new Date().toISOString(),
+               day: 1,
+               completed: false,
+               dailyGoals: {
+                   energyTracking: false,
+                   recoveryActivity: false,
+                   batteryTarget: false,
+                   teamShare: false
+               }
+           }));
+       }
+
+       function viewDetailedAnalytics() {
+           alert('📊 Opening Detailed Recovery Analytics...\n\n📈 Weekly Trends:\n• Energy: +12% improvement\n• Sleep Quality: 8.3/10 average\n• Stress Resilience: +18% increase\n• Recovery Speed: 23% faster\n\n🎯 Optimization Opportunities:\n• Improve midday energy management\n• Increase cold exposure frequency\n• Build stronger morning routine\n\n🏆 Achievements Unlocked:\n• Resilience Warrior (7-day streak)\n• Energy Master (80%+ average)\n• Community Leader (helped 15 peers)');
+       }
+
+       function exportProgress() {
+           const progressData = {
+               batteryLevel: currentBatteryLevel,
+               streak: localStorage.getItem('recoveryStreak') || 0,
+               plan: localStorage.getItem('recoveryPlan') || 'none',
+               challengeActive: !!localStorage.getItem('energyChallenge'),
+               exportDate: new Date().toISOString()
+           };
+           
+           alert('📄 Progress Report Generated!\n\n🔋 Current Energy: ' + currentBatteryLevel + '%\n🔥 Recovery Streak: ' + (localStorage.getItem('recoveryStreak') || 0) + ' days\n📈 Resilience Score: 8.7/10\n🏆 Global Rank: #47\n\nReport saved to your downloads!');
+           
+           // In a real app, this would trigger a download
+           console.log('Progress Export:', progressData);
+       }
+
+       function loadRecoveryProgress() {
+           // Load saved battery level
+           const savedBattery = localStorage.getItem('mentalBatteryLevel');
+           if (savedBattery) {
+               currentBatteryLevel = parseInt(savedBattery);
+               updateBatteryLevel();
+           }
+           
+           // Load streak
+           const savedStreak = localStorage.getItem('recoveryStreak');
+           if (savedStreak) {
+               document.getElementById('recovery-streak').textContent = savedStreak;
+           }
+           
+           // Load challenge status
+           const challenge = localStorage.getItem('energyChallenge');
+           if (challenge) {
+               const challengeData = JSON.parse(challenge);
+               const daysSince = Math.floor((new Date() - new Date(challengeData.startDate)) / (1000 * 60 * 60 * 24));
+               
+               if (daysSince < 7) {
+                   document.getElementById('challenge-timer').textContent = `Day ${daysSince + 1} of 7`;
+               }
+           }
+           
+           // Update analytics with realistic progression
+           updateAnalyticsProgression();
+       }
+
+       function updateAnalyticsProgression() {
+           const streak = parseInt(localStorage.getItem('recoveryStreak') || '0');
+           
+           // Update resilience score based on streak
+           const baseScore = 6.5;
+           const streakBonus = Math.min(streak * 0.1, 2.2); // Cap at 8.7
+           const resilienceScore = (baseScore + streakBonus).toFixed(1);
+           document.getElementById('resilience-score').textContent = resilienceScore;
+           
+           // Update community rank (higher streak = better rank)
+           const baseRank = 150;
+           const rankImprovement = Math.min(streak * 3, 103); // Best possible rank #47
+           const currentRank = Math.max(baseRank - rankImprovement, 47);
+           document.getElementById('community-rank').textContent = `#${currentRank}`;
+           
+           // Update energy trend
+           const energyTrend = Math.min(65 + streak * 2, 85); // Cap at 85%
+           document.getElementById('energy-trend-score').textContent = energyTrend + '%';
+       }
+
+       // Gamification Features
+       function checkAchievements() {
+           const streak = parseInt(localStorage.getItem('recoveryStreak') || '0');
+           const batteryLevel = currentBatteryLevel;
+           
+           // Check for new achievements
+           if (streak === 7 && !localStorage.getItem('achievement_resilience_warrior')) {
+               showAchievement('🛡️ Resilience Warrior', 'Complete 7 days of recovery training');
+               localStorage.setItem('achievement_resilience_warrior', 'true');
+           }
+           
+           if (batteryLevel >= 80 && !localStorage.getItem('achievement_energy_master')) {
+               showAchievement('⚡ Energy Master', 'Maintain 80%+ energy level');
+               localStorage.setItem('achievement_energy_master', 'true');
+           }
+           
+           if (streak === 21 && !localStorage.getItem('achievement_elite_mindset')) {
+               showAchievement('🧠 Elite Mindset', 'Build 21-day recovery habit');
+               localStorage.setItem('achievement_elite_mindset', 'true');
+           }
+       }
+
+       function showAchievement(title, description) {
+           // Create achievement notification
+           const achievement = document.createElement('div');
+           achievement.className = 'achievement-popup';
+           achievement.style.cssText = `
+               position: fixed;
+               top: 20px;
+               right: 20px;
+               background: linear-gradient(135deg, #f39c12, #e67e22);
+               color: #000;
+               padding: 1rem 1.5rem;
+               border-radius: 16px;
+               font-weight: 600;
+               z-index: 10000;
+               box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+               animation: slideInRight 0.5s ease-out;
+           `;
+           
+           achievement.innerHTML = `
+               <div style="display: flex; align-items: center; gap: 0.5rem;">
+                   <span style="font-size: 1.5rem;">🏆</span>
+                   <div>
+                       <div style="font-weight: 800;">${title}</div>
+                       <div style="font-size: 0.9rem; opacity: 0.8;">${description}</div>
+                   </div>
+               </div>
+           `;
+           
+           document.body.appendChild(achievement);
+           
+           // Remove after 5 seconds
+           setTimeout(() => {
+               achievement.style.animation = 'slideOutRight 0.5s ease-out';
+               setTimeout(() => document.body.removeChild(achievement), 500);
+           }, 5000);
+       }
+
+       // Add CSS for achievement animations
+       const achievementStyles = document.createElement('style');
+       achievementStyles.textContent = `
+           @keyframes slideInRight {
+               from { transform: translateX(100%); opacity: 0; }
+               to { transform: translateX(0); opacity: 1; }
+           }
+           
+           @keyframes slideOutRight {
+               from { transform: translateX(0); opacity: 1; }
+               to { transform: translateX(100%); opacity: 0; }
+           }
+       `;
+       document.head.appendChild(achievementStyles);
+
+       // Social Features
+       function shareProgress() {
+           const streak = localStorage.getItem('recoveryStreak') || 0;
+           const batteryLevel = currentBatteryLevel;
+           const resilienceScore = document.getElementById('resilience-score').textContent;
+           
+           alert(`📤 Sharing your progress...\n\n"Just hit ${streak} days of mental recovery training with ${batteryLevel}% energy and ${resilienceScore}/10 resilience score! 🔥 Building unbreakable mental strength with @VivifyApp #MentalResilience #EliteHabits"\n\nPosted to your connected social accounts!`);
+       }
+
+       function findRecoveryBuddy() {
+           alert('👥 Finding your recovery training partner...\n\n🎯 Matched with Sarah K.!\n• Similar resilience goals\n• Compatible training schedule  \n• 23-day recovery streak\n• Lives in your area\n\nWould you like to connect and train together?');
+       }
+
+       // Challenge yourself feature
+       function createCustomChallenge() {
+           alert('🎯 Custom Challenge Creator\n\nChoose your focus:\n\n1. 🧘 Meditation Mastery (30 days)\n2. ❄️ Cold Exposure Champion (14 days)\n3. 📱 Digital Detox Warrior (7 days)\n4. 🌿 Nature Connection (21 days)\n5. 💪 Complete Resilience (90 days)\n\nCustom challenges unlock exclusive badges and community recognition!');
+       }
+
+       // Enhanced engagement features
+       function joinRecoveryMasterclass() {
+           alert('🎓 Joining Live Masterclass...\n\n"Elite Mental Recovery Techniques with Dr. Sarah Chen"\n\n📅 Today at 7 PM EST\n👥 1,247 students registered\n🏆 Certificate available\n💎 Premium content unlock\n\nYou\'ll receive a reminder 30 minutes before!');
+       }
+
+       function startPomodorRecovery() {
+           alert('🍅 Starting Pomodoro Recovery Session...\n\n25 min focused work\n5 min recovery break\n\nRecovery activities during breaks:\n• Breathing exercises\n• Mindful movement\n• Energy check-ins\n• Micro-meditations\n\nBuilding productive habits with built-in recovery!');
+       }
+
+       // Community features
+       function viewRecoveryFeed() {
+           alert('📱 Community Recovery Feed\n\n🔥 Alex just completed their 50th meditation session!\n⚡ Jordan shared a new breathing technique\n🏆 Sarah achieved Elite Energy Master status\n❄️ Mike completed his first ice bath challenge\n🌿 Lisa discovered a new nature spot\n\nJoin the conversation and share your wins!');
+       }
+
+       // Real-time notifications
+       function enableRecoveryNotifications() {
+           if ('Notification' in window && Notification.permission !== 'granted') {
+               Notification.requestPermission().then(permission => {
+                   if (permission === 'granted') {
+                       alert('🔔 Recovery notifications enabled!\n\nYou\'ll receive:\n• Energy check-in reminders\n• Recovery break suggestions\n• Challenge updates\n• Achievement celebrations\n• Buddy training invites');
+                       
+                       // Simulate a notification
+                       setTimeout(() => {
+                           new Notification('🔋 Energy Check-in', {
+                               body: 'How\'s your mental energy? Take 30 seconds to assess and recharge!',
+                               icon: '/favicon.ico'
+                           });
+                       }, 5000);
+                   }
+               });
+           }
+       }
+
+       // Auto-save progress
+       setInterval(() => {
+           if (currentBatteryLevel !== parseInt(localStorage.getItem('mentalBatteryLevel') || '70')) {
+               localStorage.setItem('mentalBatteryLevel', currentBatteryLevel);
+               localStorage.setItem('lastEnergyUpdate', new Date().toISOString());
+           }
+           
+           // Check for achievements
+           checkAchievements();
+       }, 30000); // Every 30 seconds
+
+       // Smooth scrolling for anchor links
+       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+           anchor.addEventListener('click', function(e) {
+               e.preventDefault();
+               const target = document.querySelector(this.getAttribute('href'));
+               if (target) {
+                   target.scrollIntoView({
+                       behavior: 'smooth',
+                       block: 'start'
+                   });
+               }
+           });
+       });
+
+       // Header background on scroll
+       window.addEventListener('scroll', function() {
+           const header = document.querySelector('header');
+           if (window.scrollY > 100) {
+               header.style.background = 'rgba(10, 10, 10, 0.98)';
+           } else {
+               header.style.background = 'rgba(10, 10, 10, 0.95)';
+           }
+       });
+
+       // Initialize notifications on load
+       setTimeout(() => {
+           if ('Notification' in window && Notification.permission === 'default') {
+               const notificationBanner = document.createElement('div');
+               notificationBanner.style.cssText = `
+                   position: fixed;
+                   bottom: 20px;
+                   right: 20px;
+                   background: rgba(243, 156, 18, 0.1);
+                   border: 1px solid rgba(243, 156, 18, 0.3);
+                   border-radius: 16px;
+                   padding: 1rem;
+                   color: white;
+                   max-width: 300px;
+                   z-index: 1000;
+                   backdrop-filter: blur(10px);
+               `;
+               
+               notificationBanner.innerHTML = `
+                   <div style="margin-bottom: 0.5rem; font-weight: 600;">🔔 Stay on track with recovery reminders!</div>
+                   <div style="font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.8;">Get personalized notifications for energy check-ins and recovery breaks.</div>
+                   <button onclick="enableRecoveryNotifications(); this.parentElement.remove();" style="background: linear-gradient(135deg, #f39c12, #e67e22); color: #000; border: none; padding: 0.5rem 1rem; border-radius: 25px; font-weight: 600; cursor: pointer;">Enable Notifications</button>
+               `;
+               
+               document.body.appendChild(notificationBanner);
+           }
+       }, 3000);
+   </script>
+</body>
+</html>

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Training - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .core-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=600&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .core-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .core-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .core-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+            color: #000;
+        }
+
+        /* Stats Section */
+        .core-stats {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-content p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Myths Section */
+        .myths-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .myths-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .myths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .myth-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .myth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .myth-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .myth-card:hover {
+            transform: translateY(-10px);
+            background: rgba(231, 76, 60, 0.05);
+            border-color: rgba(231, 76, 60, 0.2);
+        }
+
+        .myth-card h3 {
+            color: #e74c3c;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fact-label {
+            color: #2ecc71;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .myth-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .myth-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            padding: 6rem 2rem;
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .benefit-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Exercise Types Section */
+        .exercise-types-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .exercise-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 4rem auto 0;
+        }
+
+        .exercise-type-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .exercise-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .exercise-type-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .exercise-type-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .exercise-type-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .exercise-type-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .exercise-type-info h3 {
+            margin: 0 0 1rem 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .exercise-type-info p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .exercise-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .view-details {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        /* Core Anatomy Section */
+        .anatomy-section {
+            padding: 6rem 2rem;
+        }
+
+        .anatomy-container {
+            max-width: 1000px;
+            margin: 4rem auto 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .anatomy-container h3 {
+            color: #f39c12;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .muscle-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .muscle-group {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .muscle-group h4 {
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .muscle-group p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 4rem auto 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .core-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .core-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .core-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .exercise-types {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .myths-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .muscle-groups {
+                grid-template-columns: 1fr;
+            }
+
+            .exercise-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section -->
+        <section class="core-hero fade-in-up">
+            <div class="hero-content">
+                <div class="core-badge">Foundation Strength</div>
+                <h1>Core Excellence</h1>
+                <p>Build the unshakeable foundation that powers all movement. Develop core strength, stability, and control for elite performance, injury prevention, and functional excellence.</p>
+                <a href="#exercise-types" class="btn btn-primary">Start Training</a>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="core-stats fade-in-up">
+            <div class="stats-container">
+                <h2 class="stats-title">Core Training Impact</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">80%</div>
+                        <div class="stat-label">Back Pain Reduction</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">360°</div>
+                        <div class="stat-label">Stability Protection</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">29</div>
+                        <div class="stat-label">Core Muscles</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Movement Foundation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section fade-in-up">
+            <h2 class="section-heading">Beyond the Six-Pack</h2>
+            <div class="intro-content">
+                <p>Your core is far more than just visible abs. It's a complex system of 29 muscles that work together to stabilize your spine, transfer force between your upper and lower body, and protect you from injury during every movement.</p>
+                <p>True core strength combines stability, endurance, and power. It's the foundation that allows you to lift heavier, run faster, and move with confidence. Whether you're studying at a desk, playing sports, or just living daily life, your core is constantly working.</p>
+                <p>Our approach focuses on functional core training that builds real-world strength, improves posture, reduces back pain, and creates the stable platform needed for peak performance in academics and athletics.</p>
+            </div>
+        </section>
+
+        <!-- Core Training Myths -->
+        <section class="myths-section fade-in-up">
+            <div class="myths-container">
+                <h2 class="section-heading">Core Training Myths Debunked</h2>
+                <div class="myths-grid">
+                    <div class="myth-card">
+                        <h3><i class="fas fa-times-circle"></i> More crunches = better abs</h3>
+                        <p class="fact-label">Fact: Quality and variety matter more than quantity.</p>
+                        <p>Hundreds of crunches won't give you visible abs or functional strength. Visible abs require low body fat, while functional strength comes from training diverse movement patterns with proper progression.</p>
+                    </div>
+                    
+                    <div class="myth-card">
+                        <h3><i class="fas fa-times-circle"></i> You need equipment for core training</h3>
+                        <p class="fact-label">Fact: Bodyweight exercises are highly effective.</p>
+                        <p>The most effective core exercises - planks, dead bugs, bird dogs - require no equipment. Your bodyweight provides all the resistance needed for building elite core strength.</p>
+                    </div>
+                    
+                    <div class="myth-card">
+                        <h3><i class="fas fa-times-circle"></i> Core training is just for athletes</h3>
+                        <p class="fact-label">Fact: Everyone needs core strength for daily life.</p>
+                        <p>From carrying books to preventing back pain to maintaining good posture during long study sessions, core strength is essential for quality of life regardless of athletic pursuits.</p>
+                    </div>
+                    
+                    <div class="myth-card">
+                        <h3><i class="fas fa-times-circle"></i> Soreness indicates effectiveness</h3>
+                        <p class="fact-label">Fact: Soreness isn't a reliable success indicator.</p>
+                        <p>Effective training focuses on progressive overload and proper form. Absence of soreness doesn't mean your workout was ineffective - consistency and progression matter most.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section fade-in-up">
+            <div class="benefits-container">
+                <h2 class="section-heading">Elite Core Benefits</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Injury Prevention</h3>
+                        <p>Create a protective cylinder around your spine, reducing lower back injury risk and improving recovery from existing issues.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Performance Power</h3>
+                        <p>Efficient force transfer between upper and lower body enhances performance in virtually all physical activities and sports.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3>Study Posture</h3>
+                        <p>Maintain proper spine alignment during long study sessions, reducing strain on your back and neck for better focus.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Enhanced Balance</h3>
+                        <p>Your core serves as your center of gravity, improving balance, coordination, and stability in all movements.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>Pain Reduction</h3>
+                        <p>Strengthen spine-supporting muscles to significantly reduce chronic back pain and prevent future occurrences.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <h3>Functional Movement</h3>
+                        <p>Nearly every movement originates from your core, making core strength essential for efficient daily activities.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise Types Section -->
+        <section class="exercise-types-section fade-in-up">
+            <div class="exercise-types-container">
+                <h2 class="section-heading" id="exercise-types">Master Core Movement Patterns</h2>
+                <div class="exercise-types">
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1600881333173-43c9327b5875?auto=format&fit=crop&w=600&q=80" alt="Plank">
+                        <div class="exercise-type-info">
+                            <h3>Plank Progressions</h3>
+                            <p>Master anti-extension patterns that build endurance in your entire core, particularly the deep transverse abdominis muscle.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner-Advanced</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/planks.html" class="btn btn-primary view-details">Master Planks</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Dead Bug">
+                        <div class="exercise-type-info">
+                            <h3>Stability Training</h3>
+                            <p>Build core stability and coordination through dead bugs and bird dogs that teach proper bracing while moving limbs.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Beginner-Intermediate</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/stability.html" class="btn btn-primary view-details">Train Stability</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1597075941308-6265941b64fe?auto=format&fit=crop&w=600&q=80" alt="Side Plank">
+                        <div class="exercise-type-info">
+                            <h3>Anti-Lateral Flexion</h3>
+                            <p>Target obliques and lateral stability through side planks and variations that resist sideways bending forces.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/side-planks.html" class="btn btn-primary view-details">Master Laterals</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1571019613538-3c3a380ecc9d?auto=format&fit=crop&w=600&q=80" alt="Russian Twist">
+                        <div class="exercise-type-info">
+                            <h3>Rotational Power</h3>
+                            <p>Develop rotational strength and control through Russian twists and anti-rotation exercises for athletic performance.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: Optional weight</span>
+                            </div>
+                            <a href="/exercises/rotation.html" class="btn btn-primary view-details">Train Rotation</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?auto=format&fit=crop&w=600&q=80" alt="Hollow Hold">
+                        <div class="exercise-type-info">
+                            <h3>Advanced Patterns</h3>
+                            <p>Master hollow holds, L-sits, and advanced gymnastics-based movements that create total-body tension and control.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Advanced</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/advanced-core.html" class="btn btn-primary view-details">Train Advanced</a>
+                        </div>
+                    </div>
+
+                    <div class="exercise-type-card">
+                        <img src="https://images.unsplash.com/photo-1571019613576-2b22c76fd955?auto=format&fit=crop&w=600&q=80" alt="Dynamic Core">
+                        <div class="exercise-type-info">
+                            <h3>Dynamic Training</h3>
+                            <p>Combine core stabilization with movement through mountain climbers, bear crawls, and dynamic flow patterns.</p>
+                            <div class="exercise-meta">
+                                <span>Difficulty: Intermediate</span>
+                                <span>Equipment: None</span>
+                            </div>
+                            <a href="/exercises/dynamic-core.html" class="btn btn-primary view-details">Train Dynamic</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Anatomy Section -->
+        <section class="anatomy-section fade-in-up">
+            <div class="anatomy-container">
+                <h2 class="section-heading">Understanding Your Core System</h2>
+                <h3>29 Muscles Working as One</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 2rem;">Your core includes far more than just your abs. Understanding these muscle groups helps you train more effectively and appreciate the complexity of this amazing system.</p>
+                
+                <div class="muscle-groups">
+                    <div class="muscle-group">
+                        <h4>Rectus Abdominis</h4>
+                        <p>The "six-pack" muscle running vertically along your abdomen. Primary function: spinal flexion and maintaining intra-abdominal pressure.</p>
+                    </div>
+                    
+                    <div class="muscle-group">
+                        <h4>Transverse Abdominis</h4>
+                        <p>The deepest abdominal muscle wrapping around your spine. Acts like a natural weight belt, stabilizing the spine before movement occurs.</p>
+                    </div>
+                    
+                    <div class="muscle-group">
+                        <h4>Internal & External Obliques</h4>
+                        <p>Side muscles enabling rotation and lateral flexion. Essential for athletic movements and resisting unwanted trunk rotation.</p>
+                    </div>
+                    
+                    <div class="muscle-group">
+                        <h4>Erector Spinae</h4>
+                        <p>Deep back muscles running along your spine. Maintain spinal extension and proper posture during daily activities.</p>
+                    </div>
+                    
+                    <div class="muscle-group">
+                        <h4>Multifidus</h4>
+                        <p>Deep spinal stabilizers attached to individual vertebrae. Provide fine motor control and segmental spinal stability.</p>
+                    </div>
+                    
+                    <div class="muscle-group">
+                        <h4>Diaphragm & Pelvic Floor</h4>
+                        <p>Form the top and bottom of your core cylinder. Essential for breathing mechanics and intra-abdominal pressure regulation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section fade-in-up">
+            <div class="faq-container">
+                <h2 class="section-heading">Training Questions Answered</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How often should I train my core?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For most people, dedicated core training 2-3 times per week is optimal. Your core is already engaged during compound exercises like squats and deadlifts, so you're training it indirectly during other workouts. Start with 2 sessions weekly if you're new to core training, monitoring how your body responds before increasing frequency.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Why don't I have visible abs despite doing core exercises?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Visible abs require both developed abdominal muscles AND low body fat levels (typically below 15% for men, 22% for women). Core exercises build the muscles, but they won't be visible if covered by body fat. Focus on nutrition to reduce overall body fat percentage, as spot reduction through targeted exercises isn't physiologically possible.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can core exercises help reduce back pain?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, appropriate core exercises can significantly help reduce and prevent back pain by strengthening spine-supporting muscles. However, if you're currently experiencing back pain, consult with a healthcare professional before starting new exercises. Exercises like bird dogs, dead bugs, and gentle planks are often recommended as they strengthen the core while maintaining neutral spine position.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Should I use weights for core exercises?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Weights can be valuable for progression once you've mastered bodyweight versions. The core responds to progressive overload like any muscle group. Start with bodyweight exercises, perfect your technique and core engagement, then gradually add resistance through weights, bands, or more challenging variations. Never compromise form for additional weight.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is it normal to feel core exercises in my lower back?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, properly performed core exercises shouldn't cause lower back pain. If you feel exercises primarily in your lower back rather than abdominal muscles, it likely indicates form issues or attempting exercises beyond your current strength level. Focus on proper technique, start with basic exercises, and progress gradually. If back discomfort persists, consider consulting a fitness professional or healthcare provider.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="core-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Build Your Foundation Today</h2>
+                <p class="cta-subtitle">Join thousands of students building elite core strength for better performance, posture, and pain-free living. Start your core mastery journey now.</p>
+                <a href="signup.html" class="btn btn-primary">Start Training</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    const icon = question.querySelector('i');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    document.querySelectorAll('.faq-question i').forEach(i => {
+                        i.classList.remove('fa-chevron-up');
+                        i.classList.add('fa-chevron-down');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+   </script>
+</body>
+</html>

@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivify - Daily Resilience & Performance Training for Students</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(243, 156, 18, 0.05) 0%, transparent 50%);
+            position: relative;
+            overflow: hidden;
+            padding-top: 100px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem); /* Reduced from 8vw/6rem */
+            font-weight: 900;
+            line-height: 1.2; /* Increased from 1.1 */
+            margin-bottom: 2rem; /* Increased from 1.5rem */
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2.5rem; /* Increased from 3rem for better balance */
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7; /* Increased from 1.6 */
+        }
+
+        .personal-stats {
+            margin-bottom: 2.5rem; /* Add more space below stats */
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+        }
+
+        /* Personal Stats for logged in users */
+        .personal-stats {
+            background: rgba(243, 156, 18, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .personal-stats.active {
+            display: block;
+        }
+
+        .personal-stats h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .personal-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .personal-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .personal-stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .personal-stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem 1rem; /* Reduce horizontal padding */
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            min-width: 200px; /* Ensure minimum width */
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: clamp(2rem, 4vw, 3rem); /* Responsive font size */
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            word-break: break-word; /* Prevent overflow */
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(0.9rem, 2vw, 1.1rem); /* Responsive label size */
+            font-weight: 500;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 8rem 2rem;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Training Areas Section */
+        .training-areas {
+            padding: 8rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .training-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .training-areas h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .training-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+
+        .training-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .training-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .training-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .training-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #f39c12;
+        }
+
+        .training-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .training-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Habits Features Section */
+        .habits-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .habits-feature {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .habits-feature:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .feature-visual {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .streak-counter, .level-badge, .challenge-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #27ae60;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            border: 2px solid #0a0a0a;
+        }
+
+        .level-badge {
+            background: #9b59b6;
+        }
+
+        .challenge-indicator {
+            background: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        .habits-feature h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .habits-feature p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* Habits Section */
+        .habits {
+            padding: 8rem 2rem;
+        }
+
+        .habits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .habits h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .habits-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .habit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habit-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .habit-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: #f39c12;
+        }
+
+        .habit-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .habit-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .left-nav ul, .right-nav ul {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .features h2,
+            .habits h2,
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .training-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .habits-features {
+                grid-template-columns: 1fr;
+            }
+
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .personal-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html">Vivify</a>
+                    </div>
+                    <ul>
+                        <li><a href="#training">Training Areas</a></li>
+                        <li><a href="#habits">Habits & Challenges</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="login.html" id="login-link">Login</a></li>
+                        <li><a href="signup.html" id="signup-link" class="cta-nav">Start Training</a></li>
+                        <!-- Logged in navigation (hidden by default) -->
+                        <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                        <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                        <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero" id="hero-section">
+                <div class="hero-content fade-in-up">
+                    <div class="hero-badge" id="hero-badge">Gamified Performance Training</div>
+                    <h1 id="hero-title">Build Elite Daily Habits</h1>
+                    <p id="hero-description">Transform your daily routine into an engaging game. Track sleep, exercise, study habits, and nutrition while earning rewards and connecting with ambitious students building their competitive edge.</p>
+                    
+                    <!-- Personal Stats for logged in users -->
+                    <div class="personal-stats" id="personal-stats">
+                        <h3>Your Performance Today</h3>
+                        <div class="personal-stats-grid" id="personal-stats-grid">
+                            <!-- Stats will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="hero-buttons" id="hero-buttons">
+                        <a href="signup.html" class="btn btn-primary">Start Your Training</a>
+                        <a href="#features" class="btn btn-secondary">See How It Works</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="stats-container" id="stats-container">
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number">21</div>
+                        <div class="stat-label">Days to Build Elite Habits</div>
+                    </div>
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Core Performance Areas</div>
+                    </div>
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Gamified Experience</div>
+                    </div>
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Progress Tracking</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features" id="features">
+                <div class="features-container">
+                    <h2>Why Ambitious Students Choose Vivify</h2>
+                    <div class="features-grid">
+                        <div class="feature-card fade-in-up">
+                            <div class="feature-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <h3>Gamified Progress</h3>
+                            <p>Turn daily habits into an engaging game with streaks, achievements, levels, and rewards. Build better habits while having fun and staying motivated.</p>
+                        </div>
+                        <div class="feature-card fade-in-up">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Student Community</h3>
+                            <p>Connect with motivated students, share strategies, celebrate wins together, and learn from others building similar habits for peak performance.</p>
+                        </div>
+                        <div class="feature-card fade-in-up">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>Performance Analytics</h3>
+                            <p>Track your progress with detailed insights, identify patterns, and see exactly which habits are driving your best performance days.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Training Areas Section -->
+            <section class="training-areas" id="training">
+                <div class="training-container">
+                    <h2>Four Pillars of Peak Performance</h2>
+                    <p class="training-subtitle">Master these core training areas to unlock your full potential and gain the competitive edge.</p>
+                    
+                    <div class="training-grid">
+                        <div class="training-card fade-in-up">
+                            <div class="training-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <h3>Physical Performance</h3>
+                            <p>Build energy, stamina, and the physical foundation that fuels mental performance and academic excellence.</p>
+                            <a href="fitness.html" class="btn btn-secondary">Start Training</a>
+                            </div>
+                    <div class="training-card fade-in-up">
+                        <div class="training-icon">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <h3>Smart Nutrition</h3>
+                        <p>Fuel your brain and body with precision nutrition strategies used by top athletes and high achievers.</p>
+                        <a href="nutrition.html" class="btn btn-secondary">Master Nutrition</a>
+                    </div>
+                    
+                    <div class="training-card fade-in-up">
+                        <div class="training-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Focus & Resilience</h3>
+                        <p>Develop laser focus, stress resilience, and the mental toughness that champions use to perform under pressure.</p>
+                        <a href="focus-resilience.html" class="btn btn-secondary">Build Mental Strength</a>
+                    </div>
+                    
+                    <div class="training-card fade-in-up">
+                        <div class="training-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Life Mastery</h3>
+                        <p>Master the life skills that set you apart: financial intelligence, time management, and success habits.</p>
+                        <a href="life-lessons.html" class="btn btn-secondary">Achieve Mastery</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Habits & Challenges Section -->
+        <section class="habits" id="habits">
+            <div class="habits-container">
+                <h2>Daily Habits & Challenges</h2>
+                <p class="habits-subtitle">Turn building better habits into an engaging game with streaks, achievements, and community challenges.</p>
+                
+                <div class="habits-features">
+                    <div class="habits-feature fade-in-up">
+                        <div class="feature-visual">
+                            <i class="fas fa-fire"></i>
+                            <span class="streak-counter">7</span>
+                        </div>
+                        <h3>Streak Building</h3>
+                        <p>Build momentum with daily habit streaks. Watch your consistency score grow as you maintain healthy routines.</p>
+                    </div>
+                    
+                    <div class="habits-feature fade-in-up">
+                        <div class="feature-visual">
+                            <i class="fas fa-trophy"></i>
+                            <span class="level-badge">Level 5</span>
+                        </div>
+                        <h3>Achievement System</h3>
+                        <p>Unlock badges, level up, and earn rewards as you master different habits and complete challenges.</p>
+                    </div>
+                    
+                    <div class="habits-feature fade-in-up">
+                        <div class="feature-visual">
+                            <i class="fas fa-users"></i>
+                            <span class="challenge-indicator">Live</span>
+                        </div>
+                        <h3>Community Challenges</h3>
+                        <p>Join weekly challenges with other students. Compete in fitness goals, study streaks, and wellness targets.</p>
+                    </div>
+                </div>
+
+                <div class="habits-grid">
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <h3>Elite Sleep</h3>
+                        <p>Track sleep quality and duration to optimize recovery, focus, and energy for peak daily performance.</p>
+                    </div>
+                    
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h3>Daily Movement</h3>
+                        <p>Build consistent exercise habits that boost energy, reduce stress, and improve cognitive performance.</p>
+                    </div>
+                    
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Focus Sessions</h3>
+                        <p>Track deep work and study time to build laser focus and maximize academic performance.</p>
+                    </div>
+                    
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <h3>Peak Nutrition</h3>
+                        <p>Monitor nutrition habits and meal timing to fuel your brain and body for optimal performance.</p>
+                    </div>
+
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Digital Wellness</h3>
+                        <p>Track and optimize screen time to improve focus, sleep quality, and real-world productivity.</p>
+                    </div>
+                    
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Stress Resilience</h3>
+                        <p>Build daily mindfulness and stress management practices for emotional regulation and mental toughness.</p>
+                    </div>
+
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <h3>Financial Skills</h3>
+                        <p>Track spending habits and build financial literacy skills that set you apart from your peers.</p>
+                    </div>
+                    
+                    <div class="habit-card fade-in-up">
+                        <div class="habit-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Goal Achievement</h3>
+                        <p>Set and track meaningful goals while building the persistence and discipline of high achievers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section" id="cta-section">
+            <div class="cta-content">
+                <h2 id="cta-title">Ready to Build Your Competitive Edge?</h2>
+                <p id="cta-description">Join the community of ambitious students building elite daily habits through gamification, tracking, and peer support. Start your performance transformation today.</p>
+                <a href="signup.html" class="btn btn-primary" id="cta-button">Start Building Elite Habits</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <ul class="footer-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check authentication status
+        const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+        
+        // Update UI based on login status
+        updateAuthState(isLoggedIn);
+        
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+    });
+
+    function updateAuthState(isLoggedIn) {
+        // Navigation updates
+        document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+        document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+        document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+        
+        if (isLoggedIn) {
+            updateHeroForLoggedInUser();
+            updateCTAForLoggedInUser();
+            showPersonalizedStats();
+        }
+    }
+
+    function updateHeroForLoggedInUser() {
+        const username = localStorage.getItem('username') || 'Champion';
+        const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+        
+        // Update hero content
+        document.getElementById('hero-badge').innerHTML = '<i class="fas fa-crown" style="margin-right: 0.5rem;"></i>Welcome Back';
+        document.getElementById('hero-title').textContent = `Welcome back, ${username}?`;
+        document.getElementById('hero-description').textContent = 'Continue building your competitive edge. Check your performance dashboard and tackle today\'s challenges.';
+        
+        // Update hero buttons
+        const heroButtons = document.getElementById('hero-buttons');
+        heroButtons.innerHTML = `
+            <a href="dashboard.html" class="btn btn-primary">
+                <i class="fas fa-tachometer-alt" style="margin-right: 0.5rem;"></i>
+                View Dashboard
+            </a>
+            <a href="challenges.html" class="btn btn-secondary">
+                <i class="fas fa-trophy" style="margin-right: 0.5rem;"></i>
+                Today's Challenges
+            </a>
+        `;
+        
+        // Update ALL signup links to go to dashboard
+        document.querySelectorAll('a[href="signup.html"]').forEach(btn => {
+            if (btn.textContent.includes('Start') || btn.classList.contains('cta-nav')) {
+                btn.href = 'dashboard.html';
+                if (btn.textContent.includes('Start Training')) {
+                    btn.innerHTML = '<i class="fas fa-play" style="margin-right: 0.5rem;"></i>Continue Training';
+                } else if (btn.textContent.includes('Start Your Training')) {
+                    btn.textContent = 'Continue Training';
+                } else if (btn.textContent.includes('Start Building')) {
+                    btn.innerHTML = '<i class="fas fa-chart-line" style="margin-right: 0.5rem;"></i>View Progress';
+                }
+            }
+        });
+    }
+
+    function updateCTAForLoggedInUser() {
+        document.getElementById('cta-title').textContent = 'Keep Building Your Edge';
+        document.getElementById('cta-description').textContent = 'You\'re on the path to elite performance. Continue tracking your habits, completing challenges, and building the competitive advantage that sets you apart.';
+        
+        const ctaButton = document.getElementById('cta-button');
+        ctaButton.href = 'dashboard.html';
+        ctaButton.innerHTML = '<i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Continue Your Journey';
+    }
+
+    function showPersonalizedStats() {
+        const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+        const personalStats = document.getElementById('personal-stats');
+        const personalStatsGrid = document.getElementById('personal-stats-grid');
+        
+        if (performanceData.scores) {
+            personalStats.classList.add('active');
+            
+            const currentStreak = performanceData.streaks?.currentStreak || 0;
+            const completedToday = getTodayCompletedHabits();
+            const overallScore = performanceData.scores.overall || 0;
+            const level = calculateUserLevel(overallScore);
+            
+            personalStatsGrid.innerHTML = `
+                <div class="personal-stat">
+                    <div class="personal-stat-number">${overallScore}%</div>
+                    <div class="personal-stat-label">Performance</div>
+                </div>
+                <div class="personal-stat">
+                    <div class="personal-stat-number">${currentStreak}</div>
+                    <div class="personal-stat-label">Day Streak</div>
+                </div>
+                <div class="personal-stat">
+                    <div class="personal-stat-number">${completedToday}</div>
+                    <div class="personal-stat-label">Done Today</div>
+                </div>
+                <div class="personal-stat">
+                    <div class="personal-stat-number">${level}</div>
+                    <div class="personal-stat-label">Level</div>
+                </div>
+            `;
+            
+            // Update main stats section with community data for logged in users
+            const statsContainer = document.getElementById('stats-container');
+            statsContainer.innerHTML = `
+                <div class="stat-item fade-in-up">
+                    <div class="stat-number">${currentStreak}</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-item fade-in-up">
+                    <div class="stat-number">${performanceData.activities?.length || 0}</div>
+                    <div class="stat-label">Activities Done</div>
+                </div>
+                <div class="stat-item fade-in-up">
+                    <div class="stat-number" style="background: ${getTierColor(levelData.tier)}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${levelData.name}</div>
+                    <div class="stat-label">${levelData.tier} Tier</div>
+                </div>
+                <div class="stat-item fade-in-up">
+                    <div class="stat-number">${levelData.xp}</div>
+                    <div class="stat-label">Total XP</div>
+                </div>
+            `;
+        }
+    }
+
+    function getTierColor(tier) {
+        const tierColors = {
+            'Bronze': 'linear-gradient(135deg, #cd7f32, #b8860b)',
+            'Silver': 'linear-gradient(135deg, #c0c0c0, #a8a8a8)', 
+            'Gold': 'linear-gradient(135deg, #ffd700, #ffed4e)',
+            'Platinum': 'linear-gradient(135deg, #e5e4e2, #c9c9c9)',
+            'Diamond': 'linear-gradient(135deg, #b9f2ff, #87ceeb)'
+        };
+        return tierColors[tier] || 'linear-gradient(135deg, #f39c12, #e67e22)';
+    }
+
+    function getTodayCompletedHabits() {
+        const today = new Date().toDateString();
+        const savedProgress = localStorage.getItem(`dailyProgress_${today}`);
+        return savedProgress ? JSON.parse(savedProgress).length : 0;
+    }
+
+    function calculateUserLevel(score) {
+        if (score >= 90) return 'Elite';
+        if (score >= 80) return 'Advanced';
+        if (score >= 70) return 'Skilled';
+        if (score >= 60) return 'Developing';
+        if (score >= 50) return 'Rising';
+        return 'Beginner';
+    }
+
+    // Logout functionality
+    document.getElementById('logout-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.clear();
+            updateAuthState(false);
+            window.location.reload();
+        }
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Header background on scroll
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+            header.style.background = 'rgba(10, 10, 10, 0.98)';
+        } else {
+            header.style.background = 'rgba(10, 10, 10, 0.95)';
+        }
+    });
+</script>
+</body>
+</html>

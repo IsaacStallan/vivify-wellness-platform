@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mountain Climbers - Exercise Guide | Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Exercise Detail Page Styles */
+        .exercise-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1609899537878-88d5ba422bd6?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .exercise-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .exercise-hero .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-tag i {
+            color: #f39c12;
+        }
+
+        .exercise-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-heading {
+            color: #f39c12;
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        .exercise-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-details {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .overview-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            width: 120px;
+            color: #ddd;
+        }
+
+        .detail-value {
+            color: #aaa;
+        }
+
+        .overview-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            background-color: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f39c12;
+            color: #000;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #ddd;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .tips-section h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .common-mistakes {
+            background-color: #331111;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .common-mistakes h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+        }
+
+        .mistake-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mistake-list li {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .mistake-list li::before {
+            content: '✕';
+            color: #ff6b6b;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .mistake-list strong {
+            color: #ff6b6b;
+        }
+
+        .variations-section {
+            margin: 3rem 0;
+        }
+
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .variation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .variation-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .variation-info {
+            padding: 1.5rem;
+        }
+
+        .variation-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .variation-info p {
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .difficulty-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .difficulty-dot.active {
+            background-color: #f39c12;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .related-exercises {
+            margin: 3rem 0;
+        }
+
+        .related-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 1rem;
+        }
+
+        .related-info h4 {
+            margin-top: 0;
+            color: #f39c12;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .related-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .related-info a i {
+            margin-left: 0.3rem;
+        }
+
+        .related-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-hero .meta-tags {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .instruction-step {
+                grid-template-columns: 40px 1fr;
+            }
+        }
+    </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Fitness</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness Home</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../hiit.html" aria-label="HIIT Page">HIIT Training</a>
+                                <a href="../flexibility.html" aria-label="Flexibility Page">Flexibility</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Exercise Hero Section -->
+        <section class="exercise-hero">
+            <h1>Mountain Climbers</h1>
+            <p>A dynamic plank exercise that builds core strength, improves cardiovascular fitness, and enhances coordination</p>
+            
+            <div class="meta-tags">
+                <div class="meta-tag">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Core, Cardio, Full Body</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Beginner-Intermediate</span>
+                </div>
+                <div class="meta-tag">
+                    <i class="fas fa-tools"></i>
+                    <span>No Equipment</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="exercise-content">
+            <!-- Overview Section -->
+            <h2 class="section-heading">Exercise Overview</h2>
+            <div class="exercise-overview">
+                <div class="overview-details">
+                    <h3>Exercise Details</h3>
+                    <ul class="detail-list">
+                        <li>
+                            <span class="detail-label">Primary Muscles:</span>
+                            <span class="detail-value">Core (Abs, Obliques), Hip Flexors</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Secondary Muscles:</span>
+                            <span class="detail-value">Shoulders, Chest, Quads, Hamstrings</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Equipment:</span>
+                            <span class="detail-value">None</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">Compound, Cardio</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Experience Level:</span>
+                            <span class="detail-value">Beginner-Intermediate</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Mechanics:</span>
+                            <span class="detail-value">Dynamic Plank</span>
+                        </li>
+                        <li>
+                            <span class="detail-label">Force:</span>
+                            <span class="detail-value">Push (Isometric), Pull (Hip Flexion)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1609899537878-88d5ba422bd6?auto=format&fit=crop&w=600&q=80" alt="Mountain Climbers Exercise">
+                </div>
+            </div>
+
+            <!-- Video Demonstration -->
+            <h2 class="section-heading">Video Demonstration</h2>
+            <div class="video-container">
+                <!-- Video placeholder - would be a real demonstration in production -->
+                <iframe src="https://www.youtube.com/embed/nmwgirgXLYM" title="Mountain Climbers Demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Step-by-Step Instructions -->
+            <h2 class="section-heading">How to Perform Mountain Climbers</h2>
+            <ol class="instruction-steps">
+                <li class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Starting Position</h4>
+                        <p>Begin in a high plank position with your hands placed directly under your shoulders, slightly wider than shoulder-width apart. Your body should form a straight line from your head to your heels.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Core Engagement</h4>
+                        <p>Engage your core by drawing your navel toward your spine. Maintain this core engagement throughout the entire exercise to protect your lower back and maintain proper form.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Knee Drive</h4>
+                        <p>Keeping your arms stationary and your hips level, drive your right knee forward toward your chest. Your foot should leave the ground as you flex at the hip and knee.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Return and Alternate</h4>
+                        <p>Quickly return your right foot to the starting position while simultaneously driving your left knee toward your chest in the same manner.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Continuous Motion</h4>
+                        <p>Continue alternating legs in a running-like motion. Start slowly to master the form, then gradually increase speed while maintaining proper body alignment and core stability.</p>
+                    </div>
+                </li>
+                <li class="instruction-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Breathing Pattern</h4>
+                        <p>Establish a controlled breathing pattern. Many people find it helpful to exhale as each knee comes toward the chest and inhale as the leg returns to the starting position.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- Training Tips -->
+            <section class="tips-section">
+                <h3>Form & Technique Tips</h3>
+                <ul class="tips-list">
+                    <li><strong>Maintain a neutral spine:</strong> Your back should remain flat throughout the exercise, neither arched nor rounded. Imagine a straight line from your head to your heels.</li>
+                    <li><strong>Keep your shoulders stable:</strong> Avoid allowing your shoulders to roll forward or shrug toward your ears. Keep them down and back, creating space between your shoulders and ears.</li>
+                    <li><strong>Control hip movement:</strong> While some hip movement is natural, avoid excessive rocking or dipping of the hips. Your hips should remain relatively level throughout the exercise.</li>
+                    <li><strong>Position hands properly:</strong> Your hands should be directly beneath your shoulders with fingers spread and weight evenly distributed across your palms and fingers.</li>
+                    <li><strong>Focus on knee drive:</strong> Think about actively driving your knee toward your chest rather than simply lifting your foot off the ground.</li>
+                    <li><strong>Pace yourself:</strong> Start slowly and gradually increase speed as you master the movement pattern. Quality always trumps quantity or speed.</li>
+                    <li><strong>Adjust intensity:</strong> Adjust the speed and range of motion based on your fitness level. Slower movements with greater control are better for beginners.</li>
+                    <li><strong>Breathe rhythmically:</strong> Find a breathing pattern that works for you and stick with it to help maintain control throughout the exercise.</li>
+                </ul>
+            </section>
+
+            <!-- Common Mistakes -->
+            <section class="common-mistakes">
+                <h3>Common Mistakes to Avoid</h3>
+                <ul class="mistake-list">
+                    <li><strong>Sagging or piking hips:</strong> Allowing your hips to sag toward the floor or pike upward disrupts proper form and reduces core engagement. Maintain a straight line from head to heels.</li>
+                    <li><strong>Shallow knee drive:</strong> Barely moving your feet rather than driving your knees forward toward your chest diminishes the effectiveness of the exercise.</li>
+                    <li><strong>Bouncing in the shoulders:</strong> Your shoulders should remain stable throughout the movement. Avoid letting them bounce or collapse with each leg movement.</li>
+                    <li><strong>Hand positioning too far forward:</strong> Placing your hands too far in front of your shoulders creates an inefficient plank position and increases strain on your shoulders.</li>
+                    <li><strong>Holding your breath:</strong> Forgetting to breathe regularly increases perceived exertion and can lead to unnecessary tension in the body.</li>
+                    <li><strong>Moving too quickly:</strong> Sacrificing form for speed is counterproductive. A controlled pace with proper form is more effective than faster, sloppier repetitions.</li>
+                    <li><strong>Overarching the lower back:</strong> Excessive arching in the lower back can lead to discomfort and potential injury. Keep your core engaged to protect your spine.</li>
+                </ul>
+            </section>
+
+            <!-- Exercise Variations -->
+            <section class="variations-section">
+                <h2 class="section-heading">Mountain Climber Variations</h2>
+                <div class="variation-cards">
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=600&q=80" alt="Slow Mountain Climbers">
+                        <div class="variation-info">
+                            <h4>Slow Mountain Climbers</h4>
+                            <p>Perform each knee drive with deliberate control and a slower tempo to increase time under tension and focus on form.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80" alt="Cross-Body Mountain Climbers">
+                        <div class="variation-info">
+                            <h4>Cross-Body Mountain Climbers</h4>
+                            <p>Drive each knee toward the opposite elbow to increase oblique engagement and rotational core strength.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="Spider Mountain Climbers">
+                        <div class="variation-info">
+                            <h4>Spider Mountain Climbers</h4>
+                            <p>Drive your knee toward your elbow on the same side while keeping your hips low for hip mobility and side core activation.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variation-card">
+                        <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?auto=format&fit=crop&w=600&q=80" alt="Elevated Mountain Climbers">
+                        <div class="variation-info">
+                            <h4>Elevated Mountain Climbers</h4>
+                            <p>Place your hands on an elevated surface like a bench or step to reduce intensity, making it more accessible for beginners.</p>
+                            <div class="difficulty-meter">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Exercises -->
+            <section class="related-exercises">
+                <h2 class="section-heading">Related Exercises</h2>
+                <div class="related-cards">
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?auto=format&fit=crop&w=600&q=80" alt="Burpees">
+                        <div class="related-info">
+                            <h4>Burpees</h4>
+                            <p>A high-intensity full-body exercise that incorporates elements of the mountain climber with additional movements.</p>
+                            <a href="burpees.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1584863231364-a543ee4685a8?auto=format&fit=crop&w=600&q=80" alt="Planks">
+                        <div class="related-info">
+                            <h4>Planks</h4>
+                            <p>The foundational static exercise that forms the base position for mountain climbers, focusing on core stability.</p>
+                            <a href="planks.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1434596922112-19c563067271?auto=format&fit=crop&w=600&q=80" alt="High Knees">
+                        <div class="related-info">
+                            <h4>High Knees</h4>
+                            <p>A standing cardio exercise that mimics the leg movement of mountain climbers with less upper body engagement.</p>
+                            <a href="high-knees.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="related-card">
+                        <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=600&q=80" alt="Plank Jacks">
+                        <div class="related-info">
+                            <h4>Plank Jacks</h4>
+                            <p>Another dynamic plank variation that works the core while incorporating lateral leg movements for cardio benefits.</p>
+                            <a href="plank-jacks.html">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

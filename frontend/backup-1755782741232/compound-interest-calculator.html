@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Compound Interest Calculator - Vivify</title>
+   
+    
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .calculator-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .calculator-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .calculator-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .calculator-container {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .calculator-section {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 2rem;
+           margin-bottom: 3rem;
+       }
+
+       .input-panel {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+       }
+
+       .results-panel {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+       }
+
+       .input-group {
+           margin-bottom: 1.5rem;
+       }
+
+       .input-group label {
+           display: block;
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .input-group input,
+       .input-group select {
+           width: 100%;
+           padding: 0.8rem;
+           border: 2px solid #444;
+           border-radius: 5px;
+           background-color: #333;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .input-group input:focus,
+       .input-group select:focus {
+           outline: none;
+           border-color: #f39c12;
+       }
+
+       .form-row {
+           display: flex;
+           gap: 1rem;
+       }
+
+       .form-row .input-group {
+           flex: 1;
+       }
+
+       .calculate-btn {
+           width: 100%;
+           padding: 1rem;
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           border-radius: 5px;
+           font-size: 1.1rem;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .calculate-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .result-item {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 1rem;
+           margin-bottom: 1rem;
+           border-radius: 5px;
+           color: white;
+       }
+
+       .result-primary {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+           font-size: 1.3rem;
+       }
+
+       .result-success {
+           background-color: #27ae60;
+       }
+
+       .result-info {
+           background-color: #3498db;
+       }
+
+       .result-warning {
+           background-color: #e67e22;
+       }
+
+       .quick-scenarios {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .scenarios-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .scenario-card {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 1.5rem;
+           text-align: center;
+           cursor: pointer;
+           transition: transform 0.3s, background-color 0.3s;
+           border: 2px solid transparent;
+       }
+
+       .scenario-card:hover {
+           transform: translateY(-3px);
+           background-color: #333;
+       }
+
+       .scenario-card.selected {
+           border-color: #f39c12;
+           background-color: #333;
+       }
+
+       .scenario-icon {
+           font-size: 2.5rem;
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .scenario-card h3 {
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-size: 1.2rem;
+       }
+
+       .scenario-details {
+           color: #ddd;
+           font-size: 0.9rem;
+           margin-bottom: 1rem;
+       }
+
+       .scenario-result {
+           font-size: 1.5rem;
+           font-weight: bold;
+           color: #27ae60;
+       }
+
+       .growth-chart {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .chart-container {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           position: relative;
+           height: 400px;
+           overflow-x: auto;
+       }
+
+       .chart-bars {
+           display: flex;
+           align-items: flex-end;
+           justify-content: space-around;
+           height: 300px;
+           gap: 10px;
+           margin: 2rem 0;
+       }
+
+       .chart-bar {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           min-width: 60px;
+       }
+
+       .bar-container {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           height: 250px;
+           justify-content: flex-end;
+       }
+
+       .bar-principal {
+           background-color: #3498db;
+           border-radius: 4px 4px 0 0;
+           width: 40px;
+           transition: height 0.6s ease;
+       }
+
+       .bar-interest {
+           background-color: #27ae60;
+           border-radius: 0 0 4px 4px;
+           width: 40px;
+           transition: height 0.6s ease;
+       }
+
+       .bar-label {
+           color: #ddd;
+           font-size: 0.8rem;
+           margin-top: 0.5rem;
+           text-align: center;
+       }
+
+       .bar-value {
+           color: #f39c12;
+           font-size: 0.7rem;
+           font-weight: bold;
+           margin-bottom: 0.3rem;
+           writing-mode: vertical-rl;
+           text-orientation: mixed;
+       }
+
+       .chart-legend {
+           display: flex;
+           justify-content: center;
+           gap: 2rem;
+           margin-top: 1rem;
+       }
+
+       .legend-item {
+           display: flex;
+           align-items: center;
+           gap: 0.5rem;
+           color: white;
+       }
+
+       .legend-color {
+           width: 20px;
+           height: 20px;
+           border-radius: 3px;
+       }
+
+       .comparison-table {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .table-container {
+           overflow-x: auto;
+       }
+
+       .data-table {
+           width: 100%;
+           border-collapse: collapse;
+           margin: 1rem 0;
+       }
+
+       .data-table th,
+       .data-table td {
+           border: 1px solid #444;
+           padding: 0.8rem;
+           text-align: center;
+       }
+
+       .data-table th {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+       }
+
+       .data-table td {
+           background-color: #333;
+           color: white;
+       }
+
+       .data-table tr:nth-child(even) td {
+           background-color: #444;
+       }
+
+       .highlight-row {
+           background-color: #27ae60 !important;
+           color: white !important;
+           font-weight: bold;
+       }
+
+       .einstein-quote {
+           background-color: #27ae60;
+           color: white;
+           padding: 3rem 2rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+           text-align: center;
+           grid-column: span 2;
+           position: relative;
+       }
+
+       .quote-icon {
+           font-size: 4rem;
+           opacity: 0.3;
+           position: absolute;
+           top: 1rem;
+           left: 2rem;
+       }
+
+       .quote-text {
+           font-size: 1.5rem;
+           font-style: italic;
+           margin-bottom: 1rem;
+           position: relative;
+           z-index: 1;
+       }
+
+       .quote-author {
+           font-size: 1rem;
+           opacity: 0.9;
+       }
+
+       .investment-options {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .options-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .option-card {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 1.5rem;
+           border-left: 4px solid #f39c12;
+       }
+
+       .option-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .option-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+           margin-bottom: 1rem;
+           font-size: 0.9rem;
+       }
+
+       .option-return {
+           display: flex;
+           justify-content: space-between;
+           background-color: #2c3e50;
+           padding: 0.5rem;
+           border-radius: 5px;
+           font-size: 0.9rem;
+       }
+
+       .return-label {
+           color: #bdc3c7;
+       }
+
+       .return-value {
+           color: #f39c12;
+           font-weight: bold;
+       }
+
+       .age-comparison {
+           background-color: #e74c3c;
+           color: white;
+           padding: 3rem 2rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+           grid-column: span 2;
+       }
+
+       .age-scenarios {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .age-scenario {
+           background-color: rgba(255, 255, 255, 0.1);
+           padding: 1.5rem;
+           border-radius: 10px;
+           text-align: center;
+       }
+
+       .age-number {
+           font-size: 2.5rem;
+           font-weight: bold;
+           margin-bottom: 0.5rem;
+       }
+
+       .age-label {
+           font-size: 0.9rem;
+           margin-bottom: 1rem;
+           opacity: 0.9;
+       }
+
+       .age-result {
+           font-size: 1.3rem;
+           font-weight: bold;
+       }
+
+       .tips-section {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .tips-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .tip-card {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 1.5rem;
+           border-left: 4px solid #f39c12;
+       }
+
+       .tip-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .tip-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+           font-size: 0.95rem;
+       }
+
+       .warning-section {
+           background-color: #e67e22;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           text-align: center;
+           grid-column: span 2;
+       }
+
+       @media (max-width: 768px) {
+           .calculator-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .calculator-section {
+               grid-template-columns: 1fr;
+           }
+           
+           .quick-scenarios {
+               grid-column: span 1;
+           }
+           
+           .growth-chart {
+               grid-column: span 1;
+           }
+           
+           .comparison-table {
+               grid-column: span 1;
+           }
+           
+           .einstein-quote {
+               grid-column: span 1;
+           }
+           
+           .investment-options {
+               grid-column: span 1;
+           }
+           
+           .age-comparison {
+               grid-column: span 1;
+           }
+           
+           .tips-section {
+               grid-column: span 1;
+           }
+           
+           .warning-section {
+               grid-column: span 1;
+           }
+           
+           .form-row {
+               flex-direction: column;
+           }
+           
+           .chart-bars {
+               gap: 5px;
+           }
+           
+           .chart-bar {
+               min-width: 40px;
+           }
+           
+           .bar-principal,
+           .bar-interest {
+               width: 30px;
+           }
+       }
+   </style>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script 
+    src="js/vivify-stats.js"
+    src="js/leaderboard-system.js">
+</script>  
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                               <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="calculator-hero">
+           <h1>Compound Interest Calculator</h1>
+           <p>Discover the magic of compound interest and see how starting early can dramatically increase your wealth. Learn why time is your greatest asset when it comes to building financial security.</p>
+       </section>
+
+       <!-- Calculator Container -->
+       <div class="calculator-container">
+           <!-- Quick Scenarios -->
+           <div class="quick-scenarios">
+               <h2 class="section-title">Quick Student Scenarios</h2>
+               <p style="color: #ddd; text-align: center; margin-bottom: 2rem;">Click on a scenario to see the power of compound interest in action</p>
+               
+               <div class="scenarios-grid">
+                   <div class="scenario-card" onclick="loadScenario(100, 0, 7, 40, 'monthly')">
+                       <div class="scenario-icon">
+                           <i class="fas fa-coffee"></i>
+                       </div>
+                       <h3>Skip the Daily Coffee</h3>
+                       <div class="scenario-details">Save $100/month instead of buying coffee</div>
+                       <div class="scenario-result">Results in 40 years</div>
+                   </div>
+                   
+                   <div class="scenario-card" onclick="loadScenario(200, 1000, 6, 30, 'monthly')">
+                       <div class="scenario-icon">
+                           <i class="fas fa-piggy-bank"></i>
+                       </div>
+                       <h3>Early Saver</h3>
+                       <div class="scenario-details">$1,000 start + $200/month from age 20</div>
+                       <div class="scenario-result">30-year growth</div>
+                   </div>
+                   
+                   <div class="scenario-card" onclick="loadScenario(500, 5000, 8, 25, 'monthly')">
+                       <div class="scenario-icon">
+                           <i class="fas fa-chart-line"></i>
+                       </div>
+                       <h3>Aggressive Investor</h3>
+                       <div class="scenario-details">$5,000 start + $500/month in shares</div>
+                       <div class="scenario-result">25-year projection</div>
+                   </div>
+                   
+                   <div class="scenario-card" onclick="loadScenario(50, 0, 3, 35, 'monthly')">
+                       <div class="scenario-icon">
+                           <i class="fas fa-university"></i>
+                       </div>
+                       <h3>Conservative Student</h3>
+                       <div class="scenario-details">$50/month in high-interest savings</div>
+                       <div class="scenario-result">35-year safe growth</div>
+                   </div>
+               </div>
+           </div>
+
+           <div class="calculator-section">
+               <!-- Input Panel -->
+               <div class="input-panel">
+                   <h2 class="section-title">Compound Interest Calculator</h2>
+                   
+                   <div class="input-group">
+                       <label for="initialAmount">Initial Investment ($AUD)</label>
+                       <input type="number" id="initialAmount" placeholder="1000" min="0" step="100">
+                   </div>
+                   
+                   <div class="form-row">
+                       <div class="input-group">
+                           <label for="monthlyContribution">Monthly Contribution ($)</label>
+                           <input type="number" id="monthlyContribution" placeholder="200" min="0" step="10">
+                       </div>
+                       
+                       <div class="input-group">
+                           <label for="contributionFrequency">Contribution Frequency</label>
+                           <select id="contributionFrequency">
+                               <option value="monthly">Monthly</option>
+                               <option value="quarterly">Quarterly</option>
+                               <option value="annually">Annually</option>
+                           </select>
+                       </div>
+                   </div>
+                   
+                   <div class="form-row">
+                       <div class="input-group">
+                           <label for="annualReturn">Annual Return Rate (%)</label>
+                           <input type="number" id="annualReturn" placeholder="7" min="0" max="20" step="0.1">
+                       </div>
+                       
+                       <div class="input-group">
+                           <label for="timeHorizon">Time Horizon (Years)</label>
+                           <input type="number" id="timeHorizon" placeholder="30" min="1" max="50" step="1">
+                       </div>
+                   </div>
+                   
+                   <div class="input-group">
+                       <label for="investmentType">Australian Investment Type</label>
+                       <select id="investmentType" onchange="updateReturnRate()">
+                           <option value="3">High Interest Savings (3%)</option>
+                           <option value="5">Conservative Balanced Fund (5%)</option>
+                           <option value="7">Diversified Portfolio (7%)</option>
+                           <option value="9">Australian Shares ETF (9%)</option>
+                           <option value="11">Growth Shares Portfolio (11%)</option>
+                           <option value="custom">Custom Rate</option>
+                       </select>
+                   </div>
+                   
+                   <button class="calculate-btn" onclick="calculateCompoundInterest()">Calculate Growth</button>
+               </div>
+
+               <!-- Results Panel -->
+               <div class="results-panel">
+                   <h2 class="section-title">Your Investment Growth</h2>
+                   
+                   <div class="result-item result-primary">
+                       <span>Final Amount</span>
+                       <span id="finalAmount">$0</span>
+                   </div>
+                   
+                   <div class="result-item result-success">
+                       <span>Total Interest Earned</span>
+                       <span id="totalInterest">$0</span>
+                   </div>
+                   
+                   <div class="result-item result-info">
+                       <span>Total Contributions</span>
+                       <span id="totalContributions">$0</span>
+                   </div>
+                   
+                   <div class="result-item result-warning">
+                       <span>Money Multiplier</span>
+                       <span id="moneyMultiplier">0x</span>
+                   </div>
+                   
+                   <div style="margin-top: 2rem;">
+                       <h3 style="color: #f39c12; margin-bottom: 1rem;">What if you started 5 years later?</h3>
+                       <div class="result-item" style="background-color: #e74c3c;">
+                           <span>You would have</span>
+                           <span id="lateStart">$0 less</span>
+                       </div>
+                       
+                       <h3 style="color: #f39c12; margin: 1rem 0;">What if you doubled contributions?</h3>
+                       <div class="result-item" style="background-color: #27ae60;">
+                           <span>You would have</span>
+                           <span id="doubleContributions">$0 more</span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Einstein Quote -->
+           <div class="einstein-quote">
+               <div class="quote-icon">
+                   <i class="fas fa-quote-left"></i>
+               </div>
+               <div class="quote-text">
+                   "Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it."
+               </div>
+               <div class="quote-author">
+                   - Albert Einstein
+               </div>
+           </div>
+
+           <!-- Growth Chart -->
+           <div class="growth-chart">
+               <h2 class="section-title" style="color: #f39c12;">Growth Visualization</h2>
+               <div class="chart-container">
+                   <div class="chart-bars" id="growthChart">
+                       <div class="chart-bar">
+                           <div class="bar-container">
+                               <div class="bar-value">$0</div>
+                               <div class="bar-interest" style="height: 10px;"></div>
+                               <div class="bar-principal" style="height: 10px;"></div>
+                           </div>
+                           <div class="bar-label">Year 5</div>
+                       </div>
+                   </div>
+               </div>
+               <div class="chart-legend">
+                   <div class="legend-item">
+                       <div class="legend-color" style="background-color: #3498db;"></div>
+                       <span>Principal + Contributions</span>
+                   </div>
+                   <div class="legend-item">
+                       <div class="legend-color" style="background-color: #27ae60;"></div>
+                       <span>Compound Interest</span>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Age Comparison -->
+           <div class="age-comparison">
+               <h2 class="section-title" style="color: white;">The Cost of Waiting: Start Age Comparison</h2>
+               <p style="text-align: center; margin-bottom: 2rem;">See how much starting age affects your final wealth. Same contributions, different start times.</p>
+               
+               <div class="age-scenarios" id="ageComparison">
+                   <div class="age-scenario">
+                       <div class="age-number">20</div>
+                       <div class="age-label">Starting at age 20</div>
+                       <div class="age-result">$0</div>
+                   </div>
+                   <div class="age-scenario">
+                       <div class="age-number">25</div>
+                       <div class="age-label">Starting at age 25</div>
+                       <div class="age-result">$0</div>
+                   </div>
+                   <div class="age-scenario">
+                       <div class="age-number">30</div>
+                       <div class="age-label">Starting at age 30</div>
+                       <div class="age-result">$0</div>
+                   </div>
+                   <div class="age-scenario">
+                       <div class="age-number">35</div>
+                       <div class="age-label">Starting at age 35</div>
+                       <div class="age-result">$0</div>
+                   </div>
+               </div>
+               
+               <p style="text-align: center; font-size: 0.9rem; opacity: 0.9; margin-top: 2rem;">
+                   *Assumes retirement at age 65 with consistent monthly contributions
+               </p>
+           </div>
+
+           <!-- Investment Options -->
+           <div class="investment-options">
+               <h2 class="section-title" style="color: #f39c12;">Australian Investment Options for Students</h2>
+               <div class="options-grid">
+                   <div class="option-card">
+                       <h4>High Interest Savings</h4>
+                       <p>FDIC insured up to $250,000. Perfect for emergency funds and short-term goals. No risk but lower returns.</p>
+                       <div class="option-return">
+                           <span class="return-label">Expected Return:</span>
+                           <span class="return-value">2-4% p.a.</span>
+                       </div>
+                   </div>
+                   
+                   <div class="option-card">
+                       <h4>Term Deposits</h4>
+                       <p>Lock in your money for set periods (3 months to 5 years) for guaranteed returns. Safe but money is tied up.</p>
+                       <div class="option-return">
+                           <span class="return-label">Expected Return:</span>
+                           <span class="return-value">3-5% p.a.</span>
+                       </div>
+                   </div>
+                   
+                   <div class="option-card">
+                       <h4>Balanced Super Fund</h4>
+                       <p>Diversified mix of growth and defensive assets. Government contributions and tax benefits. Long-term focus.</p>
+                       <div class="option-return">
+                           <span class="return-label">Expected Return:</span>
+                           <span class="return-value">5-7% p.a.</span>
+                       </div>
+                   </div>
+                   
+                   <div class="option-card">
+                       <h4>ASX Index ETFs</h4>
+                       <p>Track the Australian stock market (ASX 200). Low fees, broad diversification. Historically strong returns.</p>
+                       <div class="option-return">
+                           <span class="return-label">Expected Return:</span>
+                           <span class="return-value">7-10% p.a.</span>
+                       </div>
+                   </div>
+                   
+                   <div class="option-card">
+                       <h4>International ETFs</h4>
+                       <p>Invest globally through ASX-listed international ETFs. Currency diversification and access to US/European markets.</p>
+                       <div class="option-return">
+                           <span class="return-label">Expected Return:</span>
+                           <span class="return-value">8-12% p.a.</span>
+                       </div>
+                   </div>
+                   
+                   <div class="option-card">
+                       <h4>Growth Stock Portfolio</h4>
+                       <p>Individual Australian shares focused on growth companies. Higher potential returns but more volatile and risky.</p>
+                       <div class="option-return">
+                           <span class="return-label">Expected Return:</span>
+                           <span class="return-value">10-15% p.a.</span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Comparison Table -->
+           <div class="comparison-table">
+               <h2 class="section-title" style="color: #f39c12;">Year-by-Year Growth Breakdown</h2>
+               <div class="table-container">
+                   <table class="data-table" id="growthTable">
+                       <thead>
+                           <tr>
+                               <th>Year</th>
+                               <th>Starting Balance</th>
+                               <th>Annual Contributions</th>
+                               <th>Interest Earned</th>
+                               <th>Ending Balance</th>
+                               <th>Total Return</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr>
+                               <td colspan="6" style="text-align: center; color: #ccc;">Enter your investment details above to see year-by-year breakdown</td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+
+           <!-- Tips Section -->
+           <div class="tips-section">
+               <h2 class="section-title" style="color: #f39c12;">Smart Investment Tips for Australian Students</h2>
+               <div class="tips-grid">
+                   <div class="tip-card">
+                       <h4>Start with Your Super</h4>
+                       <p>Maximize employer super contributions and consider salary sacrificing. The government adds to your super through co-contributions if you're eligible.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Dollar Cost Averaging</h4>
+                       <p>Invest a fixed amount regularly regardless of market conditions. This reduces the impact of market volatility and removes emotional decision-making.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Emergency Fund First</h4>
+                       <p>Before investing, build 3-6 months of expenses in a high-interest savings account. This prevents you from selling investments during emergencies.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Low-Cost Index ETFs</h4>
+                       <p>Start with broad market ETFs like VDHG or A200. Low fees (0.1-0.3%) mean more money stays invested and compounds over time.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Tax-Effective Investing</h4>
+                       <p>Understand franking credits on Australian shares and capital gains tax. Hold investments for over 12 months to get 50% CGT discount.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Don't Try to Time the Market</h4>
+                       <p>Time in the market beats timing the market. Stay consistent with your investment plan, especially during market downturns.</p>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Warning Section -->
+           <div class="warning-section">
+               <h3><i class="fas fa-exclamation-triangle"></i> Important Investment Disclaimers</h3>
+               <p>This calculator provides estimates based on hypothetical scenarios. Past performance does not guarantee future results. All investments carry risk, and you may lose money. Consider seeking professional financial advice before making investment decisions. Always read the Product Disclosure Statement (PDS) before investing.</p>
+           </div>
+       </div>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       let selectedScenarioCard = null;
+
+       function loadScenario(monthly, initial, rate, years, frequency) {
+           // Remove previous selection
+           if (selectedScenarioCard) {
+               selectedScenarioCard.classList.remove('selected');
+           }
+           
+           // Add selection to clicked card
+           selectedScenarioCard = event.currentTarget;
+           selectedScenarioCard.classList.add('selected');
+           
+           // Update form fields
+           document.getElementById('initialAmount').value = initial;
+           document.getElementById('monthlyContribution').value = monthly;
+           document.getElementById('annualReturn').value = rate;
+           document.getElementById('timeHorizon').value = years;
+           document.getElementById('contributionFrequency').value = frequency;
+           
+           // Auto-calculate
+           calculateCompoundInterest();
+       }
+
+       function updateReturnRate() {
+           const investmentType = document.getElementById('investmentType').value;
+           const returnRateInput = document.getElementById('annualReturn');
+           
+           if (investmentType !== 'custom') {
+               returnRateInput.value = investmentType;
+               returnRateInput.readOnly = true;
+               returnRateInput.style.backgroundColor = '#444';
+           } else {
+               returnRateInput.readOnly = false;
+               returnRateInput.style.backgroundColor = '#333';
+               returnRateInput.focus();
+           }
+       }
+
+       function calculateCompoundInterest() {
+           // Get input values
+           const principal = parseFloat(document.getElementById('initialAmount').value) || 0;
+           const monthlyContrib = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+           const annualRate = parseFloat(document.getElementById('annualReturn').value) || 0;
+           const years = parseInt(document.getElementById('timeHorizon').value) || 0;
+           const frequency = document.getElementById('contributionFrequency').value;
+           
+           if (years === 0) {
+               alert('Please enter a time horizon to calculate compound interest.');
+               return;
+           }
+           
+           // Convert frequency to annual multiplier
+           let contribPerYear;
+           let contribFreqPerYear;
+           switch (frequency) {
+               case 'monthly':
+                   contribPerYear = monthlyContrib * 12;
+                   contribFreqPerYear = 12;
+                   break;
+               case 'quarterly':
+                   contribPerYear = monthlyContrib * 4;
+                   contribFreqPerYear = 4;
+                   break;
+               case 'annually':
+                   contribPerYear = monthlyContrib;
+                   contribFreqPerYear = 1;
+                   break;
+           }
+           
+           // Calculate compound interest with regular contributions
+           const monthlyRate = annualRate / 100 / 12;
+           let balance = principal;
+           let totalContributions = principal;
+           let yearlyData = [];
+           
+           // Month-by-month calculation for accuracy
+           for (let month = 1; month <= years * 12; month++) {
+               // Add contribution at appropriate frequency
+               if (frequency === 'monthly' || 
+                   (frequency === 'quarterly' && month % 3 === 0) ||
+                   (frequency === 'annually' && month % 12 === 0)) {
+                   balance += monthlyContrib;
+                   totalContributions += monthlyContrib;
+               }
+               
+               // Apply monthly compound interest
+               if (monthlyRate > 0) {
+                   balance = balance * (1 + monthlyRate);
+               }
+               
+               // Store yearly data for table and chart
+               if (month % 12 === 0) {
+                   const year = month / 12;
+                   const yearStart = year === 1 ? principal : yearlyData[year - 2]?.endBalance || 0;
+                   const yearContrib = year === 1 ? 
+                       (principal + (contribPerYear * (month / 12))) - principal :
+                       contribPerYear;
+                   const yearInterest = balance - yearStart - yearContrib;
+                   
+                   yearlyData.push({
+                       year: year,
+                       startBalance: yearStart,
+                       contributions: yearContrib,
+                       interest: yearInterest,
+                       endBalance: balance,
+                       totalReturn: ((balance - totalContributions) / totalContributions * 100)
+                   });
+               }
+           }
+           
+           const finalAmount = balance;
+           const totalInterest = finalAmount - totalContributions;
+           const moneyMultiplier = totalContributions > 0 ? finalAmount / totalContributions : 0;
+           
+           // Calculate comparison scenarios
+           const lateStartYears = Math.max(1, years - 5);
+           const lateStartAmount = calculateScenario(principal, monthlyContrib, annualRate, lateStartYears, frequency);
+           const lateStartDifference = finalAmount - lateStartAmount;
+           
+           const doubleContribAmount = calculateScenario(principal, monthlyContrib * 2, annualRate, years, frequency);
+           const doubleContribDifference = doubleContribAmount - finalAmount;
+           
+           // Update results
+           document.getElementById('finalAmount').textContent = `${finalAmount.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+           document.getElementById('totalInterest').textContent = `${totalInterest.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+           document.getElementById('totalContributions').textContent = `${totalContributions.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+           document.getElementById('moneyMultiplier').textContent = `${moneyMultiplier.toFixed(1)}x`;
+           document.getElementById('lateStart').textContent = `${lateStartDifference.toLocaleString(undefined, {maximumFractionDigits: 0})} less`;
+           document.getElementById('doubleContributions').textContent = `${doubleContribDifference.toLocaleString(undefined, {maximumFractionDigits: 0})} more`;
+           
+           // Update visualizations
+           updateGrowthChart(yearlyData);
+           updateGrowthTable(yearlyData);
+           updateAgeComparison(monthlyContrib, annualRate);
+       }
+
+       function calculateScenario(principal, monthlyContrib, annualRate, years, frequency) {
+           const monthlyRate = annualRate / 100 / 12;
+           let balance = principal;
+           
+           for (let month = 1; month <= years * 12; month++) {
+               if (frequency === 'monthly' || 
+                   (frequency === 'quarterly' && month % 3 === 0) ||
+                   (frequency === 'annually' && month % 12 === 0)) {
+                   balance += monthlyContrib;
+               }
+               
+               if (monthlyRate > 0) {
+                   balance = balance * (1 + monthlyRate);
+               }
+           }
+           
+           return balance;
+       }
+
+       function updateGrowthChart(yearlyData) {
+           const chartContainer = document.getElementById('growthChart');
+           
+           if (yearlyData.length === 0) {
+               chartContainer.innerHTML = '<p style="text-align: center; color: #ccc; padding: 2rem;">Enter investment details to see growth chart</p>';
+               return;
+           }
+           
+           // Show every 5 years or max 8 bars for readability
+           const interval = Math.max(1, Math.floor(yearlyData.length / 8));
+           const displayData = yearlyData.filter((_, index) => index % interval === 0 || index === yearlyData.length - 1);
+           
+           const maxBalance = Math.max(...yearlyData.map(d => d.endBalance));
+           
+           chartContainer.innerHTML = displayData.map(data => {
+               const principalHeight = Math.max(10, (data.startBalance + data.contributions) / maxBalance * 200);
+               const interestHeight = Math.max(5, (data.endBalance - data.startBalance - data.contributions) / maxBalance * 200);
+               
+               return `
+                   <div class="chart-bar">
+                       <div class="bar-container">
+                           <div class="bar-value">${(data.endBalance / 1000).toFixed(0)}k</div>
+                           <div class="bar-interest" style="height: ${interestHeight}px;"></div>
+                           <div class="bar-principal" style="height: ${principalHeight}px;"></div>
+                       </div>
+                       <div class="bar-label">Year ${data.year}</div>
+                   </div>
+               `;
+           }).join('');
+       }
+
+       function updateGrowthTable(yearlyData) {
+           const tbody = document.getElementById('growthTable').querySelector('tbody');
+           
+           if (yearlyData.length === 0) {
+               tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ccc;">Enter your investment details above to see year-by-year breakdown</td></tr>';
+               return;
+           }
+           
+           // Show first 15 years or all if less
+           const displayData = yearlyData.slice(0, 15);
+           
+           tbody.innerHTML = displayData.map((data, index) => {
+               const isHighlight = index === displayData.length - 1 && yearlyData.length > 15;
+               const rowClass = isHighlight ? 'highlight-row' : '';
+               
+               return `
+                   <tr class="${rowClass}">
+                       <td>${data.year}</td>
+                       <td>${data.startBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                       <td>${data.contributions.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                       <td>${data.interest.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                       <td>${data.endBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                       <td>${data.totalReturn.toFixed(1)}%</td>
+                   </tr>
+               `;
+           }).join('');
+           
+           if (yearlyData.length > 15) {
+               tbody.innerHTML += '<tr><td colspan="6" style="text-align: center; color: #ccc; font-style: italic;">... final year shown in green</td></tr>';
+           }
+       }
+
+       function updateAgeComparison(monthlyContrib, annualRate) {
+           const retirementAge = 65;
+           const ages = [20, 25, 30, 35];
+           const scenarios = document.getElementById('ageComparison').children;
+           
+           ages.forEach((startAge, index) => {
+               const yearsToRetirement = retirementAge - startAge;
+               const finalAmount = calculateScenario(0, monthlyContrib, annualRate, yearsToRetirement, 'monthly');
+               
+               if (scenarios[index]) {
+                   scenarios[index].querySelector('.age-result').textContent = `${(finalAmount / 1000).toFixed(0)}k`;
+               }
+           });
+       }
+
+       // Initialize with default scenario
+       document.addEventListener('DOMContentLoaded', function() {
+           updateReturnRate();
+           
+           // Login status check
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+           
+           // Load default scenario
+           setTimeout(() => {
+               loadScenario(200, 1000, 7, 30, 'monthly');
+           }, 500);
+       });
+   </script>
+</body>
+</html>
