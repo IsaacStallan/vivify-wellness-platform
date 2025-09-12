@@ -1079,10 +1079,8 @@
            animation: bounceIn 0.6s ease-out;
        }
    </style>
-<script 
-    src="js/vivify-stats.js"
-    src="js/leaderboard-system.js">
-</script>  
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
 </head>
 <body>
    <header>
@@ -1166,7 +1164,7 @@
                </div>
                
                <div class="challenge-actions">
-                   <button class="btn btn-primary" onclick="acceptChallenge()">Accept Challenge</button>
+                   <button class="btn btn-primary" onclick="acceptChallenge(event)">Accept Challenge</button>
                    <button class="btn btn-secondary" onclick="viewLeaderboard()">Live Leaderboard</button>
                    <button class="btn btn-secondary" onclick="inviteFriends()">Invite Friends</button>
                </div>
@@ -1691,6 +1689,7 @@
                    'cardio': { name: 'Cardio Session', points: 25, description: 'Completed cardio workout', emoji: '🏃‍♂️' },
                    'strength': { name: 'Strength Training', points: 30, description: 'Completed strength training', emoji: '🏋️‍♂️' },
                    'sports': { name: 'Sports Activity', points: 20, description: 'Completed sports activity', emoji: '⚽' },
+                   'pushups':  { name: 'Push-Up Challenge',points: 50, description: 'Completed daily push-up challenge', emoji: '💥' },
                    'general': { name: 'Workout', points: 20, description: 'Completed workout session', emoji: '💪' }
                };
        
@@ -2121,15 +2120,28 @@
                progressText.textContent = `${userPushUps}/50 push-ups completed`;
                
                if (userPushUps >= 50) {
-                   progressText.innerHTML = `🎉 Challenge Complete! You crushed it! 🎉<br><small>+50 XP earned • Streak maintained</small>`;
-                   progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-                   
-                   // Celebration animation
-                   document.querySelector('.challenge-widget').classList.add('bounce-in');
-                   setTimeout(() => {
-                       document.querySelector('.challenge-widget').classList.remove('bounce-in');
-                   }, 600);
-               }
+                    progressText.innerHTML = `🎉 Challenge Complete! You crushed it! 🎉<br><small>+50 XP earned • Streak maintained</small>`;
+                    progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+
+                    // Celebration animation
+                    const widget = document.querySelector('.challenge-widget');
+                    widget.classList.add('bounce-in');
+                    setTimeout(() => widget.classList.remove('bounce-in'), 600);
+
+                    // === NEW: write a workout to the fitness leaderboard once per day ===
+                    const todayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+                    const doneFlag = `pushupsComplete-${todayKey}`;
+
+                    if (!localStorage.getItem(doneFlag)) {
+                        // Record as a fitness activity worth 50 XP
+                        window.fixedFitnessBoard?.completeWorkout('pushups');
+                        localStorage.setItem(doneFlag, '1');
+                        // Optional: tiny nudge to the “Completed” stat in the widget
+                        const c = document.getElementById('challenge-completed');
+                        if (c) c.textContent = String(parseInt(c.textContent || '0', 10) + 1);
+                    }
+                }
+
                
                // Save progress
                localStorage.setItem('todayPushUps', userPushUps);
