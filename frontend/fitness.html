@@ -1079,8 +1079,6 @@
            animation: bounceIn 0.6s ease-out;
        }
    </style>
-<script src="js/vivify-stats.js"></script>
-<script src="js/leaderboard-system.js"></script>
 </head>
 <body>
    <header>
@@ -1525,7 +1523,52 @@
    </div>
 
    <script>
-       // Toast Notification System - Fixed version without class nesting issues
+       // API Service Class - VivifyAPI
+       class VivifyAPI {
+           constructor() {
+               this.baseURL = '/api';
+               this.token = localStorage.getItem('authToken');
+           }
+           
+           async request(endpoint, options = {}) {
+               const config = {
+                   headers: {
+                       'Content-Type': 'application/json',
+                       ...(this.token && { Authorization: `Bearer ${this.token}` })
+                   },
+                   ...options
+               };
+               
+               const response = await fetch(`${this.baseURL}${endpoint}`, config);
+               if (!response.ok) {
+                   throw new Error(`API Error: ${response.status}`);
+               }
+               return response.json();
+           }
+           
+           async submitWorkout(workoutData) {
+               return this.request('/fitness/workouts', {
+                   method: 'POST',
+                   body: JSON.stringify(workoutData)
+               });
+           }
+           
+           async getLeaderboard() {
+               return this.request('/fitness/leaderboard');
+           }
+           
+           async syncWorkouts(workouts) {
+               return this.request('/fitness/sync', {
+                   method: 'POST',
+                   body: JSON.stringify({ workouts })
+               });
+           }
+       }
+
+       // Initialize API service
+       const api = new VivifyAPI();
+
+       // Toast Notification System
        function createToastContainer() {
            if (!document.getElementById('toastContainer')) {
                const container = document.createElement('div');
@@ -1574,7 +1617,7 @@
                            <div style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px;">${key}</div>
                        </div>
                    `;
-               });
+                });
                statsHtml += '</div>';
            }
 
@@ -1584,7 +1627,7 @@
                    <div style="font-weight: 600; font-size: 0.95rem; flex: 1;">${title}</div>
                    <button onclick="hideToast(this)" style="background: none; border: none; color: rgba(255, 255, 255, 0.5); cursor: pointer; font-size: 1.1rem; padding: 0; width: 20px; height: 20px;">&times;</button>
                </div>
-               <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); line-1.4;">${message}</div>
+               <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); line-height: 1.4;">${message}</div>
                ${statsHtml}
            `;
 
@@ -1624,7 +1667,7 @@
            }
        }
 
-       // Fixed Fitness Leaderboard System
+       // Fitness Helper Functions
        function calculateRealFitnessStreak(activities) {
            if (activities.length === 0) return 0;
            
@@ -1661,7 +1704,8 @@
            
            return Math.round((activities.length / weeksDiff) * 10) / 10;
        }
-       
+
+       // Fixed Fitness Leaderboard System
        class FixedFitnessLeaderboard {
            constructor() {
                this.userId = this.getCurrentUserId();
@@ -1799,7 +1843,6 @@
            }
        
            showWorkoutFeedback(workout, metrics) {
-               // Use the toast notification instead of the big popup
                showWorkoutToast(
                    `${workout.name} Complete!`,
                    `Great job! +${workout.points} XP earned`,
@@ -1810,152 +1853,145 @@
                    }
                );
            }
-       
-           renderFitnessLeaderboard(containerId) {
-               const container = document.getElementById(containerId);
-               if (!container) {
-                   console.error("Container not found:", containerId);
+                     
+           async renderFitnessLeaderboard(containerId = 'fitnessLeaderboard') {
+               const el = document.getElementById(containerId);
+               if (!el) return;
+
+               el.innerHTML = `
+                   <div style="text-align:center;padding:3rem;color:#777">
+                   <i class="fas fa-dumbbell fa-spin" style="font-size:2rem;margin-bottom:1rem;"></i>
+                   <p>Loading fitness competition...</p>
+                   </div>
+               `;
+
+               const render = (rows = []) => {
+                   if (!rows.length) {
+                   el.innerHTML = `
+                       <div style="text-align:center;padding:4rem;color:rgba(255,255,255,0.6);">
+                       <i class="fas fa-dumbbell" style="font-size:3rem;margin-bottom:1rem;opacity:.3;"></i>
+                       <h3 style="color:#ccc;margin-bottom:1rem;">Start Your Fitness Journey!</h3>
+                       <p>Complete your first workout to see your fitness score and join the leaderboard!</p>
+                       </div>`;
                    return;
-               }
-       
-               const fitnessUsers = JSON.parse(localStorage.getItem('fitnessLeaderboard') || '[]');
-       
-               if (fitnessUsers.length === 0) {
-                   container.innerHTML = `
-                       <div style="text-align: center; padding: 4rem; color: rgba(255,255,255,0.6);">
-                           <i class="fas fa-dumbbell" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                           <h3 style="color: #ccc; margin-bottom: 1rem;">Start Your Fitness Journey!</h3>
-                           <p style="margin-bottom: 2rem;">Complete your first workout to see your fitness score and join the leaderboard!</p>
-                           <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                               <button onclick="window.fixedFitnessBoard.completeWorkout('cardio')" style="
-                                   background: linear-gradient(135deg, #3498db, #2980b9);
-                                   color: #fff;
-                                   border: none;
-                                   padding: 1rem 1.5rem;
-                                   border-radius: 50px;
-                                   font-weight: 600;
-                                   cursor: pointer;
-                               ">🏃‍♂️ Cardio (+25 XP)</button>
-                               <button onclick="window.fixedFitnessBoard.completeWorkout('strength')" style="
-                                   background: linear-gradient(135deg, #e74c3c, #c0392b);
-                                   color: #fff;
-                                   border: none;
-                                   padding: 1rem 1.5rem;
-                                   border-radius: 50px;
-                                   font-weight: 600;
-                                   cursor: pointer;
-                               ">🏋️‍♂️ Strength (+30 XP)</button>
-                           </div>
+                   }
+
+                   const me = this.userId;
+                   el.innerHTML = `
+                   <div style="margin-bottom:2rem;text-align:center;">
+                       <div style="color:#e74c3c;font-size:1.3rem;font-weight:800;margin-bottom:.5rem;">
+                       🏆 Real Fitness Competition
                        </div>
-                   `;
-                   return;
-               }
-       
-               let html = `
-                   <div style="margin-bottom: 2rem; text-align: center;">
-                       <div style="color: #e74c3c; font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem;">
-                           🏆 Real Fitness Competition
-                       </div>
-                       <div style="color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 1rem;">
-                           ${fitnessUsers.length} students competing based on actual workouts
+                       <div style="color:rgba(255,255,255,.8);font-size:1rem;">
+                       ${rows.length} students competing based on actual workouts
                        </div>
                    </div>
-                   <div class="leaderboard-list" style="display: flex; flex-direction: column; gap: 1rem;">
-               `;
-       
-               fitnessUsers.forEach((user) => {
-                   const isCurrentUser = user.userId === this.userId;
-                   const metrics = user.fitnessMetrics;
-                   const rankColor = user.rank === 1 ? '#ffd700' : user.rank === 2 ? '#c0c0c0' : user.rank === 3 ? '#cd7f32' : '#e74c3c';
-                   
-                   html += `
-                       <div style="
-                           display: flex;
-                           align-items: center;
-                           gap: 1rem;
-                           padding: 1.5rem;
-                           background: ${isCurrentUser ? 'rgba(231, 76, 60, 0.2)' : 'rgba(255, 255, 255, 0.05)'};
-                           border-radius: 16px;
-                           border: ${isCurrentUser ? '3px solid #e74c3c' : '1px solid rgba(255, 255, 255, 0.1)'};
-                           position: relative;
-                           transition: all 0.3s ease;
-                       ">
-                           ${isCurrentUser ? '<div style="position: absolute; top: -10px; right: -10px; background: #e74c3c; color: #fff; padding: 0.4rem 0.8rem; border-radius: 15px; font-size: 0.7rem; font-weight: 700;">YOU 💪</div>' : ''}
-                           
+                   <div class="leaderboard-list" style="display:flex;flex-direction:column;gap:1rem;">
+                       ${rows.map((u, idx) => {
+                       const rank = idx + 1;
+                       const isYou = u.userId === me;
+                       const rankColor = rank===1 ? '#ffd700' : rank===2 ? '#c0c0c0' : rank===3 ? '#cd7f32' : '#e74c3c';
+                       const avatar = (u.username || 'ST').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+
+                       return `
                            <div style="
-                               font-size: 2rem;
-                               font-weight: 900;
-                               color: ${rankColor};
-                               min-width: 60px;
-                               text-align: center;
-                           ">${user.rank}</div>
-                           
-                           <div style="
-                               width: 70px;
-                               height: 70px;
-                               border-radius: 50%;
-                               background: ${isCurrentUser ? 'linear-gradient(135deg, #e74c3c, #c0392b)' : 'linear-gradient(135deg, #555, #777)'};
-                               display: flex;
-                               align-items: center;
-                               justify-content: center;
-                               font-weight: 800;
-                               color: #fff;
-                               font-size: 1.3rem;
-                           ">${user.profile.avatar}</div>
-                           
-                           <div style="flex-grow: 1;">
-                               <div style="
-                                   color: #ffffff;
-                                   font-weight: 800;
-                                   font-size: 1.2rem;
-                                   margin-bottom: 0.3rem;
-                               ">${user.profile.name} ${user.rank === 1 ? '👑' : isCurrentUser ? '🔥' : ''}</div>
-                               <div style="
-                                   color: rgba(255, 255, 255, 0.8);
-                                   font-size: 0.9rem;
-                                   margin-bottom: 0.2rem;
-                               ">${user.profile.school} ${user.profile.yearLevel ? `• Year ${user.profile.yearLevel}` : ''}</div>
-                               <div style="
-                                   color: rgba(255, 255, 255, 0.6);
-                                   font-size: 0.8rem;
-                               ">Streak: ${metrics.fitnessStreak} days • Total: ${metrics.totalWorkouts} workouts</div>
+                           display:flex;align-items:center;gap:1rem;padding:1.5rem;
+                           background:${isYou ? 'rgba(231,76,60,.2)' : 'rgba(255,255,255,.05)'};
+                           border-radius:16px;border:${isYou ? '3px solid #e74c3c' : '1px solid rgba(255,255,255,.1)'};
+                           position:relative;">
+                           ${isYou ? '<div style="position:absolute;top:-10px;right:-10px;background:#e74c3c;color:#fff;padding:.4rem .8rem;border-radius:15px;font-size:.7rem;font-weight:700;">YOU 💪</div>' : ''}
+
+                           <div style="font-size:2rem;font-weight:900;color:${rankColor};min-width:60px;text-align:center;">${rank}</div>
+
+                           <div style="width:70px;height:70px;border-radius:50%;
+                               background:${isYou ? 'linear-gradient(135deg,#e74c3c,#c0392b)' : 'linear-gradient(135deg,#555,#777)'};
+                               display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1.3rem;">
+                               ${avatar}
                            </div>
-                           
-                           <div style="text-align: right;">
-                               <div style="
-                                   color: #e74c3c;
-                                   font-weight: 900;
-                                   font-size: 1.6rem;
-                                   margin-bottom: 0.3rem;
-                               ">${metrics.fitnessScore}</div>
-                               <div style="
-                                   color: rgba(255, 255, 255, 0.8);
-                                   font-size: 0.8rem;
-                                   margin-bottom: 0.5rem;
-                               ">FITNESS SCORE</div>
-                               <div style="
-                                   background: rgba(231, 76, 60, 0.2);
-                                   color: #ff6b35;
-                                   font-weight: 700;
-                                   font-size: 0.9rem;
-                                   padding: 0.3rem 0.6rem;
-                                   border-radius: 12px;
-                               ">${metrics.thisWeekWorkouts}/4 this week</div>
+
+                           <div style="flex-grow:1;">
+                               <div style="color:#fff;font-weight:800;font-size:1.2rem;margin-bottom:.3rem;">
+                               ${u.username || 'Student'} ${rank===1 ? '👑' : isYou ? '🔥' : ''}
+                               </div>
+                               <div style="color:rgba(255,255,255,.8);font-size:.9rem;margin-bottom:.2rem;">
+                               ${u.school || '—'} ${u.yearLevel ? `• Year ${u.yearLevel}` : ''}
+                               </div>
+                               <div style="color:rgba(255,255,255,.6);font-size:.8rem;">
+                               Streak: ${u.streak ?? 0} days • Total: ${u.totalWorkouts ?? 0} workouts
+                               </div>
                            </div>
-                       </div>
+
+                           <div style="text-align:right;">
+                               <div style="color:#e74c3c;font-weight:900;font-size:1.6rem;margin-bottom:.3rem;">
+                               ${u.fitnessScore ?? 0}
+                               </div>
+                               <div style="color:rgba(255,255,255,.8);font-size:.8rem;margin-bottom:.5rem;">FITNESS SCORE</div>
+                               <div style="background:rgba(231,76,60,.2);color:#ff6b35;font-weight:700;font-size:.9rem;padding:.3rem .6rem;border-radius:12px;">
+                               ${(u.thisWeekWorkouts ?? 0)}/4 this week
+                               </div>
+                           </div>
+                           </div>`;
+                       }).join('')}
+                   </div>
                    `;
-               });
-       
-               html += '</div>';
-               container.innerHTML = html;
+               };
+
+               try {
+                   const auth = localStorage.getItem('authToken');
+                   const res = await fetch('/api/fitness/leaderboard', {
+                   headers: auth ? { Authorization: `Bearer ${auth}` } : {}
+                   });
+                   if (!res.ok) throw new Error('bad status ' + res.status);
+                   const data = await res.json();
+                   render(data);
+               } catch (e) {
+                   console.warn('API failed, falling back to localStorage leaderboard', e);
+                   const local = JSON.parse(localStorage.getItem('fitnessLeaderboard') || '[]')
+                   .map(u => ({
+                       userId: u.userId,
+                       username: u.profile?.name,
+                       school: u.profile?.school,
+                       yearLevel: u.profile?.yearLevel,
+                       fitnessScore: u.fitnessMetrics?.fitnessScore ?? 0,
+                       totalWorkouts: u.fitnessMetrics?.totalWorkouts ?? 0,
+                       thisWeekWorkouts: u.fitnessMetrics?.thisWeekWorkouts ?? 0,
+                       streak: u.fitnessMetrics?.fitnessStreak ?? 0,
+                   }))
+                   .sort((a,b) => (b.fitnessScore||0) - (a.fitnessScore||0));
+                   render(local);
+               }
            }
-       }
+       }    
        
        // Initialize the fitness leaderboard
        window.fixedFitnessBoard = new FixedFitnessLeaderboard();
+
+       // Sync Function
+       async function syncWorkoutData() {
+           const pendingWorkouts = JSON.parse(localStorage.getItem('pendingWorkouts') || '[]');
+           if (pendingWorkouts.length > 0) {
+               try {
+                   await api.syncWorkouts(pendingWorkouts);
+                   localStorage.removeItem('pendingWorkouts');
+                   console.log('Synced', pendingWorkouts.length, 'pending workouts');
+                   
+                   showWorkoutToast('Synced!', `${pendingWorkouts.length} workouts synced to server`);
+                   
+                   // Refresh leaderboard after sync
+                   if (window.fixedFitnessBoard) {
+                       window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
+                   }
+               } catch (error) {
+                   console.warn('Sync failed, keeping local data:', error);
+               }
+           }
+       }
        
        // Main app initialization
        document.addEventListener('DOMContentLoaded', function() {
+           // Try to sync any pending workouts when page loads
+           syncWorkoutData();
+           
            // Check authentication status
            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
            
@@ -2042,6 +2078,12 @@
                   header.style.background = 'rgba(10, 10, 10, 0.95)';
               }
           });
+
+          // Auto-select defaults for quick start
+          setTimeout(() => {
+              selectIntensity('moderate');
+              selectEquipment('bodyweight');
+          }, 1000);
       });
 
        // Live Stats Simulation
@@ -2065,11 +2107,11 @@
                document.getElementById('active-workouts').textContent = Math.max(0, baseStats.activeWorkouts + variation());
                document.getElementById('today-completions').textContent = baseStats.todayCompletions + Math.abs(variation());
                document.getElementById('challenge-completed').textContent = baseStats.challengeCompleted + Math.abs(variation());
-           }, 15000); // Update every 15 seconds
+           }, 15000);
        }
 
        // Challenge Timer
-       let challengeTimeRemaining = 8 * 3600 + 47 * 60 + 23; // 8:47:23 in seconds
+       let challengeTimeRemaining = 8 * 3600 + 47 * 60 + 23;
 
        function startChallengeTimer() {
            const timer = document.getElementById('challenge-timer');
@@ -2092,61 +2134,72 @@
        let userPushUps = 0;
        let challengeAccepted = false;
 
-       function acceptChallenge() {
-           challengeAccepted = true;
-           document.getElementById('challenge-progress').classList.add('active');
-           document.querySelector('.challenge-widget').scrollIntoView({ behavior: 'smooth', block: 'center' });
-           
-           // Update button text
-           event.target.textContent = 'Challenge Accepted! 💪';
-           event.target.style.background = 'rgba(39, 174, 96, 0.8)';
-       }
+       function acceptChallenge(e) {
+            challengeAccepted = true;
+            document.getElementById('challenge-progress').classList.add('active');
+            document.querySelector('.challenge-widget').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (e?.target) {
+                e.target.textContent = 'Challenge Accepted! 💪';
+                e.target.style.background = 'rgba(39, 174, 96, 0.8)';
+            }
+        }
 
-       function logPushUps() {
-           if (!challengeAccepted) {
-               alert('Accept the challenge first!');
-               return;
-           }
-           
-           const increment = parseInt(prompt('How many push-ups did you just complete?')) || 0;
-           if (increment > 0) {
-            userPushUps = Math.min(userPushUps + increment, 50);
-               
-               const progressFill = document.getElementById('progress-fill');
-               const progressText = document.getElementById('progress-text');
-               
-               const percentage = (userPushUps / 50) * 100;
-               progressFill.style.width = percentage + '%';
-               progressText.textContent = `${userPushUps}/50 push-ups completed`;
-               
-               if (userPushUps >= 50) {
-                    progressText.innerHTML = `🎉 Challenge Complete! You crushed it! 🎉<br><small>+50 XP earned • Streak maintained</small>`;
-                    progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+        // Fixed logPushUps function with proper API integration
+        async function logPushUps() {
+            if (!challengeAccepted) {
+                alert('Accept the challenge first!');
+                return;
+            }
 
-                    // Celebration animation
-                    const widget = document.querySelector('.challenge-widget');
-                    widget.classList.add('bounce-in');
-                    setTimeout(() => widget.classList.remove('bounce-in'), 600);
+            const increment = parseInt(prompt('How many push-ups did you just complete?')) || 0;
+            if (increment > 0) {
+                userPushUps = Math.min(userPushUps + increment, 50);
 
-                    // === NEW: write a workout to the fitness leaderboard once per day ===
-                    const todayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-                    const doneFlag = `pushupsComplete-${todayKey}`;
+                // Update UI first (immediate feedback)
+                const progressFill = document.getElementById('progress-fill');
+                const progressText = document.getElementById('progress-text');
+                const percentage = (userPushUps / 50) * 100;
+                progressFill.style.width = percentage + '%';
+                progressText.textContent = `${userPushUps}/50 push-ups completed`;
 
-                    if (!localStorage.getItem(doneFlag)) {
-                        // Record as a fitness activity worth 50 XP
-                        window.fixedFitnessBoard?.completeWorkout('pushups');
-                        localStorage.setItem(doneFlag, '1');
-                        // Optional: tiny nudge to the “Completed” stat in the widget
-                        const c = document.getElementById('challenge-completed');
-                        if (c) c.textContent = String(parseInt(c.textContent || '0', 10) + 1);
+                // Send to backend with proper error handling
+                try {
+                    const userId = localStorage.getItem('vivifyUserId');
+                    const result = await api.submitWorkout({
+                        userId,
+                        workoutType: 'pushups',
+                        reps: increment,
+                        points: 50,
+                    });
+                    console.log('Workout saved to server:', result);
+                    
+                    // Update fitness leaderboard after successful API call
+                    if (window.fixedFitnessBoard) {
+                        window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
                     }
+                } catch (error) {
+                    console.warn('Failed to save workout to server:', error);
+                    
+                    // Save to pending workouts for sync later
+                    const pendingWorkouts = JSON.parse(localStorage.getItem('pendingWorkouts') || '[]');
+                    pendingWorkouts.push({
+                        userId: localStorage.getItem('vivifyUserId'),
+                        workoutType: 'pushups',
+                        reps: increment,
+                        points: 50,
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('pendingWorkouts', JSON.stringify(pendingWorkouts));
+                    
+                    showWorkoutToast('Saved Offline', 'Workout saved locally, will sync when online');
                 }
 
-               
-               // Save progress
-               localStorage.setItem('todayPushUps', userPushUps);
-           }
-       }
+                if (userPushUps >= 50) {
+                    progressText.innerHTML = `🎉 Challenge Complete! You crushed it! 🎉<br><small>+50 XP earned • Streak maintained</small>`;
+                    progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                }
+            }
+        }
 
        function loadUserProgress() {
            const savedPushUps = localStorage.getItem('todayPushUps');
@@ -2199,7 +2252,6 @@
        function selectWorkout(type) {
            selectedWorkout = type;
            
-           // Update UI
            document.querySelectorAll('.workout-option').forEach(option => {
                option.classList.remove('selected');
            });
@@ -2211,7 +2263,6 @@
        function selectTime(time) {
            selectedTime = time;
            
-           // Update UI
            document.querySelectorAll('[data-time]').forEach(option => {
                option.classList.remove('selected');
            });
@@ -2223,25 +2274,19 @@
        function selectIntensity(intensity) {
            selectedIntensity = intensity;
            
-           // Update UI
            document.querySelectorAll('[data-intensity]').forEach(option => {
                option.classList.remove('selected');
            });
            document.querySelector(`[data-intensity="${intensity}"]`).classList.add('selected');
-           
-           updateStartButton();
        }
 
        function selectEquipment(equipment) {
            selectedEquipment = equipment;
            
-           // Update UI
            document.querySelectorAll('[data-equipment]').forEach(option => {
                option.classList.remove('selected');
            });
            document.querySelector(`[data-equipment="${equipment}"]`).classList.add('selected');
-           
-           updateStartButton();
        }
 
        function updateStartButton() {
@@ -2267,10 +2312,8 @@
                startTime: Date.now()
            };
            
-           // Save workout data
            localStorage.setItem('currentWorkout', JSON.stringify(workoutData));
            
-           // Start workout timer and redirect
            alert(`Starting ${selectedTime} minute ${selectedWorkout} workout! 🔥\n\nWorkout logged and timer started. Get ready to crush it!`);
            
            // In a real app, this would navigate to the workout screen
@@ -2342,7 +2385,6 @@
                window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
            }
            
-           // Show notification
            showWorkoutToast('New Competitor!', `${randomName} joined the fitness competition!`);
        }
 
@@ -2379,12 +2421,10 @@
                shareWorkoutAchievement(workoutData);
            }
            
-           // Update stats
            updateWorkoutStats();
        }
 
        function updateWorkoutStats() {
-           // Increment today's completions
            const completionsEl = document.getElementById('today-completions');
            const current = parseInt(completionsEl.textContent);
            completionsEl.textContent = current + 1;
@@ -2463,12 +2503,6 @@
            }
        }
 
-       // Initialize default selections for quick start
-       setTimeout(() => {
-           // Auto-select moderate intensity and bodyweight equipment as defaults
-           selectIntensity('moderate');
-           selectEquipment('bodyweight');
-       }, 1000);
-  </script>
+   </script>
 </body>
 </html>

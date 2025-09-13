@@ -17,6 +17,13 @@ const uri =
   `${encodeURIComponent(process.env.MONGODB_PASS)}@${process.env.MONGODB_HOST}/` +
   `${process.env.MONGODB_DB}?retryWrites=true&w=majority&authSource=admin`;
 
+mongoose.connect(process.env.MONGODB_URI, { dbName: 'vivify' });
+
+app.use('/api/fitness', fitnessRoutes);
+  
+app.listen(process.env.PORT || 3000, () => console.log('API up'));
+
+
 // Connect to MongoDB
 (async () => {
   try {
