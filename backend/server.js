@@ -6,6 +6,11 @@ const cors = require('cors');
 
 const app = express();
 
+const fitnessRoutes = require('./routes/fitness');
+
+// And then use the routes:
+app.use('/api/fitness', fitnessRoutes);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
