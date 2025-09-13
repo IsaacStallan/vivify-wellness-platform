@@ -505,6 +505,7 @@
     </footer>
 
     <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
         function showMessage(message, type = 'error') {
             const messageElement = document.getElementById('message');
             messageElement.textContent = message;
@@ -599,8 +600,8 @@
                 loginForm.classList.add('loading');
 
                 try {
-                    // Make API call to your backend
-                    const response = await fetch('/api/auth/login', { 
+                    // Make API call to your backend with correct URL
+                    const response = await fetch(`${API_BASE_URL}/auth/login`, { 
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json' 
@@ -618,7 +619,7 @@
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('authToken', data.token);
                         localStorage.setItem('username', data.user.username);
-                        localStorage.setItem('vivifyUserId', data.user.id); // Store real user ID
+                        localStorage.setItem('vivifyUserId', data.user.id);
                         
                         // Format userProfile for the platform
                         const userProfile = {
@@ -656,9 +657,9 @@
                 } catch (error) {
                     console.error('Login error:', error);
                     
-                    // Network error fallback
+                    // Improved error handling
                     if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                        showMessage('Unable to connect to server. Please check your internet connection and try again.');
+                        showMessage('Cannot connect to server. Please ensure the backend is running on localhost:3001');
                     } else {
                         showMessage('Login failed. Please check your credentials and try again.');
                     }

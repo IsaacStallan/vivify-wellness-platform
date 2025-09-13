@@ -467,6 +467,7 @@
     </main>
     
     <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
         document.addEventListener('DOMContentLoaded', function() {
             const parentNotifyCheckbox = document.getElementById('parentNotify');
             const parentEmailGroup = document.getElementById('parentEmailGroup');
@@ -484,7 +485,7 @@
                 
                 // Get form data
                 const formData = {
-                    username: document.getElementById('firstName').value.trim(), // Using firstName as username
+                    username: document.getElementById('firstName').value.trim(),
                     email: document.getElementById('email').value.trim(),
                     password: 'temp_' + Date.now(), // Generate temporary password for beta users
                     school: document.getElementById('school').value.trim() || 'Unknown School',
@@ -515,8 +516,8 @@
                 submitButton.disabled = true;
 
                 try {
-                    // Send signup request to backend
-                    const response = await fetch('/api/auth/signup', {
+                    // Send signup request to backend with correct URL
+                    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -532,24 +533,24 @@
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('username', data.user.username);
                         localStorage.setItem('userProfile', JSON.stringify(data.user));
-                        
-                        // Store the real user ID for fitness tracking
                         localStorage.setItem('vivifyUserId', data.user.id);
                         
-                        // Success message
                         alert(`Welcome to Vivify Beta, ${data.user.username}! Your account has been created successfully.`);
-                        
-                        // Redirect to fitness page or dashboard
                         window.location.href = 'fitness.html';
                         
                     } else {
-                        // Handle errors
                         alert(`Signup failed: ${data.error}`);
                     }
 
                 } catch (error) {
                     console.error('Signup error:', error);
-                    alert('Network error. Please check your connection and try again.');
+                    
+                    // Improved error handling
+                    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                        alert('Cannot connect to server. Please ensure the backend is running on localhost:3001');
+                    } else {
+                        alert('Network error. Please check your connection and try again.');
+                    }
                 } finally {
                     // Restore button state
                     submitButton.innerHTML = originalText;
