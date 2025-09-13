@@ -1,6 +1,6 @@
 // routes/teacher-api.js - API routes for teacher dashboard
 const express = require('express');
-const { authenticate, requireRole, canAccessStudent } = require('../middleware/auth-middleware');
+const { authenticate, requireRole, canAccessStudent } = require('../../frontend/middleware/auth-middleware');
 const { User } = require('../models/User');
 const router = express.Router();
 

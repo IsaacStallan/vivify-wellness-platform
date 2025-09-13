@@ -6,15 +6,19 @@ const cors = require('cors');
 
 const app = express();
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static('../frontend')); // Serve your frontend files
+
 const fitnessRoutes = require('./routes/fitness');
 
 // And then use the routes:
 app.use('/api/fitness', fitnessRoutes);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static('../frontend')); // Serve your frontend files
+// In server.js, add this:
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
 // Build MongoDB URI from env vars
 const uri =
@@ -33,13 +37,14 @@ app.listen(process.env.PORT || 3000, () => console.log('API up'));
 (async () => {
   try {
     if (!uri.startsWith('mongodb')) throw new Error('MongoDB URI build failed');
-    await mongoose.connect(uri);
     console.log('✅ MongoDB connected');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     process.exit(1);
   }
 })();
+
+const User = require('./models/User');
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -62,8 +67,6 @@ const userSchema = new mongoose.Schema({
   lifeSkillsScore: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
-
-const User = mongoose.model('User', userSchema);
 
 // API Routes
 app.post('/api/register', async (req, res) => {

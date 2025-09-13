@@ -91,12 +91,6 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Indexes for performance
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
-userSchema.index({ 'fitnessMetrics.fitnessScore': -1 });
-userSchema.index({ school: 1, yearLevel: 1 });
-
 // Virtual for full name
 userSchema.virtual('fullName').get(function() {
     if (this.profile.firstName && this.profile.lastName) {

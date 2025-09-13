@@ -593,37 +593,41 @@
                     return;
                 }
 
+                // Show loading state
                 loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Signing In...';
                 loginBtn.disabled = true;
                 loginForm.classList.add('loading');
 
                 try {
-                    // For development/demo - you'll need to update this endpoint
+                    // Make API call to your backend
                     const response = await fetch('/api/auth/login', { 
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
+                        headers: { 
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify({ 
+                            email: email, 
+                            password: password 
+                        })
                     });
 
-                    if (!response.ok) {
-                        throw new Error('Network error');
-                    }
+                    const data = await response.json();
 
-                    const result = await response.json();
-                    
-                    if (result.success && result.token) {
-                        // Store user authentication data
+                    if (data.success && data.token) {
+                        // Store authentication data (matching signup pattern)
                         localStorage.setItem('userLoggedIn', 'true');
-                        localStorage.setItem('authToken', result.token);
-                        localStorage.setItem('username', result.user.username);
+                        localStorage.setItem('authToken', data.token);
+                        localStorage.setItem('username', data.user.username);
+                        localStorage.setItem('vivifyUserId', data.user.id); // Store real user ID
                         
                         // Format userProfile for the platform
                         const userProfile = {
-                            id: result.user.id,
-                            name: result.user.username,
-                            email: result.user.email,
-                            school: result.user.school || 'Knox Grammar School',
-                            yearLevel: result.user.yearLevel || '',
+                            id: data.user.id,
+                            name: data.user.username,
+                            email: data.user.email,
+                            school: data.user.school || 'Unknown School',
+                            yearLevel: data.user.yearLevel || '',
+                            username: data.user.username
                         };
                         localStorage.setItem('userProfile', JSON.stringify(userProfile));
                         
@@ -633,7 +637,7 @@
                         
                         if (needsAssessment) {
                             localStorage.setItem('needsBaselineAssessment', 'true');
-                            showMessage('Welcome! Let\'s set up your performance baseline...', 'success');
+                            showMessage('Welcome back! Let\'s continue your performance setup...', 'success');
                             setTimeout(() => {
                                 window.location.href = 'performance-baseline-assessment.html';
                             }, 1500);
@@ -645,45 +649,22 @@
                         }
                         
                     } else {
-                        throw new Error(result.message || 'Login failed');
+                        // Handle authentication failure
+                        showMessage(data.error || 'Invalid email or password. Please try again.');
                     }
                     
                 } catch (error) {
                     console.error('Login error:', error);
                     
-                    // For demo purposes - simulate login with any email/password
-                    if (email && password) {
-                        const demoUser = {
-                            id: 'user_' + Date.now(),
-                            name: email.split('@')[0],
-                            email: email,
-                            school: 'Knox Grammar School',
-                            yearLevel: '10',
-                            username: email.split('@')[0]
-                        };
-                        
-                        localStorage.setItem('userLoggedIn', 'true');
-                        localStorage.setItem('authToken', 'demo_token_' + Date.now());
-                        localStorage.setItem('username', demoUser.name);
-                        localStorage.setItem('userProfile', JSON.stringify(demoUser));
-                        
-                        const hasPerformanceData = localStorage.getItem('performanceData');
-                        if (!hasPerformanceData) {
-                            localStorage.setItem('needsBaselineAssessment', 'true');
-                            showMessage('Welcome! Let\'s set up your performance baseline...', 'success');
-                            setTimeout(() => {
-                                window.location.href = 'performance-baseline-assessment.html';
-                            }, 1500);
-                        } else {
-                            showMessage('Welcome back! Redirecting to your dashboard...', 'success');
-                            setTimeout(() => {
-                                window.location.href = 'dashboard.html';
-                            }, 1000);
-                        }
+                    // Network error fallback
+                    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                        showMessage('Unable to connect to server. Please check your internet connection and try again.');
                     } else {
-                        showMessage(error.message || 'Please check your email and password and try again.');
+                        showMessage('Login failed. Please check your credentials and try again.');
                     }
+                    
                 } finally {
+                    // Reset button state
                     loginBtn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Continue Training';
                     loginBtn.disabled = false;
                     loginForm.classList.remove('loading');
@@ -712,6 +693,54 @@
                 observer.observe(el);
             });
         });
+
+        // Demo login function (keep this for testing purposes)
+        function loginAsDemo() {
+            const demoBtn = document.querySelector('.demo-btn');
+            demoBtn.textContent = 'Creating demo account...';
+            demoBtn.disabled = true;
+            
+            // Simulate demo login
+            setTimeout(() => {
+                // Create demo user data
+                const demoUser = {
+                    id: 'demo_' + Date.now(),
+                    name: 'Demo Student',
+                    email: 'demo@vivify.com',
+                    school: 'Knox Grammar School',
+                    yearLevel: '10',
+                    username: 'Demo Student'
+                };
+                
+                // Set demo authentication
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('authToken', 'demo_token_' + Date.now());
+                localStorage.setItem('username', demoUser.name);
+                localStorage.setItem('userProfile', JSON.stringify(demoUser));
+                localStorage.setItem('vivifyUserId', demoUser.id);
+                
+                // Set demo baseline assessment as needed
+                localStorage.setItem('needsBaselineAssessment', 'true');
+                
+                showMessage('Demo account created! Starting your performance assessment...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'performance-baseline-assessment.html';
+                }, 1500);
+            }, 1500);
+        }
+
+        // Message display function (keep existing)
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
     </script>
 </body>
 </html>
