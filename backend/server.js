@@ -12,10 +12,9 @@ app.use(express.json());
 app.use(express.static('../frontend'));
 
 // Build MongoDB URI from env vars
-const uri = `mongodb+srv://${encodeURIComponent(process.env.MONGODB_USER)}:${encodeURIComponent(process.env.MONGODB_PASS)}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DB}?retryWrites=true&w=majority&authSource=admin`;
+const uri = process.env.MONGODB_URI;
 
-// Connect to MongoDB
-mongoose.connect(uri, { dbName: 'vivify' })
+mongoose.connect(uri)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => {
     console.error('❌ MongoDB connection error:', err.message);
