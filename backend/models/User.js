@@ -241,24 +241,4 @@ userSchema.statics.findBySchool = function(school) {
     return this.find({ school: school, isActive: true });
 };
 
-// In routes/User.js (or wherever your user routes are)
-router.post('/progress', async (req, res) => {
-    try {
-      const { userId, challengeId, progress } = req.body;
-      
-      // Find and update the user
-      const user = await User.findOne({ userId });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      // Update logic here (same as I provided earlier)
-      
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Error updating progress:', error);
-      res.status(500).json({ error: 'Failed to update progress' });
-    }
-  });
-
 module.exports = mongoose.model('User', userSchema);
