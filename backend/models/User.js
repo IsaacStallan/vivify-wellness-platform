@@ -76,6 +76,63 @@ const userSchema = new mongoose.Schema({
         level: { type: Number, default: 1 },
         badges: [String]
     },
+    performanceData: {
+        hasCompletedBaseline: {
+            type: Boolean,
+            default: false
+        },
+        baselineCompletedAt: {
+            type: Date
+        },
+        physicalFitness: {
+            currentLevel: {
+                type: String,
+                enum: ['beginner', 'intermediate', 'advanced']
+            },
+            goals: [{
+                type: String
+            }],
+            exerciseFrequency: {
+                type: String,
+                enum: ['never', 'rarely', 'sometimes', 'regularly', 'daily']
+            }
+        },
+        academicPerformance: {
+            currentGPA: {
+                type: String
+            },
+            studyHours: {
+                type: Number
+            },
+            challenges: [{
+                type: String
+            }]
+        },
+        mentalWellbeing: {
+            stressLevel: {
+                type: Number,
+                min: 1,
+                max: 10
+            },
+            sleepHours: {
+                type: Number
+            },
+            mindfulnessInterest: {
+                type: Boolean,
+                default: false
+            }
+        },
+        socialSkills: {
+            confidenceLevel: {
+                type: Number,
+                min: 1,
+                max: 10
+            },
+            socialGoals: [{
+                type: String
+            }]
+        }
+    },
     // Account status
     isActive: {
         type: Boolean,
