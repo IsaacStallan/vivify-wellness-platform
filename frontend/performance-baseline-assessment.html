@@ -1191,6 +1191,11 @@
         }
 
         function goToDashboard() {
+            // Debug: Check what we have before redirect
+            console.log('=== DASHBOARD REDIRECT DEBUG ===');
+            console.log('performanceData in localStorage:', localStorage.getItem('performanceData'));
+            console.log('needsBaselineAssessment:', localStorage.getItem('needsBaselineAssessment'));
+            
             // Verify we have all required data
             const performanceData = localStorage.getItem('performanceData');
             const userProfile = localStorage.getItem('userProfile');
@@ -1203,6 +1208,7 @@
             });
             
             if (!performanceData) {
+                console.error('PROBLEM: Performance data is missing!');
                 alert('Assessment data not saved properly. Please try again.');
                 return;
             }
