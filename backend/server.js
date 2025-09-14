@@ -41,16 +41,35 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+async function findUser(identifier) {
+  return await User.findOne({
+    $or: [
+      { _id: mongoose.Types.ObjectId.isValid(identifier) ? identifier : null },
+      { username: identifier },
+      { email: identifier }
+    ]
+  });
+}
+
 app.get('/api/user/:userId', async (req, res) => {
   try {
-    const user = await User.findOne({ 
-      $or: [
-        { _id: req.params.userId },
-        { username: req.params.userId }
-      ]
-    });
+    let user = await findUser(req.params.userId);
+    
+    // If not found and it looks like a generated userId, create a new user
+    if (!user && req.params.userId.startsWith('user_')) {
+      user = new User({
+        username: req.params.userId,
+        email: `${req.params.userId}@temp.com`,
+        password: 'temppassword',
+        school: 'Unknown',
+        yearLevel: 'Year 10'
+      });
+      await user.save();
+    }
+    
     res.json(user || {});
   } catch (error) {
+    console.error('Error fetching user:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -58,9 +77,9 @@ app.get('/api/user/:userId', async (req, res) => {
 app.put('/api/user/:userId', async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
-      { 
+      {
         $or: [
-          { _id: req.params.userId },
+          { _id: mongoose.Types.ObjectId.isValid(req.params.userId) ? req.params.userId : null },
           { username: req.params.userId }
         ]
       },
@@ -69,6 +88,7 @@ app.put('/api/user/:userId', async (req, res) => {
     );
     res.json(user);
   } catch (error) {
+    console.error('Error updating user:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -78,12 +98,7 @@ app.post('/api/user/progress', async (req, res) => {
   try {
     const { userId, challengeId, progress } = req.body;
     
-    const user = await User.findOne({ 
-      $or: [
-        { _id: userId },
-        { username: userId }
-      ]
-    });
+    let user = await findUser(userId);
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
