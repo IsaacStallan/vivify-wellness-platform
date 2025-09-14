@@ -895,6 +895,8 @@
             calculatePerformanceScores();
         }
 
+        // Replace the existing assessment completion code in your performance-baseline-assessment.html
+
         async function calculatePerformanceScores() {
             // Use saved answers from state manager to ensure we have all responses
             const allAnswers = stateManager.getAllAnswers();
@@ -906,7 +908,6 @@
                     completeResponses[i] = allAnswers[i];
                 } else {
                     console.warn(`Missing answer for question ${i + 1}`);
-                    // Use a default middle value if somehow missing
                     completeResponses[i] = {
                         question: performanceQuestions[i].text,
                         category: performanceQuestions[i].category,
@@ -938,42 +939,20 @@
                         scores[category].reduce((sum, score) => sum + score, 0) / scores[category].length
                     );
                 } else {
-                    finalScores[category] = 60; // Default fallback
+                    finalScores[category] = 60;
                 }
             });
 
-            // Calculate overall performance score
             finalScores.overall = Math.round(
                 (finalScores.physical + finalScores.mental + finalScores.nutrition + finalScores.lifeSkills) / 4
             );
 
             console.log('Calculated performance scores:', finalScores);
 
-            // Save to server if possible
-            const authToken = localStorage.getItem('authToken');
-            if (authToken) {
-                try {
-                    const serverResponse = await fetch('/api/performance/baseline', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}`
-                        },
-                        body: JSON.stringify({
-                            scores: finalScores,
-                            responses: completeResponses
-                        })
-                    });
+            // FIXED: Save to backend using the correct structure and endpoint
+            await savePerformanceDataToBackend(finalScores, completeResponses);
 
-                    if (serverResponse.ok) {
-                        console.log('Performance baseline saved to server successfully');
-                    }
-                } catch (error) {
-                    console.log('Server not available, using localStorage');
-                }
-            }
-
-            // Always save locally
+            // Always save locally as backup
             const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
             
             const performanceData = {
@@ -1003,7 +982,7 @@
                 baselineCompleted: true,
                 assessmentResponses: completeResponses,
                 lastUpdated: new Date().toISOString(),
-                totalXP: 50, // Starting XP from assessment
+                totalXP: 50,
                 streaks: {
                     currentStreak: 1,
                     longestStreak: 1,
@@ -1013,13 +992,77 @@
 
             localStorage.setItem('performanceData', JSON.stringify(performanceData));
             localStorage.removeItem('needsBaselineAssessment');
-            
-            // Clear the assessment answers since we're done
             stateManager.clearAnswers();
             
-            console.log('Performance data saved:', performanceData);
-
+            console.log('Performance data saved locally:', performanceData);
             showResults(finalScores);
+        }
+
+        // NEW: Backend integration function that matches your backend route structure
+        async function savePerformanceDataToBackend(scores, responses) {
+            const API_BASE_URL = 'http://localhost:3001/api';
+            const authToken = localStorage.getItem('authToken');
+            
+            if (!authToken) {
+                console.log('No auth token, skipping backend save');
+                return;
+            }
+
+            // Transform the data to match your backend User model structure
+            const backendData = {
+                physicalFitness: {
+                    currentLevel: scores.physical >= 75 ? 'advanced' : scores.physical >= 55 ? 'intermediate' : 'beginner',
+                    goals: ['improve_performance'], // Could be extracted from responses if needed
+                    exerciseFrequency: scores.physical >= 75 ? 'regularly' : scores.physical >= 55 ? 'sometimes' : 'rarely'
+                },
+                academicPerformance: {
+                    currentGPA: scores.overall >= 85 ? 'A' : scores.overall >= 70 ? 'B+' : scores.overall >= 55 ? 'B' : 'C+',
+                    studyHours: Math.floor(scores.mental / 10), // Convert score to approximate hours
+                    challenges: ['time_management', 'focus'] // Could be more specific based on responses
+                },
+                mentalWellbeing: {
+                    stressLevel: Math.max(1, Math.min(10, Math.floor((100 - scores.mental) / 10))), // Invert score for stress
+                    sleepHours: scores.physical >= 70 ? 8 : 7, // Better physical scores suggest better sleep
+                    mindfulnessInterest: scores.mental >= 70
+                },
+                socialSkills: {
+                    confidenceLevel: Math.floor(scores.overall / 10), // Convert percentage to 1-10 scale
+                    socialGoals: ['leadership', 'communication']
+                }
+            };
+
+            try {
+                console.log('Sending performance data to backend:', backendData);
+                
+                const response = await fetch(`${API_BASE_URL}/auth/performance-baseline`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(backendData)
+                });
+
+                const result = await response.json();
+                console.log('Backend response:', result);
+
+                if (result.success) {
+                    console.log('✅ Performance data saved to backend successfully');
+                    // Update local storage with backend response if it has additional data
+                    if (result.user && result.user.performanceData) {
+                        const existingData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+                        existingData.backendSynced = true;
+                        existingData.serverData = result.user.performanceData;
+                        localStorage.setItem('performanceData', JSON.stringify(existingData));
+                    }
+                } else {
+                    console.error('❌ Backend save failed:', result.error);
+                }
+
+            } catch (error) {
+                console.error('❌ Network error saving to backend:', error);
+                // Don't throw - we'll continue with local storage only
+            }
         }
 
         function showResults(scores) {
@@ -1199,7 +1242,7 @@
                 }
             }
         });
-        // Add this to your performance-baseline-assessment.html completion handler:
+        // Add this to your performance-baseline-assessment.html file
         async function savePerformanceData(performanceData) {
             const API_BASE_URL = 'http://localhost:3001/api';
             const authToken = localStorage.getItem('authToken');
@@ -1228,7 +1271,6 @@
                     
                 } else {
                     console.error('Failed to save performance data:', data.error);
-                    // Still redirect but show warning
                     alert('Performance data saved locally but failed to sync with server.');
                     localStorage.setItem('performanceData', JSON.stringify(performanceData));
                     window.location.href = 'dashboard.html';
@@ -1240,34 +1282,6 @@
                 localStorage.setItem('performanceData', JSON.stringify(performanceData));
                 window.location.href = 'dashboard.html';
             }
-        }
-
-        // Call this function when assessment is completed
-        // Example usage in your assessment completion:
-        function onAssessmentComplete() {
-            const performanceData = {
-                physicalFitness: {
-                    currentLevel: 'beginner', // from form
-                    goals: ['lose_weight', 'build_muscle'], // from form
-                    exerciseFrequency: 'sometimes' // from form
-                },
-                academicPerformance: {
-                    currentGPA: 'B+', // from form
-                    studyHours: 3, // from form
-                    challenges: ['time_management'] // from form
-                },
-                mentalWellbeing: {
-                    stressLevel: 6, // from form
-                    sleepHours: 7, // from form
-                    mindfulnessInterest: true // from form
-                },
-                socialSkills: {
-                    confidenceLevel: 7, // from form
-                    socialGoals: ['public_speaking'] // from form
-                }
-            };
-            
-            savePerformanceData(performanceData);
         }
     </script>
 </body>

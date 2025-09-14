@@ -97,7 +97,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-// POST /api/auth/login - Login user
+// Update your login route in auth.js to include performance data check:
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -138,6 +138,7 @@ router.post('/login', async (req, res) => {
         );
 
         console.log('Login successful:', user.username);
+        console.log('Has completed baseline:', user.performanceData?.hasCompletedBaseline);
 
         res.json({
             success: true,
@@ -149,7 +150,8 @@ router.post('/login', async (req, res) => {
                 email: user.email,
                 school: user.school,
                 yearLevel: user.yearLevel,
-                fitnessMetrics: user.fitnessMetrics
+                hasCompletedBaseline: user.performanceData?.hasCompletedBaseline || false,
+                performanceData: user.performanceData
             }
         });
 
