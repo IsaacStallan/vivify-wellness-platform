@@ -437,15 +437,6 @@
         html { visibility: hidden; opacity: 0; }
         html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
     </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('loaded');
-        });
-        window.addEventListener('load', function() {
-            document.documentElement.classList.add('loaded');
-        });
-    </script>
 </head>
 <body>
     <header>
@@ -749,7 +740,6 @@
 
         // Replace the redirect logic in your performance-baseline-assessment.html with this:
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user should be here
             const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
             
             if (!isLoggedIn) {
@@ -757,30 +747,21 @@
                 return;
             }
             
-            // FIXED: Check if user has already completed baseline (more robust check)
+            // AGGRESSIVE CHECK: If user has any performance data, redirect immediately
             const performanceData = localStorage.getItem('performanceData');
-            if (performanceData) {
-                const parsed = JSON.parse(performanceData);
-                if (parsed && parsed.baselineCompleted === true) {
-                    console.log('Baseline already completed, redirecting to dashboard');
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
-            }
+            console.log('Assessment page - checking performanceData:', performanceData ? 'EXISTS' : 'MISSING');
             
-            // If user has performance data AND doesn't explicitly need assessment, redirect to dashboard
-            if (performanceData && !needsAssessment) {
-                console.log('User has completed baseline, redirecting to dashboard');
-                window.location.href = 'dashboard.html';
+            if (performanceData) {
+                console.log('Performance data found, redirecting to dashboard immediately');
+                window.location.replace('dashboard.html');
                 return;
             }
             
-            // If user explicitly needs assessment or has no performance data, continue with assessment
-            console.log('User needs baseline assessment, continuing...');
+            console.log('No performance data found, starting assessment');
             
+            // Continue with assessment setup only if no performance data exists
             document.getElementById('totalQuestions').textContent = performanceQuestions.length;
             
-            // Load saved answers into responses array
             const savedAnswers = stateManager.getAllAnswers();
             Object.entries(savedAnswers).forEach(([index, answerData]) => {
                 responses[parseInt(index)] = answerData;
@@ -788,7 +769,6 @@
             
             loadQuestion();
         });
-
         function loadQuestion() {
             const question = performanceQuestions[currentQuestionIndex];
             const container = document.getElementById('questionsContainer');
