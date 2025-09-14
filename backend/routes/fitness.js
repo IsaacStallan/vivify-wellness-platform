@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Workout = require('../models/workout.js');
+const Workout = require('../models/Workout.js');
 const User = require('../models/User');
 
 // POST /api/fitness/workouts - Submit a new workout
