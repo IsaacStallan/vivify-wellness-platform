@@ -97,7 +97,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-// Update your login route in auth.js to include performance data check:
+// Replace your existing login route in auth.js with this:
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -138,7 +138,10 @@ router.post('/login', async (req, res) => {
         );
 
         console.log('Login successful:', user.username);
-        console.log('Has completed baseline:', user.performanceData?.hasCompletedBaseline);
+        
+        // FIXED: Check if user has completed baseline assessment
+        const hasCompletedBaseline = user.performanceData?.hasCompletedBaseline || false;
+        console.log('Has completed baseline:', hasCompletedBaseline);
 
         res.json({
             success: true,
@@ -150,7 +153,7 @@ router.post('/login', async (req, res) => {
                 email: user.email,
                 school: user.school,
                 yearLevel: user.yearLevel,
-                hasCompletedBaseline: user.performanceData?.hasCompletedBaseline || false,
+                hasCompletedBaseline: hasCompletedBaseline, // ADDED: This is the key field
                 performanceData: user.performanceData
             }
         });
@@ -229,6 +232,66 @@ router.put('/profile', authenticateToken, async (req, res) => {
         res.status(500).json({ 
             error: 'Failed to update profile',
             details: error.message 
+        });
+    }
+});
+
+// Add this route to your auth.js file if you haven't already:
+// POST /api/auth/performance-baseline - Save performance baseline data
+router.post('/performance-baseline', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const performanceData = req.body;
+        
+        console.log('Saving performance data for user:', userId);
+        console.log('Performance data:', performanceData);
+        
+        // Update user with performance data
+        const user = await User.findByIdAndUpdate(
+            userId,
+            {
+                $set: {
+                    'performanceData.hasCompletedBaseline': true,
+                    'performanceData.baselineCompletedAt': new Date(),
+                    'performanceData.physicalFitness': performanceData.physicalFitness,
+                    'performanceData.academicPerformance': performanceData.academicPerformance,
+                    'performanceData.mentalWellbeing': performanceData.mentalWellbeing,
+                    'performanceData.socialSkills': performanceData.socialSkills
+                }
+            },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: 'User not found'
+            });
+        }
+
+        console.log('Performance data saved successfully for:', user.username);
+        console.log('hasCompletedBaseline is now:', user.performanceData?.hasCompletedBaseline);
+
+        res.json({
+            success: true,
+            message: 'Performance baseline saved successfully',
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                school: user.school,
+                yearLevel: user.yearLevel,
+                hasCompletedBaseline: user.performanceData?.hasCompletedBaseline || false,
+                performanceData: user.performanceData
+            }
+        });
+
+    } catch (error) {
+        console.error('Performance data save error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to save performance data',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
         });
     }
 });
