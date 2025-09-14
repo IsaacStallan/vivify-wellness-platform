@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     },
     yearLevel: {
         type: String,
-        enum: ['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'University'],
+        enum: ['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Uni'],
         required: true
     },
     role: {
