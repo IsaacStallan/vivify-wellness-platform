@@ -59,24 +59,9 @@ const userSchema = new mongoose.Schema({
         lastWorkout: Date,
         lastUpdated: Date
     },
-    // Overall performance tracking
+    // MERGED: Combined both performanceData sections into one
     performanceData: {
-        scores: {
-            physical: { type: Number, default: 0 },
-            mental: { type: Number, default: 0 },
-            academic: { type: Number, default: 0 },
-            overall: { type: Number, default: 0 }
-        },
-        streaks: {
-            current: { type: Number, default: 0 },
-            longest: { type: Number, default: 0 },
-            lastUpdated: Date
-        },
-        totalXP: { type: Number, default: 0 },
-        level: { type: Number, default: 1 },
-        badges: [String]
-    },
-    performanceData: {
+        // Baseline assessment data
         hasCompletedBaseline: {
             type: Boolean,
             default: false
@@ -131,7 +116,22 @@ const userSchema = new mongoose.Schema({
             socialGoals: [{
                 type: String
             }]
-        }
+        },
+        // Overall performance tracking (merged from original)
+        scores: {
+            physical: { type: Number, default: 0 },
+            mental: { type: Number, default: 0 },
+            academic: { type: Number, default: 0 },
+            overall: { type: Number, default: 0 }
+        },
+        streaks: {
+            current: { type: Number, default: 0 },
+            longest: { type: Number, default: 0 },
+            lastUpdated: Date
+        },
+        totalXP: { type: Number, default: 0 },
+        level: { type: Number, default: 1 },
+        badges: [String]
     },
     // Account status
     isActive: {
