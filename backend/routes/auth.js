@@ -3,32 +3,46 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-// POST /api/auth/signup - Register new user
+// POST /api/auth/signup - Register new user (with enhanced debugging)
 router.post('/signup', async (req, res) => {
     try {
+        console.log('=== SIGNUP REQUEST START ===');
+        console.log('Request body:', req.body);
+        
         const { username, email, password, school, yearLevel } = req.body;
         
-        console.log('Signup attempt:', { username, email, school, yearLevel });
+        console.log('Extracted fields:', { username, email, school, yearLevel, hasPassword: !!password });
         
         // Validate required fields
         if (!username || !email || !password || !school || !yearLevel) {
+            console.log('❌ Validation failed - missing fields');
             return res.status(400).json({ 
-                error: 'All fields are required: username, email, password, school, yearLevel' 
+                success: false,
+                error: 'All fields are required: username, email, password, school, yearLevel',
+                received: { username: !!username, email: !!email, password: !!password, school: !!school, yearLevel: !!yearLevel }
             });
         }
 
+        console.log('✅ Field validation passed');
+
         // Check if user already exists
+        console.log('🔍 Checking for existing user...');
         const existingUser = await User.findOne({ 
             $or: [{ email }, { username }] 
         });
         
         if (existingUser) {
+            console.log('❌ User already exists:', existingUser.email === email ? 'email' : 'username');
             return res.status(400).json({ 
+                success: false,
                 error: existingUser.email === email ? 'Email already registered' : 'Username already taken' 
             });
         }
 
+        console.log('✅ No existing user found');
+
         // Create new user
+        console.log('👤 Creating new user...');
         const user = new User({
             username,
             email,
@@ -38,16 +52,20 @@ router.post('/signup', async (req, res) => {
             role: 'student'
         });
 
+        console.log('💾 Saving user to database...');
         await user.save();
+        console.log('✅ User saved successfully with ID:', user._id);
 
         // Generate JWT token
+        console.log('🔑 Generating JWT token...');
         const token = jwt.sign(
             { userId: user._id, username: user.username },
             process.env.JWT_SECRET || 'fallback-secret-key',
             { expiresIn: '7d' }
         );
+        console.log('✅ JWT token generated');
 
-        console.log('User created successfully:', user.username);
+        console.log('🎉 User created successfully:', user.username);
 
         res.status(201).json({
             success: true,
@@ -62,11 +80,19 @@ router.post('/signup', async (req, res) => {
             }
         });
 
+        console.log('=== SIGNUP REQUEST SUCCESS ===');
+
     } catch (error) {
-        console.error('Signup error:', error);
+        console.log('=== SIGNUP REQUEST ERROR ===');
+        console.error('❌ Signup error:', error);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+        
         res.status(500).json({ 
+            success: false,
             error: 'Failed to create account',
-            details: error.message 
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
         });
     }
 });
