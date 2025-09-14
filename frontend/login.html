@@ -616,6 +616,9 @@
                     console.log('Login response data:', data);
                     console.log('data.user.hasCompletedBaseline:', data.user.hasCompletedBaseline);
                     console.log('typeof data.user.hasCompletedBaseline:', typeof data.user.hasCompletedBaseline);
+                    console.log('data.success:', data.success);
+                    console.log('data.token:', data.token);
+                    console.log('About to check hasCompletedBaseline...');
 
                     // Update your login success handler in login.html:
                     if (data.success && data.token) {
@@ -638,15 +641,17 @@
                         
                         // Check if user has completed baseline assessment
                         const hasCompletedBaseline = data.user.hasCompletedBaseline || false;
-                        
+                        console.log('Final hasCompletedBaseline value:', hasCompletedBaseline);
+
                         if (!hasCompletedBaseline) {
+                            console.log('Taking ASSESSMENT path because hasCompletedBaseline is false');
                             localStorage.setItem('needsBaselineAssessment', 'true');
                             showMessage('Welcome back! Let\'s complete your performance baseline...', 'success');
                             setTimeout(() => {
                                 window.location.href = 'performance-baseline-assessment.html';
                             }, 1500);
                         } else {
-                            // Store performance data locally for offline access
+                            console.log('Taking DASHBOARD path because hasCompletedBaseline is true');
                             if (data.user.performanceData) {
                                 localStorage.setItem('performanceData', JSON.stringify(data.user.performanceData));
                             }
