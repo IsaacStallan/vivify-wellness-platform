@@ -256,7 +256,11 @@ router.post('/performance-baseline', authenticateToken, async (req, res) => {
                     'performanceData.physicalFitness': performanceData.physicalFitness,
                     'performanceData.academicPerformance': performanceData.academicPerformance,
                     'performanceData.mentalWellbeing': performanceData.mentalWellbeing,
-                    'performanceData.socialSkills': performanceData.socialSkills
+                    'performanceData.socialSkills': performanceData.socialSkills,
+                    'performanceData.scores.physical': performanceData.calculatedScores?.physical || 0,
+                    'performanceData.scores.mental': performanceData.calculatedScores?.mental || 0,
+                    'performanceData.scores.academic': performanceData.calculatedScores?.nutrition || 0,
+                    'performanceData.scores.overall': performanceData.calculatedScores?.overall || 0
                 }
             },
             { new: true, runValidators: true }

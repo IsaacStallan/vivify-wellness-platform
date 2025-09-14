@@ -1027,22 +1027,30 @@
             const backendData = {
                 physicalFitness: {
                     currentLevel: scores.physical >= 75 ? 'advanced' : scores.physical >= 55 ? 'intermediate' : 'beginner',
-                    goals: ['improve_performance'], // Could be extracted from responses if needed
+                    goals: ['improve_performance'],
                     exerciseFrequency: scores.physical >= 75 ? 'regularly' : scores.physical >= 55 ? 'sometimes' : 'rarely'
                 },
                 academicPerformance: {
                     currentGPA: scores.overall >= 85 ? 'A' : scores.overall >= 70 ? 'B+' : scores.overall >= 55 ? 'B' : 'C+',
-                    studyHours: Math.floor(scores.mental / 10), // Convert score to approximate hours
-                    challenges: ['time_management', 'focus'] // Could be more specific based on responses
+                    studyHours: Math.floor(scores.mental / 10),
+                    challenges: ['time_management', 'focus']
                 },
                 mentalWellbeing: {
-                    stressLevel: Math.max(1, Math.min(10, Math.floor((100 - scores.mental) / 10))), // Invert score for stress
-                    sleepHours: scores.physical >= 70 ? 8 : 7, // Better physical scores suggest better sleep
+                    stressLevel: Math.max(1, Math.min(10, Math.floor((100 - scores.mental) / 10))),
+                    sleepHours: scores.physical >= 70 ? 8 : 7,
                     mindfulnessInterest: scores.mental >= 70
                 },
                 socialSkills: {
-                    confidenceLevel: Math.floor(scores.overall / 10), // Convert percentage to 1-10 scale
+                    confidenceLevel: Math.floor(scores.overall / 10),
                     socialGoals: ['leadership', 'communication']
+                },
+                // ADD THIS: Include the actual calculated scores
+                calculatedScores: {
+                    physical: scores.physical,
+                    mental: scores.mental,
+                    nutrition: scores.nutrition,
+                    lifeSkills: scores.lifeSkills,
+                    overall: scores.overall
                 }
             };
 
