@@ -1199,6 +1199,76 @@
                 }
             }
         });
+        // Add this to your performance-baseline-assessment.html completion handler:
+        async function savePerformanceData(performanceData) {
+            const API_BASE_URL = 'http://localhost:3001/api';
+            const authToken = localStorage.getItem('authToken');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/performance-baseline`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(performanceData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    console.log('Performance data saved successfully');
+                    
+                    // Store locally for offline access
+                    localStorage.setItem('performanceData', JSON.stringify(data.user.performanceData));
+                    localStorage.removeItem('needsBaselineAssessment');
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                    
+                } else {
+                    console.error('Failed to save performance data:', data.error);
+                    // Still redirect but show warning
+                    alert('Performance data saved locally but failed to sync with server.');
+                    localStorage.setItem('performanceData', JSON.stringify(performanceData));
+                    window.location.href = 'dashboard.html';
+                }
+
+            } catch (error) {
+                console.error('Network error saving performance data:', error);
+                // Save locally as fallback
+                localStorage.setItem('performanceData', JSON.stringify(performanceData));
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Call this function when assessment is completed
+        // Example usage in your assessment completion:
+        function onAssessmentComplete() {
+            const performanceData = {
+                physicalFitness: {
+                    currentLevel: 'beginner', // from form
+                    goals: ['lose_weight', 'build_muscle'], // from form
+                    exerciseFrequency: 'sometimes' // from form
+                },
+                academicPerformance: {
+                    currentGPA: 'B+', // from form
+                    studyHours: 3, // from form
+                    challenges: ['time_management'] // from form
+                },
+                mentalWellbeing: {
+                    stressLevel: 6, // from form
+                    sleepHours: 7, // from form
+                    mindfulnessInterest: true // from form
+                },
+                socialSkills: {
+                    confidenceLevel: 7, // from form
+                    socialGoals: ['public_speaking'] // from form
+                }
+            };
+            
+            savePerformanceData(performanceData);
+        }
     </script>
 </body>
 </html>

@@ -527,6 +527,7 @@
 
                     const data = await response.json();
 
+                    // In your signup.html JavaScript, update the success handler:
                     if (data.success) {
                         // Store authentication data
                         localStorage.setItem('authToken', data.token);
@@ -535,8 +536,13 @@
                         localStorage.setItem('userProfile', JSON.stringify(data.user));
                         localStorage.setItem('vivifyUserId', data.user.id);
                         
-                        alert(`Welcome to Vivify Beta, ${data.user.username}! Your account has been created successfully.`);
-                        window.location.href = 'fitness.html';
+                        // Set flag for baseline assessment
+                        localStorage.setItem('needsBaselineAssessment', 'true');
+                        
+                        alert(`Welcome to Vivify Beta, ${data.user.username}! Let's set up your performance baseline.`);
+                        
+                        // Redirect to performance baseline assessment
+                        window.location.href = 'performance-baseline-assessment.html';
                         
                     } else {
                         alert(`Signup failed: ${data.error}`);

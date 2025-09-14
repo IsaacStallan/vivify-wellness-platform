@@ -614,8 +614,9 @@
 
                     const data = await response.json();
 
+                    // Update your login success handler in login.html:
                     if (data.success && data.token) {
-                        // Store authentication data (matching signup pattern)
+                        // Store authentication data
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('authToken', data.token);
                         localStorage.setItem('username', data.user.username);
@@ -632,28 +633,33 @@
                         };
                         localStorage.setItem('userProfile', JSON.stringify(userProfile));
                         
-                        // Check if user needs baseline assessment
-                        const hasPerformanceData = localStorage.getItem('performanceData');
-                        const needsAssessment = !hasPerformanceData;
+                        // Check if user has completed baseline assessment
+                        const hasCompletedBaseline = data.user.hasCompletedBaseline || false;
                         
-                        if (needsAssessment) {
+                        if (!hasCompletedBaseline) {
                             localStorage.setItem('needsBaselineAssessment', 'true');
-                            showMessage('Welcome back! Let\'s continue your performance setup...', 'success');
+                            showMessage('Welcome back! Let\'s complete your performance baseline...', 'success');
                             setTimeout(() => {
                                 window.location.href = 'performance-baseline-assessment.html';
                             }, 1500);
                         } else {
+                            // Store performance data locally for offline access
+                            if (data.user.performanceData) {
+                                localStorage.setItem('performanceData', JSON.stringify(data.user.performanceData));
+                            }
+                            localStorage.removeItem('needsBaselineAssessment');
+                            
                             showMessage('Welcome back! Redirecting to your dashboard...', 'success');
                             setTimeout(() => {
                                 window.location.href = 'dashboard.html';
                             }, 1000);
                         }
-                        
-                    } else {
-                        // Handle authentication failure
-                        showMessage(data.error || 'Invalid email or password. Please try again.');
                     }
-                    
+                    else {
+                        const errorMsg = data.message || 'Login failed. Please check your credentials and try again.';
+                        showMessage(errorMsg);
+                    }
+
                 } catch (error) {
                     console.error('Login error:', error);
                     
