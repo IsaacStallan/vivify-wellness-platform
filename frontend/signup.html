@@ -406,6 +406,19 @@
                     <label>Email Address</label>
                     <input type="email" id="email" required placeholder="Enter your email">
                 </div>
+
+                <div class="form-group">
+                    <label>Create Password</label>
+                    <input type="password" id="password" required placeholder="Minimum 6 characters" minlength="6">
+                    <small style="color: #888; font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+                        Must be at least 6 characters long
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPassword" required placeholder="Re-enter your password">
+                </div>
                 
                 <div class="form-group">
                     <label>Year Level</label>
@@ -479,35 +492,57 @@
             });
             
             // Handle form submission
-            // Replace the existing form submission handler with this:
             betaSignupForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                // Get form data
-                const formData = {
-                    username: document.getElementById('firstName').value.trim(),
-                    email: document.getElementById('email').value.trim(),
-                    password: 'temp_' + Date.now(), // Generate temporary password for beta users
-                    school: document.getElementById('school').value.trim() || 'Unknown School',
-                    yearLevel: document.getElementById('yearLevel').value,
-                    // Additional beta-specific data
-                    mainGoal: document.getElementById('mainGoal').value,
-                    parentNotify: document.getElementById('parentNotify').checked,
-                    parentEmail: document.getElementById('parentEmail').value.trim(),
-                    feedbackAgree: document.getElementById('feedbackAgree').checked,
-                    betaUser: true
-                };
+                // Get form data including passwords
+                const firstName = document.getElementById('firstName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const confirmPassword = document.getElementById('confirmPassword').value.trim();
+                const school = document.getElementById('school').value.trim() || 'Unknown School';
+                const yearLevel = document.getElementById('yearLevel').value;
+                const mainGoal = document.getElementById('mainGoal').value;
+                const parentNotify = document.getElementById('parentNotify').checked;
+                const parentEmail = document.getElementById('parentEmail').value.trim();
+                const feedbackAgree = document.getElementById('feedbackAgree').checked;
                 
                 // Validation
-                if (!formData.username || !formData.email || !formData.yearLevel || !formData.feedbackAgree) {
+                if (!firstName || !email || !password || !yearLevel || !feedbackAgree) {
                     alert('Please fill in all required fields and agree to provide feedback.');
                     return;
                 }
                 
-                if (formData.parentNotify && !formData.parentEmail) {
+                // Password validation
+                if (password.length < 6) {
+                    alert('Password must be at least 6 characters long.');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match. Please check and try again.');
+                    return;
+                }
+                
+                if (parentNotify && !parentEmail) {
                     alert('Please enter parent email address or uncheck the notification option.');
                     return;
                 }
+
+                // Prepare form data with real password
+                const formData = {
+                    username: firstName,
+                    email: email,
+                    password: password, // Use the actual password user created
+                    school: school,
+                    yearLevel: yearLevel,
+                    // Additional beta-specific data
+                    mainGoal: mainGoal,
+                    parentNotify: parentNotify,
+                    parentEmail: parentEmail,
+                    feedbackAgree: feedbackAgree,
+                    betaUser: true
+                };
 
                 // Show loading state
                 const submitButton = document.querySelector('.btn');
@@ -527,7 +562,6 @@
 
                     const data = await response.json();
 
-                    // In your signup.html JavaScript, update the success handler:
                     if (data.success) {
                         // Store authentication data
                         localStorage.setItem('authToken', data.token);
@@ -536,12 +570,9 @@
                         localStorage.setItem('userProfile', JSON.stringify(data.user));
                         localStorage.setItem('vivifyUserId', data.user.id);
                         
-                        // Set flag for baseline assessment
-                        localStorage.setItem('needsBaselineAssessment', 'true');
+                        alert(`Welcome to Vivify Beta, ${data.user.username}! Your account has been created successfully.`);
                         
-                        alert(`Welcome to Vivify Beta, ${data.user.username}! Let's set up your performance baseline.`);
-                        
-                        // Redirect to performance baseline assessment
+                        // Redirect to performance assessment
                         window.location.href = 'performance-baseline-assessment.html';
                         
                     } else {
