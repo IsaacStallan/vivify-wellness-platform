@@ -654,9 +654,56 @@
                             }, 1500);
                         } else {
                             console.log('Taking DASHBOARD path because hasCompletedBaseline is true');
+                            
+                            // Convert backend format to frontend format
                             if (data.user.performanceData) {
-                                localStorage.setItem('performanceData', JSON.stringify(data.user.performanceData));
+                                const backendData = data.user.performanceData;
+                                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                                
+                                const frontendPerformanceData = {
+                                    user: {
+                                        name: userProfile.username || userProfile.name || 'Student',
+                                        username: userProfile.username || userProfile.name || 'Student',
+                                        school: userProfile.school || 'Unknown School',
+                                        yearLevel: userProfile.yearLevel || '',
+                                        userId: userProfile.id,
+                                        joinDate: new Date().toISOString(),
+                                        lastActive: new Date().toISOString()
+                                    },
+                                    scores: {
+                                        physical: backendData.scores?.physical || 70,
+                                        mental: backendData.scores?.mental || 70,
+                                        nutrition: backendData.scores?.academic || 70, // Map academic to nutrition
+                                        lifeSkills: backendData.scores?.overall || 70,
+                                        overall: backendData.scores?.overall || 70
+                                    },
+                                    activities: [{
+                                        id: Date.now(),
+                                        type: 'baseline_assessment',
+                                        category: 'general',
+                                        description: 'Completed performance baseline assessment',
+                                        points: 50,
+                                        timestamp: backendData.baselineCompletedAt || new Date().toISOString()
+                                    }],
+                                    customGoals: [],
+                                    achievements: {
+                                        first_login: true,
+                                        assessment_complete: true
+                                    },
+                                    baselineCompleted: true,
+                                    lastUpdated: new Date().toISOString(),
+                                    totalXP: backendData.totalXP || 50,
+                                    streaks: {
+                                        currentStreak: backendData.streaks?.current || 1,
+                                        longestStreak: backendData.streaks?.longest || 1,
+                                        lastActiveDate: new Date().toDateString()
+                                    }
+                                };
+                                
+                                localStorage.setItem('performanceData', JSON.stringify(frontendPerformanceData));
+                                console.log('Converted backend data to frontend format:', frontendPerformanceData);
                             }
+                            
                             localStorage.removeItem('needsBaselineAssessment');
                             
                             showMessage('Welcome back! Redirecting to your dashboard...', 'success');

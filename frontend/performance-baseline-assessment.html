@@ -431,12 +431,6 @@
             animation: fadeInUp 0.6s ease-out;
         }
     </style>
-
-    <!-- FOUC Prevention -->
-    <style>
-        html { visibility: hidden; opacity: 0; }
-        html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
-    </style>
 </head>
 <body>
     <header>
@@ -1251,47 +1245,6 @@
                 }
             }
         });
-        // Add this to your performance-baseline-assessment.html file
-        async function savePerformanceData(performanceData) {
-            const API_BASE_URL = 'http://localhost:3001/api';
-            const authToken = localStorage.getItem('authToken');
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/performance-baseline`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify(performanceData)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    console.log('Performance data saved successfully');
-                    
-                    // Store locally for offline access
-                    localStorage.setItem('performanceData', JSON.stringify(data.user.performanceData));
-                    localStorage.removeItem('needsBaselineAssessment');
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'dashboard.html';
-                    
-                } else {
-                    console.error('Failed to save performance data:', data.error);
-                    alert('Performance data saved locally but failed to sync with server.');
-                    localStorage.setItem('performanceData', JSON.stringify(performanceData));
-                    window.location.href = 'dashboard.html';
-                }
-
-            } catch (error) {
-                console.error('Network error saving performance data:', error);
-                // Save locally as fallback
-                localStorage.setItem('performanceData', JSON.stringify(performanceData));
-                window.location.href = 'dashboard.html';
-            }
-        }
     </script>
 </body>
 </html>
