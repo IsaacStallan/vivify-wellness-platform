@@ -143,10 +143,21 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     lastLogin: Date,
-    loginCount: { type: Number, default: 0 }
-}, {
-    timestamps: true
-});
+    loginCount: { type: Number, default: 0 },
+    overallScore: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
+    habitStreak: { type: Number, default: 0 },
+    fitnessScore: { type: Number, default: 0 },
+    nutritionScore: { type: Number, default: 0 },
+    mentalScore: { type: Number, default: 0 },
+    lifeSkillsScore: { type: Number, default: 0 },
+    userChallenges: { type: Object, default: {} },
+    challengeStats: {
+        active: { type: Number, default: 0 },
+        completed: { type: Number, default: 0 },
+        totalPoints: { type: Number, default: 0 }
+    }
+    }, { timestamps: true });
 
 // Virtual for full name
 userSchema.virtual('fullName').get(function() {

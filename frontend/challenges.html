@@ -105,6 +105,49 @@
     .overall-score{display:flex;flex-direction:column;align-items:flex-end;gap:.25rem}
     .level-badge{background:linear-gradient(135deg,#f39c12,#e67e22);color:#000;padding:.2rem .5rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase}
 
+    .mini-leaderboard {
+      margin: 1rem 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .mini-leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .mini-leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    .mini-leaderboard-item.current-user {
+      background: rgba(243,156,18,0.1);
+      border-radius: 4px;
+      padding: 0.5rem;
+      color: #f39c12;
+      font-weight: 600;
+    }
+
+    .mini-leaderboard-item .rank {
+      color: #f39c12;
+      font-weight: 600;
+      min-width: 30px;
+    }
+
+    .mini-leaderboard-item .name {
+      flex: 1;
+      margin: 0 1rem;
+    }
+
+    .mini-leaderboard-item .progress {
+      color: #27ae60;
+      font-weight: 600;
+    }
+
     @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
     .fade-in-up{animation:fadeInUp .6s ease-out}
     .notification{position:fixed;top:100px;right:20px;background:#27ae60;color:#fff;padding:1rem 1.5rem;border-radius:50px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:1000;opacity:0;transform:translateY(-20px);transition:all .3s ease;max-width:350px;font-weight:600}
@@ -179,7 +222,7 @@
     <button class="filter-tab" data-filter="ongoing">Ongoing</button>
   </div>
 
-  <!-- Sections (kept as your original cards) -->
+  <!-- Sections -->
   <div class="challenge-sections">
 
     <!-- Physical -->
@@ -418,7 +461,6 @@
           <p class="section-description">Master the daily systems and routines of high achievers for sustained excellence</p>
         </div>
       </div>
-
       <div class="challenges-grid">
         <!-- Elite Morning -->
         <div class="challenge-card featured" data-challenge="elite-morning">
@@ -537,19 +579,257 @@
 
 <script>
 /** -----------------------------
- *  Minimal state (no fake seeds)
+ *  Global Leaderboard Manager
  *  ----------------------------*/
-let userId = null;                       // stable per-device id
-let currentUserName = null;              // display name
-let userChallenges = {};                 // { [challengeId]: {...} }
-let challengeStats = { active: 0, completed: 0, totalPoints: 0 };
-let leaderboard = [];                    // fetched from backend
-const participantsDefaults = {
-  'fitness-foundation': 0, 'morning-energy': 0, 'deep-work': 0,
-  'stress-resilience': 0, 'elite-morning': 0, 'time-mastery': 0
-};
+class LeaderboardManager {
+  constructor() {
+    this.leaderboards = {
+      overall: [],
+      challenges: [],
+      physical: [],
+      mental: [],
+      habits: [],
+      weekly: [],
+      monthly: []
+    };
+    this.currentUser = null;
+    this.refreshInterval = null;
+  }
 
-// challenge catalog (unchanged)
+  async initialize(userId, userName) {
+    this.currentUser = { userId, displayName: userName };
+    await this.fetchAllLeaderboards();
+    this.startAutoRefresh();
+  }
+
+  async fetchAllLeaderboards() {
+    try {
+      // Fetch all leaderboard types
+      const responses = await Promise.allSettled([
+        fetch('/api/leaderboard/overall'),
+        fetch('/api/leaderboard/challenges'),
+        fetch('/api/leaderboard/physical'),
+        fetch('/api/leaderboard/mental'),
+        fetch('/api/leaderboard/habits'),
+        fetch('/api/leaderboard/weekly'),
+        fetch('/api/leaderboard/monthly')
+      ]);
+
+      const types = ['overall', 'challenges', 'physical', 'mental', 'habits', 'weekly', 'monthly'];
+      
+      for (let i = 0; i < responses.length; i++) {
+        if (responses[i].status === 'fulfilled' && responses[i].value.ok) {
+          this.leaderboards[types[i]] = await responses[i].value.json();
+        } else {
+          console.warn(`Failed to fetch ${types[i]} leaderboard`);
+          this.leaderboards[types[i]] = [];
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch leaderboards:', error);
+    }
+  }
+
+  async updateUserProgress(challengeId, progress) {
+    try {
+      const response = await fetch('/api/user/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: this.currentUser.userId,
+          challengeId,
+          progress,
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      if (response.ok) {
+        // Refresh leaderboards after progress update
+        await this.fetchAllLeaderboards();
+        this.updateDisplays();
+        return true;
+      }
+    } catch (error) {
+      console.error('Failed to update progress:', error);
+    }
+    return false;
+  }
+
+  getChallengeLeaderboard(challengeId) {
+    // Get leaderboard specific to a challenge
+    return this.leaderboards.challenges.filter(entry => 
+      entry.challengeId === challengeId
+    ).sort((a, b) => (b.progress || 0) - (a.progress || 0));
+  }
+
+  getCategoryLeaderboard(category) {
+    // Get leaderboard for challenge categories
+    return this.leaderboards[category] || [];
+  }
+
+  getOverallLeaderboard() {
+    return this.leaderboards.overall || [];
+  }
+
+  getUserRank(leaderboardType = 'overall') {
+    const board = this.leaderboards[leaderboardType] || [];
+    const userIndex = board.findIndex(entry => 
+      entry.userId === this.currentUser?.userId
+    );
+    return userIndex === -1 ? null : userIndex + 1;
+  }
+
+  getUserScore(leaderboardType = 'overall') {
+    const board = this.leaderboards[leaderboardType] || [];
+    const userEntry = board.find(entry => 
+      entry.userId === this.currentUser?.userId
+    );
+    return userEntry?.score || 0;
+  }
+
+  updateDisplays() {
+    this.updateMainLeaderboard();
+    this.updateChallengeStats();
+    this.updateUserRankings();
+  }
+
+  updateMainLeaderboard() {
+    const list = document.getElementById('leaderboardList');
+    if (!list) return;
+
+    const overallBoard = this.getOverallLeaderboard();
+    if (overallBoard.length === 0) {
+      list.innerHTML = '<p style="color:rgba(255,255,255,.7);text-align:center;padding:2rem;">Loading leaderboard...</p>';
+      return;
+    }
+
+    list.innerHTML = '';
+    const top10 = overallBoard.slice(0, 10);
+
+    top10.forEach((entry, idx) => {
+      const item = document.createElement('div');
+      item.className = 'leaderboard-item';
+      if (entry.userId === this.currentUser?.userId) {
+        item.classList.add('current-user');
+      }
+
+      let icon = '<i class="fas fa-user"></i>';
+      if (idx === 0) icon = '<i class="fas fa-crown" style="color:#f39c12;"></i>';
+      else if (idx === 1) icon = '<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
+      else if (idx === 2) icon = '<i class="fas fa-medal" style="color:#cd7f32;"></i>';
+
+      const isCurrentUser = entry.userId === this.currentUser?.userId;
+      const displayName = entry.displayName || 'Student';
+
+      item.innerHTML = `
+        <div class="leaderboard-rank">${idx + 1}</div>
+        <div class="leaderboard-avatar">${icon}</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">${displayName}${isCurrentUser ? ' (You)' : ''}</div>
+          <div class="leaderboard-school">${entry.school || ''}</div>
+        </div>
+        <div class="overall-score">
+          <div class="leaderboard-score">${(entry.overallScore || 0).toLocaleString()}</div>
+          <div class="level-badge">Level ${entry.level || 1}</div>
+        </div>`;
+      
+      list.appendChild(item);
+    });
+  }
+
+  updateChallengeStats() {
+    // Update hero stats with real data
+    const userOverall = this.getOverallLeaderboard().find(u => 
+      u.userId === this.currentUser?.userId
+    );
+
+    if (userOverall) {
+      const activeEl = document.getElementById('activeChallenges');
+      const completedEl = document.getElementById('completedChallenges');
+      const pointsEl = document.getElementById('totalPoints');
+
+      if (activeEl) activeEl.textContent = userOverall.activeChallenges || 0;
+      if (completedEl) completedEl.textContent = userOverall.completedChallenges || 0;
+      if (pointsEl) pointsEl.textContent = userOverall.totalPoints || 0;
+    }
+  }
+
+  updateUserRankings() {
+    // Show user's ranking in different categories
+    const rankings = {
+      overall: this.getUserRank('overall'),
+      physical: this.getUserRank('physical'),
+      mental: this.getUserRank('mental'),
+      habits: this.getUserRank('habits')
+    };
+
+    console.log('User rankings:', rankings);
+  }
+
+  startAutoRefresh() {
+    // Refresh leaderboards every 30 seconds
+    this.refreshInterval = setInterval(async () => {
+      await this.fetchAllLeaderboards();
+      this.updateDisplays();
+    }, 30000);
+  }
+
+  stopAutoRefresh() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+  }
+
+  // Challenge-specific leaderboard methods
+  async showChallengeLeaderboard(challengeId) {
+    const challengeBoard = this.getChallengeLeaderboard(challengeId);
+    const challenge = challenges[challengeId];
+    
+    if (!challenge) return;
+
+    let html = `<h3>${challenge.name} Leaderboard</h3><div class="mini-leaderboard">`;
+    
+    if (challengeBoard.length === 0) {
+      html += '<p>No participants yet. Be the first!</p>';
+    } else {
+      challengeBoard.slice(0, 5).forEach((entry, idx) => {
+        const isCurrentUser = entry.userId === this.currentUser?.userId;
+        html += `
+          <div class="mini-leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
+            <span class="rank">${idx + 1}.</span>
+            <span class="name">${entry.displayName}${isCurrentUser ? ' (You)' : ''}</span>
+            <span class="progress">${entry.progress || 0}%</span>
+          </div>`;
+      });
+    }
+    
+    html += '</div>';
+    showNotification(html, 'info');
+  }
+
+  async updateChallengeParticipants() {
+    // Update participant counts for each challenge
+    Object.keys(challenges).forEach(challengeId => {
+      const participants = this.getChallengeLeaderboard(challengeId).length;
+      const el = document.getElementById(`${challengeId}-participants`);
+      if (el) el.textContent = participants.toLocaleString();
+    });
+  }
+}
+
+// Global instance
+const leaderboardManager = new LeaderboardManager();
+
+/** -----------------------------
+ *  State Management
+ *  ----------------------------*/
+let userId = null;
+let currentUserName = null;
+let userChallenges = {};
+let challengeStats = { active: 0, completed: 0, totalPoints: 0 };
+
+// Challenge catalog
 const challenges = {
   'fitness-foundation': { name:'30-Day Fitness Foundation', type:'monthly', category:'physical', duration:30, points:500, requirements:['Complete 30 minutes of physical activity daily','Track workout intensity','Log energy levels'], goalType:'daily', totalGoal:30 },
   'morning-energy':     { name:'Morning Energy Boost',      type:'weekly',  category:'physical', duration:7,  points:150, requirements:['10 minutes morning movement','Before 8 AM','Track energy levels'], goalType:'daily', totalGoal:7 },
@@ -560,21 +840,24 @@ const challenges = {
 };
 
 /** -----------------------------
- *  Helpers
+ *  Helper Functions
  *  ----------------------------*/
 function showNotification(message, type='info'){
   const n=document.createElement('div');
-  n.className=`notification ${type}`; n.style.whiteSpace='pre-line'; n.textContent=message;
+  n.className=`notification ${type}`;
+  n.style.whiteSpace='pre-line';
+  n.innerHTML=message; // Using innerHTML to support HTML content for leaderboards
   document.body.appendChild(n);
   setTimeout(()=>n.classList.add('show'),100);
-  setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),300);},5000);
+  setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),300);},7000); // Longer display for leaderboards
 }
+
 function getOrCreateUserId(){
   let id=localStorage.getItem('vivifyUserId');
   if(!id){
     id='user_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
     localStorage.setItem('vivifyUserId', id);
-    // best-effort register
+    // Register with backend
     fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:id,displayName:'Student'})}).catch(()=>{});
   }
   return id;
@@ -592,7 +875,7 @@ async function fetchUser(){
     userChallenges  = data.userChallenges || {};
     challengeStats  = data.challengeStats || {active:0,completed:0,totalPoints:0};
   }catch(e){
-    // initialize user record if missing
+    // Initialize user record if missing
     currentUserName = localStorage.getItem('username') || 'You';
     await fetch(`/api/user/${userId}`,{
       method:'PUT',
@@ -605,9 +888,9 @@ async function fetchUser(){
     }).catch(()=>{});
   }
 }
+
 async function saveUser(){
   try{
-    // derive computed user summary for leaderboard
     const computed = computeCurrentUserSummary();
     await fetch(`/api/user/${userId}`,{
       method:'PUT',
@@ -626,31 +909,9 @@ async function saveUser(){
     });
   }catch(e){ console.error('Failed to save user',e); }
 }
-async function fetchLeaderboard(){
-  try{
-    const res=await fetch('/api/leaderboard');
-    if(!res.ok) throw new Error('bad leaderboard');
-    leaderboard = await res.json();
-  }catch(e){
-    leaderboard = []; // fallback; UI will show loading/empty
-  }
-}
-async function fetchParticipants(){
-  // If you add a real endpoint later, wire it here.
-  // For now, leave zeros or compute from leaderboard.
-  const counts = {...participantsDefaults};
-  try{
-    // derive per-challenge participant counts from user data if your backend exposes it later
-    // noop for now
-  }catch(e){}
-  Object.entries(counts).forEach(([id,count])=>{
-    const el=document.getElementById(`${id}-participants`);
-    if(el) el.textContent = (count||0).toLocaleString();
-  });
-}
 
 /** -----------------------------
- *  Scoring & UI updates
+ *  Scoring Logic
  *  ----------------------------*/
 function calculateOverallScore(user){
   const challengeMultiplier=1.0, habitMultiplier=0.8, fitnessMultiplier=0.6, nutritionMultiplier=0.6, mentalMultiplier=0.7, lifeSkillsMultiplier=0.5;
@@ -665,8 +926,8 @@ function calculateOverallScore(user){
     levelBonus
   );
 }
+
 function computeCurrentUserSummary(){
-  // simple derivation from challengeStats (same as your prior heuristic)
   const cp=challengeStats.totalPoints||0;
   const summary={
     challengePoints: cp,
@@ -680,6 +941,7 @@ function computeCurrentUserSummary(){
   summary.overallScore = calculateOverallScore(summary);
   return summary;
 }
+
 function updateChallengeStats(){
   const active = Object.keys(userChallenges).filter(id => userChallenges[id]?.joined && !userChallenges[id]?.completed).length;
   const completed = Object.keys(userChallenges).filter(id => userChallenges[id]?.completed).length;
@@ -700,9 +962,11 @@ function updateChallengeStats(){
   if(c) c.textContent=completed;
   if(p) p.textContent=totalPoints;
 }
+
 function updateAllChallengeCards(){
   Object.keys(challenges).forEach(updateChallengeCard);
 }
+
 function updateChallengeCard(challengeId){
   const uc=userChallenges[challengeId]; const ch=challenges[challengeId];
   const btn=document.getElementById(`${challengeId}-btn`);
@@ -727,99 +991,126 @@ function updateChallengeCard(challengeId){
     if(text) text.textContent='0%';
   }
 }
+
 function calcProgress(challengeId){
   const uc=userChallenges[challengeId]; const ch=challenges[challengeId];
   if(!uc?.joined||!ch) return 0;
   if(ch.type==='ongoing') return Math.min(100, Math.round((uc.dailyProgress||0)/7*100));
   return Math.min(100, Math.round((uc.completedDays||0)/(ch.totalGoal||1)*100));
 }
-function updateLeaderboardDisplay(){
-  const list=document.getElementById('leaderboardList');
-  if(!list) return;
-  list.innerHTML='';
 
-  if(!Array.isArray(leaderboard) || leaderboard.length===0){
-    list.innerHTML='<p style="color:rgba(255,255,255,.7);text-align:center;padding:2rem;">No leaderboard data yet.</p>';
+/** -----------------------------
+ *  Enhanced Challenge Actions
+ *  ----------------------------*/
+async function joinChallenge(challengeId) {
+  const ch = challenges[challengeId];
+  if (!ch) return showNotification('Challenge not found', 'error');
+
+  if (userChallenges[challengeId]?.joined) {
+    showNotification('You are already in this challenge', 'info');
     return;
   }
 
-  // ensure current user is visible if present
-  const youIdx = leaderboard.findIndex(u => u.userId===userId);
-  if(youIdx===-1){
-    const summary=computeCurrentUserSummary();
-    leaderboard.push({
-      userId, displayName: currentUserName||'You', school: '—',
-      overallScore: summary.overallScore, level: summary.level
-    });
-  }
+  // Update local state
+  userChallenges[challengeId] = {
+    joined: true,
+    startDate: new Date().toISOString(),
+    completedDays: 0,
+    dailyProgress: 0,
+    completed: false,
+    lastLogDate: null
+  };
 
-  leaderboard.sort((a,b)=>(b.overallScore||0)-(a.overallScore||0));
-  const top = leaderboard.slice(0,10);
-
-  top.forEach((u,idx)=>{
-    const item=document.createElement('div');
-    item.className='leaderboard-item';
-    if(u.userId===userId) item.classList.add('current-user');
-
-    let icon='<i class="fas fa-user"></i>';
-    if(idx===0) icon='<i class="fas fa-crown" style="color:#f39c12;"></i>';
-    else if(idx===1) icon='<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
-    else if(idx===2) icon='<i class="fas fa-medal" style="color:#cd7f32;"></i>';
-
-    item.innerHTML=`
-      <div class="leaderboard-rank">${idx+1}</div>
-      <div class="leaderboard-avatar">${icon}</div>
-      <div class="leaderboard-info">
-        <div class="leaderboard-name">${u.displayName||'Student'}${u.userId===userId?' (You)':''}</div>
-        <div class="leaderboard-school">${u.school||''}</div>
-      </div>
-      <div class="overall-score">
-        <div class="leaderboard-score">${(u.overallScore||0).toLocaleString()}</div>
-        <div class="level-badge">Level ${u.level||1}</div>
-      </div>`;
-    list.appendChild(item);
+  // Update backend
+  const success = await leaderboardManager.updateUserProgress(challengeId, {
+    action: 'join',
+    progress: 0
   });
+
+  if (success) {
+    updateChallengeStats();
+    updateChallengeCard(challengeId);
+    await saveUser();
+    showNotification(`Joined ${ch.name}!`, 'success');
+    
+    // Update participant count
+    leaderboardManager.updateChallengeParticipants();
+  } else {
+    showNotification('Failed to join challenge. Please try again.', 'error');
+  }
 }
 
-/** -----------------------------
- *  Actions
- *  ----------------------------*/
-async function joinChallenge(challengeId){
-  const ch=challenges[challengeId];
-  if(!ch) return showNotification('Challenge not found','error');
-
-  if(userChallenges[challengeId]?.joined){
-    showNotification('You are already in this challenge','info'); return;
+async function logProgress(challengeId) {
+  const ch = challenges[challengeId];
+  const uc = userChallenges[challengeId];
+  
+  if (!ch || !uc?.joined) {
+    return showNotification('Join the challenge first', 'info');
   }
 
-  userChallenges[challengeId]={ joined:true, startDate:new Date().toISOString(), completedDays:0, dailyProgress:0, completed:false, lastLogDate:null };
-  updateChallengeStats(); updateChallengeCard(challengeId); await saveUser();
-  showNotification(`Joined ${ch.name}!`,'success');
-}
-async function logProgress(challengeId){
-  const ch=challenges[challengeId]; const uc=userChallenges[challengeId];
-  if(!ch||!uc?.joined) return showNotification('Join the challenge first','info');
-
-  const today=new Date().toDateString();
-  if(uc.lastLogDate===today) return showNotification('Already logged today','info');
-  uc.lastLogDate=today;
-
-  if(ch.type==='ongoing'){
-    uc.dailyProgress=(uc.dailyProgress||0)+1; challengeStats.totalPoints += ch.points;
-    showNotification(`Progress logged! +${ch.points} points`,'success');
-  }else{
-    uc.completedDays=(uc.completedDays||0)+1;
-    if(uc.completedDays >= (ch.totalGoal||0)){ uc.completed=true; challengeStats.totalPoints += ch.points; showNotification(`Challenge completed! +${ch.points} points`,'success'); }
-    else{ showNotification('Daily progress logged! Keep going!','success'); }
+  const today = new Date().toDateString();
+  if (uc.lastLogDate === today) {
+    return showNotification('Already logged today', 'info');
   }
-  updateChallengeStats(); updateChallengeCard(challengeId); await saveUser(); updateLeaderboardDisplay();
+
+  uc.lastLogDate = today;
+
+  let progressUpdate;
+  if (ch.type === 'ongoing') {
+    uc.dailyProgress = (uc.dailyProgress || 0) + 1;
+    challengeStats.totalPoints += ch.points;
+    progressUpdate = {
+      action: 'daily_progress',
+      dailyProgress: uc.dailyProgress,
+      points: ch.points
+    };
+    showNotification(`Progress logged! +${ch.points} points`, 'success');
+  } else {
+    uc.completedDays = (uc.completedDays || 0) + 1;
+    const progressPercent = Math.round((uc.completedDays / (ch.totalGoal || 1)) * 100);
+    
+    if (uc.completedDays >= (ch.totalGoal || 0)) {
+      uc.completed = true;
+      challengeStats.totalPoints += ch.points;
+      progressUpdate = {
+        action: 'complete',
+        completedDays: uc.completedDays,
+        points: ch.points,
+        progress: 100
+      };
+      showNotification(`Challenge completed! +${ch.points} points`, 'success');
+    } else {
+      progressUpdate = {
+        action: 'progress',
+        completedDays: uc.completedDays,
+        progress: progressPercent
+      };
+      showNotification('Daily progress logged! Keep going!', 'success');
+    }
+  }
+
+  // Update backend and refresh leaderboards
+  const success = await leaderboardManager.updateUserProgress(challengeId, progressUpdate);
+  
+  if (success) {
+    updateChallengeStats();
+    updateChallengeCard(challengeId);
+    await saveUser();
+  } else {
+    showNotification('Failed to log progress. Please try again.', 'error');
+  }
 }
-function viewChallenge(challengeId){
-  const ch=challenges[challengeId]; if(!ch) return;
-  showNotification(`${ch.name}:\n• ${ch.requirements.join('\n• ')}\nReward: ${ch.points} points`,'info');
+
+function viewChallenge(challengeId) {
+  const ch = challenges[challengeId];
+  if (!ch) return;
+
+  // Show challenge details AND leaderboard
+  leaderboardManager.showChallengeLeaderboard(challengeId);
 }
+
 function viewFullLeaderboard(){
-  const me = leaderboard.find(u=>u.userId===userId);
+  const me = leaderboardManager.getOverallLeaderboard().find(u=>u.userId===userId);
   const summary = me ? {
     challengePoints: me.challengeStats?.totalPoints,
     habitStreak: me.habitStreak, fitnessScore: me.fitnessScore,
@@ -829,56 +1120,16 @@ function viewFullLeaderboard(){
 
   showNotification(
     `Your Overall Score Breakdown:
-• Challenges: ${summary.challengePoints||0}
-• Habits: ${summary.habitStreak||0}
-• Fitness: ${summary.fitnessScore||0}
-• Nutrition: ${summary.nutritionScore||0}
-• Mental: ${summary.mentalScore||0}
-• Life Skills: ${summary.lifeSkillsScore||0}
-• Level Bonus: ${(summary.level||1)*50}`,
+- Challenges: ${summary.challengePoints||0}
+- Habits: ${summary.habitStreak||0}
+- Fitness: ${summary.fitnessScore||0}
+- Nutrition: ${summary.nutritionScore||0}
+- Mental: ${summary.mentalScore||0}
+- Life Skills: ${summary.lifeSkillsScore||0}
+- Level Bonus: ${(summary.level||1)*50}`,
     'info'
   );
 }
-
-/** -----------------------------
- *  Init
- *  ----------------------------*/
-document.addEventListener('DOMContentLoaded', async () => {
-  // logout
-  const logout=document.getElementById('logout-link');
-  if(logout){ logout.addEventListener('click',e=>{e.preventDefault(); localStorage.clear(); window.location.href='index.html';}); }
-
-  // tabs
-  document.querySelectorAll('.filter-tab').forEach(tab=>{
-    tab.addEventListener('click',()=>{
-      document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      filterChallenges(tab.dataset.filter);
-    });
-  });
-
-  // animations
-  const obs=new IntersectionObserver((ents)=>{
-    ents.forEach(ent=>{ if(ent.isIntersecting){ ent.target.style.opacity='1'; ent.target.style.transform='translateY(0)'; } });
-  },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
-  document.querySelectorAll('.fade-in-up').forEach(el=>{
-    el.style.opacity='0'; el.style.transform='translateY(30px)'; el.style.transition='opacity .8s ease, transform .8s ease'; obs.observe(el);
-  });
-
-  userId = getOrCreateUserId();
-  currentUserName = localStorage.getItem('username') || 'You';
-
-  await fetchUser();            // hydrate userChallenges/challengeStats if present
-  updateChallengeStats();
-  updateAllChallengeCards();
-
-  await fetchLeaderboard();     // from backend
-  updateLeaderboardDisplay();
-
-  await fetchParticipants();    // optional; zeros for now
-
-  // if you use the separate leaderboard-system.js, it can coexist without conflict
-});
 
 function filterChallenges(filter){
   document.querySelectorAll('.challenge-card').forEach(card=>{
@@ -889,13 +1140,56 @@ function filterChallenges(filter){
   });
 }
 
-// optional: track page visit
+/** -----------------------------
+ *  Initialization
+ *  ----------------------------*/
+document.addEventListener('DOMContentLoaded', async () => {
+  // Logout functionality
+  const logout=document.getElementById('logout-link');
+  if(logout){ logout.addEventListener('click',e=>{e.preventDefault(); localStorage.clear(); window.location.href='index.html';}); }
+
+  // Filter tabs
+  document.querySelectorAll('.filter-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      filterChallenges(tab.dataset.filter);
+    });
+  });
+
+  // Animations
+  const obs=new IntersectionObserver((ents)=>{
+    ents.forEach(ent=>{ if(ent.isIntersecting){ ent.target.style.opacity='1'; ent.target.style.transform='translateY(0)'; } });
+  },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.fade-in-up').forEach(el=>{
+    el.style.opacity='0'; el.style.transform='translateY(30px)'; el.style.transition='opacity .8s ease, transform .8s ease'; obs.observe(el);
+  });
+
+  // Initialize user and system
+  userId = getOrCreateUserId();
+  currentUserName = localStorage.getItem('username') || 'You';
+
+  // Initialize enhanced leaderboard system
+  await leaderboardManager.initialize(userId, currentUserName);
+
+  await fetchUser();
+  updateChallengeStats();
+  updateAllChallengeCards();
+
+  // The leaderboard manager now handles all leaderboard updates
+  leaderboardManager.updateDisplays();
+  leaderboardManager.updateChallengeParticipants();
+});
+
+// Clean up on page unload
+window.addEventListener('beforeunload', () => {
+  leaderboardManager.stopAutoRefresh();
+});
+
+// Optional: track page visit
 if(window.vivifyTracker){
   window.vivifyTracker.trackActivity('challenges_visit','challenges','Visited challenges page',5);
 }
 </script>
-
-<!-- (Optional) If you keep the separate system, include it after this page's script -->
-<!-- <script src="/js/leaderboard-system.js"></script> -->
 </body>
 </html>
