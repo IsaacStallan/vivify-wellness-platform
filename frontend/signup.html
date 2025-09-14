@@ -407,18 +407,198 @@
                     <input type="email" id="email" required placeholder="Enter your email">
                 </div>
 
+                <!-- Replace your password field section with this enhanced version -->
+
                 <div class="form-group">
                     <label>Create Password</label>
-                    <input type="password" id="password" required placeholder="Minimum 6 characters" minlength="6">
-                    <small style="color: #888; font-size: 0.85rem; margin-top: 0.5rem; display: block;">
-                        Must be at least 6 characters long
-                    </small>
+                    <input type="password" id="password" required placeholder="Create a strong password">
+                    
+                    <!-- Password Requirements Checklist -->
+                    <div class="password-requirements" style="margin-top: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.75rem; font-weight: 600;">Password Requirements:</div>
+                        
+                        <div class="requirement" id="req-length" style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem; transition: color 0.3s ease;">
+                            <span class="req-icon" style="margin-right: 0.5rem; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #666; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">✗</span>
+                            <span>At least 8 characters</span>
+                        </div>
+                        
+                        <div class="requirement" id="req-number" style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem; transition: color 0.3s ease;">
+                            <span class="req-icon" style="margin-right: 0.5rem; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #666; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">✗</span>
+                            <span>One number (0-9)</span>
+                        </div>
+                        
+                        <div class="requirement" id="req-special" style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem; transition: color 0.3s ease;">
+                            <span class="req-icon" style="margin-right: 0.5rem; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #666; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">✗</span>
+                            <span>One special character (!@#$%^&*)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Password Strength Indicator -->
+                    <div class="password-strength" style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.85rem; color: #ccc;">Password Strength:</span>
+                            <span id="strength-text" style="font-size: 0.85rem; font-weight: 600; color: #666;">Weak</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
+                            <div id="strength-bar" style="height: 100%; width: 0%; background: #e74c3c; transition: all 0.3s ease; border-radius: 3px;"></div>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Confirm Password</label>
                     <input type="password" id="confirmPassword" required placeholder="Re-enter your password">
+                    <div id="password-match" style="margin-top: 0.5rem; font-size: 0.85rem; display: none;">
+                        <span id="match-icon" style="margin-right: 0.5rem;">✗</span>
+                        <span id="match-text">Passwords do not match</span>
+                    </div>
                 </div>
+
+                <style>
+                .requirement.valid {
+                    color: #27ae60 !important;
+                }
+
+                .requirement.valid .req-icon {
+                    background: #27ae60 !important;
+                    border-color: #27ae60 !important;
+                    color: white !important;
+                }
+
+                .password-match.valid {
+                    color: #27ae60 !important;
+                }
+
+                .password-match.invalid {
+                    color: #e74c3c !important;
+                }
+                </style>
+
+                <script>
+                // Add this JavaScript for password validation
+                document.addEventListener('DOMContentLoaded', function() {
+                    const passwordInput = document.getElementById('password');
+                    const confirmPasswordInput = document.getElementById('confirmPassword');
+                    
+                    // Password strength validation
+                    passwordInput.addEventListener('input', function() {
+                        const password = this.value;
+                        validatePasswordStrength(password);
+                    });
+                    
+                    // Confirm password validation
+                    confirmPasswordInput.addEventListener('input', function() {
+                        const password = passwordInput.value;
+                        const confirmPassword = this.value;
+                        validatePasswordMatch(password, confirmPassword);
+                    });
+                    
+                    function validatePasswordStrength(password) {
+                        const requirements = {
+                            length: password.length >= 8,
+                            number: /[0-9]/.test(password),
+                            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+                        };
+                        
+                        // Update requirement indicators
+                        updateRequirement('req-length', requirements.length);
+                        updateRequirement('req-number', requirements.number);
+                        updateRequirement('req-special', requirements.special);
+                        
+                        // Calculate strength
+                        const metRequirements = Object.values(requirements).filter(Boolean).length;
+                        updateStrengthIndicator(metRequirements, password.length);
+                    }
+                    
+                    function updateRequirement(id, isValid) {
+                        const element = document.getElementById(id);
+                        const icon = element.querySelector('.req-icon');
+                        
+                        if (isValid) {
+                            element.classList.add('valid');
+                            icon.textContent = '✓';
+                        } else {
+                            element.classList.remove('valid');
+                            icon.textContent = '✗';
+                        }
+                    }
+                    
+                    function updateStrengthIndicator(metRequirements, passwordLength) {
+                        const strengthBar = document.getElementById('strength-bar');
+                        const strengthText = document.getElementById('strength-text');
+                        
+                        let strength = 0;
+                        let strengthLabel = 'Weak';
+                        let strengthColor = '#e74c3c';
+                        
+                        if (metRequirements >= 5 && passwordLength >= 10) {
+                            strength = 100;
+                            strengthLabel = 'Very Strong';
+                            strengthColor = '#27ae60';
+                        } else if (metRequirements >= 4 && passwordLength >= 8) {
+                            strength = 80;
+                            strengthLabel = 'Strong';
+                            strengthColor = '#2ecc71';
+                        } else if (metRequirements >= 3 && passwordLength >= 6) {
+                            strength = 60;
+                            strengthLabel = 'Medium';
+                            strengthColor = '#f39c12';
+                        } else if (metRequirements >= 2) {
+                            strength = 40;
+                            strengthLabel = 'Weak';
+                            strengthColor = '#e67e22';
+                        } else {
+                            strength = 20;
+                            strengthLabel = 'Very Weak';
+                            strengthColor = '#e74c3c';
+                        }
+                        
+                        strengthBar.style.width = strength + '%';
+                        strengthBar.style.background = strengthColor;
+                        strengthText.textContent = strengthLabel;
+                        strengthText.style.color = strengthColor;
+                    }
+                    
+                    function validatePasswordMatch(password, confirmPassword) {
+                        const matchDiv = document.getElementById('password-match');
+                        const matchIcon = document.getElementById('match-icon');
+                        const matchText = document.getElementById('match-text');
+                        
+                        if (confirmPassword.length > 0) {
+                            matchDiv.style.display = 'block';
+                            
+                            if (password === confirmPassword) {
+                                matchDiv.className = 'password-match valid';
+                                matchIcon.textContent = '✓';
+                                matchText.textContent = 'Passwords match';
+                            } else {
+                                matchDiv.className = 'password-match invalid';
+                                matchIcon.textContent = '✗';
+                                matchText.textContent = 'Passwords do not match';
+                            }
+                        } else {
+                            matchDiv.style.display = 'none';
+                        }
+                    }
+                    
+                    // Global function to check if password is valid
+                    window.isPasswordValid = function() {
+                        const password = passwordInput.value;
+                        const confirmPassword = confirmPasswordInput.value;
+                        
+                        const requirements = {
+                            length: password.length >= 8,
+                            number: /[0-9]/.test(password),
+                            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+                        };
+                        
+                        const allRequirementsMet = Object.values(requirements).every(Boolean);
+                        const passwordsMatch = password === confirmPassword;
+                        
+                        return allRequirementsMet && passwordsMatch;
+                    };
+                });
+                </script>
                 
                 <div class="form-group">
                     <label>Year Level</label>
@@ -495,7 +675,7 @@
             betaSignupForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                // Get form data including passwords
+                // Get form data
                 const firstName = document.getElementById('firstName').value.trim();
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value.trim();
@@ -507,20 +687,15 @@
                 const parentEmail = document.getElementById('parentEmail').value.trim();
                 const feedbackAgree = document.getElementById('feedbackAgree').checked;
                 
-                // Validation
+                // Basic field validation
                 if (!firstName || !email || !password || !yearLevel || !feedbackAgree) {
                     alert('Please fill in all required fields and agree to provide feedback.');
                     return;
                 }
                 
-                // Password validation
-                if (password.length < 6) {
-                    alert('Password must be at least 6 characters long.');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    alert('Passwords do not match. Please check and try again.');
+                // Use the comprehensive password validation function
+                if (!window.isPasswordValid()) {
+                    alert('Please ensure your password meets all requirements and that both passwords match.');
                     return;
                 }
                 
@@ -529,14 +704,13 @@
                     return;
                 }
 
-                // Prepare form data with real password
+                // Prepare form data
                 const formData = {
                     username: firstName,
                     email: email,
-                    password: password, // Use the actual password user created
+                    password: password,
                     school: school,
                     yearLevel: yearLevel,
-                    // Additional beta-specific data
                     mainGoal: mainGoal,
                     parentNotify: parentNotify,
                     parentEmail: parentEmail,
@@ -551,7 +725,6 @@
                 submitButton.disabled = true;
 
                 try {
-                    // Send signup request to backend with correct URL
                     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                         method: 'POST',
                         headers: {
@@ -563,7 +736,6 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        // Store authentication data
                         localStorage.setItem('authToken', data.token);
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('username', data.user.username);
@@ -571,8 +743,6 @@
                         localStorage.setItem('vivifyUserId', data.user.id);
                         
                         alert(`Welcome to Vivify Beta, ${data.user.username}! Your account has been created successfully.`);
-                        
-                        // Redirect to performance assessment
                         window.location.href = 'performance-baseline-assessment.html';
                         
                     } else {
@@ -582,14 +752,12 @@
                 } catch (error) {
                     console.error('Signup error:', error);
                     
-                    // Improved error handling
                     if (error.name === 'TypeError' && error.message.includes('fetch')) {
                         alert('Cannot connect to server. Please ensure the backend is running on localhost:3001');
                     } else {
                         alert('Network error. Please check your connection and try again.');
                     }
                 } finally {
-                    // Restore button state
                     submitButton.innerHTML = originalText;
                     submitButton.disabled = false;
                 }
