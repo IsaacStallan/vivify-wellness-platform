@@ -605,7 +605,173 @@
                 cursor: pointer;
             }
         }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
     </style>
+    <script>
+        // Simple mobile menu toggle
+        function createMobileMenu() {
+            // Create mobile menu if it doesn't exist
+            if (!document.getElementById('mobile-menu')) {
+                const header = document.querySelector('header');
+                const mobileMenu = document.createElement('div');
+                mobileMenu.id = 'mobile-menu';
+                mobileMenu.className = 'mobile-menu';
+                mobileMenu.innerHTML = `
+                    <div class="mobile-menu-content">
+                        <div class="mobile-menu-header">
+                            <div class="logo"><a href="index.html">Vivify</a></div>
+                            <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                        </div>
+                        <div class="mobile-menu-links">
+                            <a href="index.html" class="mobile-menu-link">Home</a>
+                            <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                            <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
+                            <a href="about.html" class="mobile-menu-link">About</a>
+                            <a href="community.html" class="mobile-menu-link">Community</a>
+                            <div class="mobile-menu-divider"></div>
+                            <a href="login.html" class="mobile-menu-link">Login</a>
+                            <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+                        </div>
+                    </div>
+                `;
+                header.appendChild(mobileMenu);
+            }
+            
+            // Create mobile button if it doesn't exist
+            if (!document.getElementById('mobile-menu-btn')) {
+                const nav = document.querySelector('nav');
+                const rightNav = nav.querySelector('.right-nav') || nav;
+                const mobileBtn = document.createElement('button');
+                mobileBtn.id = 'mobile-menu-btn';
+                mobileBtn.className = 'mobile-menu-btn';
+                mobileBtn.onclick = toggleMobileMenu;
+                mobileBtn.innerHTML = `
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                `;
+                rightNav.appendChild(mobileBtn);
+            }
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.remove('active');
+            btn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', createMobileMenu);
+        </script>
 
 <!-- PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
@@ -713,7 +879,173 @@
                 cursor: pointer;
             }
         }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
     </style>
+    <script>
+        // Simple mobile menu toggle
+        function createMobileMenu() {
+            // Create mobile menu if it doesn't exist
+            if (!document.getElementById('mobile-menu')) {
+                const header = document.querySelector('header');
+                const mobileMenu = document.createElement('div');
+                mobileMenu.id = 'mobile-menu';
+                mobileMenu.className = 'mobile-menu';
+                mobileMenu.innerHTML = `
+                    <div class="mobile-menu-content">
+                        <div class="mobile-menu-header">
+                            <div class="logo"><a href="index.html">Vivify</a></div>
+                            <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                        </div>
+                        <div class="mobile-menu-links">
+                            <a href="index.html" class="mobile-menu-link">Home</a>
+                            <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                            <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
+                            <a href="about.html" class="mobile-menu-link">About</a>
+                            <a href="community.html" class="mobile-menu-link">Community</a>
+                            <div class="mobile-menu-divider"></div>
+                            <a href="login.html" class="mobile-menu-link">Login</a>
+                            <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+                        </div>
+                    </div>
+                `;
+                header.appendChild(mobileMenu);
+            }
+            
+            // Create mobile button if it doesn't exist
+            if (!document.getElementById('mobile-menu-btn')) {
+                const nav = document.querySelector('nav');
+                const rightNav = nav.querySelector('.right-nav') || nav;
+                const mobileBtn = document.createElement('button');
+                mobileBtn.id = 'mobile-menu-btn';
+                mobileBtn.className = 'mobile-menu-btn';
+                mobileBtn.onclick = toggleMobileMenu;
+                mobileBtn.innerHTML = `
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                `;
+                rightNav.appendChild(mobileBtn);
+            }
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.remove('active');
+            btn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', createMobileMenu);
+        </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
