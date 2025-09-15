@@ -185,14 +185,6 @@ router.get('/challenges/participants', async (req, res) => {
       console.error('Error fetching challenge participants:', error);
       res.status(500).json({ error: 'Failed to fetch participants' });
     }
-  });
-
-  challengeIds.forEach(challengeId => {
-    participantCounts[challengeId] = users.filter(user => {
-      // Check if user has challenge data and has joined this specific challenge
-      const challengeData = user.challengeData && user.challengeData[challengeId];
-      return challengeData && challengeData.joined === true;
-    }).length;
-  });
+});
 
 module.exports = router;
