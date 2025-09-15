@@ -853,20 +853,20 @@ function showNotification(message, type='info'){
 }
 
 function getLoggedInUser() {
-  // Check if user is logged in using your existing auth system
-  const token = localStorage.getItem('authToken'); // or whatever you use to store login state
-  const userId = localStorage.getItem('userId'); // your actual user ID from login
-  const username = localStorage.getItem('username'); // Isaac
+  // Use your existing auth data
+  const userLoggedIn = localStorage.getItem('userLoggedIn');
+  const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+  const username = localStorage.getItem('username');
   
-  if (token && userId) {
+  if (userLoggedIn === 'true' && userProfile.id && username) {
     return {
-      userId: userId,
-      username: username,
+      userId: userProfile.id, // This is Isaac's real MongoDB _id
+      username: username,     // This is "Isaac"
       isLoggedIn: true
     };
   }
   
-  // If not logged in, redirect to login page
+  // If not logged in, redirect to login
   window.location.href = 'login.html';
   return null;
 }
@@ -1175,10 +1175,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize user and system
   const loggedInUser = getLoggedInUser();
-  if (!loggedInUser) return; // Will redirect to login if not logged in
-
-  userId = loggedInUser.userId;
-  currentUserName = loggedInUser.username;
+  if (!loggedInUser) return;
+  
+  userId = loggedInUser.userId;        // Isaac's real ID: 68c74b407db7039dc12e6c0c
+  currentUserName = loggedInUser.username; // "Isaac"
 
   // Initialize enhanced leaderboard system
   await leaderboardManager.initialize(userId, currentUserName);
