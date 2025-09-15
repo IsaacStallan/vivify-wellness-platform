@@ -403,8 +403,14 @@ class ChallengeManager {
     // Save to local storage
     this.saveUserData();
     
-    // NEW: Also sync to backend
-    await this.syncChallengeToBackend(challengeId, challengeData);
+    // NEW: Add detailed logging and make sure this runs
+    console.log('About to sync challenge to backend...');
+    try {
+      await this.syncChallengeToBackend(challengeId, challengeData);
+      console.log('Sync completed successfully');
+    } catch (error) {
+      console.error('Sync failed with error:', error);
+    }
     
     this.displayChallenges();
     this.showNotification(`Joined ${ch.name}! Ready to start your journey.`, 'success');
@@ -418,30 +424,35 @@ class ChallengeManager {
   async syncChallengeToBackend(challengeId, challengeData) {
     try {
       const username = localStorage.getItem('username');
+      console.log('Username from localStorage:', username);
+      
       if (!username) {
-        console.log('No username found');
+        console.log('No username found, aborting sync');
         return;
       }
       
-      console.log('Syncing challenge to backend:', { username, challengeId, challengeData });
+      const payload = { username, challengeId, challengeData };
+      console.log('Sending payload to backend:', payload);
       
       const response = await fetch('https://vivify-backend.onrender.com/api/users/challenges/join', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, challengeId, challengeData })
+        body: JSON.stringify(payload)
       });
       
       console.log('Response status:', response.status);
-      const result = await response.text();
-      console.log('Response body:', result);
+      console.log('Response ok:', response.ok);
+      
+      const responseText = await response.text();
+      console.log('Response body:', responseText);
       
       if (response.ok) {
-        console.log('Challenge data synced to backend');
+        console.log('Challenge data synced to backend successfully');
       } else {
-        console.error('Failed to sync challenge:', result);
+        console.error('Backend returned error:', responseText);
       }
     } catch (error) {
-      console.error('Error syncing challenge to backend:', error);
+      console.error('Network error syncing challenge to backend:', error);
     }
   }
 
