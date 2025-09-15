@@ -42,9 +42,22 @@ class FlexibleMobileNav {
             <span class="hamburger"></span>
         `;
         
-        // Add to the right side of nav
-        const rightNav = nav.querySelector('.right-nav') || nav;
-        rightNav.appendChild(mobileBtn);
+        // Find the best place to add the button
+        let targetContainer = nav.querySelector('.right-nav');
+        
+        // If no right-nav, create one
+        if (!targetContainer) {
+            targetContainer = document.createElement('div');
+            targetContainer.className = 'right-nav';
+            nav.appendChild(targetContainer);
+        }
+        
+        // Ensure it's visible and positioned correctly
+        targetContainer.style.display = 'flex';
+        targetContainer.style.alignItems = 'center';
+        targetContainer.appendChild(mobileBtn);
+        
+        console.log('Mobile menu button added successfully');
     }
     
     createMobileMenuOverlay(header) {
