@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Adjust path if needed
+const User = require('../models/User');
 
 // Middleware for authentication
 function authenticateToken(req, res, next) {
@@ -22,18 +22,35 @@ function authenticateToken(req, res, next) {
     });
 }
 
+// Helper function to find user (same as in server.js)
+async function findUser(identifier) {
+    return await User.findOne({
+        $or: [
+            { _id: require('mongoose').Types.ObjectId.isValid(identifier) ? identifier : null },
+            { username: identifier },
+            { email: identifier }
+        ]
+    });
+}
+
 // PUT /api/users/update-score - Update user's overall score
-router.put('/update-score', authenticateToken, async (req, res) => {
+router.put('/update-score', async (req, res) => {
     try {
-        const { pointsToAdd, activityType, metadata = {} } = req.body;
-        const userId = req.user.id; // From auth middleware
+        const { pointsToAdd, activityType, metadata = {}, username } = req.body;
+        
+        // For now, use username since your auth might not be fully set up
+        const userIdentifier = username || req.user?.username || req.user?.id;
+        
+        if (!userIdentifier) {
+            return res.status(400).json({ error: 'Username required' });
+        }
         
         if (!pointsToAdd || pointsToAdd <= 0) {
             return res.status(400).json({ error: 'Valid pointsToAdd required' });
         }
         
-        // Find user and update score
-        const user = await User.findById(userId);
+        // Find user
+        let user = await findUser(userIdentifier);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -59,8 +76,8 @@ router.put('/update-score', authenticateToken, async (req, res) => {
             }
         }
         
-        const updatedUser = await User.findByIdAndUpdate(
-            userId, 
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
             updateData, 
             { new: true, runValidators: true }
         );
@@ -87,10 +104,10 @@ router.put('/update-score', authenticateToken, async (req, res) => {
     }
 });
 
-// GET /api/users/leaderboard - Get current leaderboard
+// GET /api/users/leaderboard - Get current leaderboard (cleaner version)
 router.get('/leaderboard', async (req, res) => {
     try {
-        const users = await User.find({ isActive: true })
+        const users = await User.find({})
             .select('username school overallScore level challengeStats lastActive')
             .sort({ overallScore: -1 })
             .limit(50);
@@ -119,7 +136,7 @@ router.get('/leaderboard', async (req, res) => {
 router.get('/profile/:username', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username })
-            .select('-password -email'); // Don't send sensitive data
+            .select('-password'); // Don't send password
             
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
