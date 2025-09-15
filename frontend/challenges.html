@@ -1658,6 +1658,71 @@ window.addEventListener('beforeunload', () => {
 if(window.vivifyTracker){
   window.vivifyTracker.trackActivity('challenges_visit','challenges','Visited challenges page',5);
 }
+// Listen for leaderboard updates from other pages
+window.addEventListener('leaderboardUpdated', function(event) {
+    console.log('Leaderboard update received:', event.detail);
+    
+    // Force refresh the leaderboard display
+    const challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
+    
+    if (challengesLeaderboard.length > 0) {
+        updateChallengesLeaderboardDisplay(challengesLeaderboard);
+    }
+});
+
+// Function to update the challenges page leaderboard display
+function updateChallengesLeaderboardDisplay(leaderboard) {
+    const list = document.getElementById('leaderboardList');
+    if (!list) return;
+    
+    const username = localStorage.getItem('username');
+    
+    list.innerHTML = '';
+    const top10 = leaderboard.slice(0, 10);
+    
+    top10.forEach((entry, idx) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        if (entry.username === username) {
+            item.classList.add('current-user');
+        }
+        
+        let icon = '<i class="fas fa-user"></i>';
+        if (idx === 0) icon = '<i class="fas fa-crown" style="color:#f39c12;"></i>';
+        else if (idx === 1) icon = '<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
+        else if (idx === 2) icon = '<i class="fas fa-medal" style="color:#cd7f32;"></i>';
+        
+        const isCurrentUser = entry.username === username;
+        const displayName = entry.displayName || entry.username || 'Student';
+        
+        item.innerHTML = `
+            <div class="leaderboard-rank">${idx + 1}</div>
+            <div class="leaderboard-avatar">${icon}</div>
+            <div class="leaderboard-info">
+                <div class="leaderboard-name">${displayName}${isCurrentUser ? ' (You)' : ''}</div>
+                <div class="leaderboard-school">${entry.school || 'Knox Grammar'}</div>
+            </div>
+            <div class="overall-score">
+                <div class="leaderboard-score">${(entry.overallScore || 0).toLocaleString()}</div>
+                <div class="level-badge">Level ${entry.level || 1}</div>
+            </div>`;
+        
+        list.appendChild(item);
+    });
+}
+
+// Also update the initialization to use localStorage if backend fails
+// Modify your existing DOMContentLoaded function to add this fallback:
+// Add this after the leaderboardManager.updateDisplays() line:
+
+// Fallback to localStorage if backend fails
+setTimeout(() => {
+    const challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
+    if (challengesLeaderboard.length > 0) {
+        updateChallengesLeaderboardDisplay(challengesLeaderboard);
+    }
+}, 2000);
+
 </script>
 <script src="js/flexible-mobile-nav.js"></script> </body>
 </html>
