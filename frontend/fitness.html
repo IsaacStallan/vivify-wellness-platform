@@ -576,106 +576,6 @@
             transform: translateY(0);
         }
 
-        /* Fitness Leaderboard */
-        .fitness-leaderboard {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .fitness-leaderboard::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-        }
-
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            padding: 1.25rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1rem;
-        }
-
-        .leaderboard-item:hover {
-            background: rgba(243, 156, 18, 0.1);
-            border-color: rgba(243, 156, 18, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .leaderboard-item.current-user {
-            border-color: #f39c12;
-            background: rgba(243, 156, 18, 0.1);
-        }
-
-        .leaderboard-rank {
-            font-size: 1.3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            min-width: 50px;
-        }
-
-        .leaderboard-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(243, 156, 18, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 1rem;
-            color: #f39c12;
-            font-size: 1.2rem;
-        }
-
-        .leaderboard-info {
-            flex: 1;
-        }
-
-        .leaderboard-name {
-            color: #fff;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-size: 1rem;
-        }
-
-        .leaderboard-school {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-        }
-
-        .leaderboard-score {
-            color: #f39c12;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .level-badge {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 0.25rem;
-            display: inline-block;
-        }
-
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .fitness-container {
@@ -807,7 +707,7 @@
             <p>Track your progress, build consistent habits, and develop the physical foundation for peak performance</p>
         </div>
 
-        <!-- Personal Progress Dashboard - REAL DATA -->
+        <!-- Personal Progress Dashboard - FITNESS ONLY -->
         <div class="progress-dashboard">
             <div class="progress-card fade-in-up">
                 <div class="progress-icon">
@@ -839,7 +739,7 @@
                 </div>
                 <div class="progress-value" id="fitnessPoints">0</div>
                 <div class="progress-label">Fitness Points</div>
-                <div class="progress-sublabel">From workouts</div>
+                <div class="progress-sublabel">From workouts only</div>
             </div>
         </div>
 
@@ -957,22 +857,11 @@
             </div>
         </div>
 
-        <!-- Recent Activity Section - REAL DATA -->
+        <!-- Recent Activity Section - FITNESS ONLY -->
         <div class="recent-activity fade-in-up">
             <h2 class="section-title">Recent Achievements</h2>
             <div class="activity-list" id="recentActivity">
                 <!-- Real workout history will be populated here -->
-            </div>
-        </div>
-
-        <!-- Fitness Leaderboard - REAL DATA -->
-        <div class="fitness-leaderboard fade-in-up">
-            <h2 class="section-title">
-                <i class="fas fa-trophy"></i>
-                Fitness Leaderboard
-            </h2>
-            <div id="fitness-leaderboard-list">
-                <!-- Real leaderboard data will be populated here -->
             </div>
         </div>
 
@@ -1013,21 +902,22 @@
     <script src="js/unified-leaderboard.js"></script>
 
     <script>
-        // REAL DATA SYSTEM - Connected to your backend
+        // PERSONAL FITNESS TRACKING - No leaderboard on this page
         let currentUser = null;
         let userFitnessData = {
             totalWorkouts: 0,
             currentStreak: 0,
             thisWeek: 0,
+            fitnessPoints: 0, // SEPARATE FITNESS POINTS
             lastWorkoutDate: null,
             workoutHistory: []
         };
 
-        // Initialize page with REAL authentication check
+        // Initialize page with authentication
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('Fitness page loading...');
             
-            // 1. Check authentication (same as your challenges page)
+            // 1. Check authentication
             const userLoggedIn = localStorage.getItem('userLoggedIn');
             const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
             const username = localStorage.getItem('username');
@@ -1044,29 +934,18 @@
             // 2. Update navigation
             updateNavigation(true);
             
-            // 3. Initialize unified leaderboard (CRITICAL)
+            // 3. Initialize unified leaderboard for global tracking ONLY
             if (window.VivifyLeaderboard) {
                 window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
-                
-                // Listen for leaderboard updates
-                window.VivifyLeaderboard.onUpdate((data) => {
-                    console.log('Leaderboard updated:', data);
-                    updateFitnessStats();
-                    displayFitnessLeaderboard();
-                });
-                
-                console.log('Unified leaderboard initialized');
-            } else {
-                console.error('VivifyLeaderboard not available - check js/unified-leaderboard.js');
+                console.log('Unified leaderboard initialized for global tracking');
             }
             
-            // 4. Load user's real fitness data
+            // 4. Load user's fitness data
             await loadRealFitnessData();
             
-            // 5. Display everything
+            // 5. Display personal stats only
             updateFitnessStats();
             updateRecentActivity();
-            displayFitnessLeaderboard();
             
             // 6. Set up logout
             const logoutLink = document.getElementById('logout-link');
@@ -1078,10 +957,10 @@
                 });
             }
             
-            console.log('Fitness page initialization complete');
+            console.log('Fitness page initialization complete - personal focus only');
         });
 
-        // REAL DATA: Load user's fitness data from backend/localStorage
+        // Load user's fitness data
         async function loadRealFitnessData() {
             try {
                 // Try to load from backend first
@@ -1111,7 +990,7 @@
             }
         }
 
-        // REAL DATA: Complete workout function - syncs to backend AND unified leaderboard
+        // Complete workout - tracks fitness points separately
         async function completeWorkout(type, points, name) {
             if (!currentUser) {
                 showNotification('Please log in to track workouts', 'error');
@@ -1134,6 +1013,7 @@
 
                 // Update stats
                 userFitnessData.totalWorkouts++;
+                userFitnessData.fitnessPoints += points; // SEPARATE FITNESS POINTS TRACKING
                 
                 // Calculate streak
                 if (userFitnessData.lastWorkoutDate === today) {
@@ -1183,27 +1063,23 @@
                 userData.fitness = userFitnessData;
                 localStorage.setItem(`userData_${userKey}`, JSON.stringify(userData));
 
-                // 3. CRITICAL: Add points to unified leaderboard (which syncs to backend)
+                // 3. Add to GLOBAL leaderboard (for challenges page ranking)
                 if (window.VivifyLeaderboard) {
-                    const success = window.VivifyLeaderboard.addPoints(points, 'fitness_workout', {
+                    window.VivifyLeaderboard.addPoints(points, 'fitness_workout', {
                         workoutType: type,
                         workoutName: name
                     });
-                    
-                    if (success) {
-                        console.log(`Added ${points} points to unified leaderboard`);
-                        
-                        // 4. Sync to backend in background
-                        syncWorkoutToBackend(workoutEntry);
-                    }
                 }
 
-                // 5. Update UI
+                // 4. Sync to backend in background
+                syncWorkoutToBackend(workoutEntry);
+
+                // 5. Update UI with PERSONAL stats only
                 updateFitnessStats();
                 updateRecentActivity();
                 
                 // 6. Show success notification
-                let message = `Great job! You earned ${points} points for completing ${name}!`;
+                let message = `Great job! You earned ${points} fitness points for completing ${name}!`;
                 if (userFitnessData.currentStreak > 1) {
                     message += ` 🔥 ${userFitnessData.currentStreak} day streak!`;
                 }
@@ -1243,18 +1119,17 @@
             }
         }
 
-        // Update fitness stats display with REAL data
+        // Update fitness stats - PERSONAL DATA ONLY
         function updateFitnessStats() {
             document.getElementById('totalWorkouts').textContent = userFitnessData.totalWorkouts || 0;
             document.getElementById('workoutStreak').textContent = userFitnessData.currentStreak || 0;
             document.getElementById('thisWeek').textContent = userFitnessData.thisWeek || 0;
             
-            // CRITICAL: Get fitness points from unified leaderboard, not local calculation
-            const totalPoints = window.VivifyLeaderboard ? window.VivifyLeaderboard.getCurrentUserScore() : 0;
-            document.getElementById('fitnessPoints').textContent = totalPoints;
+            // SHOW ONLY FITNESS POINTS (not total from all activities)
+            document.getElementById('fitnessPoints').textContent = userFitnessData.fitnessPoints || 0;
         }
 
-        // Update recent activity with REAL workout history
+        // Update recent activity with workout history
         function updateRecentActivity() {
             const activityList = document.getElementById('recentActivity');
             
@@ -1300,15 +1175,6 @@
                     </div>
                 `;
             }).join('');
-        }
-
-        // Display REAL fitness leaderboard using unified system
-        function displayFitnessLeaderboard() {
-            const container = document.getElementById('fitness-leaderboard-list');
-            if (!container || !window.VivifyLeaderboard) return;
-
-            // Use the unified leaderboard's display method
-            window.VivifyLeaderboard.displayForChallengesPage('fitness-leaderboard-list');
         }
 
         // Helper functions
