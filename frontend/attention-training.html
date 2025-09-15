@@ -1925,22 +1925,25 @@
         }
 
         // Initialize everything when page loads
-        // Add this to the DOMContentLoaded event in BOTH pages
-        // Replace the existing DOMContentLoaded initialization
-
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('Page loading...');
             
             // Check authentication
             const userLoggedIn = localStorage.getItem('userLoggedIn');
-            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-            const username = localStorage.getItem('username');
+                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                const username = localStorage.getItem('username');
             
-            if (userLoggedIn !== 'true' || !username) {
-                console.log('User not logged in, redirecting...');
-                window.location.href = 'login.html';
-                return;
-            }
+                if (userLoggedIn !== 'true' || !username) {
+                    console.log('User not logged in, redirecting...');
+                    window.location.href = 'login.html';
+                    return;
+                }
+            
+                document.getElementById('login-link').style.display = 'none';
+                document.getElementById('signup-link').style.display = 'none';
+                document.getElementById('dashboard-link').classList.remove('hidden');
+                document.getElementById('profile-link').classList.remove('hidden');
+                document.getElementById('logout-link').classList.remove('hidden');
             
             console.log('User authenticated:', username);
             
