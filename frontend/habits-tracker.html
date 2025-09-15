@@ -1088,7 +1088,7 @@ window.addEventListener('resize', function() {
             </div>
         </div>
     </main>
-
+    <script src="js/unified-leaderboard.js"></script>
     <script>
         // Default performance habits for new users
         const defaultHabits = [
@@ -1191,6 +1191,14 @@ window.addEventListener('resize', function() {
             loadHabitsData();
             updateDisplay();
             
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const username = localStorage.getItem('username');
+            
+            if (window.VivifyLeaderboard && username) {
+                window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+                console.log('Unified leaderboard initialized for habits page');
+            }
+
             // Add scroll animations
             const observerOptions = {
                 threshold: 0.1,
@@ -1440,6 +1448,20 @@ window.addEventListener('resize', function() {
             habit.streak = (habit.streak || 0) + 1;
             habitsData.streaks[habitId] = habit.streak;
 
+            // CRITICAL FIX: Add points to unified leaderboard AND sync to backend
+            if (window.VivifyLeaderboard) {
+                window.VivifyLeaderboard.addPoints(habit.points, 'habit_complete', { 
+                    habitId: habitId,
+                    habitName: habit.name 
+                });
+                
+                // Also sync to backend
+                syncPointsToBackend(habit.points, 'habit_complete', { 
+                    habitId: habitId,
+                    habitName: habit.name 
+                });
+            }
+
             // Check for achievements
             checkAchievements();
 
@@ -1452,9 +1474,6 @@ window.addEventListener('resize', function() {
             saveHabitsData();
             calculateStats();
             updateDisplay();
-
-            // Sync with leaderboard - ADD THIS LINE
-            syncHabitsWithLeaderboard();
 
             // Add completion animation
             const habitCard = document.querySelector(`[onclick="toggleHabit('${habitId}')"]`).closest('.habit-card');
@@ -1520,6 +1539,47 @@ window.addEventListener('resize', function() {
             // Elite performer achievement (90% for a month)
             if (!habitsData.achievements.elite_performer && userStats.weeklyRate >= 90) {
                 unlockAchievement('elite_performer');
+            }
+        }
+
+        // Add this sync function to habits-tracker.html
+        async function syncPointsToBackend(points, activityType, metadata = {}) {
+            try {
+                const username = localStorage.getItem('username');
+                
+                if (!username) {
+                    console.warn('No username - points saved locally only');
+                    return false;
+                }
+                
+                console.log(`Syncing ${points} points for ${activityType} to backend...`);
+                
+                const response = await fetch('https://vivify-backend.onrender.com/api/users/update-score', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        pointsToAdd: points,
+                        activityType: activityType,
+                        username: username,
+                        metadata: metadata
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(`✅ Synced to backend: ${result.oldScore} -> ${result.newScore} (+${points})`);
+                    return true;
+                } else {
+                    const error = await response.text();
+                    console.error('❌ Failed to sync points to backend:', error);
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('❌ Error syncing points to backend:', error);
+                return false;
             }
         }
 
