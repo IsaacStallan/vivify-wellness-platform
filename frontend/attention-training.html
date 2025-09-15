@@ -1132,7 +1132,7 @@
             </div>
         </footer>
     </div>
-
+    <script src="js/unified-leaderboard.js"></script>
     <script>
         // Timer Variables
         let timerInterval;
@@ -1362,7 +1362,7 @@
             scoreEl.textContent = parseInt(scoreEl.textContent) + timerPoints;
             
             // FIXED: Sync timer points to global leaderboard too
-            syncPointsToUnifiedLeaderboard(timerPoints, 'focus_timer');
+            addPointsToLeaderboard(timerPoints, 'focus_timer');
             
             alert(`Focus Session Complete!\n\n${completedMinutes} minutes of deep focus\n+${timerPoints} focus points earned\nStreak maintained!`);
             
@@ -1499,7 +1499,7 @@
                 scoreEl.textContent = newLocalScore;
                 
                 // CRITICAL FIX: Properly sync to global leaderboard
-                syncPointsToUnifiedLeaderboard(pointsResult.points, 'brain_training');
+                addPointsToLeaderboard(pointsResult.points, 'brain_training');
                 
                 container.innerHTML = `
                     <h3>Stroop Challenge Complete!</h3>
@@ -1600,7 +1600,7 @@
                 scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
                 
                 // Update global leaderboard
-                syncPointsToUnifiedLeaderboard(pointsResult.points, 'nback');
+                addPointsToLeaderboard(pointsResult.points, 'nback');
                 
                 container.innerHTML = `
                     <h3>N-Back Training Complete!</h3>
@@ -1680,7 +1680,7 @@
                 scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
                 
                 // Update global leaderboard
-                syncPointsToUnifiedLeaderboard(pointsResult.points, 'mindfulness');
+                addPointsToLeaderboard(pointsResult.points, 'mindfulness');
                 container.innerHTML = `
                     <h3>Mindfulness Session Complete!</h3>
                     <div class="game-score">
@@ -1724,87 +1724,9 @@
 
         // UNIFIED LEADERBOARD SYNC - Add this to attention training page
         // FIXED: Proper Global Leaderboard Integration
-        function syncPointsToUnifiedLeaderboard(points, activity_type) {
-            try {
-                const username = localStorage.getItem('username') || 'Anonymous';
-                const userSchool = localStorage.getItem('userSchool') || 'Knox Grammar';
-                const userId = localStorage.getItem('userId') || username;
-                
-                // Update localStorage leaderboard (for attention training page)
-                let globalLeaderboard = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
-                
-                let userEntry = globalLeaderboard.find(entry => 
-                    entry.username === username || entry.userId === userId
-                );
-                
-                if (!userEntry) {
-                    userEntry = {
-                        userId: userId,
-                        username: username,
-                        displayName: username,
-                        school: userSchool,
-                        totalPoints: 0,
-                        focusMinutes: parseInt(document.getElementById('total-minutes')?.textContent || '0'),
-                        streak: parseInt(document.getElementById('current-streak')?.textContent || '0'),
-                        gamesPlayed: 0,
-                        lastActive: Date.now(),
-                        level: 1,
-                        overallScore: 0
-                    };
-                    globalLeaderboard.push(userEntry);
-                }
-                
-                // CRITICAL FIX: Add points instead of setting them
-                userEntry.totalPoints = (userEntry.totalPoints || 0) + points;
-                userEntry.overallScore = (userEntry.overallScore || 0) + points;
-                userEntry.gamesPlayed = (userEntry.gamesPlayed || 0) + 1;
-                userEntry.focusMinutes = parseInt(document.getElementById('total-minutes')?.textContent || '0');
-                userEntry.lastActive = Date.now();
-                userEntry.level = Math.floor(userEntry.totalPoints / 500) + 1;
-                
-                globalLeaderboard.sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
-                localStorage.setItem('globalLeaderboard', JSON.stringify(globalLeaderboard));
-                
-                // CRITICAL: Also update the challenges page format
-                let challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
-                
-                let challengeUserEntry = challengesLeaderboard.find(entry => 
-                    entry.username === username || entry.userId === userId
-                );
-                
-                if (!challengeUserEntry) {
-                    challengeUserEntry = {
-                        userId: userId,
-                        username: username,
-                        displayName: username,
-                        school: userSchool,
-                        overallScore: 98, // IMPORTANT: Initialize with your existing score
-                        activeChallenges: 0,
-                        completedChallenges: 0,
-                        level: 1,
-                        lastActive: Date.now()
-                    };
-                    challengesLeaderboard.push(challengeUserEntry);
-                }
-                
-                // CRITICAL FIX: Add points instead of setting them
-                challengeUserEntry.overallScore = (challengeUserEntry.overallScore || 0) + points;
-                challengeUserEntry.level = Math.floor(challengeUserEntry.overallScore / 500) + 1;
-                challengeUserEntry.lastActive = Date.now();
-                
-                challengesLeaderboard.sort((a, b) => (b.overallScore || 0) - (a.overallScore || 0));
-                localStorage.setItem('challengesLeaderboard', JSON.stringify(challengesLeaderboard));
-                
-                console.log(`${points} points ADDED to both leaderboards for ${activity_type}. New total: ${challengeUserEntry.overallScore}`);
-                
-                // Trigger update event for challenges page
-                window.dispatchEvent(new CustomEvent('leaderboardUpdated', {
-                    detail: { points, activity_type, newScore: challengeUserEntry.overallScore }
-                }));
-                
-            } catch (error) {
-                console.error('Error syncing to unified leaderboard:', error);
-            }
+        function addPointsToLeaderboard(points, activityType) {
+            const focusMinutes = parseInt(document.getElementById('total-minutes')?.textContent || '0');
+            return window.VivifyLeaderboard.addPoints(points, activityType, { focusMinutes });
         }
 
         // Helper function to update leaderboards visible on current page

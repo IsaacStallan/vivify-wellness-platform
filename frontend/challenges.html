@@ -395,6 +395,7 @@
             }
         }
     </style>
+    <script src="js/unified-leaderboard.js"></script>
     <script>
         // Authentication-aware mobile menu
 function createMobileMenu() {
@@ -1609,9 +1610,25 @@ function displayAchievements(userAchievements = []) {
  *  ----------------------------*/
 
  document.addEventListener('DOMContentLoaded', async () => {
-  // Logout functionality
-  const logout=document.getElementById('logout-link');
-  if(logout){ logout.addEventListener('click',e=>{e.preventDefault(); localStorage.clear(); window.location.href='index.html';}); }
+    const loggedInUser = getLoggedInUser();
+    if (!loggedInUser) return;
+    
+    // Initialize unified leaderboard
+    window.VivifyLeaderboard.initialize(
+        loggedInUser.userId, 
+        loggedInUser.username, 
+        'Knox Grammar'
+    );
+    
+    // Listen for updates
+    window.VivifyLeaderboard.onUpdate((data) => {
+        console.log('Leaderboard updated:', data);
+        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+        updateChallengeStats(); // Update your stats display
+    });
+    
+    // Initial display
+    window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');});
 
   // Filter tabs
   document.querySelectorAll('.filter-tab').forEach(tab=>{
@@ -1647,7 +1664,6 @@ function displayAchievements(userAchievements = []) {
   // The leaderboard manager handles all leaderboard updates
   leaderboardManager.updateDisplays();
   leaderboardManager.updateChallengeParticipants();
-});
 
 // Clean up on page unload
 window.addEventListener('beforeunload', () => {
