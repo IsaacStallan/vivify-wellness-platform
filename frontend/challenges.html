@@ -395,162 +395,6 @@
             }
         }
     </style>
-    <script src="js/unified-leaderboard.js"></script>
-    <script>
-        // Authentication-aware mobile menu
-function createMobileMenu() {
-    // Only create mobile menu on mobile devices
-    if (window.innerWidth > 768) {
-        return; // Exit early on desktop
-    }
-    
-    // Check authentication status
-    const authToken = localStorage.getItem('authToken');
-    const userLoggedIn = localStorage.getItem('userLoggedIn');
-    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
-    const username = localStorage.getItem('username') || 'User';
-    
-    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
-    
-    // Create mobile menu if it doesn't exist
-    if (!document.getElementById('mobile-menu')) {
-        const header = document.querySelector('header');
-        const mobileMenu = document.createElement('div');
-        mobileMenu.id = 'mobile-menu';
-        mobileMenu.className = 'mobile-menu';
-        
-        // Generate auth-specific menu items
-        let authMenuItems = '';
-        if (isLoggedIn) {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <div class="mobile-user-info">
-                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
-                </div>
-                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
-                <a href="profile.html" class="mobile-menu-link">Profile</a>
-                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
-            `;
-        } else {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <a href="login.html" class="mobile-menu-link">Login</a>
-                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
-            `;
-        }
-        
-        mobileMenu.innerHTML = `
-            <div class="mobile-menu-content">
-                <div class="mobile-menu-header">
-                    <div class="logo"><a href="index.html">Vivify</a></div>
-                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
-                </div>
-                <div class="mobile-menu-links">
-                    <a href="index.html" class="mobile-menu-link">Home</a>
-                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
-                    <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
-                    <a href="about.html" class="mobile-menu-link">About</a>
-                    <a href="community.html" class="mobile-menu-link">Community</a>
-                    ${authMenuItems}
-                </div>
-            </div>
-        `;
-        header.appendChild(mobileMenu);
-    }
-    
-    // Create mobile button if it doesn't exist
-    if (!document.getElementById('mobile-menu-btn')) {
-        const nav = document.querySelector('nav');
-        const rightNav = nav.querySelector('.right-nav') || nav;
-        const mobileBtn = document.createElement('button');
-        mobileBtn.id = 'mobile-menu-btn';
-        mobileBtn.className = 'mobile-menu-btn';
-        mobileBtn.onclick = toggleMobileMenu;
-        mobileBtn.innerHTML = `
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-        `;
-        rightNav.appendChild(mobileBtn);
-    }
-}
-
-function handleMobileLogout(event) {
-    event.preventDefault();
-    if (confirm('Are you sure you want to logout?')) {
-        // Clear all auth data
-        localStorage.clear();
-        
-        // Close mobile menu
-        closeMobileMenu();
-        
-        // Refresh the page to update UI
-        window.location.reload();
-    }
-}
-
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.toggle('active');
-    btn.classList.toggle('active');
-    
-    if (menu.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
-}
-
-function closeMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.remove('active');
-    btn.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Function to update mobile menu when auth state changes
-function updateMobileMenuAuth() {
-    const existingMenu = document.getElementById('mobile-menu');
-    if (existingMenu) {
-        existingMenu.remove();
-    }
-    createMobileMenu();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', createMobileMenu);
-
-// Listen for auth state changes (if you have an auth system that fires events)
-window.addEventListener('authStateChanged', updateMobileMenuAuth);
-
-// Export functions for external use
-window.updateMobileMenuAuth = updateMobileMenuAuth;
-window.handleMobileLogout = handleMobileLogout;
-// Add this at the end of your mobile menu script
-window.addEventListener('resize', function() {
-    if (window.innerWidth > 768) {
-        // Remove mobile elements on desktop
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        
-        if (mobileMenu) mobileMenu.remove();
-        if (mobileBtn) mobileBtn.remove();
-        
-        // Reset body overflow
-        document.body.style.overflow = '';
-    } else if (window.innerWidth <= 768) {
-        // Recreate mobile menu if switching to mobile
-        const existingMenu = document.getElementById('mobile-menu');
-        if (!existingMenu) {
-            createMobileMenu();
-        }
-    }
-});
-        </script>
 </head>
 <body>
 <header>
@@ -967,253 +811,113 @@ window.addEventListener('resize', function() {
   </div>
 </main>
 
+<!-- Load unified leaderboard FIRST -->
+<script src="js/unified-leaderboard.js"></script>
+
+<!-- Main functionality script -->
 <script>
-/** -----------------------------
- *  Global Leaderboard Manager
- *  ----------------------------*/
-class LeaderboardManager {
-  constructor() {
-    this.leaderboards = {
-      overall: [],
-      challenges: [],
-      physical: [],
-      mental: [],
-      habits: [],
-      weekly: [],
-      monthly: []
-    };
-    this.currentUser = null;
-    this.refreshInterval = null;
-  }
-
-  async initialize(userId, userName) {
-    this.currentUser = { userId, displayName: userName };
-    await this.fetchAllLeaderboards();
-    this.startAutoRefresh();
-  }
-
-  async fetchAllLeaderboards() {
-    try {
-      // Fetch all leaderboard types
-      const responses = await Promise.allSettled([
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/overall'),
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/challenges'),
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/physical'),
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/mental'),
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/habits'),
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/weekly'),
-        fetch('https://vivify-backend.onrender.com/api/leaderboard/monthly')
-      ]);
-
-      const types = ['overall', 'challenges', 'physical', 'mental', 'habits', 'weekly', 'monthly'];
-      
-      for (let i = 0; i < responses.length; i++) {
-        if (responses[i].status === 'fulfilled' && responses[i].value.ok) {
-          this.leaderboards[types[i]] = await responses[i].value.json();
+// Mobile menu functions
+function createMobileMenu() {
+    if (window.innerWidth > 768) return;
+    
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
         } else {
-          console.warn(`Failed to fetch ${types[i]} leaderboard`);
-          this.leaderboards[types[i]] = [];
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
         }
-      }
-    } catch (error) {
-      console.error('Failed to fetch leaderboards:', error);
-    }
-  }
-
-  async updateUserProgress(challengeId, progress) {
-    try {
-      const response = await fetch('https://vivify-backend.onrender.com/api/user/progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: this.currentUser.userId,
-          challengeId,
-          progress,
-          timestamp: new Date().toISOString()
-        })
-      });
-
-      if (response.ok) {
-        // Refresh leaderboards after progress update
-        await this.fetchAllLeaderboards();
-        this.updateDisplays();
-        return true;
-      }
-    } catch (error) {
-      console.error('Failed to update progress:', error);
-    }
-    return false;
-  }
-
-  getChallengeLeaderboard(challengeId) {
-    // Get leaderboard specific to a challenge
-    return this.leaderboards.challenges.filter(entry => 
-      entry.challengeId === challengeId
-    ).sort((a, b) => (b.progress || 0) - (a.progress || 0));
-  }
-
-  getCategoryLeaderboard(category) {
-    // Get leaderboard for challenge categories
-    return this.leaderboards[category] || [];
-  }
-
-  getOverallLeaderboard() {
-    return this.leaderboards.overall || [];
-  }
-
-  getUserRank(leaderboardType = 'overall') {
-    const board = this.leaderboards[leaderboardType] || [];
-    const userIndex = board.findIndex(entry => 
-      entry.userId === this.currentUser?.userId
-    );
-    return userIndex === -1 ? null : userIndex + 1;
-  }
-
-  getUserScore(leaderboardType = 'overall') {
-    const board = this.leaderboards[leaderboardType] || [];
-    const userEntry = board.find(entry => 
-      entry.userId === this.currentUser?.userId
-    );
-    return userEntry?.score || 0;
-  }
-
-  updateDisplays() {
-    this.updateMainLeaderboard();
-    this.updateChallengeStats();
-    this.updateUserRankings();
-  }
-
-  updateMainLeaderboard() {
-    const list = document.getElementById('leaderboardList');
-    if (!list) return;
-
-    const overallBoard = this.getOverallLeaderboard();
-    if (overallBoard.length === 0) {
-      list.innerHTML = '<p style="color:rgba(255,255,255,.7);text-align:center;padding:2rem;">Loading leaderboard...</p>';
-      return;
-    }
-
-    list.innerHTML = '';
-    const top10 = overallBoard.slice(0, 10);
-
-    top10.forEach((entry, idx) => {
-      const item = document.createElement('div');
-      item.className = 'leaderboard-item';
-      if (entry.userId === this.currentUser?.userId) {
-        item.classList.add('current-user');
-      }
-
-      let icon = '<i class="fas fa-user"></i>';
-      if (idx === 0) icon = '<i class="fas fa-crown" style="color:#f39c12;"></i>';
-      else if (idx === 1) icon = '<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
-      else if (idx === 2) icon = '<i class="fas fa-medal" style="color:#cd7f32;"></i>';
-
-      const isCurrentUser = entry.userId === this.currentUser?.userId;
-      const displayName = entry.displayName || 'Student';
-
-      item.innerHTML = `
-        <div class="leaderboard-rank">${idx + 1}</div>
-        <div class="leaderboard-avatar">${icon}</div>
-        <div class="leaderboard-info">
-          <div class="leaderboard-name">${displayName}${isCurrentUser ? ' (You)' : ''}</div>
-          <div class="leaderboard-school">${entry.school || ''}</div>
-        </div>
-        <div class="overall-score">
-          <div class="leaderboard-score">${(entry.overallScore || 0).toLocaleString()}</div>
-          <div class="level-badge">Level ${entry.level || 1}</div>
-        </div>`;
-      
-      list.appendChild(item);
-    });
-  }
-
-  updateChallengeStats() {
-    // Update hero stats with real data
-    const userOverall = this.getOverallLeaderboard().find(u => 
-      u.userId === this.currentUser?.userId
-    );
-
-    if (userOverall) {
-      const activeEl = document.getElementById('activeChallenges');
-      const completedEl = document.getElementById('completedChallenges');
-      const pointsEl = document.getElementById('totalPoints');
-
-      if (activeEl) activeEl.textContent = userOverall.activeChallenges || 0;
-      if (completedEl) completedEl.textContent = userOverall.completedChallenges || 0;
-      if (pointsEl) pointsEl.textContent = userOverall.overallScore || 0;
-    }
-  }
-
-  updateUserRankings() {
-    // Show user's ranking in different categories
-    const rankings = {
-      overall: this.getUserRank('overall'),
-      physical: this.getUserRank('physical'),
-      mental: this.getUserRank('mental'),
-      habits: this.getUserRank('habits')
-    };
-
-    console.log('User rankings:', rankings);
-  }
-
-  startAutoRefresh() {
-    // Refresh leaderboards every 30 seconds
-    this.refreshInterval = setInterval(async () => {
-      await this.fetchAllLeaderboards();
-      this.updateDisplays();
-    }, 30000);
-  }
-
-  stopAutoRefresh() {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
-      this.refreshInterval = null;
-    }
-  }
-
-  // Challenge-specific leaderboard methods
-  async showChallengeLeaderboard(challengeId) {
-    const challengeBoard = this.getChallengeLeaderboard(challengeId);
-    const challenge = challenges[challengeId];
-    
-    if (!challenge) return;
-
-    let html = `<h3>${challenge.name} Leaderboard</h3><div class="mini-leaderboard">`;
-    
-    if (challengeBoard.length === 0) {
-      html += '<p>No participants yet. Be the first!</p>';
-    } else {
-      challengeBoard.slice(0, 5).forEach((entry, idx) => {
-        const isCurrentUser = entry.userId === this.currentUser?.userId;
-        html += `
-          <div class="mini-leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
-            <span class="rank">${idx + 1}.</span>
-            <span class="name">${entry.displayName}${isCurrentUser ? ' (You)' : ''}</span>
-            <span class="progress">${entry.progress || 0}%</span>
-          </div>`;
-      });
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
     }
     
-    html += '</div>';
-    showNotification(html, 'info');
-  }
-
-  async updateChallengeParticipants() {
-    // Update participant counts for each challenge
-    Object.keys(challenges).forEach(challengeId => {
-      const participants = this.getChallengeLeaderboard(challengeId).length;
-      const el = document.getElementById(`${challengeId}-participants`);
-      if (el) el.textContent = participants.toLocaleString();
-    });
-  }
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
 }
 
-// Global instance
-const leaderboardManager = new LeaderboardManager();
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.clear();
+        closeMobileMenu();
+        window.location.reload();
+    }
+}
 
-/** -----------------------------
- *  State Management
- *  ----------------------------*/
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// State Management
 let userId = null;
 let currentUserName = null;
 let userChallenges = {};
@@ -1222,11 +926,11 @@ let challengeStats = { active: 0, completed: 0, totalPoints: 0 };
 // Challenge catalog
 const challenges = {
   'fitness-foundation': { name:'30-Day Fitness Foundation', type:'monthly', category:'physical', duration:30, points:500, requirements:['Complete 30 minutes of physical activity daily','Track workout intensity','Log energy levels'], goalType:'daily', totalGoal:30 },
-  'morning-energy':     { name:'Morning Energy Boost',      type:'weekly',  category:'physical', duration:7,  points:150, requirements:['10 minutes morning movement','Before 8 AM','Track energy levels'], goalType:'daily', totalGoal:7 },
-  'deep-work':          { name:'Deep Work Mastery',         type:'weekly',  category:'mental',   duration:7,  points:200, requirements:['90-minute focused sessions','No distractions','Track productivity'], goalType:'daily', totalGoal:7 },
-  'stress-resilience':  { name:'Stress Resilience Training',type:'ongoing', category:'mental',   duration:'ongoing', points:10, requirements:['Daily mindfulness practice','Stress management techniques','Mood tracking'], goalType:'daily', totalGoal:7 },
-  'elite-morning':      { name:'Elite Morning Routine',     type:'monthly', category:'habits',   duration:30, points:750, requirements:['Exercise within 3 hours','Planning session','Learning time','Focused work'], goalType:'daily', totalGoal:30 },
-  'time-mastery':       { name:'Time Mastery Challenge',    type:'weekly',  category:'habits',   duration:7,  points:300, requirements:['Track every hour','Identify time wasters','Optimize high-impact activities'], goalType:'daily', totalGoal:7 }
+  'morning-energy': { name:'Morning Energy Boost', type:'weekly', category:'physical', duration:7, points:150, requirements:['10 minutes morning movement','Before 8 AM','Track energy levels'], goalType:'daily', totalGoal:7 },
+  'deep-work': { name:'Deep Work Mastery', type:'weekly', category:'mental', duration:7, points:200, requirements:['90-minute focused sessions','No distractions','Track productivity'], goalType:'daily', totalGoal:7 },
+  'stress-resilience': { name:'Stress Resilience Training', type:'ongoing', category:'mental', duration:'ongoing', points:10, requirements:['Daily mindfulness practice','Stress management techniques','Mood tracking'], goalType:'daily', totalGoal:7 },
+  'elite-morning': { name:'Elite Morning Routine', type:'monthly', category:'habits', duration:30, points:750, requirements:['Exercise within 3 hours','Planning session','Learning time','Focused work'], goalType:'daily', totalGoal:30 },
+  'time-mastery': { name:'Time Mastery Challenge', type:'weekly', category:'habits', duration:7, points:300, requirements:['Track every hour','Identify time wasters','Optimize high-impact activities'], goalType:'daily', totalGoal:7 }
 };
 
 const achievementDefinitions = {
@@ -1243,183 +947,35 @@ const achievementDefinitions = {
   habit_master: { name: 'Habit Master', description: 'Earn 1000 habit points', icon: '🎯' }
 };
 
-/** -----------------------------
- *  Helper Functions
- *  ----------------------------*/
+// Helper Functions
 function showNotification(message, type='info'){
   const n=document.createElement('div');
   n.className=`notification ${type}`;
   n.style.whiteSpace='pre-line';
-  n.innerHTML=message; // Using innerHTML to support HTML content for leaderboards
+  n.innerHTML=message;
   document.body.appendChild(n);
   setTimeout(()=>n.classList.add('show'),100);
-  setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),300);},7000); // Longer display for leaderboards
+  setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),300);},7000);
 }
 
 function getLoggedInUser() {
-  // Use your existing auth data
   const userLoggedIn = localStorage.getItem('userLoggedIn');
   const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
   const username = localStorage.getItem('username');
   
   if (userLoggedIn === 'true' && userProfile.id && username) {
     return {
-      userId: userProfile.id, // This is Isaac's real MongoDB _id
-      username: username,     // This is "Isaac"
+      userId: userProfile.id,
+      username: username,
       isLoggedIn: true
     };
   }
   
-  // If not logged in, redirect to login
   window.location.href = 'login.html';
   return null;
 }
 
-/** -----------------------------
- *  Backend I/O
- *  ----------------------------*/
- async function fetchUser(){
-  try{
-    const res=await fetch(`https://vivify-backend.onrender.com/api/user/${userId}`);
-    if(!res.ok) throw new Error('User not found');
-    const data=await res.json();
-    
-    currentUserName = data.username || data.displayName || 'You';
-    userChallenges = data.userChallenges || {};
-    userChallengeStats = data.challengeStats || {active:0, completed:0, totalPoints:0};
-    userOverallScore = data.overallScore || 0; // Store the real overall score
-
-    console.log('Stored values:', { // Debug log
-      challengeStats: userChallengeStats,
-      overallScore: userOverallScore
-    });
-    
-    
-    // Store actual database scores
-    userLevel = data.level || 1;
-    userHabitStreak = data.habitStreak || 0;
-    userFitnessScore = data.fitnessScore || 0;
-    userNutritionScore = data.nutritionScore || 0;
-    userMentalScore = data.mentalScore || 0;
-    userLifeSkillsScore = data.lifeSkillsScore || 0;
-    userOverallScore = data.overallScore || 0;
-    
-    // Display achievements
-    const achievements = data.achievements || [];
-    displayAchievements(achievements);
-  }catch(e){
-    // Initialize with defaults for new users...
-  }
-}
-
-async function saveUser(){
-  try{
-    const computed = computeCurrentUserSummary();
-    await fetch(`https://vivify-backend.onrender.com/api/user/${userId}`,{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        userId, displayName: currentUserName,
-        userChallenges, challengeStats,
-        overallScore: computed.overallScore,
-        level: computed.level,
-        habitStreak: computed.habitStreak,
-        fitnessScore: computed.fitnessScore,
-        nutritionScore: computed.nutritionScore,
-        mentalScore: computed.mentalScore,
-        lifeSkillsScore: computed.lifeSkillsScore
-      })
-    });
-  }catch(e){ console.error('Failed to save user',e); }
-}
-
-/** -----------------------------
- *  Scoring Logic
- *  ----------------------------*/
-function calculateOverallScore(user){
-  const challengeMultiplier=1.0, habitMultiplier=0.8, fitnessMultiplier=0.6, nutritionMultiplier=0.6, mentalMultiplier=0.7, lifeSkillsMultiplier=0.5;
-  const levelBonus=(user.level||1)*50;
-  return Math.round(
-    (user.challengePoints||0)*challengeMultiplier +
-    (user.habitStreak||0)*habitMultiplier +
-    (user.fitnessScore||0)*fitnessMultiplier +
-    (user.nutritionScore||0)*nutritionMultiplier +
-    (user.mentalScore||0)*mentalMultiplier +
-    (user.lifeSkillsScore||0)*lifeSkillsMultiplier +
-    levelBonus
-  );
-}
-
-function computeCurrentUserSummary(){
-  // Use actual database values instead of calculating from challengeStats
-  return {
-    challengePoints: challengeStats.totalPoints || 0,
-    level: userLevel || 1,
-    habitStreak: userHabitStreak || 0,
-    fitnessScore: userFitnessScore || 0,
-    nutritionScore: userNutritionScore || 0,
-    mentalScore: userMentalScore || 0,
-    lifeSkillsScore: userLifeSkillsScore || 0,
-    overallScore: userOverallScore || 0
-  };
-}
-
-function updateChallengeStats(){
-  // Use actual database values instead of calculating
-  const active = userChallengeStats?.active || 0;
-  const completed = userChallengeStats?.completed || 0;
-  const totalPoints = userOverallScore || 0; // Use overall score, not just challenge points
-
-  console.log('Updating stats with:', { active, completed, totalPoints }); // Debug log
-
-  const a = document.getElementById('activeChallenges');
-  const c = document.getElementById('completedChallenges');
-  const p = document.getElementById('totalPoints');
-  
-  if(a) a.textContent = active;
-  if(c) c.textContent = completed;
-  if(p) p.textContent = totalPoints;
-}
-
-function updateAllChallengeCards(){
-  Object.keys(challenges).forEach(updateChallengeCard);
-}
-
-function updateChallengeCard(challengeId){
-  const uc=userChallenges[challengeId]; const ch=challenges[challengeId];
-  const btn=document.getElementById(`${challengeId}-btn`);
-  const pbtn=document.getElementById(`${challengeId}-progress-btn`);
-  const fill=document.getElementById(`${challengeId}-fill`);
-  const text=document.getElementById(`${challengeId}-progress`);
-  if(!btn||!ch) return;
-
-  if(uc?.joined){
-    if(uc.completed){
-      btn.textContent='Completed ✓'; btn.className='btn completed'; btn.disabled=true; if(pbtn) pbtn.style.display='none';
-    }else{
-      btn.textContent='In Progress'; btn.className='btn in-progress'; btn.disabled=true; if(pbtn) pbtn.style.display='inline-block';
-    }
-    const progress=calcProgress(challengeId);
-    if(fill) fill.style.width=progress+'%';
-    if(text) text.textContent=progress+'%';
-  }else{
-    btn.textContent='Join Challenge'; btn.className='btn btn-primary'; btn.disabled=false;
-    if(pbtn) pbtn.style.display='none';
-    if(fill) fill.style.width='0%';
-    if(text) text.textContent='0%';
-  }
-}
-
-function calcProgress(challengeId){
-  const uc=userChallenges[challengeId]; const ch=challenges[challengeId];
-  if(!uc?.joined||!ch) return 0;
-  if(ch.type==='ongoing') return Math.min(100, Math.round((uc.dailyProgress||0)/7*100));
-  return Math.min(100, Math.round((uc.completedDays||0)/(ch.totalGoal||1)*100));
-}
-
-/** -----------------------------
- *  Enhanced Challenge Actions
- *  ----------------------------*/
+// Challenge Functions
 async function joinChallenge(challengeId) {
   const ch = challenges[challengeId];
   if (!ch) return showNotification('Challenge not found', 'error');
@@ -1429,7 +985,6 @@ async function joinChallenge(challengeId) {
     return;
   }
 
-  // Update local state
   userChallenges[challengeId] = {
     joined: true,
     startDate: new Date().toISOString(),
@@ -1439,22 +994,12 @@ async function joinChallenge(challengeId) {
     lastLogDate: null
   };
 
-  // Update backend
-  const success = await leaderboardManager.updateUserProgress(challengeId, {
-    action: 'join',
-    progress: 0
-  });
-
-  if (success) {
-    updateChallengeStats();
-    updateChallengeCard(challengeId);
-    await saveUser();
-    showNotification(`Joined ${ch.name}!`, 'success');
-    
-    // Update participant count
-    leaderboardManager.updateChallengeParticipants();
-  } else {
-    showNotification('Failed to join challenge. Please try again.', 'error');
+  updateChallengeCard(challengeId);
+  showNotification(`Joined ${ch.name}!`, 'success');
+  
+  // Add points to unified leaderboard
+  if (window.VivifyLeaderboard) {
+    window.VivifyLeaderboard.addPoints(25, 'challenge_join', { challengeId });
   }
 }
 
@@ -1473,113 +1018,127 @@ async function logProgress(challengeId) {
 
   uc.lastLogDate = today;
 
-  let progressUpdate;
   if (ch.type === 'ongoing') {
     uc.dailyProgress = (uc.dailyProgress || 0) + 1;
     challengeStats.totalPoints += ch.points;
-    progressUpdate = {
-      action: 'daily_progress',
-      dailyProgress: uc.dailyProgress,
-      points: ch.points
-    };
     showNotification(`Progress logged! +${ch.points} points`, 'success');
+    
+    // Add points to unified leaderboard
+    if (window.VivifyLeaderboard) {
+      window.VivifyLeaderboard.addPoints(ch.points, 'challenge_progress', { challengeId });
+    }
   } else {
     uc.completedDays = (uc.completedDays || 0) + 1;
-    const progressPercent = Math.round((uc.completedDays / (ch.totalGoal || 1)) * 100);
     
     if (uc.completedDays >= (ch.totalGoal || 0)) {
       uc.completed = true;
       challengeStats.totalPoints += ch.points;
-      progressUpdate = {
-        action: 'complete',
-        completedDays: uc.completedDays,
-        points: ch.points,
-        progress: 100
-      };
       showNotification(`Challenge completed! +${ch.points} points`, 'success');
+      
+      // Add completion bonus to unified leaderboard
+      if (window.VivifyLeaderboard) {
+        window.VivifyLeaderboard.addPoints(ch.points, 'challenge_complete', { challengeId });
+      }
     } else {
-      progressUpdate = {
-        action: 'progress',
-        completedDays: uc.completedDays,
-        progress: progressPercent
-      };
       showNotification('Daily progress logged! Keep going!', 'success');
+      
+      // Add smaller progress points
+      if (window.VivifyLeaderboard) {
+        window.VivifyLeaderboard.addPoints(10, 'challenge_progress', { challengeId });
+      }
     }
   }
 
-  // Update backend and refresh leaderboards
-  const success = await leaderboardManager.updateUserProgress(challengeId, progressUpdate);
-  
-  if (success) {
-    updateChallengeStats();
-    updateChallengeCard(challengeId);
-    await saveUser();
-  } else {
-    showNotification('Failed to log progress. Please try again.', 'error');
-  }
+  updateChallengeCard(challengeId);
+  updateChallengeStats();
 }
 
 function viewChallenge(challengeId) {
   const ch = challenges[challengeId];
   if (!ch) return;
-
-  // Show challenge details AND leaderboard
-  leaderboardManager.showChallengeLeaderboard(challengeId);
+  
+  showNotification(`${ch.name}\n\nRequirements:\n${ch.requirements.join('\n')}\n\nReward: ${ch.points} points`, 'info');
 }
 
-async function viewFullLeaderboard(){
-  try {
-    // Fetch the current user's actual data from the backend
-    const response = await fetch(`/api/user/${userId}`);
-    if (!response.ok) {
-      showNotification('Unable to load score breakdown', 'error');
-      return;
-    }
-    
-    const userData = await response.json();
-    
-    // Use real data from the backend
-    const breakdown = {
-      challengePoints: userData.challengeStats?.totalPoints || 0,
-      habitPoints: userData.habitPoints || 0,
-      currentStreak: userData.currentStreak || 0,
-      streakBonus: Math.floor((userData.currentStreak || 0) / 7) * 50,
-      fitnessScore: userData.fitnessScore || 0,
-      nutritionScore: userData.nutritionScore || 0,
-      mentalScore: userData.mentalScore || 0,
-      lifeSkillsScore: userData.lifeSkillsScore || 0,
-      level: userData.level || 1,
-      levelBonus: (userData.level || 1) * 50,
-      overallScore: userData.overallScore || 0
-    };
-
-    showNotification(
-      `Your Overall Score Breakdown:
-- Challenge Points: ${breakdown.challengePoints}
-- Habit Points: ${breakdown.habitPoints}
-- Current Streak: ${breakdown.currentStreak} days
-- Streak Bonus: ${breakdown.streakBonus}
-- Fitness Score: ${breakdown.fitnessScore}
-- Nutrition Score: ${breakdown.nutritionScore}
-- Mental Score: ${breakdown.mentalScore}
-- Life Skills Score: ${breakdown.lifeSkillsScore}
-- Level Bonus: ${breakdown.levelBonus} (Level ${breakdown.level})
-
-Total Score: ${breakdown.overallScore}`,
-      'info'
-    );
-  } catch (error) {
-    console.error('Error fetching score breakdown:', error);
-    showNotification('Unable to load score breakdown', 'error');
+function viewFullLeaderboard() {
+  if (window.VivifyLeaderboard) {
+    const currentScore = window.VivifyLeaderboard.getCurrentUserScore();
+    const currentRank = window.VivifyLeaderboard.getCurrentUserRank();
+    showNotification(`Your Current Stats:\nScore: ${currentScore} points\nRank: #${currentRank || 'Unranked'}\n\nKeep completing challenges to climb the leaderboard!`, 'info');
   }
 }
 
-function filterChallenges(filter){
-  document.querySelectorAll('.challenge-card').forEach(card=>{
-    if(filter==='all'){ card.style.display='block'; return; }
-    if(filter==='featured'){ card.style.display=card.classList.contains('featured')?'block':'none'; return; }
-    const badge=card.querySelector('.challenge-badge'); const text=badge?badge.textContent.toLowerCase():'';
-    card.style.display = text===filter ? 'block' : 'none';
+function updateChallengeStats() {
+  const active = Object.values(userChallenges).filter(c => c.joined && !c.completed).length;
+  const completed = Object.values(userChallenges).filter(c => c.completed).length;
+  const totalPoints = window.VivifyLeaderboard ? window.VivifyLeaderboard.getCurrentUserScore() : 0;
+
+  const a = document.getElementById('activeChallenges');
+  const c = document.getElementById('completedChallenges');
+  const p = document.getElementById('totalPoints');
+  
+  if(a) a.textContent = active;
+  if(c) c.textContent = completed;
+  if(p) p.textContent = totalPoints;
+}
+
+function updateChallengeCard(challengeId) {
+  const uc = userChallenges[challengeId];
+  const ch = challenges[challengeId];
+  const btn = document.getElementById(`${challengeId}-btn`);
+  const pbtn = document.getElementById(`${challengeId}-progress-btn`);
+  const fill = document.getElementById(`${challengeId}-fill`);
+  const text = document.getElementById(`${challengeId}-progress`);
+  
+  if (!btn || !ch) return;
+
+  if (uc?.joined) {
+    if (uc.completed) {
+      btn.textContent = 'Completed ✓';
+      btn.className = 'btn completed';
+      btn.disabled = true;
+      if (pbtn) pbtn.style.display = 'none';
+    } else {
+      btn.textContent = 'In Progress';
+      btn.className = 'btn in-progress';
+      btn.disabled = true;
+      if (pbtn) pbtn.style.display = 'inline-block';
+    }
+    
+    const progress = calcProgress(challengeId);
+    if (fill) fill.style.width = progress + '%';
+    if (text) text.textContent = progress + '%';
+  } else {
+    btn.textContent = 'Join Challenge';
+    btn.className = 'btn btn-primary';
+    btn.disabled = false;
+    if (pbtn) pbtn.style.display = 'none';
+    if (fill) fill.style.width = '0%';
+    if (text) text.textContent = '0%';
+  }
+}
+
+function calcProgress(challengeId) {
+  const uc = userChallenges[challengeId];
+  const ch = challenges[challengeId];
+  if (!uc?.joined || !ch) return 0;
+  if (ch.type === 'ongoing') return Math.min(100, Math.round((uc.dailyProgress || 0) / 7 * 100));
+  return Math.min(100, Math.round((uc.completedDays || 0) / (ch.totalGoal || 1) * 100));
+}
+
+function filterChallenges(filter) {
+  document.querySelectorAll('.challenge-card').forEach(card => {
+    if (filter === 'all') {
+      card.style.display = 'block';
+      return;
+    }
+    if (filter === 'featured') {
+      card.style.display = card.classList.contains('featured') ? 'block' : 'none';
+      return;
+    }
+    const badge = card.querySelector('.challenge-badge');
+    const text = badge ? badge.textContent.toLowerCase() : '';
+    card.style.display = text === filter ? 'block' : 'none';
   });
 }
 
@@ -1605,140 +1164,119 @@ function displayAchievements(userAchievements = []) {
   });
 }
 
-/** -----------------------------
- *  Initialization
- *  ----------------------------*/
-
- document.addEventListener('DOMContentLoaded', async () => {
-    const loggedInUser = getLoggedInUser();
-    if (!loggedInUser) return;
+// SINGLE DOMContentLoaded Event
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Page loading...');
     
-    // Initialize unified leaderboard
-    window.VivifyLeaderboard.initialize(
-        loggedInUser.userId, 
-        loggedInUser.username, 
-        'Knox Grammar'
-    );
-    
-    // Listen for updates
-    window.VivifyLeaderboard.onUpdate((data) => {
-        console.log('Leaderboard updated:', data);
-        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
-        updateChallengeStats(); // Update your stats display
-    });
-    
-    // Initial display
-    window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');});
-
-  // Filter tabs
-  document.querySelectorAll('.filter-tab').forEach(tab=>{
-    tab.addEventListener('click',()=>{
-      document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      filterChallenges(tab.dataset.filter);
-    });
-  });
-
-  // Animations
-  const obs=new IntersectionObserver((ents)=>{
-    ents.forEach(ent=>{ if(ent.isIntersecting){ ent.target.style.opacity='1'; ent.target.style.transform='translateY(0)'; } });
-  },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
-  document.querySelectorAll('.fade-in-up').forEach(el=>{
-    el.style.opacity='0'; el.style.transform='translateY(30px)'; el.style.transition='opacity .8s ease, transform .8s ease'; obs.observe(el);
-  });
-
-  // Initialize user and system
-  const loggedInUser = getLoggedInUser();
-  if (!loggedInUser) return;
-  
-  userId = loggedInUser.userId;
-  currentUserName = loggedInUser.username;
-
-  // Initialize enhanced leaderboard system
-  await leaderboardManager.initialize(userId, currentUserName);
-
-  await fetchUser();
-  updateChallengeStats();
-  updateAllChallengeCards();
-
-  // The leaderboard manager handles all leaderboard updates
-  leaderboardManager.updateDisplays();
-  leaderboardManager.updateChallengeParticipants();
-
-// Clean up on page unload
-window.addEventListener('beforeunload', () => {
-  leaderboardManager.stopAutoRefresh();
-});
-
-// Optional: track page visit
-if(window.vivifyTracker){
-  window.vivifyTracker.trackActivity('challenges_visit','challenges','Visited challenges page',5);
-}
-// Listen for leaderboard updates from other pages
-window.addEventListener('leaderboardUpdated', function(event) {
-    console.log('Leaderboard update received:', event.detail);
-    
-    // Force refresh the leaderboard display
-    const challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
-    
-    if (challengesLeaderboard.length > 0) {
-        updateChallengesLeaderboardDisplay(challengesLeaderboard);
-    }
-});
-
-// Function to update the challenges page leaderboard display
-function updateChallengesLeaderboardDisplay(leaderboard) {
-    const list = document.getElementById('leaderboardList');
-    if (!list) return;
-    
+    // 1. Check authentication
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
     const username = localStorage.getItem('username');
     
-    list.innerHTML = '';
-    const top10 = leaderboard.slice(0, 10);
-    
-    top10.forEach((entry, idx) => {
-        const item = document.createElement('div');
-        item.className = 'leaderboard-item';
-        if (entry.username === username) {
-            item.classList.add('current-user');
-        }
-        
-        let icon = '<i class="fas fa-user"></i>';
-        if (idx === 0) icon = '<i class="fas fa-crown" style="color:#f39c12;"></i>';
-        else if (idx === 1) icon = '<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
-        else if (idx === 2) icon = '<i class="fas fa-medal" style="color:#cd7f32;"></i>';
-        
-        const isCurrentUser = entry.username === username;
-        const displayName = entry.displayName || entry.username || 'Student';
-        
-        item.innerHTML = `
-            <div class="leaderboard-rank">${idx + 1}</div>
-            <div class="leaderboard-avatar">${icon}</div>
-            <div class="leaderboard-info">
-                <div class="leaderboard-name">${displayName}${isCurrentUser ? ' (You)' : ''}</div>
-                <div class="leaderboard-school">${entry.school || 'Knox Grammar'}</div>
-            </div>
-            <div class="overall-score">
-                <div class="leaderboard-score">${(entry.overallScore || 0).toLocaleString()}</div>
-                <div class="level-badge">Level ${entry.level || 1}</div>
-            </div>`;
-        
-        list.appendChild(item);
-    });
-}
-
-// Also update the initialization to use localStorage if backend fails
-// Modify your existing DOMContentLoaded function to add this fallback:
-// Add this after the leaderboardManager.updateDisplays() line:
-
-// Fallback to localStorage if backend fails
-setTimeout(() => {
-    const challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
-    if (challengesLeaderboard.length > 0) {
-        updateChallengesLeaderboardDisplay(challengesLeaderboard);
+    if (userLoggedIn !== 'true' || !username) {
+        console.log('User not logged in, redirecting...');
+        window.location.href = 'login.html';
+        return;
     }
-}, 2000);
+    
+    console.log('User authenticated:', username);
+    
+    // 2. Initialize mobile menu
+    createMobileMenu();
+    
+    // 3. Set up user variables
+    const loggedInUser = getLoggedInUser();
+    if (loggedInUser) {
+        userId = loggedInUser.userId;
+        currentUserName = loggedInUser.username;
+    }
+    
+    // 4. Initialize unified leaderboard
+    if (window.VivifyLeaderboard) {
+        window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+        
+        window.VivifyLeaderboard.onUpdate((data) => {
+            console.log('Leaderboard updated:', data);
+            if (document.getElementById('leaderboardList')) {
+                window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+            }
+            updateChallengeStats();
+        });
+        
+        // Initial display after short delay
+        setTimeout(() => {
+            if (document.getElementById('leaderboardList')) {
+                window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+            }
+        }, 1000);
+        
+        console.log('VivifyLeaderboard initialized successfully');
+    } else {
+        console.error('VivifyLeaderboard not loaded - check js/unified-leaderboard.js');
+    }
+    
+    // 5. Set up event listeners
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            filterChallenges(tab.dataset.filter);
+        });
+    });
+    
+    // 6. Set up logout functionality
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+    }
+    
+    // 7. Initialize challenges UI
+    updateChallengeStats();
+    Object.keys(challenges).forEach(updateChallengeCard);
+    displayAchievements();
+    
+    // 8. Set up animations
+    const obs = new IntersectionObserver((ents) => {
+        ents.forEach(ent => {
+            if (ent.isIntersecting) {
+                ent.target.style.opacity = '1';
+                ent.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: .1, rootMargin: '0px 0px -50px 0px' });
+    
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity .8s ease, transform .8s ease';
+        obs.observe(el);
+    });
+    
+    console.log('Page initialization complete');
+});
+
+// Resize handler for mobile menu
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
 
 </script>
-<script src="js/flexible-mobile-nav.js"></script> </body>
+</body>
 </html>

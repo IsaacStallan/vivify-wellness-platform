@@ -1925,55 +1925,65 @@
         }
 
         // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize game stats and anti-gaming mechanics
-            initializeGameStats();
+        // Add this to the DOMContentLoaded event in BOTH pages
+        // Replace the existing DOMContentLoaded initialization
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Page loading...');
             
-            // Check authentication status
-            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            // Check authentication
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const username = localStorage.getItem('username');
             
-            // Update UI based on login status
-            document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
-            document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
-            document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
-            document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
-            document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
             
-            // Mobile menu
-            createMobileMenu();
+            console.log('User authenticated:', username);
             
-            // Update timer display
-            updateTimerDisplay();
-            
-            // Load saved progress
-            const saved = localStorage.getItem('focusProgress');
-            if (saved) {
-                const progress = JSON.parse(saved);
-                const today = new Date().toDateString();
-                const savedDate = new Date(progress.lastSaved).toDateString();
+            // Initialize unified leaderboard FIRST
+            if (window.VivifyLeaderboard) {
+                window.VivifyLeaderboard.initialize(
+                    userProfile.id || username, 
+                    username, 
+                    'Knox Grammar'
+                );
                 
-                if (today === savedDate) {
-                    document.getElementById('sessions-today').textContent = progress.sessionsToday || '0';
-                    document.getElementById('total-minutes').textContent = progress.totalMinutes || '0';
-                    document.getElementById('focus-score').textContent = progress.focusScore || '0';
-                }
-            }
-            
-            // Logout functionality
-            const logoutLink = document.getElementById('logout-link');
-            if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    window.location.href = 'index.html';
+                // Listen for updates
+                window.VivifyLeaderboard.onUpdate((data) => {
+                    console.log('Leaderboard updated:', data);
+                    
+                    // Update displays based on which page we're on
+                    if (document.getElementById('leaderboardList')) {
+                        // Challenges page
+                        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+                    }
+                    if (document.getElementById('focus-leaderboard-list')) {
+                        // Attention training page  
+                        window.VivifyLeaderboard.displayForAttentionTraining('focus-leaderboard-list');
+                    }
                 });
+                
+                // Initial display
+                setTimeout(() => {
+                    if (document.getElementById('leaderboardList')) {
+                        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+                    }
+                    if (document.getElementById('focus-leaderboard-list')) {
+                        window.VivifyLeaderboard.displayForAttentionTraining('focus-leaderboard-list');
+                    }
+                }, 1000);
+                
+                console.log('Unified leaderboard initialized');
+            } else {
+                console.error('VivifyLeaderboard not available');
             }
             
-            // Animate stats
-            animateStats();
-            
-            // Show daily cooldown reset notification
-            showDailyCooldownReset();
+            // Rest of your existing initialization code...
+            // (Keep all your existing code for mobile menu, logout, etc.)
         });
 
         // Daily cooldown reset
