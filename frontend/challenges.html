@@ -1287,6 +1287,12 @@ function getLoggedInUser() {
     userChallenges = data.userChallenges || {};
     userChallengeStats = data.challengeStats || {active:0, completed:0, totalPoints:0};
     userOverallScore = data.overallScore || 0; // Store the real overall score
+
+    console.log('Stored values:', { // Debug log
+      challengeStats: userChallengeStats,
+      overallScore: userOverallScore
+    });
+    
     
     // Store actual database scores
     userLevel = data.level || 1;
@@ -1362,6 +1368,8 @@ function updateChallengeStats(){
   const active = userChallengeStats?.active || 0;
   const completed = userChallengeStats?.completed || 0;
   const totalPoints = userOverallScore || 0; // Use overall score, not just challenge points
+
+  console.log('Updating stats with:', { active, completed, totalPoints }); // Debug log
 
   const a = document.getElementById('activeChallenges');
   const c = document.getElementById('completedChallenges');
