@@ -1069,20 +1069,19 @@ function viewFullLeaderboard() {
 }
 
 function updateChallengeStats() {
-  const active = Object.values(userChallenges).filter(c => c.joined && !c.completed).length;
-  const completed = Object.values(userChallenges).filter(c => c.completed).length;
-  
-  const totalPoints = window.VivifyLeaderboard ? window.VivifyLeaderboard.getCurrentUserScore() : 0;
+    const active = Object.values(userChallenges).filter(c => c.joined && !c.completed).length;
+    const completed = Object.values(userChallenges).filter(c => c.completed).length;
+    
+    // CRITICAL FIX: Get total points from unified leaderboard ONLY
+    const totalPoints = window.VivifyLeaderboard ? window.VivifyLeaderboard.getCurrentUserScore() : 0;
 
-  const a = document.getElementById('activeChallenges');
-  const c = document.getElementById('completedChallenges');
-  const p = document.getElementById('totalPoints');
-  
-  if(a) a.textContent = active;
-  if(c) c.textContent = completed;
-  if(p) p.textContent = totalPoints;
-
-  console.log('Updated challenge stats - Total points:', totalPoints); // Debug log
+    const a = document.getElementById('activeChallenges');
+    const c = document.getElementById('completedChallenges');
+    const p = document.getElementById('totalPoints');
+    
+    if(a) a.textContent = active;
+    if(c) c.textContent = completed;
+    if(p) p.textContent = totalPoints;
 }
 
 function updateChallengeCard(challengeId) {

@@ -1345,27 +1345,25 @@
             document.getElementById('timer-display').classList.remove('breathing');
         }
 
+        // FIXED: Timer completion
         function completeSession() {
             isTimerRunning = false;
             clearInterval(timerInterval);
             
             const completedMinutes = Math.floor(sessionTime / 60);
-            const timerPoints = completedMinutes * 3; // 3 points per minute for timer sessions
+            const timerPoints = completedMinutes * 3;
             
-            // Update local stats
+            // ONLY update non-point displays locally
             const sessionsEl = document.getElementById('sessions-today');
             const minutesEl = document.getElementById('total-minutes');
-            const scoreEl = document.getElementById('focus-score');
             
             sessionsEl.textContent = parseInt(sessionsEl.textContent) + 1;
             minutesEl.textContent = parseInt(minutesEl.textContent) + completedMinutes;
-            scoreEl.textContent = parseInt(scoreEl.textContent) + timerPoints;
             
-            // FIXED: Sync timer points to global leaderboard too
+            // CRITICAL FIX: Let unified leaderboard handle the points
             addPointsToLeaderboard(timerPoints, 'focus_timer');
             
-            alert(`Focus Session Complete!\n\n${completedMinutes} minutes of deep focus\n+${timerPoints} focus points earned\nStreak maintained!`);
-            
+            alert(`Focus Session Complete!\n\n${completedMinutes} minutes of deep focus\n+${timerPoints} focus points earned`);
             stopTimer();
         }
 
@@ -1969,12 +1967,18 @@
             
             // Initialize unified leaderboard FIRST
             if (window.VivifyLeaderboard) {
-                window.VivifyLeaderboard.initialize(
-                    userProfile.id || username, 
-                    username, 
-                    'Knox Grammar'
-                );
+                window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
                 
+                // Wait a moment for initialization
+                setTimeout(() => {
+                    // NOW update displays
+                    updateChallengeStats(); // On challenges page
+                    // OR sync displays for attention training
+                    if (window.VivifyLeaderboard.syncAllDisplays) {
+                        window.VivifyLeaderboard.syncAllDisplays();
+                    }
+                }, 500);
+
                 // Listen for updates
                 window.VivifyLeaderboard.onUpdate((data) => {
                     console.log('Leaderboard updated:', data);
@@ -1989,16 +1993,6 @@
                         window.VivifyLeaderboard.displayForAttentionTraining('focus-leaderboard-list');
                     }
                 });
-                
-                // Initial display
-                setTimeout(() => {
-                    if (document.getElementById('leaderboardList')) {
-                        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
-                    }
-                    if (document.getElementById('focus-leaderboard-list')) {
-                        window.VivifyLeaderboard.displayForAttentionTraining('focus-leaderboard-list');
-                    }
-                }, 1000);
                 
                 console.log('Unified leaderboard initialized');
             } else {
@@ -2043,18 +2037,6 @@
                 document.getElementById('minutes-today').textContent = baseStats.minutesToday + Math.abs(variation() * 10);
             }, 20000);
         }
-
-        // Auto-save progress every 30 seconds
-        setInterval(() => {
-            const progress = {
-                sessionsToday: document.getElementById('sessions-today').textContent,
-                totalMinutes: document.getElementById('total-minutes').textContent,
-                focusScore: document.getElementById('focus-score').textContent,
-                currentStreak: document.getElementById('current-streak').textContent,
-                lastSaved: Date.now()
-            };
-            localStorage.setItem('focusProgress', JSON.stringify(progress));
-        }, 30000);
 
         // Responsive handling
         window.addEventListener('leaderboardUpdated', function(event) {

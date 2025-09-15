@@ -1,11 +1,11 @@
-// unified-leaderboard.js - Add this to both pages
-
+// FIXED: unified-leaderboard.js - Updated version
 class UnifiedLeaderboardManager {
     constructor() {
-        this.STORAGE_KEY = 'vivifyLeaderboard'; // Single storage key
+        this.STORAGE_KEY = 'vivifyLeaderboard';
         this.UPDATE_EVENT = 'vivifyLeaderboardUpdate';
         this.initialized = false;
         this.currentUser = null;
+        this.updateListeners = [];
     }
 
     initialize(userId, username, school = 'Knox Grammar') {
@@ -17,39 +17,31 @@ class UnifiedLeaderboardManager {
         };
         this.initialized = true;
         
-        // Migrate old data if it exists
-        this.migrateOldData();
+        // Ensure user exists in leaderboard
+        this.ensureUserExists();
         
         console.log('UnifiedLeaderboardManager initialized for:', username);
         return this;
     }
 
-    migrateOldData() {
-        // Migrate from old storage keys to unified system
-        const oldGlobal = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
-        const oldChallenges = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
-        const existing = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-        
-        if (existing.length === 0 && (oldGlobal.length > 0 || oldChallenges.length > 0)) {
-            // Merge old data, prioritizing challenges data
-            const merged = [];
-            const seenUsers = new Set();
-            
-            [...oldChallenges, ...oldGlobal].forEach(entry => {
-                const key = entry.userId || entry.username;
-                if (!seenUsers.has(key)) {
-                    seenUsers.add(key);
-                    merged.push(this.normalizeUserEntry(entry));
-                }
+    ensureUserExists() {
+        const leaderboard = this.getLeaderboard();
+        let userEntry = leaderboard.find(entry => 
+            entry.userId === this.currentUser.userId || 
+            entry.username === this.currentUser.username
+        );
+
+        if (!userEntry) {
+            userEntry = this.normalizeUserEntry({
+                ...this.currentUser,
+                overallScore: 0
             });
-            
-            this.saveLeaderboard(merged);
-            console.log('Migrated old leaderboard data:', merged.length, 'users');
+            leaderboard.push(userEntry);
+            this.saveLeaderboard(leaderboard);
         }
     }
 
     normalizeUserEntry(entry) {
-        // Ensure consistent data structure
         return {
             userId: entry.userId || entry.username,
             username: entry.username || entry.displayName || 'Student',
@@ -74,8 +66,7 @@ class UnifiedLeaderboardManager {
 
     saveLeaderboard(leaderboard) {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(leaderboard));
-        
-        // CRITICAL: Also update old storage keys for backward compatibility
+        // Keep backward compatibility
         localStorage.setItem('globalLeaderboard', JSON.stringify(leaderboard));
         localStorage.setItem('challengesLeaderboard', JSON.stringify(leaderboard));
     }
@@ -94,42 +85,59 @@ class UnifiedLeaderboardManager {
             );
 
             if (!userEntry) {
-                // Create new user entry
-                userEntry = this.normalizeUserEntry({
-                    ...this.currentUser,
-                    overallScore: 0
-                });
-                leaderboard.push(userEntry);
+                this.ensureUserExists();
+                userEntry = leaderboard.find(entry => 
+                    entry.userId === this.currentUser.userId || 
+                    entry.username === this.currentUser.username
+                );
             }
 
-            // CRITICAL: Add points instead of setting them
+            // CRITICAL FIX: Add points properly
             const oldScore = userEntry.overallScore || 0;
             userEntry.overallScore = oldScore + points;
             userEntry.level = Math.floor(userEntry.overallScore / 500) + 1;
             userEntry.lastActive = Date.now();
 
             // Update activity-specific stats
-            if (activityType === 'focus_timer' || activityType === 'brain_training') {
+            if (activityType.includes('focus') || activityType.includes('brain')) {
                 userEntry.focusMinutes = metadata.focusMinutes || userEntry.focusMinutes || 0;
                 userEntry.gamesPlayed = (userEntry.gamesPlayed || 0) + 1;
             }
 
-            // Re-sort and save
+            // Sort and save
             const sortedLeaderboard = leaderboard.sort((a, b) => 
                 (b.overallScore || 0) - (a.overallScore || 0)
             );
             
             this.saveLeaderboard(sortedLeaderboard);
 
-            // Broadcast update
-            this.broadcastUpdate({
+            // CRITICAL FIX: Sync ALL displays immediately
+            this.syncAllDisplays();
+
+            // Broadcast update AFTER sync
+            const updateData = {
                 userId: this.currentUser.userId,
                 username: this.currentUser.username,
                 pointsAdded: points,
                 newScore: userEntry.overallScore,
                 activityType: activityType,
                 metadata: metadata
+            };
+
+            // Call all registered listeners immediately
+            this.updateListeners.forEach(callback => {
+                try {
+                    callback(updateData);
+                } catch (error) {
+                    console.error('Error in update listener:', error);
+                }
             });
+
+            // Also dispatch event
+            setTimeout(() => {
+                const event = new CustomEvent(this.UPDATE_EVENT, { detail: updateData });
+                window.dispatchEvent(event);
+            }, 100);
 
             console.log(`Added ${points} points for ${activityType}. New score: ${userEntry.overallScore}`);
             return true;
@@ -138,6 +146,33 @@ class UnifiedLeaderboardManager {
             console.error('Error adding points:', error);
             return false;
         }
+    }
+
+    // CRITICAL FIX: Sync all displays when points are added
+    syncAllDisplays() {
+        const currentScore = this.getCurrentUserScore();
+        
+        // Update focus score displays (attention training page)
+        const focusScoreEl = document.getElementById('focus-score');
+        if (focusScoreEl) {
+            focusScoreEl.textContent = currentScore;
+        }
+
+        // Update challenge stats (challenges page)
+        const totalPointsEl = document.getElementById('totalPoints');
+        if (totalPointsEl) {
+            totalPointsEl.textContent = currentScore;
+        }
+
+        // Force refresh leaderboard displays
+        setTimeout(() => {
+            if (document.getElementById('leaderboardList')) {
+                this.displayForChallengesPage('leaderboardList');
+            }
+            if (document.getElementById('focus-leaderboard-list')) {
+                this.displayForAttentionTraining('focus-leaderboard-list');
+            }
+        }, 50);
     }
 
     getCurrentUserScore() {
@@ -158,55 +193,12 @@ class UnifiedLeaderboardManager {
         return userIndex >= 0 ? userIndex + 1 : null;
     }
 
-    broadcastUpdate(data) {
-        const event = new CustomEvent(this.UPDATE_EVENT, { detail: data });
-        window.dispatchEvent(event);
-    }
-
     onUpdate(callback) {
+        this.updateListeners.push(callback);
+        
+        // Also listen to events for backward compatibility
         window.addEventListener(this.UPDATE_EVENT, (event) => {
             callback(event.detail);
-        });
-    }
-
-    // Display helpers for different page formats
-    displayForAttentionTraining(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        const leaderboard = this.getLeaderboard().slice(0, 10);
-        container.innerHTML = '';
-
-        leaderboard.forEach((entry, index) => {
-            const isCurrentUser = entry.username === this.currentUser?.username;
-            const rank = index + 1;
-            
-            let rankStyle = '#f39c12';
-            if (rank === 1) rankStyle = '#ffd700';
-            else if (rank === 2) rankStyle = '#c0c0c0';
-            else if (rank === 3) rankStyle = '#cd7f32';
-            
-            const item = document.createElement('div');
-            item.className = 'leaderboard-item';
-            if (isCurrentUser) {
-                item.style.border = '2px solid #f39c12';
-                item.style.background = 'rgba(243, 156, 18, 0.1)';
-            }
-            
-            item.innerHTML = `
-                <div class="rank" style="color: ${rankStyle}">${rank}</div>
-                <div class="player-avatar">${entry.username.charAt(0).toUpperCase()}</div>
-                <div class="player-info">
-                    <div class="player-name">${entry.displayName}${isCurrentUser ? ' (You)' : ''}</div>
-                    <div class="player-school">${entry.school}</div>
-                </div>
-                <div class="player-stats">
-                    <div class="focus-time">${entry.overallScore} pts</div>
-                    <div class="streak-count">Level ${entry.level}</div>
-                </div>
-            `;
-            
-            container.appendChild(item);
         });
     }
 
@@ -247,34 +239,96 @@ class UnifiedLeaderboardManager {
             container.appendChild(item);
         });
     }
+
+    displayForAttentionTraining(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const leaderboard = this.getLeaderboard().slice(0, 10);
+        container.innerHTML = '';
+
+        leaderboard.forEach((entry, index) => {
+            const isCurrentUser = entry.username === this.currentUser?.username;
+            const rank = index + 1;
+            
+            let rankStyle = '#f39c12';
+            if (rank === 1) rankStyle = '#ffd700';
+            else if (rank === 2) rankStyle = '#c0c0c0';
+            else if (rank === 3) rankStyle = '#cd7f32';
+            
+            const item = document.createElement('div');
+            item.className = 'leaderboard-item';
+            if (isCurrentUser) {
+                item.style.border = '2px solid #f39c12';
+                item.style.background = 'rgba(243, 156, 18, 0.1)';
+            }
+            
+            item.innerHTML = `
+                <div class="rank" style="color: ${rankStyle}">${rank}</div>
+                <div class="player-avatar">${entry.username.charAt(0).toUpperCase()}</div>
+                <div class="player-info">
+                    <div class="player-name">${entry.displayName}${isCurrentUser ? ' (You)' : ''}</div>
+                    <div class="player-school">${entry.school}</div>
+                </div>
+                <div class="player-stats">
+                    <div class="focus-time">${entry.overallScore} pts</div>
+                    <div class="streak-count">Level ${entry.level}</div>
+                </div>
+            `;
+            
+            container.appendChild(item);
+        });
+    }
 }
 
 // Global instance
 window.VivifyLeaderboard = new UnifiedLeaderboardManager();
 
-// Usage examples:
-
-// In attention-training.html, replace syncPointsToUnifiedLeaderboard with:
+// FIXED: Updated usage for attention training page
+// Replace your existing addPointsToLeaderboard function with this:
 function addPointsToLeaderboard(points, activityType) {
-    return window.VivifyLeaderboard.addPoints(points, activityType, {
+    if (!window.VivifyLeaderboard) {
+        console.error('VivifyLeaderboard not available');
+        return false;
+    }
+    
+    // CRITICAL FIX: Don't update local displays manually - let the unified system handle it
+    const success = window.VivifyLeaderboard.addPoints(points, activityType, {
         focusMinutes: parseInt(document.getElementById('total-minutes')?.textContent || '0')
     });
+    
+    if (success) {
+        console.log(`Successfully added ${points} points for ${activityType}`);
+    }
+    
+    return success;
 }
 
-// In challenges.html, when user completes a challenge:
-function onChallengeComplete(challengeId, points) {
-    return window.VivifyLeaderboard.addPoints(points, 'challenge_complete', {
-        challengeId: challengeId
-    });
+// FIXED: Updated game completion functions
+// In your Stroop game, replace the point update section with:
+function endStroopGame() {
+    gameActive = false;
+    const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
+    
+    const basePoints = 50;
+    const pointsResult = calculatePoints(basePoints, 'stroop', accuracy);
+    
+    // CRITICAL FIX: Only call the unified leaderboard - don't manually update local displays
+    const success = addPointsToLeaderboard(pointsResult.points, 'brain_training');
+    
+    if (success) {
+        container.innerHTML = `
+            <h3>Stroop Challenge Complete!</h3>
+            <div class="game-score">
+                <div class="score-value">${accuracy}%</div>
+                <div class="score-label">Accuracy</div>
+            </div>
+            <p>Level ${gameLevel} • ${correctAnswers}/${totalQuestions} correct</p>
+            <p><strong>+${pointsResult.points} focus points earned</strong></p>
+            <p>Your total score: ${window.VivifyLeaderboard.getCurrentUserScore()} points</p>
+            
+            <button class="btn btn-primary" onclick="gameLevel++; startStroopGame(document.getElementById('game-content'))">Next Level</button>
+            <button class="btn btn-secondary" onclick="closeGame()">Close</button>
+        `;
+    }
 }
-
-// Initialize on both pages:
-// const user = getLoggedInUser();
-// window.VivifyLeaderboard.initialize(user.userId, user.username, user.school);
-
-// Listen for updates on both pages:
-// window.VivifyLeaderboard.onUpdate((data) => {
-//     console.log('Leaderboard updated:', data);
-//     // Refresh displays
-//     window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
-// });
