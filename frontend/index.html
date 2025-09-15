@@ -751,10 +751,6 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            .left-nav ul, .right-nav ul {
-                display: none;
-            }
-
             .hero h1 {
                 font-size: 3rem;
             }
@@ -811,13 +807,14 @@
 </head>
 <body>
     <div class="wrapper">
+        <!-- Updated Header HTML -->
         <header>
             <nav>
                 <div class="left-nav">
                     <div class="logo">
                         <a href="index.html">Vivify</a>
                     </div>
-                    <ul>
+                    <ul class="desktop-nav">
                         <li><a href="#training">Training Areas</a></li>
                         <li><a href="#habits">Habits & Challenges</a></li>
                         <li><a href="about.html">About</a></li>
@@ -825,7 +822,7 @@
                     </ul>
                 </div>
                 <div class="right-nav">
-                    <ul>
+                    <ul class="desktop-nav">
                         <li><a href="login.html" id="login-link">Login</a></li>
                         <li><a href="signup.html" id="signup-link" class="cta-nav">Start Training</a></li>
                         <!-- Logged in navigation (hidden by default) -->
@@ -833,9 +830,300 @@
                         <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
                         <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
                     </ul>
+                    <!-- Mobile menu button -->
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                    </button>
                 </div>
             </nav>
+            
+            <!-- Mobile menu overlay -->
+            <div class="mobile-menu" id="mobile-menu">
+                <div class="mobile-menu-content">
+                    <div class="mobile-menu-header">
+                        <div class="logo">
+                            <a href="index.html">Vivify</a>
+                        </div>
+                        <button class="mobile-menu-close" id="mobile-menu-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mobile-menu-links">
+                        <!-- Main navigation -->
+                        <a href="#training" class="mobile-menu-link">Training Areas</a>
+                        <a href="#habits" class="mobile-menu-link">Habits & Challenges</a>
+                        <a href="about.html" class="mobile-menu-link">About</a>
+                        <a href="community.html" class="mobile-menu-link">Community</a>
+                        
+                        <div class="mobile-menu-divider"></div>
+                        
+                        <!-- Auth links for logged out users -->
+                        <a href="login.html" class="mobile-menu-link" id="mobile-login-link">Login</a>
+                        <a href="signup.html" class="mobile-menu-link mobile-cta" id="mobile-signup-link">Start Training</a>
+                        
+                        <!-- Auth links for logged in users -->
+                        <a href="dashboard.html" class="mobile-menu-link hidden" id="mobile-dashboard-link">Dashboard</a>
+                        <a href="profile.html" class="mobile-menu-link hidden" id="mobile-profile-link">Profile</a>
+                        <a href="#" class="mobile-menu-link hidden" id="mobile-logout-link">Logout</a>
+                    </div>
+                </div>
+            </div>
         </header>
+
+        <style>
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        .hamburger {
+            width: 25px;
+            height: 3px;
+            background: #ffffff;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu-close:hover {
+            color: #f39c12;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            justify-content: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-link.mobile-cta:hover {
+            color: #000 !important;
+            padding-left: 0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        /* Update existing mobile styles */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none !important;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            nav {
+                padding: 1rem 1rem; /* Reduce padding on mobile */
+            }
+            
+            .logo a {
+                font-size: 1.5rem; /* Slightly smaller logo on mobile */
+            }
+        }
+
+        /* Small screen adjustments */
+        @media (max-width: 480px) {
+            .mobile-menu-content {
+                padding: 1.5rem;
+            }
+            
+            .mobile-menu-link {
+                font-size: 1.1rem;
+            }
+            
+            nav {
+                padding: 0.75rem 1rem;
+            }
+        }
+        </style>
+
+        <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+            
+            // Toggle mobile menu
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenuBtn.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            // Close mobile menu
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+            
+            // Close menu when clicking on links
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Don't close for anchor links, let them scroll
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        closeMobileMenu();
+                    } else {
+                        // Close menu after a short delay for anchor links
+                        setTimeout(closeMobileMenu, 300);
+                    }
+                });
+            });
+            
+            // Close menu when clicking outside
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    closeMobileMenu();
+                }
+            });
+            
+            function closeMobileMenu() {
+                mobileMenuBtn.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Update mobile menu auth state
+            function updateMobileAuthState(isLoggedIn) {
+                // Mobile menu auth links
+                document.getElementById('mobile-login-link').style.display = isLoggedIn ? 'none' : 'flex';
+                document.getElementById('mobile-signup-link').style.display = isLoggedIn ? 'none' : 'flex';
+                document.getElementById('mobile-dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('mobile-profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('mobile-logout-link').classList.toggle('hidden', !isLoggedIn);
+                
+                // Update mobile CTA text for logged in users
+                if (isLoggedIn) {
+                    const mobileSignupLink = document.getElementById('mobile-signup-link');
+                    const mobileDashboardLink = document.getElementById('mobile-dashboard-link');
+                    
+                    mobileDashboardLink.classList.remove('hidden');
+                    mobileDashboardLink.style.display = 'flex';
+                    mobileDashboardLink.classList.add('mobile-cta');
+                    mobileDashboardLink.textContent = 'Continue Training';
+                }
+            }
+            
+            // Add mobile logout functionality
+            document.getElementById('mobile-logout-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.clear();
+                    closeMobileMenu();
+                    updateAuthState(false);
+                    updateMobileAuthState(false);
+                    window.location.reload();
+                }
+            });
+            
+            // Expose function globally so main auth system can call it
+            window.updateMobileAuthState = updateMobileAuthState;
+        });
+        </script>
 
         <main>
             <!-- Hero Section -->
@@ -1120,9 +1408,9 @@
     });
 
     function updateAuthState(isLoggedIn) {
-        console.log('Updating auth state:', isLoggedIn); // Debug log
+        console.log('Updating auth state:', isLoggedIn);
         
-        // Get elements
+        // Desktop navigation updates
         const loginLink = document.getElementById('login-link');
         const signupLink = document.getElementById('signup-link');
         const dashboardLink = document.getElementById('dashboard-link');
@@ -1131,32 +1419,37 @@
         
         if (isLoggedIn) {
             // Hide login/signup
-            loginLink.style.display = 'none';
-            signupLink.style.display = 'none';
+            if (loginLink) loginLink.style.display = 'none';
+            if (signupLink) signupLink.style.display = 'none';
             
             // Show logged-in options
-            dashboardLink.classList.remove('hidden');
-            profileLink.classList.remove('hidden');
-            logoutLink.classList.remove('hidden');
+            if (dashboardLink) dashboardLink.classList.remove('hidden');
+            if (profileLink) profileLink.classList.remove('hidden');
+            if (logoutLink) logoutLink.classList.remove('hidden');
             
-            // Update hero and other content
+            // Update content
             updateHeroForLoggedInUser();
             updateCTAForLoggedInUser();
             showPersonalizedStats();
         } else {
             // Show login/signup
-            loginLink.style.display = 'block';
-            signupLink.style.display = 'block';
+            if (loginLink) loginLink.style.display = 'block';
+            if (signupLink) signupLink.style.display = 'block';
             
             // Hide logged-in options
-            dashboardLink.classList.add('hidden');
-            profileLink.classList.add('hidden');
-            logoutLink.classList.add('hidden');
+            if (dashboardLink) dashboardLink.classList.add('hidden');
+            if (profileLink) profileLink.classList.add('hidden');
+            if (logoutLink) logoutLink.classList.add('hidden');
             
-            // Reset hero content to default
+            // Reset content
             resetHeroContent();
             resetCTAContent();
             hidePersonalizedStats();
+        }
+        
+        // Update mobile menu if function exists
+        if (typeof updateMobileAuthState === 'function') {
+            updateMobileAuthState(isLoggedIn);
         }
     }
 
