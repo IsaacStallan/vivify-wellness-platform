@@ -150,4 +150,38 @@ router.get('/profile/:username', async (req, res) => {
     }
 });
 
+// In your backend routes file
+app.get('/api/challenges/participants', async (req, res) => {
+    try {
+      // Count users who have joined each challenge
+      const participantCounts = {};
+      
+      // Get all users
+      const users = await User.find({});
+      
+      // Count participants for each challenge
+      const challengeIds = [
+        'fitness-foundation', 
+        'morning-energy', 
+        'deep-work', 
+        'stress-resilience', 
+        'elite-morning', 
+        'time-mastery'
+      ];
+      
+      challengeIds.forEach(challengeId => {
+        participantCounts[challengeId] = users.filter(user => {
+          const challengeData = user.challengeData && user.challengeData[challengeId];
+          return challengeData && challengeData.joined === true;
+        }).length;
+      });
+      
+      res.json(participantCounts);
+      
+    } catch (error) {
+      console.error('Error fetching challenge participants:', error);
+      res.status(500).json({ error: 'Failed to fetch participants' });
+    }
+  });
+
 module.exports = router;

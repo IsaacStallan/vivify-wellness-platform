@@ -455,13 +455,12 @@ class ChallengeManager {
 
   renderChallengeStats(id, challenge) {
     const userChallenge = this.userChallenges[id];
-    const participants = Math.floor(Math.random() * 500) + 50;
     const daysLeft = challenge.type === 'ongoing' ? '∞' : Math.max(0, challenge.duration - (userChallenge?.totalDays || 0));
     
     return `
       <div class="challenge-stats">
         <div class="challenge-stat">
-          <span class="challenge-stat-value">${participants}</span>
+          <span class="challenge-stat-value" id="participants-${id}">-</span>
           <span class="challenge-stat-label">Participants</span>
         </div>
         <div class="challenge-stat">
@@ -474,6 +473,39 @@ class ChallengeManager {
         </div>
       </div>
     `;
+  }
+
+  async loadChallengeParticipants() {
+    try {
+      console.log('Loading challenge participant counts...');
+      
+      const response = await fetch('https://vivify-backend.onrender.com/api/challenges/participants');
+      if (!response.ok) throw new Error('Failed to fetch participants');
+      
+      const participantData = await response.json();
+      console.log('Fetched participant data:', participantData);
+      
+      // Update each challenge's participant count
+      Object.entries(participantData).forEach(([challengeId, count]) => {
+        const element = document.getElementById(`participants-${challengeId}`);
+        if (element) {
+          element.textContent = count;
+        }
+      });
+      
+      console.log('✅ Participant counts loaded');
+      
+    } catch (error) {
+      console.error('❌ Error loading participant counts:', error);
+      
+      // Fallback to showing dash or reasonable estimates
+      Object.keys(challenges).forEach(challengeId => {
+        const element = document.getElementById(`participants-${challengeId}`);
+        if (element && element.textContent === '-') {
+          element.textContent = '0';
+        }
+      });
+    }
   }
 
   renderDailyTracker(id, challenge) {
@@ -809,9 +841,8 @@ async function loadLeaderboardFromBackend() {
   try {
     console.log('Loading fresh leaderboard from backend...');
     
-    const response = await fetch('https://vivify-backend.onrender.com/api/users/leaderboard');
+    const response = await fetch('https://vivify-backend.onrender.com/api/users/challenges/participants');
     if (!response.ok) throw new Error('Failed to fetch leaderboard');
-    
     const backendLeaderboard = await response.json();
     console.log('Fetched leaderboard from backend:', backendLeaderboard.length, 'users');
     
@@ -905,6 +936,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   // 4. Initialize the improved challenge system
   challengeManager = new ChallengeManager();
   challengeManager.displayChallenges();
+
+  setTimeout(() => {
+    challengeManager.loadChallengeParticipants();
+  }, 2000);
   
   // 5. Set up logout functionality
   const logoutLink = document.getElementById('logout-link');
