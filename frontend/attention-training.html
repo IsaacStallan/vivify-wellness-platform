@@ -1361,8 +1361,8 @@
             minutesEl.textContent = parseInt(minutesEl.textContent) + completedMinutes;
             scoreEl.textContent = parseInt(scoreEl.textContent) + timerPoints;
             
-            // Update global leaderboard
-            updateGlobalLeaderboard(timerPoints, 'focus_timer');
+            // FIXED: Sync timer points to global leaderboard too
+            syncPointsToGlobalLeaderboard(timerPoints, 'focus_timer');
             
             alert(`Focus Session Complete!\n\n${completedMinutes} minutes of deep focus\n+${timerPoints} focus points earned\nStreak maintained!`);
             
@@ -1410,8 +1410,8 @@
 
         // Enhanced Stroop Game with Progressive Difficulty
         function startStroopGame(container) {
-            const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown'];
-            const colorWords = ['RED', 'BLUE', 'GREEN', 'YELLOW', 'PURPLE', 'ORANGE', 'PINK', 'BROWN'];
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+            const colorWords = ['RED', 'BLUE', 'GREEN', 'YELLOW', 'PURPLE'];
             
             let currentWord = '';
             let currentColor = '';
@@ -1420,35 +1420,29 @@
             let startTime = Date.now();
             let questionStartTime = Date.now();
             let reactionTimes = [];
+            let gameActive = true;
             
             // Progressive difficulty
-            const maxQuestions = 10 + (gameLevel * 5); // More questions at higher levels
-            const timeLimit = Math.max(2000, 5000 - (gameLevel * 300)); // Less time per question
+            const maxQuestions = 10;
+            const timeLimit = 8000; // 8 seconds per question instead of 2-5 seconds
             
             function newStroopQuestion() {
+                if (!gameActive || totalQuestions >= maxQuestions) return;
+                
                 questionStartTime = Date.now();
                 
-                // Higher levels use more confusing color combinations
-                if (gameLevel > 3) {
-                    // Intentionally confusing combinations
-                    do {
-                        currentWord = colorWords[Math.floor(Math.random() * colorWords.length)];
-                        currentColor = colors[Math.floor(Math.random() * colors.length)];
-                    } while (currentWord.toLowerCase() === currentColor); // Ensure mismatch
-                } else {
-                    currentWord = colorWords[Math.floor(Math.random() * colorWords.length)];
-                    currentColor = colors[Math.floor(Math.random() * colors.length)];
-                }
+                currentWord = colorWords[Math.floor(Math.random() * colorWords.length)];
+                currentColor = colors[Math.floor(Math.random() * colors.length)];
                 
                 container.innerHTML = `
                     <h3>Stroop Challenge - Level ${gameLevel}</h3>
                     <div class="game-instructions">
                         Click the COLOR of the word, not what the word says!<br>
-                        <small>Time limit: ${(timeLimit/1000).toFixed(1)}s per question</small>
+                        <small>Time limit: ${(timeLimit/1000).toFixed(0)}s per question</small>
                     </div>
                     <div class="stroop-word" style="color: ${currentColor}">${currentWord}</div>
                     <div class="color-buttons">
-                        ${colors.slice(0, Math.min(5 + gameLevel, colors.length)).map(color => 
+                        ${colors.map(color => 
                             `<button class="color-btn" style="background: ${color}; color: white;" onclick="stroopAnswer('${color}')">${color.toUpperCase()}</button>`
                         ).join('')}
                     </div>
@@ -1461,45 +1455,51 @@
                     </div>
                 `;
                 
-                // Auto-advance if time limit exceeded
+                // FIXED: Auto-advance only after reasonable time limit
                 setTimeout(() => {
-                    if (currentGame === 'stroop' && totalQuestions < maxQuestions) {
+                    if (gameActive && currentGame === 'stroop' && totalQuestions < maxQuestions) {
                         stroopAnswer('timeout');
                     }
                 }, timeLimit);
             }
             
             window.stroopAnswer = function(selectedColor) {
+                if (!gameActive) return;
+                
                 const reactionTime = Date.now() - questionStartTime;
                 totalQuestions++;
                 
-                if (selectedColor === currentColor) {
+                if (selectedColor === currentColor && selectedColor !== 'timeout') {
                     correctAnswers++;
                     reactionTimes.push(reactionTime);
                 }
                 
                 if (totalQuestions >= maxQuestions) {
+                    gameActive = false;
                     endStroopGame();
                 } else {
-                    setTimeout(newStroopQuestion, 500);
+                    // FIXED: Reasonable delay between questions
+                    setTimeout(newStroopQuestion, 1500); // 1.5 seconds between questions
                 }
             };
             
             function endStroopGame() {
+                gameActive = false;
                 const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
                 const avgReactionTime = reactionTimes.length > 0 ? 
                     (reactionTimes.reduce((a,b) => a+b, 0) / reactionTimes.length / 1000).toFixed(2) : 'N/A';
                 
-                // Calculate points with anti-gaming mechanics
+                // FIXED: Proper point calculation and global leaderboard sync
                 const basePoints = 50;
                 const pointsResult = calculatePoints(basePoints, 'stroop', accuracy);
                 
-                // Update local score
+                // Update local score AND sync to global leaderboard properly
                 const scoreEl = document.getElementById('focus-score');
-                scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
+                const newLocalScore = parseInt(scoreEl.textContent) + pointsResult.points;
+                scoreEl.textContent = newLocalScore;
                 
-                // Update global leaderboard
-                updateGlobalLeaderboard(pointsResult.points, 'stroop');
+                // CRITICAL FIX: Properly sync to global leaderboard
+                syncPointsToGlobalLeaderboard(pointsResult.points, 'brain_training');
                 
                 container.innerHTML = `
                     <h3>Stroop Challenge Complete!</h3>
@@ -1518,18 +1518,12 @@
                         </div>
                     ` : ''}
                     
-                    ${pointsResult.diminishingReturns < 0.8 ? `
-                        <div class="cooldown-notice">
-                            Diminishing returns: ${Math.round((1 - pointsResult.diminishingReturns) * 100)}% point reduction<br>
-                            Try different games for better rewards!
-                        </div>
-                    ` : ''}
-                    
                     <button class="btn btn-primary" onclick="gameLevel++; startStroopGame(document.getElementById('game-content'))">Next Level</button>
                     <button class="btn btn-secondary" onclick="closeGame()">Close</button>
                 `;
             }
             
+            gameActive = true;
             newStroopQuestion();
         }
 
@@ -1728,6 +1722,162 @@
             }, 2000);
         }
 
+        function syncPointsToGlobalLeaderboard(points, activity_type) {
+            try {
+                // Get current global leaderboard data
+                let globalLeaderboard = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
+                const username = localStorage.getItem('username') || 'Anonymous';
+                const userSchool = localStorage.getItem('userSchool') || 'Knox Grammar';
+                const userId = localStorage.getItem('userId') || username;
+                
+                // Find existing user or create new entry
+                let userEntry = globalLeaderboard.find(entry => 
+                    entry.username === username || entry.userId === userId
+                );
+                
+                if (!userEntry) {
+                    userEntry = {
+                        userId: userId,
+                        username: username,
+                        displayName: username,
+                        school: userSchool,
+                        totalPoints: 0,
+                        focusMinutes: parseInt(document.getElementById('total-minutes')?.textContent || '0'),
+                        streak: parseInt(document.getElementById('current-streak')?.textContent || '0'),
+                        gamesPlayed: 0,
+                        lastActive: Date.now(),
+                        level: 1,
+                        overallScore: 0
+                    };
+                    globalLeaderboard.push(userEntry);
+                }
+                
+                // Update user stats
+                userEntry.totalPoints = (userEntry.totalPoints || 0) + points;
+                userEntry.overallScore = (userEntry.overallScore || 0) + points;
+                userEntry.gamesPlayed = (userEntry.gamesPlayed || 0) + 1;
+                userEntry.focusMinutes = parseInt(document.getElementById('total-minutes')?.textContent || '0');
+                userEntry.lastActive = Date.now();
+                
+                // Calculate level based on total points
+                userEntry.level = Math.floor(userEntry.totalPoints / 500) + 1;
+                
+                // Sort leaderboard by total points
+                globalLeaderboard.sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
+                
+                // Keep only top 100 to prevent localStorage bloat
+                if (globalLeaderboard.length > 100) {
+                    globalLeaderboard = globalLeaderboard.slice(0, 100);
+                }
+                
+                // Save updated leaderboard
+                localStorage.setItem('globalLeaderboard', JSON.stringify(globalLeaderboard));
+                
+                console.log(`${points} points synced to global leaderboard for ${activity_type}`);
+                console.log('Updated user entry:', userEntry);
+                
+                // Update any visible leaderboards on the page
+                updateVisibleLeaderboards();
+                
+            } catch (error) {
+                console.error('Error syncing to global leaderboard:', error);
+            }
+        }
+
+        // Helper function to update leaderboards visible on current page
+        function updateVisibleLeaderboards() {
+            // This will update any leaderboard displays on the current page
+            const leaderboardList = document.getElementById('focus-leaderboard-list');
+            if (leaderboardList) {
+                displayGlobalLeaderboard();
+            }
+        }
+
+        // Enhanced function to display global leaderboard
+        function displayGlobalLeaderboard() {
+            const leaderboardList = document.getElementById('focus-leaderboard-list');
+            if (!leaderboardList) return;
+            
+            const globalLeaderboard = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
+            const currentUsername = localStorage.getItem('username');
+            
+            if (globalLeaderboard.length === 0) {
+                leaderboardList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
+                        <p>No players yet. Be the first to earn points!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            leaderboardList.innerHTML = '';
+            
+            // Show top 10 players
+            const top10 = globalLeaderboard.slice(0, 10);
+            
+            top10.forEach((entry, index) => {
+                const isCurrentUser = entry.username === currentUsername;
+                const rank = index + 1;
+                
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+                if (isCurrentUser) {
+                    item.style.border = '2px solid #f39c12';
+                    item.style.background = 'rgba(243, 156, 18, 0.1)';
+                }
+                
+                let rankStyle = '#f39c12';
+                if (rank === 1) rankStyle = '#ffd700';
+                else if (rank === 2) rankStyle = '#c0c0c0';
+                else if (rank === 3) rankStyle = '#cd7f32';
+                
+                item.innerHTML = `
+                    <div class="rank" style="color: ${rankStyle}">${rank}</div>
+                    <div class="player-avatar">${entry.username.charAt(0).toUpperCase()}</div>
+                    <div class="player-info">
+                        <div class="player-name">${entry.displayName || entry.username}${isCurrentUser ? ' (You)' : ''}</div>
+                        <div class="player-school">${entry.school || 'Knox Grammar'}</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="focus-time">${entry.totalPoints || 0} pts</div>
+                        <div class="streak-count">Level ${entry.level || 1}</div>
+                    </div>
+                `;
+                
+                leaderboardList.appendChild(item);
+            });
+            
+            // If current user isn't in top 10, show their position at bottom
+            const userIndex = globalLeaderboard.findIndex(entry => entry.username === currentUsername);
+            if (userIndex > 9) {
+                const userEntry = globalLeaderboard[userIndex];
+                const separator = document.createElement('div');
+                separator.style.cssText = 'border-top: 1px solid rgba(255,255,255,0.2); margin: 1rem 0; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem;';
+                separator.textContent = '...';
+                leaderboardList.appendChild(separator);
+                
+                const userItem = document.createElement('div');
+                userItem.className = 'leaderboard-item';
+                userItem.style.border = '2px solid #f39c12';
+                userItem.style.background = 'rgba(243, 156, 18, 0.1)';
+                
+                userItem.innerHTML = `
+                    <div class="rank" style="color: #f39c12">${userIndex + 1}</div>
+                    <div class="player-avatar">${userEntry.username.charAt(0).toUpperCase()}</div>
+                    <div class="player-info">
+                        <div class="player-name">${userEntry.displayName || userEntry.username} (You)</div>
+                        <div class="player-school">${userEntry.school || 'Knox Grammar'}</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="focus-time">${userEntry.totalPoints || 0} pts</div>
+                        <div class="streak-count">Level ${userEntry.level || 1}</div>
+                    </div>
+                `;
+                
+                leaderboardList.appendChild(userItem);
+            }
+        }
+
         // Mobile Menu Functions
         function createMobileMenu() {
             if (window.innerWidth > 768) return;
@@ -1879,6 +2029,9 @@
             
             // Show daily cooldown reset notification
             showDailyCooldownReset();
+                setTimeout(() => {
+            displayGlobalLeaderboard();
+            }, 1000);
         });
 
         // Daily cooldown reset
