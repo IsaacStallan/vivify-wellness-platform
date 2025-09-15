@@ -189,26 +189,24 @@ router.get('/challenges/participants', async (req, res) => {
 
 router.put('/challenges/join', async (req, res) => {
     try {
+      console.log('=== CHALLENGE JOIN REQUEST ===');
+      console.log('Body:', req.body);
+      
       const { username, challengeId, challengeData } = req.body;
       
-      if (!username || !challengeId || !challengeData) {
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
-      
       const user = await User.findOne({ username });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+      console.log('Found user:', user.username);
+      console.log('Current challengeData:', user.challengeData);
       
-      // Initialize challengeData if it doesn't exist
       if (!user.challengeData) {
         user.challengeData = {};
       }
       
-      // Update the specific challenge data
       user.challengeData[challengeId] = challengeData;
+      console.log('Updated challengeData:', user.challengeData);
       
       await user.save();
+      console.log('User saved successfully');
       
       res.json({ success: true, message: 'Challenge joined successfully' });
       
@@ -216,19 +214,19 @@ router.put('/challenges/join', async (req, res) => {
       console.error('Error joining challenge:', error);
       res.status(500).json({ error: 'Failed to join challenge' });
     }
-  });
+});   
 
-  router.get('/debug/:username', async (req, res) => {
+router.get('/debug/:username', async (req, res) => {
     try {
-      const user = await User.findOne({ username: req.params.username });
-      res.json({
+        const user = await User.findOne({ username: req.params.username });
+        res.json({
         username: user.username,
         challengeData: user.challengeData,
         hasData: !!user.challengeData
-      });
+        });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  });
+});
 
 module.exports = router;
