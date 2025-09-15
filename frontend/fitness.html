@@ -13,6 +13,9 @@
     <!-- Load icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Load unified leaderboard system -->
+    <script src="js/unified-leaderboard.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -28,7 +31,7 @@
             overflow-x: hidden;
         }
 
-        /* Header - Consistent with index.html */
+        /* Header - Consistent with other pages */
         header {
             position: fixed;
             top: 0;
@@ -99,27 +102,19 @@
             width: 100%;
         }
 
-        .cta-nav {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000 !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .cta-nav:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
-            color: #000 !important;
-        }
-
         .hidden {
             display: none !important;
         }
 
+        /* Main Container */
+        .fitness-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 2rem;
+        }
+
         /* Hero Section */
-        .performance-hero {
+        .fitness-hero {
             background: 
                 radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
@@ -127,46 +122,29 @@
                 url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
-            padding: 150px 2rem 6rem;
+            border-radius: 24px;
+            padding: 4rem 2rem;
             text-align: center;
             position: relative;
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 3rem;
+            overflow: hidden;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 100;
-            max-width: 900px;
-            margin: 0 auto;
+        .fitness-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
         }
 
-        .performance-badge {
-            display: inline-block;
-            background: rgba(243, 156, 18, 0.1);
-            color: #f39c12;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            border: 1px solid rgba(243, 156, 18, 0.2);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2rem;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .performance-hero h1 {
-            font-size: clamp(3rem, 6vw, 5rem);
+        .fitness-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 900;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -174,524 +152,20 @@
             line-height: 1.1;
         }
 
-        .performance-hero p {
-            font-size: 1.25rem;
-            max-width: 700px;
+        .fitness-hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
             margin: 0 auto 2rem;
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
         }
 
-        /* Community Stats in Hero */
-        .live-stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0 3rem;
-            flex-wrap: wrap;
-        }
-
-        .live-stat {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(243, 156, 18, 0.3);
-            border-radius: 16px;
-            padding: 1rem 1.5rem;
-            backdrop-filter: blur(10px);
-            position: relative;
-        }
-
-        .live-stat::before {
-            content: '';
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            width: 8px;
-            height: 8px;
-            background: #27ae60;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
-        }
-
-        .live-stat .stat-number {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #f39c12;
-        }
-
-        .live-stat .stat-label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            font-family: inherit;
-            border: none;
-            cursor: pointer;
-            margin: 0 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 2px solid rgba(243, 156, 18, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
-        }
-
-        /* Today's Challenge Widget */
-        .daily-challenge {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 4rem 2rem;
-        }
-
-        .challenge-widget {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
-            border: 1px solid rgba(243, 156, 18, 0.2);
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .challenge-widget::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border-radius: 24px 24px 0 0;
-        }
-
-        .challenge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .challenge-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .challenge-timer {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 0.5rem 1rem;
-            color: #f39c12;
-            font-weight: 600;
-        }
-
-        .challenge-description {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .challenge-participants {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .participant-stat {
-            text-align: center;
-        }
-
-        .participant-stat .number {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #f39c12;
-        }
-
-        .participant-stat .label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-        }
-
-        .challenge-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .challenge-progress {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            display: none;
-        }
-
-        .challenge-progress.active {
-            display: block;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border-radius: 6px;
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-
-        .progress-text {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        /* Workout Quick Start */
-        .quick-start {
-            padding: 6rem 2rem;
-        }
-
-        .quick-start-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem;
-            position: relative;
-        }
-
-        .quick-start-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border-radius: 24px 24px 0 0;
-        }
-
-        .section-heading {
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #ffffff, #f39c12);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .workout-selector {
+        /* Workout Stats */
+        .workout-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .workout-option {
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .workout-option:hover {
-            background: rgba(243, 156, 18, 0.1);
-            border-color: rgba(243, 156, 18, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .workout-option.selected {
-            background: rgba(243, 156, 18, 0.2);
-            border-color: rgba(243, 156, 18, 0.5);
-        }
-
-        .workout-option i {
-            font-size: 2rem;
-            color: #f39c12;
-            margin-bottom: 0.5rem;
-        }
-
-        .workout-option h4 {
-            color: #ffffff;
-            margin: 0.5rem 0;
-            font-size: 1rem;
-        }
-
-        .workout-option p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-
-        .workout-customizer {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .customizer-group {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 1.5rem;
-        }
-
-        .customizer-group h4 {
-            color: #f39c12;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .time-selector {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .time-option {
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .time-option:hover,
-        .time-option.selected {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            border-color: transparent;
-        }
-
-        .start-workout-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            border: none;
-            padding: 1.5rem;
-            font-weight: 700;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        .start-workout-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
-        }
-
-        .start-workout-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Live Leaderboard */
-        .live-leaderboard {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 6rem 2rem;
-        }
-
-        .leaderboard-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem;
-        }
-
-        .leaderboard-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .leaderboard-filters {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn.active {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            border-color: transparent;
-        }
-
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .leaderboard-item:hover {
-            background: rgba(243, 156, 18, 0.1);
-            transform: translateX(10px);
-        }
-
-        .rank {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #f39c12;
-            min-width: 40px;
-        }
-
-        .rank.first {
-            color: #ffd700;
-        }
-
-        .rank.second {
-            color: #c0c0c0;
-        }
-
-        .rank.third {
-            color: #cd7f32;
-        }
-
-        .player-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: #000;
-        }
-
-        .player-info {
-            flex-grow: 1;
-        }
-
-        .player-name {
-            color: #ffffff;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        .player-school {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-
-        .player-stats {
-            text-align: right;
-        }
-
-        .streak-count {
-            color: #f39c12;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .total-workouts {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-
-        /* Performance Stats */
-        .performance-stats {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 6rem 2rem;
-            text-align: center;
-        }
-
-        .stats-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .stats-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #ffffff, #f39c12);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         .stat-card {
@@ -699,6 +173,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 2rem;
+            text-align: center;
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
@@ -726,151 +201,87 @@
             border-color: rgba(243, 156, 18, 0.2);
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: #f39c12;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
             background: linear-gradient(135deg, #f39c12, #e67e22);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 0.5rem;
-            display: block;
         }
 
         .stat-label {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
             font-weight: 500;
-        }
-
-        /* Training Categories */
-        .performance-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            padding: 6rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .performance-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .performance-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .performance-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .performance-card:hover {
-            transform: translateY(-15px);
-            background: rgba(243, 156, 18, 0.05);
-            border-color: rgba(243, 156, 18, 0.2);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-image {
-            height: 220px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .card-overlay {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .performance-card-content {
-            padding: 2rem;
-        }
-
-        .performance-card h2 {
-            margin: 0 0 1rem 0;
-            color: #ffffff;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .performance-card p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            min-height: 80px;
-        }
-
-        .performance-card .btn {
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Elite Features Section */
-        .elite-features {
-            padding: 6rem 2rem;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .features-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .features-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 4rem;
-            background: linear-gradient(135deg, #ffffff, #f39c12);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
+        /* Quick Workouts Section */
+        .quick-workouts {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 3rem 2rem;
-            text-align: center;
-            transition: all 0.4s ease;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
         }
 
-        .feature-card::before {
+        .quick-workouts::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .workouts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .workout-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .workout-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -882,203 +293,249 @@
             transition: transform 0.4s ease;
         }
 
-        .feature-card:hover::before {
+        .workout-card:hover::before {
             transform: scaleX(1);
         }
 
-        .feature-card:hover {
-            transform: translateY(-15px);
+        .workout-card:hover {
+            transform: translateY(-10px);
             background: rgba(243, 156, 18, 0.05);
             border-color: rgba(243, 156, 18, 0.2);
         }
 
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border-radius: 20px;
+        .workout-header {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
-            font-size: 2rem;
-            color: #000;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
         }
 
-        .feature-card h3 {
-            font-size: 1.5rem;
+        .workout-info h3 {
+            color: #fff;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 1rem;
-            color: #ffffff;
+            margin-bottom: 0.5rem;
         }
 
-        .feature-card p {
+        .workout-duration {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.25rem 0.75rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .workout-description {
             color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
         }
 
-        /* CTA Section */
-        .performance-cta {
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
-            padding: 6rem 2rem;
+        .workout-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+
+        .workout-stat {
             text-align: center;
         }
 
-        .cta-content {
-            max-width: 800px;
-            margin: 0 auto;
+        .workout-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f39c12;
+            display: block;
         }
 
-        .cta-title {
-            font-size: 2.5rem;
+        .workout-stat-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.3);
+        }
+
+        /* Leaderboard Section */
+        .fitness-leaderboard {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fitness-leaderboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .leaderboard-item.current-user {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .leaderboard-rank {
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff, #f39c12);
+            background: linear-gradient(135deg, #f39c12, #e67e22);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            min-width: 60px;
         }
 
-        .cta-subtitle {
+        .leaderboard-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(243, 156, 18, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1.5rem;
+            color: #f39c12;
             font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 3rem;
+            font-weight: 700;
         }
 
-        /* Footer continued */
-       footer {
-           background: #000000;
-           padding: 3rem 2rem 2rem;
-           border-top: 1px solid rgba(255, 255, 255, 0, 0.1);
-       }
+        .leaderboard-info {
+            flex: 1;
+        }
 
-       .footer-content {
-           max-width: 1200px;
-           margin: 0 auto;
-           text-align: center;
-       }
+        .leaderboard-name {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
 
-       .footer-links {
-           display: flex;
-           justify-content: center;
-           gap: 2rem;
-           margin-bottom: 2rem;
-           list-style: none;
-       }
+        .leaderboard-school {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
 
-       .footer-links a {
-           color: rgba(255, 255, 255, 0.6);
-           text-decoration: none;
-           transition: color 0.3s ease;
-       }
+        .leaderboard-score {
+            color: #f39c12;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
 
-       .footer-links a:hover {
-           color: #f39c12;
-       }
+        .level-badge {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+            display: inline-block;
+        }
 
-       .copyright {
-           color: rgba(255, 255, 255, 0.4);
-           font-size: 0.9rem;
-       }
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            font-weight: 600;
+        }
 
-       /* Mobile Responsiveness */
-       @media (max-width: 768px) {
-           .left-nav ul, .right-nav ul {
-               display: none;
-           }
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-           .performance-hero {
-               padding: 120px 1rem 4rem;
-           }
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .fitness-container {
+                padding: 100px 1rem 2rem;
+            }
 
-           .performance-hero h1 {
-               font-size: 2.5rem;
-           }
+            .fitness-hero {
+                padding: 2rem 1rem;
+            }
 
-           .live-stats {
-               flex-direction: column;
-               align-items: center;
-           }
+            .fitness-hero h1 {
+                font-size: 2rem;
+            }
 
-           .performance-categories {
-               grid-template-columns: 1fr;
-               padding: 3rem 1rem;
-               gap: 1.5rem;
-           }
+            .workout-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
 
-           .features-grid {
-               grid-template-columns: 1fr;
-           }
+            .workouts-grid {
+                grid-template-columns: 1fr;
+            }
 
-           .stats-grid {
-               grid-template-columns: repeat(2, 1fr);
-           }
-
-           .workout-selector {
-               grid-template-columns: repeat(2, 1fr);
-           }
-
-           .workout-customizer {
-               grid-template-columns: 1fr;
-           }
-
-           .leaderboard-filters {
-               flex-direction: column;
-               align-items: center;
-           }
-
-           .challenge-actions {
-               flex-direction: column;
-               align-items: center;
-           }
-
-           .challenge-header {
-               flex-direction: column;
-               text-align: center;
-           }
-
-           .footer-links {
-               flex-direction: column;
-               gap: 1rem;
-           }
-       }
-
-       /* Animations */
-       @keyframes fadeInUp {
-           from {
-               opacity: 0;
-               transform: translateY(30px);
-           }
-           to {
-               opacity: 1;
-               transform: translateY(0);
-           }
-       }
-
-       .fade-in-up {
-           animation: fadeInUp 0.8s ease-out forwards;
-       }
-
-       @keyframes slideIn {
-           from { transform: translateX(-100%); opacity: 0; }
-           to { transform: translateX(0); opacity: 1; }
-       }
-
-       .slide-in {
-           animation: slideIn 0.5s ease-out;
-       }
-
-       @keyframes bounceIn {
-           0% { transform: scale(0.3); opacity: 0; }
-           50% { transform: scale(1.05); }
-           70% { transform: scale(0.9); }
-           100% { transform: scale(1); opacity: 1; }
-       }
-
-       .bounce-in {
-           animation: bounceIn 0.6s ease-out;
-       }
-   @media (max-width: 768px) {
             /* FORCE hide all desktop navigation */
             nav ul,
             nav li,
@@ -1140,19 +597,6 @@
             }
         }
 
-        /* If no mobile button exists, add this emergency button */
-        @media (max-width: 768px) {
-            nav:not(:has(.mobile-menu-btn))::after {
-                content: "☰";
-                position: absolute;
-                right: 1rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: white;
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-        }
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -1234,18 +678,6 @@
             margin: 1rem 0;
         }
 
-        .mobile-menu-btn.active .hamburger:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-
-        .mobile-menu-btn.active .hamburger:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active .hamburger:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-
         /* Add this to your CSS to ensure mobile elements are hidden on desktop */
         @media (min-width: 769px) {
             .mobile-menu,
@@ -1254,1590 +686,662 @@
                 visibility: hidden !important;
             }
         }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
     </style>
-    <script>
-        // Authentication-aware mobile menu
-function createMobileMenu() {
-    // Only create mobile menu on mobile devices
-    if (window.innerWidth > 768) {
-        return; // Exit early on desktop
-    }
-    
-    // Check authentication status
-    const authToken = localStorage.getItem('authToken');
-    const userLoggedIn = localStorage.getItem('userLoggedIn');
-    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
-    const username = localStorage.getItem('username') || 'User';
-    
-    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
-    
-    // Create mobile menu if it doesn't exist
-    if (!document.getElementById('mobile-menu')) {
-        const header = document.querySelector('header');
-        const mobileMenu = document.createElement('div');
-        mobileMenu.id = 'mobile-menu';
-        mobileMenu.className = 'mobile-menu';
-        
-        // Generate auth-specific menu items
-        let authMenuItems = '';
-        if (isLoggedIn) {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <div class="mobile-user-info">
-                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
-                </div>
-                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
-                <a href="profile.html" class="mobile-menu-link">Profile</a>
-                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
-            `;
-        } else {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <a href="login.html" class="mobile-menu-link">Login</a>
-                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
-            `;
-        }
-        
-        mobileMenu.innerHTML = `
-            <div class="mobile-menu-content">
-                <div class="mobile-menu-header">
-                    <div class="logo"><a href="index.html">Vivify</a></div>
-                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
-                </div>
-                <div class="mobile-menu-links">
-                    <a href="index.html" class="mobile-menu-link">Home</a>
-                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
-                    <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
-                    <a href="about.html" class="mobile-menu-link">About</a>
-                    <a href="community.html" class="mobile-menu-link">Community</a>
-                    ${authMenuItems}
-                </div>
-            </div>
-        `;
-        header.appendChild(mobileMenu);
-    }
-    
-    // Create mobile button if it doesn't exist
-    if (!document.getElementById('mobile-menu-btn')) {
-        const nav = document.querySelector('nav');
-        const rightNav = nav.querySelector('.right-nav') || nav;
-        const mobileBtn = document.createElement('button');
-        mobileBtn.id = 'mobile-menu-btn';
-        mobileBtn.className = 'mobile-menu-btn';
-        mobileBtn.onclick = toggleMobileMenu;
-        mobileBtn.innerHTML = `
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-        `;
-        rightNav.appendChild(mobileBtn);
-    }
-}
-
-function handleMobileLogout(event) {
-    event.preventDefault();
-    if (confirm('Are you sure you want to logout?')) {
-        // Clear all auth data
-        localStorage.clear();
-        
-        // Close mobile menu
-        closeMobileMenu();
-        
-        // Refresh the page to update UI
-        window.location.reload();
-    }
-}
-
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.toggle('active');
-    btn.classList.toggle('active');
-    
-    if (menu.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
-}
-
-function closeMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.remove('active');
-    btn.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Function to update mobile menu when auth state changes
-function updateMobileMenuAuth() {
-    const existingMenu = document.getElementById('mobile-menu');
-    if (existingMenu) {
-        existingMenu.remove();
-    }
-    createMobileMenu();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', createMobileMenu);
-
-// Listen for auth state changes (if you have an auth system that fires events)
-window.addEventListener('authStateChanged', updateMobileMenuAuth);
-
-// Export functions for external use
-window.updateMobileMenuAuth = updateMobileMenuAuth;
-window.handleMobileLogout = handleMobileLogout;
-// Add this at the end of your mobile menu script
-window.addEventListener('resize', function() {
-    if (window.innerWidth > 768) {
-        // Remove mobile elements on desktop
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        
-        if (mobileMenu) mobileMenu.remove();
-        if (mobileBtn) mobileBtn.remove();
-        
-        // Reset body overflow
-        document.body.style.overflow = '';
-    } else if (window.innerWidth <= 768) {
-        // Recreate mobile menu if switching to mobile
-        const existingMenu = document.getElementById('mobile-menu');
-        if (!existingMenu) {
-            createMobileMenu();
-        }
-    }
-});
-        </script>
 </head>
 <body>
-   <header>
-       <nav>
-           <div class="left-nav">
-               <div class="logo">
-                   <a href="index.html">Vivify</a>
-               </div>
-               <ul>
-                   <li><a href="index.html#training">Training Areas</a></li>
-                   <li><a href="index.html#habits">Habits & Challenges</a></li>
-                   <li><a href="about.html">About</a></li>
-               </ul>
-           </div>
-           <div class="right-nav">
-               <ul>
-                   <li><a href="login.html" id="login-link">Login</a></li>
-                   <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
-                   <!-- Logged in navigation -->
-                   <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
-                   <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
-                   <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
-               </ul>
-           </div>
-       </nav>
-   </header>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="habits-tracker.html">Daily Habits</a></li>
+                    <li><a href="challenges.html">Challenges</a></li>
+                    <li><a href="community.html">Community</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link" class="hidden">Login</a></li>
+                    <li><a href="signup.html" id="signup-link" class="cta-nav hidden">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link">Profile</a></li>
+                    <li><a href="#" id="logout-link">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-   <div class="wrapper">
-       <!-- Hero Section with Live Community Stats -->
-       <section class="performance-hero fade-in-up">
-           <div class="hero-content">
-               <div class="performance-badge">🔥 Elite Physical Training</div>
-               <h1>Build Your Physical Edge</h1>
-               <p>Join 1,247 ambitious students building elite fitness habits through gamified training, community challenges, and performance tracking.</p>
-               
-               <div class="live-stats">
-                   <div class="live-stat">
-                       <span class="stat-number" id="live-students">1,247</span>
-                       <span class="stat-label">Students Training</span>
-                   </div>
-                   <div class="live-stat">
-                       <span class="stat-number" id="active-workouts">89</span>
-                       <span class="stat-label">Active Workouts</span>
-                   </div>
-                   <div class="live-stat">
-                       <span class="stat-number" id="today-completions">156</span>
-                       <span class="stat-label">Completed Today</span>
-                   </div>
-               </div>
+    <main class="fitness-container">
+        <!-- Hero Section -->
+        <div class="fitness-hero fade-in-up">
+            <h1>Physical Performance Training</h1>
+            <p>Build the physical foundation for peak performance through structured workouts, habit tracking, and community challenges</p>
+            
+            <div style="margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="startQuickWorkout()" style="margin: 0 0.5rem; max-width: 200px;">Start Quick Workout</button>
+                <button class="btn" onclick="viewLeaderboard()" style="background: rgba(255,255,255,0.1); color: #fff; margin: 0 0.5rem; max-width: 200px;">View Leaderboard</button>
+            </div>
+        </div>
 
-               <div class="hero-buttons">
-                   <a href="#quick-start" class="btn btn-primary">Start Quick Workout</a>
-                   <a href="#challenge" class="btn btn-secondary">Join Today's Challenge</a>
-               </div>
-           </div>
-       </section>
+        <!-- Workout Stats -->
+        <div class="workout-stats">
+            <div class="stat-card fade-in-up">
+                <div class="stat-icon">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <div class="stat-value" id="totalWorkouts">0</div>
+                <div class="stat-label">Total Workouts</div>
+            </div>
+            <div class="stat-card fade-in-up">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-value" id="workoutStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card fade-in-up">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="stat-value" id="thisWeek">0</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card fade-in-up">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-value" id="fitnessPoints">0</div>
+                <div class="stat-label">Fitness Points</div>
+            </div>
+        </div>
 
-       <!-- Today's Challenge Widget -->
-       <section class="daily-challenge fade-in-up">
-           <div class="challenge-widget" id="challenge">
-               <div class="challenge-header">
-                   <h3 class="challenge-title">💪 Push-Up Power Challenge</h3>
-                   <div class="challenge-timer" id="challenge-timer">Ends in 8:47:23</div>
-               </div>
-               
-               <p class="challenge-description">Hit 50 push-ups today and join 847 students building upper body strength! Break it into sets and track your progress. Leaderboard updates live!</p>
-               
-               <div class="challenge-participants">
-                   <div class="participant-stat">
-                       <span class="number" id="challenge-completed">423</span>
-                       <span class="label">Completed</span>
-                   </div>
-                   <div class="participant-stat">
-                       <span class="number" id="challenge-average">67</span>
-                       <span class="label">Avg Push-ups</span>
-                   </div>
-                   <div class="participant-stat">
-                       <span class="number" id="your-rank">#12</span>
-                       <span class="label">Your Rank</span>
-                   </div>
-               </div>
-               
-               <div class="challenge-actions">
-                   <button class="btn btn-primary" onclick="acceptChallenge(event)">Accept Challenge</button>
-                   <button class="btn btn-secondary" onclick="viewLeaderboard()">Live Leaderboard</button>
-                   <button class="btn btn-secondary" onclick="inviteFriends()">Invite Friends</button>
-               </div>
+        <!-- Quick Workouts Section -->
+        <div class="quick-workouts fade-in-up">
+            <h2 class="section-title">Quick Workouts</h2>
+            <div class="workouts-grid">
+                <div class="workout-card" onclick="completeWorkout('cardio', 25, 'Cardio Blast')">
+                    <div class="workout-header">
+                        <div class="workout-info">
+                            <h3>Cardio Blast</h3>
+                        </div>
+                        <div class="workout-duration">15-30 min</div>
+                    </div>
+                    <div class="workout-description">
+                        High-intensity cardio session to boost endurance and energy levels. Perfect for building cardiovascular fitness.
+                    </div>
+                    <div class="workout-stats">
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">25</span>
+                            <span class="workout-stat-label">Points</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">🔥</span>
+                            <span class="workout-stat-label">High</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">❤️</span>
+                            <span class="workout-stat-label">Cardio</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Complete Workout</button>
+                </div>
 
-               <div class="challenge-progress" id="challenge-progress">
-                   <div class="progress-bar">
-                       <div class="progress-fill" id="progress-fill"></div>
-                   </div>
-                   <div class="progress-text" id="progress-text">0/50 push-ups completed</div>
-                   <div style="text-align: center; margin-top: 1rem;">
-                       <button class="btn btn-primary" onclick="logPushUps()">+ Log Push-ups</button>
-                   </div>
-               </div>
-           </div>
-       </section>
+                <div class="workout-card" onclick="completeWorkout('strength', 30, 'Strength Training')">
+                    <div class="workout-header">
+                        <div class="workout-info">
+                            <h3>Strength Training</h3>
+                        </div>
+                        <div class="workout-duration">20-45 min</div>
+                    </div>
+                    <div class="workout-description">
+                        Build functional strength and muscle with bodyweight or weight training exercises. Improve power and endurance.
+                    </div>
+                    <div class="workout-stats">
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">30</span>
+                            <span class="workout-stat-label">Points</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">💪</span>
+                            <span class="workout-stat-label">High</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">⚡</span>
+                            <span class="workout-stat-label">Power</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Complete Workout</button>
+                </div>
 
-       <!-- Quick Start Workout -->
-       <section class="quick-start fade-in-up">
-           <div class="quick-start-container" id="quick-start">
-               <h2 class="section-heading">Quick Start Workout</h2>
-               <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Get moving in under 2 minutes! Choose your workout type, set your time, and start building your streak.</p>
-               
-               <div class="workout-selector">
-                   <div class="workout-option" onclick="selectWorkout('cardio')" data-type="cardio">
-                       <i class="fas fa-heartbeat"></i>
-                       <h4>Cardio Blast</h4>
-                       <p>Heart pumping</p>
-                   </div>
-                   <div class="workout-option" onclick="selectWorkout('strength')" data-type="strength">
-                       <i class="fas fa-dumbbell"></i>
-                       <h4>Strength</h4>
-                       <p>Build muscle</p>
-                   </div>
-                   <div class="workout-option" onclick="selectWorkout('hiit')" data-type="hiit">
-                       <i class="fas fa-fire"></i>
-                       <h4>HIIT</h4>
-                       <p>High intensity</p>
-                   </div>
-                   <div class="workout-option" onclick="selectWorkout('flexibility')" data-type="flexibility">
-                       <i class="fas fa-leaf"></i>
-                       <h4>Flexibility</h4>
-                       <p>Stretch & flow</p>
-                   </div>
-               </div>
+                <div class="workout-card" onclick="completeWorkout('flexibility', 15, 'Flexibility & Mobility')">
+                    <div class="workout-header">
+                        <div class="workout-info">
+                            <h3>Flexibility & Mobility</h3>
+                        </div>
+                        <div class="workout-duration">10-20 min</div>
+                    </div>
+                    <div class="workout-description">
+                        Improve flexibility, mobility, and recovery. Essential for maintaining peak physical condition and preventing injury.
+                    </div>
+                    <div class="workout-stats">
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">15</span>
+                            <span class="workout-stat-label">Points</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">🧘</span>
+                            <span class="workout-stat-label">Low</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">🌟</span>
+                            <span class="workout-stat-label">Recovery</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Complete Workout</button>
+                </div>
 
-               <div class="workout-customizer">
-                   <div class="customizer-group">
-                       <h4>Workout Duration</h4>
-                       <div class="time-selector">
-                           <div class="time-option" onclick="selectTime('5')" data-time="5">5 min</div>
-                           <div class="time-option" onclick="selectTime('10')" data-time="10">10 min</div>
-                           <div class="time-option" onclick="selectTime('15')" data-time="15">15 min</div>
-                           <div class="time-option" onclick="selectTime('20')" data-time="20">20 min</div>
-                           <div class="time-option" onclick="selectTime('30')" data-time="30">30 min</div>
-                       </div>
-                   </div>
-                   
-                   <div class="customizer-group">
-                       <h4>Intensity Level</h4>
-                       <div class="time-selector">
-                           <div class="time-option" onclick="selectIntensity('easy')" data-intensity="easy">Easy</div>
-                           <div class="time-option" onclick="selectIntensity('moderate')" data-intensity="moderate">Moderate</div>
-                           <div class="time-option" onclick="selectIntensity('hard')" data-intensity="hard">Hard</div>
-                           <div class="time-option" onclick="selectIntensity('beast')" data-intensity="beast">Beast Mode</div>
-                       </div>
-                   </div>
-                   
-                   <div class="customizer-group">
-                       <h4>Equipment</h4>
-                       <div class="time-selector">
-                           <div class="time-option" onclick="selectEquipment('none')" data-equipment="none">None</div>
-                           <div class="time-option" onclick="selectEquipment('bodyweight')" data-equipment="bodyweight">Bodyweight</div>
-                           <div class="time-option" onclick="selectEquipment('basic')" data-equipment="basic">Basic Gear</div>
-                           <div class="time-option" onclick="selectEquipment('full')" data-equipment="full">Full Gym</div>
-                       </div>
-                   </div>
-               </div>
+                <div class="workout-card" onclick="completeWorkout('sports', 20, 'Sports Activity')">
+                    <div class="workout-header">
+                        <div class="workout-info">
+                            <h3>Sports Activity</h3>
+                        </div>
+                        <div class="workout-duration">30-60 min</div>
+                    </div>
+                    <div class="workout-description">
+                        Play sports, join a team activity, or engage in recreational physical activity. Fun way to stay active and social.
+                    </div>
+                    <div class="workout-stats">
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">20</span>
+                            <span class="workout-stat-label">Points</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">⚽</span>
+                            <span class="workout-stat-label">Fun</span>
+                        </div>
+                        <div class="workout-stat">
+                            <span class="workout-stat-value">👥</span>
+                            <span class="workout-stat-label">Social</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Complete Workout</button>
+                </div>
+            </div>
+        </div>
 
-               <button class="start-workout-btn" id="start-workout-btn" onclick="startCustomWorkout()" disabled>
-                   Select Workout Type & Duration to Start
-               </button>
-           </div>
-       </section>
+        <!-- Fitness Leaderboard -->
+        <div class="fitness-leaderboard fade-in-up">
+            <h2 class="section-title">Physical Performance Leaderboard</h2>
+            <p style="text-align: center; color: rgba(255,255,255,0.7); margin-bottom: 2rem;">
+                Rankings based on your total fitness points from the unified leaderboard system
+            </p>
+            <div class="leaderboard-list" id="fitnessLeaderboardList">
+                <!-- Leaderboard will be populated by JavaScript -->
+            </div>
+        </div>
+    </main>
 
-       <!-- Fitness Leaderboard Section -->
-       <section class="live-leaderboard fade-in-up">
-           <div class="leaderboard-container">
-               <div class="leaderboard-header">
-                   <h2 class="section-heading">🏆 Fitness Performance Leaderboard</h2>
-                   <p style="color: rgba(255, 255, 255, 0.8);">Compete with real students based on workout consistency and fitness achievements!</p>
-               </div>
-               
-               <!-- Fitness metrics explanation -->
-               <div style="background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.2); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
-                   <h4 style="color: #e74c3c; margin-bottom: 1rem; text-align: center;">🎯 How Fitness Score is Calculated</h4>
-                   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
-                       <div>
-                           <div style="color: #f39c12; font-weight: 700; font-size: 1.1rem;">40 points</div>
-                           <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">This Week's Workouts<br>(4 = max points)</div>
-                       </div>
-                       <div>
-                           <div style="color: #f39c12; font-weight: 700; font-size: 1.1rem;">35 points</div>
-                           <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Workout Streak<br>(consistency bonus)</div>
-                       </div>
-                       <div>
-                           <div style="color: #f39c12; font-weight: 700; font-size: 1.1rem;">25 points</div>
-                           <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Long-term Average<br>(overall consistency)</div>
-                       </div>
-                   </div>
-               </div>
-               
-               <!-- Real fitness leaderboard container -->
-               <div id="fitnessLeaderboard" style="min-height: 300px;">
-                   <div style="text-align: center; padding: 3rem; color: #666;">
-                       <i class="fas fa-dumbbell fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                       <p>Loading fitness competition...</p>
-                   </div>
-               </div>
-               
-               <!-- Fitness testing buttons -->
-               <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(231, 76, 60, 0.1); border-radius: 16px;">
-                   <h4 style="color: #e74c3c; margin-bottom: 1rem;">💪 Complete Workouts</h4>
-                   
-                   <!-- Working buttons with correct function calls -->
-                   <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem;">
-                       <button onclick="completeCardioWorkout()" class="btn btn-primary" style="
-                           background: linear-gradient(135deg, #f39c12, #e67e22);
-                           color: #000;
-                           border: none;
-                           padding: 1rem 1.5rem;
-                           border-radius: 50px;
-                           font-weight: 600;
-                           cursor: pointer;
-                       ">
-                           🏃‍♂️ Complete Cardio (+25 XP)
-                       </button>
-                       
-                       <button onclick="completeStrengthWorkout()" class="btn btn-primary" style="
-                           background: linear-gradient(135deg, #e74c3c, #c0392b);
-                           color: #fff;
-                           border: none;
-                           padding: 1rem 1.5rem;
-                           border-radius: 50px;
-                           font-weight: 600;
-                           cursor: pointer;
-                       ">
-                           🏋️‍♂️ Complete Strength (+30 XP)
-                       </button>
-                       
-                       <button onclick="completeSportsWorkout()" class="btn btn-primary" style="
-                           background: linear-gradient(135deg, #27ae60, #229954);
-                           color: #fff;
-                           border: none;
-                           padding: 1rem 1.5rem;
-                           border-radius: 50px;
-                           font-weight: 600;
-                           cursor: pointer;
-                       ">
-                           ⚽ Complete Sports (+20 XP)
-                       </button>
-                   </div>
-                   
-                   <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                       <button onclick="addTestFitnessCompetitor()" class="btn btn-secondary" style="
-                           background: rgba(255, 255, 255, 0.1);
-                           color: rgba(255, 255, 255, 0.8);
-                           border: 1px solid rgba(255, 255, 255, 0.2);
-                           padding: 0.75rem 1.5rem;
-                           border-radius: 25px;
-                           cursor: pointer;
-                       ">
-                           Add Test Competitor
-                       </button>
-                       
-                       <button onclick="resetFitnessData()" class="btn btn-secondary" style="
-                           background: rgba(231, 76, 60, 0.8);
-                           color: #fff;
-                           border: none;
-                           padding: 0.75rem 1.5rem;
-                           border-radius: 25px;
-                           cursor: pointer;
-                       ">
-                           Reset Fitness Board
-                       </button>
-                   </div>
-                   
-                   <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 1rem;">
-                       Beta testing: Complete different workout types to see your fitness score and rank change!
-                   </p>
-               </div>
-
-               <!-- Share fitness achievements -->
-               <div style="text-align: center; margin-top: 2rem;">
-                   <button class="btn btn-primary" onclick="shareFitnessRank()">Share My Fitness Rank</button>
-                   <button class="btn btn-secondary" onclick="inviteFitnessCompetitors()">Challenge Friends</button>
-               </div>
-           </div>
-       </section>
-
-       <!-- Performance Stats -->
-       <section class="performance-stats fade-in-up">
-           <div class="stats-container">
-               <h2 class="stats-title">Community Performance Results</h2>
-               <div class="stats-grid">
-                   <div class="stat-card">
-                       <div class="stat-number" id="energy-boost">89%</div>
-                       <div class="stat-label">Report Energy Boost</div>
-                   </div>
-                   <div class="stat-card">
-                       <div class="stat-number" id="strength-gains">3.2x</div>
-                       <div class="stat-label">Average Strength Gain</div>
-                   </div>
-                   <div class="stat-card">
-                       <div class="stat-number" id="habit-lock">21</div>
-                       <div class="stat-label">Days to Habit Lock</div>
-                   </div>
-                   <div class="stat-card">
-                       <div class="stat-number" id="active-streaks">847</div>
-                       <div class="stat-label">Active Streaks Today</div>
-                   </div>
-               </div>
-           </div>
-       </section>
-
-       <!-- Training Categories Section -->
-       <section id="training-types" class="performance-categories fade-in-up">
-           <div class="performance-card">
-               <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80');">
-                   <div class="card-overlay">Endurance</div>
-               </div>
-               <div class="performance-card-content">
-                   <h2>Cardiovascular Conditioning</h2>
-                   <p>Build cardiovascular endurance that powers through long study sessions and high-pressure situations. Train your heart for sustained performance.</p>
-                   <a href="cardio.html" class="btn btn-primary">Train Cardio</a>
-               </div>
-           </div>
-
-           <div class="performance-card">
-               <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80');">
-                   <div class="card-overlay">Strength</div>
-               </div>
-               <div class="performance-card-content">
-                   <h2>Functional Strength</h2>
-                   <p>Develop functional strength that translates to confidence, better posture, and the physical presence of a high performer.</p>
-                   <a href="strength.html" class="btn btn-primary">Build Strength</a>
-               </div>
-           </div>
-
-           <div class="performance-card">
-               <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80');">
-                   <div class="card-overlay">Mobility</div>
-               </div>
-               <div class="performance-card-content">
-                   <h2>Movement Quality</h2>
-                   <p>Enhance mobility and movement patterns to prevent injury and maintain peak physical condition throughout demanding schedules.</p>
-                   <a href="mobility.html" class="btn btn-primary">Improve Mobility</a>
-               </div>
-           </div>
-
-           <div class="performance-card">
-               <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=600&q=80');">
-                   <div class="card-overlay">Efficiency</div>
-               </div>
-               <div class="performance-card-content">
-                   <h2>HIIT Training</h2>
-                   <p>Time-efficient, high-intensity protocols designed for busy high achievers. Maximum results in minimum time with proper recovery.</p>
-                   <a href="hiit.html" class="btn btn-primary">Train HIIT</a>
-               </div>
-           </div>
-
-           <div class="performance-card">
-               <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80');">
-                   <div class="card-overlay">Bodyweight</div>
-               </div>
-               <div class="performance-card-content">
-                   <h2>Calisthenics</h2>
-                   <p>Master bodyweight movements that build functional strength, balance, and athletic coordination without requiring equipment.</p>
-                   <a href="calisthenics.html" class="btn btn-primary">Master Bodyweight</a>
-               </div>
-           </div>
-
-           <div class="performance-card">
-               <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=600&q=80');">
-                   <div class="card-overlay">Foundation</div>
-               </div>
-               <div class="performance-card-content">
-                   <h2>Core Stability</h2>
-                   <p>Develop a strong core that improves posture, reduces fatigue, and creates the foundation for all athletic performance.</p>
-                   <a href="core.html" class="btn btn-primary">Strengthen Core</a>
-               </div>
-           </div>
-       </section>
-
-       <!-- Elite Features Section -->
-       <section class="elite-features fade-in-up">
-           <div class="features-container">
-               <h2 class="features-title">Why Elite Students Choose Our Training</h2>
-               <div class="features-grid">
-                   <div class="feature-card">
-                       <div class="feature-icon">
-                           <i class="fas fa-gamepad"></i>
-                       </div>
-                       <h3>Gamified Progress</h3>
-                       <p>Turn fitness into a game with streaks, challenges, leaderboards, and rewards. Build habits that stick through positive reinforcement.</p>
-                   </div>
-
-                   <div class="feature-card">
-                       <div class="feature-icon">
-                           <i class="fas fa-users"></i>
-                       </div>
-                       <h3>Student Community</h3>
-                       <p>Connect with motivated students across Australia. Share achievements, compete in challenges, and stay accountable together.</p>
-                   </div>
-
-                   <div class="feature-card">
-                       <div class="feature-icon">
-                           <i class="fas fa-chart-line"></i>
-                       </div>
-                       <h3>Performance Analytics</h3>
-                       <p>Track your physical metrics like a pro athlete. Monitor strength gains, endurance improvements, and optimize your training for peak results.</p>
-                   </div>
-
-                   <div class="feature-card">
-                       <div class="feature-icon">
-                           <i class="fas fa-stopwatch"></i>
-                       </div>
-                       <h3>Time-Optimized Protocols</h3>
-                       <p>Training designed for busy high achievers. Get maximum physical benefits in minimal time with scientifically-backed efficiency protocols.</p>
-                   </div>
-               </div>
-           </div>
-       </section>
-
-       <!-- CTA Section -->
-       <section class="performance-cta fade-in-up">
-           <div class="cta-content">
-               <h2 class="cta-title">Build Your Physical Foundation Today</h2>
-               <p class="cta-subtitle">Join 1,247 high-performing students using our gamified training protocols to build the physical foundation for academic and life success.</p>
-               <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                   <a href="signup.html" class="btn btn-primary">Start Free Trial</a>
-                   <button class="btn btn-secondary" onclick="shareWithFriends()">Invite Friends</button>
-               </div>
-           </div>
-       </section>
-
-       <!-- Footer -->
-       <footer>
-           <div class="footer-content">
-               <ul class="footer-links">
-                   <li><a href="privacy.html">Privacy Policy</a></li>
-                   <li><a href="terms.html">Terms of Service</a></li>
-                   <li><a href="contact.html">Contact Us</a></li>
-                   <li><a href="about.html">About</a></li>
-               </ul>
-               <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
-           </div>
-       </footer>
-   </div>
-
-   <script>
-       // API Service Class - VivifyAPI
-       class VivifyAPI {
-           constructor() {
-               this.baseURL = '/api';
-               this.token = localStorage.getItem('authToken');
-           }
-           
-           async request(endpoint, options = {}) {
-               const config = {
-                   headers: {
-                       'Content-Type': 'application/json',
-                       ...(this.token && { Authorization: `Bearer ${this.token}` })
-                   },
-                   ...options
-               };
-               
-               const response = await fetch(`${this.baseURL}${endpoint}`, config);
-               if (!response.ok) {
-                   throw new Error(`API Error: ${response.status}`);
-               }
-               return response.json();
-           }
-           
-           async submitWorkout(workoutData) {
-               return this.request('/fitness/workouts', {
-                   method: 'POST',
-                   body: JSON.stringify(workoutData)
-               });
-           }
-           
-           async getLeaderboard() {
-               return this.request('/fitness/leaderboard');
-           }
-           
-           async syncWorkouts(workouts) {
-               return this.request('/fitness/sync', {
-                   method: 'POST',
-                   body: JSON.stringify({ workouts })
-               });
-           }
-       }
-
-       // Initialize API service
-       const api = new VivifyAPI();
-
-       // Toast Notification System
-       function createToastContainer() {
-           if (!document.getElementById('toastContainer')) {
-               const container = document.createElement('div');
-               container.id = 'toastContainer';
-               container.style.cssText = `
-                   position: fixed;
-                   top: 20px;
-                   right: 20px;
-                   z-index: 10000;
-                   max-width: 380px;
-                   pointer-events: none;
-               `;
-               document.body.appendChild(container);
-           }
-       }
-
-       function showWorkoutToast(title, message, stats = null, duration = 3500) {
-           createToastContainer();
-           
-           const toast = document.createElement('div');
-           toast.style.cssText = `
-               background: rgba(27, 27, 27, 0.95);
-               border: 1px solid rgba(255, 255, 255, 0.1);
-               border-left: 4px solid #27ae60;
-               border-radius: 12px;
-               padding: 1rem 1.25rem;
-               margin-bottom: 0.75rem;
-               box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-               backdrop-filter: blur(20px);
-               transform: translateX(100%);
-               opacity: 0;
-               transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-               cursor: pointer;
-               pointer-events: auto;
-               color: #fff;
-               font-family: 'Inter', sans-serif;
-           `;
-
-           let statsHtml = '';
-           if (stats) {
-               statsHtml = '<div style="display: flex; gap: 1rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">';
-               Object.entries(stats).forEach(([key, value]) => {
-                   statsHtml += `
-                       <div style="text-align: center; flex: 1;">
-                           <div style="font-size: 1.1rem; font-weight: 700; color: #27ae60;">${value}</div>
-                           <div style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px;">${key}</div>
-                       </div>
-                   `;
-                });
-               statsHtml += '</div>';
-           }
-
-           toast.innerHTML = `
-               <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                   <div style="width: 24px; height: 24px; border-radius: 50%; background: #27ae60; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #000; font-weight: 600;">✓</div>
-                   <div style="font-weight: 600; font-size: 0.95rem; flex: 1;">${title}</div>
-                   <button onclick="hideToast(this)" style="background: none; border: none; color: rgba(255, 255, 255, 0.5); cursor: pointer; font-size: 1.1rem; padding: 0; width: 20px; height: 20px;">&times;</button>
-               </div>
-               <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); line-height: 1.4;">${message}</div>
-               ${statsHtml}
-           `;
-
-           document.getElementById('toastContainer').appendChild(toast);
-
-           // Show toast
-           setTimeout(() => {
-               toast.style.transform = 'translateX(0)';
-               toast.style.opacity = '1';
-           }, 100);
-
-           // Auto-hide
-           setTimeout(() => {
-               hideToastElement(toast);
-           }, duration);
-
-           // Click to dismiss
-           toast.addEventListener('click', () => {
-               hideToastElement(toast);
-           });
-       }
-
-       function hideToast(button) {
-           const toast = button.closest('div').parentElement;
-           hideToastElement(toast);
-       }
-
-       function hideToastElement(toast) {
-           if (toast && toast.parentNode) {
-               toast.style.transform = 'translateX(100%)';
-               toast.style.opacity = '0';
-               setTimeout(() => {
-                   if (toast.parentNode) {
-                       toast.parentNode.removeChild(toast);
-                   }
-               }, 400);
-           }
-       }
-
-       // Fitness Helper Functions
-       function calculateRealFitnessStreak(activities) {
-           if (activities.length === 0) return 0;
-           
-           const sorted = activities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-           
-           let streak = 0;
-           let currentDate = new Date();
-           currentDate.setHours(0, 0, 0, 0);
-           
-           for (let i = 0; i < 30; i++) {
-               const checkDate = new Date(currentDate.getTime() - (i * 24 * 60 * 60 * 1000));
-               const hasWorkout = sorted.some(activity => {
-                   const activityDate = new Date(activity.timestamp);
-                   activityDate.setHours(0, 0, 0, 0);
-                   return activityDate.getTime() === checkDate.getTime();
-               });
-               
-               if (hasWorkout) {
-                   streak++;
-               } else if (streak > 0) {
-                   break;
-               }
-           }
-           
-           return streak;
-       }
-       
-       function calculateAvgWorkoutsPerWeek(activities) {
-           if (activities.length === 0) return 0;
-           
-           const oldestActivity = new Date(activities[activities.length - 1].timestamp);
-           const now = new Date();
-           const weeksDiff = Math.max(1, (now - oldestActivity) / (7 * 24 * 60 * 60 * 1000));
-           
-           return Math.round((activities.length / weeksDiff) * 10) / 10;
-       }
-
-       // Fixed Fitness Leaderboard System
-       class FixedFitnessLeaderboard {
-           constructor() {
-               this.userId = this.getCurrentUserId();
-               console.log("Initializing fitness leaderboard for user:", this.userId);
-           }
-       
-           getCurrentUserId() {
-               let userId = localStorage.getItem('vivifyUserId');
-               if (!userId) {
-                   userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                   localStorage.setItem('vivifyUserId', userId);
-               }
-               return userId;
-           }
-       
-           completeWorkout(workoutType = 'general') {
-               console.log("Completing workout:", workoutType);
-               
-               const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-               
-               if (!performanceData.activities) performanceData.activities = [];
-               if (!performanceData.scores) performanceData.scores = { physical: 0, overall: 0 };
-       
-               const workoutTypes = {
-                   'cardio': { name: 'Cardio Session', points: 25, description: 'Completed cardio workout', emoji: '🏃‍♂️' },
-                   'strength': { name: 'Strength Training', points: 30, description: 'Completed strength training', emoji: '🏋️‍♂️' },
-                   'sports': { name: 'Sports Activity', points: 20, description: 'Completed sports activity', emoji: '⚽' },
-                   'pushups':  { name: 'Push-Up Challenge',points: 50, description: 'Completed daily push-up challenge', emoji: '💥' },
-                   'general': { name: 'Workout', points: 20, description: 'Completed workout session', emoji: '💪' }
-               };
-       
-               const workout = workoutTypes[workoutType] || workoutTypes.general;
-       
-               const newActivity = {
-                   type: 'workout_complete',
-                   category: 'physical',
-                   description: workout.description,
-                   workoutType: workoutType,
-                   points: workout.points,
-                   timestamp: new Date().toISOString(),
-                   isFitnessActivity: true
-               };
-               
-               performanceData.activities.unshift(newActivity);
-               localStorage.setItem('performanceData', JSON.stringify(performanceData));
-       
-               const newMetrics = this.updateFitnessLeaderboard();
-               this.showWorkoutFeedback(workout, newMetrics);
-               this.renderFitnessLeaderboard('fitnessLeaderboard');
-           }
-       
-           updateFitnessLeaderboard() {
-               const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-               const activities = performanceData.activities || [];
-               
-               const fitnessActivities = activities.filter(activity => 
-                   activity.category === 'physical' || 
-                   activity.type === 'workout_complete' ||
-                   activity.workoutType ||
-                   activity.isFitnessActivity
-               );
-               
-               const fitnessMetrics = this.calculateFitnessMetrics(fitnessActivities);
-               
-               let fitnessLeaderboard = JSON.parse(localStorage.getItem('fitnessLeaderboard') || '[]');
-               fitnessLeaderboard = fitnessLeaderboard.filter(user => user.userId !== this.userId);
-               
-               const userProfile = this.getUserProfile();
-               const userFitnessStats = {
-                   userId: this.userId,
-                   profile: userProfile,
-                   fitnessMetrics: fitnessMetrics,
-                   timestamp: new Date().toISOString()
-               };
-               
-               fitnessLeaderboard.push(userFitnessStats);
-               fitnessLeaderboard.sort((a, b) => b.fitnessMetrics.fitnessScore - a.fitnessMetrics.fitnessScore);
-               fitnessLeaderboard.forEach((user, index) => {
-                   user.rank = index + 1;
-               });
-               
-               localStorage.setItem('fitnessLeaderboard', JSON.stringify(fitnessLeaderboard));
-               return fitnessMetrics;
-           }
-       
-           calculateFitnessMetrics(fitnessActivities) {
-               const totalWorkouts = fitnessActivities.length;
-               const thisWeekWorkouts = this.getThisWeekCount(fitnessActivities);
-               const fitnessStreak = calculateRealFitnessStreak(fitnessActivities);
-               const totalFitnessXP = fitnessActivities.reduce((total, activity) => total + (activity.points || 0), 0);
-               const avgWorkoutsPerWeek = calculateAvgWorkoutsPerWeek(fitnessActivities);
-               
-               const weeklyScore = Math.min(40, (thisWeekWorkouts / 4) * 40);
-               const streakScore = Math.min(35, fitnessStreak * 2.5);
-               const consistencyScore = Math.min(25, (avgWorkoutsPerWeek / 4) * 25);
-               const fitnessScore = Math.round(weeklyScore + streakScore + consistencyScore);
-       
-               return {
-                   totalWorkouts,
-                   thisWeekWorkouts,
-                   fitnessStreak,
-                   totalFitnessXP,
-                   fitnessScore,
-                   avgWorkoutsPerWeek,
-                   lastWorkout: fitnessActivities.length > 0 ? fitnessActivities[0].timestamp : null
-               };
-           }
-       
-           getThisWeekCount(activities) {
-               const weekStart = new Date();
-               weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-               weekStart.setHours(0, 0, 0, 0);
-               
-               return activities.filter(activity => 
-                   new Date(activity.timestamp) >= weekStart
-               ).length;
-           }
-       
-           getUserProfile() {
-               const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-               const username = localStorage.getItem('username') || profile.name || 'Student';
-               
-               return {
-                   id: this.userId,
-                   name: username,
-                   school: profile.school || 'Knox Grammar',
-                   yearLevel: profile.yearLevel || '10',
-                   avatar: this.getAvatarInitials(username)
-               };
-           }
-       
-           getAvatarInitials(name) {
-               if (!name) return 'ST';
-               return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-           }
-       
-           showWorkoutFeedback(workout, metrics) {
-               showWorkoutToast(
-                   `${workout.name} Complete!`,
-                   `Great job! +${workout.points} XP earned`,
-                   {
-                       'Score': metrics.fitnessScore,
-                       'Streak': `${metrics.fitnessStreak} days`,
-                       'Weekly': `${metrics.thisWeekWorkouts}/4`
-                   }
-               );
-           }
-                     
-           async renderFitnessLeaderboard(containerId = 'fitnessLeaderboard') {
-               const el = document.getElementById(containerId);
-               if (!el) return;
-
-               el.innerHTML = `
-                   <div style="text-align:center;padding:3rem;color:#777">
-                   <i class="fas fa-dumbbell fa-spin" style="font-size:2rem;margin-bottom:1rem;"></i>
-                   <p>Loading fitness competition...</p>
-                   </div>
-               `;
-
-               const render = (rows = []) => {
-                   if (!rows.length) {
-                   el.innerHTML = `
-                       <div style="text-align:center;padding:4rem;color:rgba(255,255,255,0.6);">
-                       <i class="fas fa-dumbbell" style="font-size:3rem;margin-bottom:1rem;opacity:.3;"></i>
-                       <h3 style="color:#ccc;margin-bottom:1rem;">Start Your Fitness Journey!</h3>
-                       <p>Complete your first workout to see your fitness score and join the leaderboard!</p>
-                       </div>`;
-                   return;
-                   }
-
-                   const me = this.userId;
-                   el.innerHTML = `
-                   <div style="margin-bottom:2rem;text-align:center;">
-                       <div style="color:#e74c3c;font-size:1.3rem;font-weight:800;margin-bottom:.5rem;">
-                       🏆 Real Fitness Competition
-                       </div>
-                       <div style="color:rgba(255,255,255,.8);font-size:1rem;">
-                       ${rows.length} students competing based on actual workouts
-                       </div>
-                   </div>
-                   <div class="leaderboard-list" style="display:flex;flex-direction:column;gap:1rem;">
-                       ${rows.map((u, idx) => {
-                       const rank = idx + 1;
-                       const isYou = u.userId === me;
-                       const rankColor = rank===1 ? '#ffd700' : rank===2 ? '#c0c0c0' : rank===3 ? '#cd7f32' : '#e74c3c';
-                       const avatar = (u.username || 'ST').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-
-                       return `
-                           <div style="
-                           display:flex;align-items:center;gap:1rem;padding:1.5rem;
-                           background:${isYou ? 'rgba(231,76,60,.2)' : 'rgba(255,255,255,.05)'};
-                           border-radius:16px;border:${isYou ? '3px solid #e74c3c' : '1px solid rgba(255,255,255,.1)'};
-                           position:relative;">
-                           ${isYou ? '<div style="position:absolute;top:-10px;right:-10px;background:#e74c3c;color:#fff;padding:.4rem .8rem;border-radius:15px;font-size:.7rem;font-weight:700;">YOU 💪</div>' : ''}
-
-                           <div style="font-size:2rem;font-weight:900;color:${rankColor};min-width:60px;text-align:center;">${rank}</div>
-
-                           <div style="width:70px;height:70px;border-radius:50%;
-                               background:${isYou ? 'linear-gradient(135deg,#e74c3c,#c0392b)' : 'linear-gradient(135deg,#555,#777)'};
-                               display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1.3rem;">
-                               ${avatar}
-                           </div>
-
-                           <div style="flex-grow:1;">
-                               <div style="color:#fff;font-weight:800;font-size:1.2rem;margin-bottom:.3rem;">
-                               ${u.username || 'Student'} ${rank===1 ? '👑' : isYou ? '🔥' : ''}
-                               </div>
-                               <div style="color:rgba(255,255,255,.8);font-size:.9rem;margin-bottom:.2rem;">
-                               ${u.school || '—'} ${u.yearLevel ? `• Year ${u.yearLevel}` : ''}
-                               </div>
-                               <div style="color:rgba(255,255,255,.6);font-size:.8rem;">
-                               Streak: ${u.streak ?? 0} days • Total: ${u.totalWorkouts ?? 0} workouts
-                               </div>
-                           </div>
-
-                           <div style="text-align:right;">
-                               <div style="color:#e74c3c;font-weight:900;font-size:1.6rem;margin-bottom:.3rem;">
-                               ${u.fitnessScore ?? 0}
-                               </div>
-                               <div style="color:rgba(255,255,255,.8);font-size:.8rem;margin-bottom:.5rem;">FITNESS SCORE</div>
-                               <div style="background:rgba(231,76,60,.2);color:#ff6b35;font-weight:700;font-size:.9rem;padding:.3rem .6rem;border-radius:12px;">
-                               ${(u.thisWeekWorkouts ?? 0)}/4 this week
-                               </div>
-                           </div>
-                           </div>`;
-                       }).join('')}
-                   </div>
-                   `;
-               };
-
-               try {
-                   const auth = localStorage.getItem('authToken');
-                   const res = await fetch('/api/fitness/leaderboard', {
-                   headers: auth ? { Authorization: `Bearer ${auth}` } : {}
-                   });
-                   if (!res.ok) throw new Error('bad status ' + res.status);
-                   const data = await res.json();
-                   render(data);
-               } catch (e) {
-                   console.warn('API failed, falling back to localStorage leaderboard', e);
-                   const local = JSON.parse(localStorage.getItem('fitnessLeaderboard') || '[]')
-                   .map(u => ({
-                       userId: u.userId,
-                       username: u.profile?.name,
-                       school: u.profile?.school,
-                       yearLevel: u.profile?.yearLevel,
-                       fitnessScore: u.fitnessMetrics?.fitnessScore ?? 0,
-                       totalWorkouts: u.fitnessMetrics?.totalWorkouts ?? 0,
-                       thisWeekWorkouts: u.fitnessMetrics?.thisWeekWorkouts ?? 0,
-                       streak: u.fitnessMetrics?.fitnessStreak ?? 0,
-                   }))
-                   .sort((a,b) => (b.fitnessScore||0) - (a.fitnessScore||0));
-                   render(local);
-               }
-           }
-       }    
-       
-       // Initialize the fitness leaderboard
-       window.fixedFitnessBoard = new FixedFitnessLeaderboard();
-
-       // Sync Function
-       async function syncWorkoutData() {
-           const pendingWorkouts = JSON.parse(localStorage.getItem('pendingWorkouts') || '[]');
-           if (pendingWorkouts.length > 0) {
-               try {
-                   await api.syncWorkouts(pendingWorkouts);
-                   localStorage.removeItem('pendingWorkouts');
-                   console.log('Synced', pendingWorkouts.length, 'pending workouts');
-                   
-                   showWorkoutToast('Synced!', `${pendingWorkouts.length} workouts synced to server`);
-                   
-                   // Refresh leaderboard after sync
-                   if (window.fixedFitnessBoard) {
-                       window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
-                   }
-               } catch (error) {
-                   console.warn('Sync failed, keeping local data:', error);
-               }
-           }
-       }
-       
-       // Main app initialization
-       document.addEventListener('DOMContentLoaded', function() {
-           // Try to sync any pending workouts when page loads
-           syncWorkoutData();
-           
-           // Check authentication status
-           const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
-           
-           // Update UI based on login status
-           updateAuthState(isLoggedIn);
-           
-           // Initialize live stats
-           updateLiveStats();
-           
-           // Start challenge timer
-           startChallengeTimer();
-           
-           // Load user progress
-           loadUserProgress();
-           
-           // Render fitness leaderboard
-           setTimeout(() => {
-               window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
-           }, 500);
-           
-           // Add scroll animations
-           const observerOptions = {
-               threshold: 0.1,
-               rootMargin: '0px 0px -50px 0px'
-           };
-           
-           const observer = new IntersectionObserver((entries) => {
-               entries.forEach(entry => {
-                   if (entry.isIntersecting) {
-                       entry.target.style.opacity = '1';
-                       entry.target.style.transform = 'translateY(0)';
-                   }
-               });
-           }, observerOptions);
-           
-           // Observe all fade-in elements
-           document.querySelectorAll('.fade-in-up').forEach(el => {
-               el.style.opacity = '0';
-               el.style.transform = 'translateY(30px)';
-               el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-               observer.observe(el);
-           });
-           
-           function updateAuthState(isLoggedIn) {
-               // Navigation updates
-               document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
-               document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
-               document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
-               document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
-               document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
-           }
-           
-           // Logout functionality
-           const logoutLink = document.getElementById('logout-link');
-           if (logoutLink) {
-               logoutLink.addEventListener('click', function(e) {
-                   e.preventDefault();
-                   localStorage.clear();
-                   updateAuthState(false);
-                   window.location.href = 'index.html';
-               });
-           }
-           
-           // Smooth scrolling for anchor links
-           document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-               anchor.addEventListener('click', function(e) {
-                   e.preventDefault();
-                   const target = document.querySelector(this.getAttribute('href'));
-                   if (target) {
-                       target.scrollIntoView({
-                          behavior: 'smooth',
-                          block: 'start'
-                      });
-                  }
-              });
-          });
-          
-          // Header background on scroll
-          window.addEventListener('scroll', function() {
-              const header = document.querySelector('header');
-              if (window.scrollY > 100) {
-                  header.style.background = 'rgba(10, 10, 10, 0.98)';
-              } else {
-                  header.style.background = 'rgba(10, 10, 10, 0.95)';
-              }
-          });
-
-          // Auto-select defaults for quick start
-          setTimeout(() => {
-              selectIntensity('moderate');
-              selectEquipment('bodyweight');
-          }, 1000);
-      });
-
-       // Live Stats Simulation
-       function updateLiveStats() {
-           const baseStats = {
-               students: 1247,
-               activeWorkouts: 89,
-               todayCompletions: 156,
-               energyBoost: 89,
-               strengthGains: 3.2,
-               activeStreaks: 847,
-               challengeCompleted: 423,
-               challengeAverage: 67
-           };
-           
-           setInterval(() => {
-               // Simulate live updates
-               const variation = () => Math.floor(Math.random() * 10) - 5;
-               
-               document.getElementById('live-students').textContent = baseStats.students + variation();
-               document.getElementById('active-workouts').textContent = Math.max(0, baseStats.activeWorkouts + variation());
-               document.getElementById('today-completions').textContent = baseStats.todayCompletions + Math.abs(variation());
-               document.getElementById('challenge-completed').textContent = baseStats.challengeCompleted + Math.abs(variation());
-           }, 15000);
-       }
-
-       // Challenge Timer
-       let challengeTimeRemaining = 8 * 3600 + 47 * 60 + 23;
-
-       function startChallengeTimer() {
-           const timer = document.getElementById('challenge-timer');
-           
-           setInterval(() => {
-               challengeTimeRemaining--;
-               const hours = Math.floor(challengeTimeRemaining / 3600);
-               const minutes = Math.floor((challengeTimeRemaining % 3600) / 60);
-               const seconds = challengeTimeRemaining % 60;
-               
-               timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-               
-               if (challengeTimeRemaining <= 0) {
-                   timer.textContent = 'Challenge Ended';
-               }
-           }, 1000);
-       }
-
-       // Challenge Functions
-       let userPushUps = 0;
-       let challengeAccepted = false;
-
-       function acceptChallenge(e) {
-            challengeAccepted = true;
-            document.getElementById('challenge-progress').classList.add('active');
-            document.querySelector('.challenge-widget').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            if (e?.target) {
-                e.target.textContent = 'Challenge Accepted! 💪';
-                e.target.style.background = 'rgba(39, 174, 96, 0.8)';
+    <script>
+        // Mobile menu functions
+        function createMobileMenu() {
+            if (window.innerWidth > 768) return;
+            
+            const authToken = localStorage.getItem('authToken');
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+            const username = localStorage.getItem('username') || 'User';
+            
+            if (!document.getElementById('mobile-menu')) {
+                const header = document.querySelector('header');
+                const mobileMenu = document.createElement('div');
+                mobileMenu.id = 'mobile-menu';
+                mobileMenu.className = 'mobile-menu';
+                
+                let authMenuItems = '';
+                if (isLoggedIn) {
+                    authMenuItems = `
+                        <div class="mobile-menu-divider"></div>
+                        <div class="mobile-user-info">
+                            <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                        </div>
+                        <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                        <a href="profile.html" class="mobile-menu-link">Profile</a>
+                        <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+                    `;
+                } else {
+                    authMenuItems = `
+                        <div class="mobile-menu-divider"></div>
+                        <a href="login.html" class="mobile-menu-link">Login</a>
+                        <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+                    `;
+                }
+                
+                mobileMenu.innerHTML = `
+                    <div class="mobile-menu-content">
+                        <div class="mobile-menu-header">
+                            <div class="logo"><a href="index.html">Vivify</a></div>
+                            <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                        </div>
+                        <div class="mobile-menu-links">
+                            <a href="index.html" class="mobile-menu-link">Home</a>
+                            <a href="habits-tracker.html" class="mobile-menu-link">Daily Habits</a>
+                            <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                            <a href="community.html" class="mobile-menu-link">Community</a>
+                            <a href="about.html" class="mobile-menu-link">About</a>
+                            ${authMenuItems}
+                        </div>
+                    </div>
+                `;
+                header.appendChild(mobileMenu);
+            }
+            
+            if (!document.getElementById('mobile-menu-btn')) {
+                const nav = document.querySelector('nav');
+                const rightNav = nav.querySelector('.right-nav') || nav;
+                const mobileBtn = document.createElement('button');
+                mobileBtn.id = 'mobile-menu-btn';
+                mobileBtn.className = 'mobile-menu-btn';
+                mobileBtn.onclick = toggleMobileMenu;
+                mobileBtn.innerHTML = `
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                `;
+                rightNav.appendChild(mobileBtn);
             }
         }
 
-        // Fixed logPushUps function with proper API integration
-        async function logPushUps() {
-            if (!challengeAccepted) {
-                alert('Accept the challenge first!');
+        function handleMobileLogout(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                closeMobileMenu();
+                window.location.reload();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.remove('active');
+            btn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Backend sync function
+        async function syncPointsToBackend(points, activityType, metadata = {}) {
+            try {
+                const username = localStorage.getItem('username');
+                
+                if (!username) {
+                    console.warn('No username - points saved locally only');
+                    return false;
+                }
+                
+                console.log(`Syncing ${points} points for ${activityType} to backend...`);
+                
+                const response = await fetch('https://vivify-backend.onrender.com/api/users/update-score', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        pointsToAdd: points,
+                        activityType: activityType,
+                        username: username,
+                        metadata: metadata
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(`✅ Synced to backend: ${result.oldScore} -> ${result.newScore} (+${points})`);
+                    return true;
+                } else {
+                    const error = await response.text();
+                    console.error('❌ Failed to sync points to backend:', error);
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('❌ Error syncing points to backend:', error);
+                return false;
+            }
+        }
+
+        // Fitness tracking
+        let fitnessData = {
+            totalWorkouts: 0,
+            workoutStreak: 0,
+            thisWeek: 0,
+            fitnessPoints: 0,
+            lastWorkout: null,
+            workoutHistory: []
+        };
+
+        function loadFitnessData() {
+            const saved = localStorage.getItem('fitnessData');
+            if (saved) {
+                fitnessData = JSON.parse(saved);
+            }
+            updateFitnessStats();
+        }
+
+        function saveFitnessData() {
+            localStorage.setItem('fitnessData', JSON.stringify(fitnessData));
+        }
+
+        function updateFitnessStats() {
+            document.getElementById('totalWorkouts').textContent = fitnessData.totalWorkouts;
+            document.getElementById('workoutStreak').textContent = fitnessData.workoutStreak;
+            document.getElementById('thisWeek').textContent = fitnessData.thisWeek;
+            document.getElementById('fitnessPoints').textContent = fitnessData.fitnessPoints;
+        }
+
+        function calculateStreak() {
+            if (fitnessData.workoutHistory.length === 0) return 0;
+            
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
+            
+            let streak = 0;
+            let checkDate = new Date();
+            
+            // Check if worked out today or yesterday
+            const hasRecentWorkout = fitnessData.workoutHistory.some(workout => {
+                const workoutDate = new Date(workout.timestamp).toDateString();
+                return workoutDate === today || workoutDate === yesterday;
+            });
+            
+            if (!hasRecentWorkout) return 0;
+            
+            // Calculate consecutive days
+            for (let i = 0; i < 30; i++) {
+                const checkDateStr = checkDate.toDateString();
+                const hasWorkout = fitnessData.workoutHistory.some(workout => 
+                    new Date(workout.timestamp).toDateString() === checkDateStr
+                );
+                
+                if (hasWorkout) {
+                    streak++;
+                } else if (streak > 0) {
+                    break;
+                }
+                
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+            
+            return streak;
+        }
+
+        function calculateThisWeek() {
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            weekStart.setHours(0, 0, 0, 0);
+            
+            return fitnessData.workoutHistory.filter(workout => 
+                new Date(workout.timestamp) >= weekStart
+            ).length;
+        }
+
+        function completeWorkout(type, points, name) {
+            const workout = {
+                type: type,
+                name: name,
+                points: points,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Update fitness data
+            fitnessData.totalWorkouts++;
+            fitnessData.fitnessPoints += points;
+            fitnessData.lastWorkout = workout.timestamp;
+            fitnessData.workoutHistory.unshift(workout);
+            
+            // Recalculate derived stats
+            fitnessData.workoutStreak = calculateStreak();
+            fitnessData.thisWeek = calculateThisWeek();
+            
+            // Save locally
+            saveFitnessData();
+            updateFitnessStats();
+            
+            // Add to unified leaderboard and sync to backend
+            if (window.VivifyLeaderboard) {
+                window.VivifyLeaderboard.addPoints(points, 'fitness_workout', {
+                    workoutType: type,
+                    workoutName: name
+                });
+                
+                // Sync to backend
+                syncPointsToBackend(points, 'fitness_workout', {
+                    workoutType: type,
+                    workoutName: name
+                });
+            }
+            
+            // Show completion message
+            showNotification(`${name} completed! +${points} points earned. Keep building that streak!`, 'success');
+            
+            // Update leaderboard display
+            setTimeout(() => {
+                displayFitnessLeaderboard();
+            }, 1000);
+        }
+
+        function displayFitnessLeaderboard() {
+            const container = document.getElementById('fitnessLeaderboardList');
+            if (!container) return;
+            
+            if (!window.VivifyLeaderboard) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">Leaderboard system not available</div>';
                 return;
             }
-
-            const increment = parseInt(prompt('How many push-ups did you just complete?')) || 0;
-            if (increment > 0) {
-                userPushUps = Math.min(userPushUps + increment, 50);
-
-                // Update UI first (immediate feedback)
-                const progressFill = document.getElementById('progress-fill');
-                const progressText = document.getElementById('progress-text');
-                const percentage = (userPushUps / 50) * 100;
-                progressFill.style.width = percentage + '%';
-                progressText.textContent = `${userPushUps}/50 push-ups completed`;
-
-                // Send to backend with proper error handling
-                try {
-                    const userId = localStorage.getItem('vivifyUserId');
-                    const result = await api.submitWorkout({
-                        userId,
-                        workoutType: 'pushups',
-                        reps: increment,
-                        points: 50,
-                    });
-                    console.log('Workout saved to server:', result);
-                    
-                    // Update fitness leaderboard after successful API call
-                    if (window.fixedFitnessBoard) {
-                        window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
-                    }
-                } catch (error) {
-                    console.warn('Failed to save workout to server:', error);
-                    
-                    // Save to pending workouts for sync later
-                    const pendingWorkouts = JSON.parse(localStorage.getItem('pendingWorkouts') || '[]');
-                    pendingWorkouts.push({
-                        userId: localStorage.getItem('vivifyUserId'),
-                        workoutType: 'pushups',
-                        reps: increment,
-                        points: 50,
-                        timestamp: new Date().toISOString()
-                    });
-                    localStorage.setItem('pendingWorkouts', JSON.stringify(pendingWorkouts));
-                    
-                    showWorkoutToast('Saved Offline', 'Workout saved locally, will sync when online');
-                }
-
-                if (userPushUps >= 50) {
-                    progressText.innerHTML = `🎉 Challenge Complete! You crushed it! 🎉<br><small>+50 XP earned • Streak maintained</small>`;
-                    progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-
-                    window.fixedFitnessBoard.completeWorkout('pushups');
-                }
+            
+            const leaderboard = window.VivifyLeaderboard.getLeaderboard();
+            const currentUsername = localStorage.getItem('username');
+            
+            if (leaderboard.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.6);">
+                        <i class="fas fa-dumbbell" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <h3 style="margin-bottom: 1rem;">Start Your Fitness Journey!</h3>
+                        <p>Complete your first workout to join the leaderboard!</p>
+                    </div>
+                `;
+                return;
             }
+            
+            container.innerHTML = '';
+            
+            // Show top 10
+            const top10 = leaderboard.slice(0, 10);
+            
+            top10.forEach((entry, index) => {
+                const isCurrentUser = entry.username === currentUsername;
+                const rank = index + 1;
+                
+                let icon = entry.username.charAt(0).toUpperCase();
+                if (rank === 1) icon = '👑';
+                else if (rank === 2) icon = '🥈';
+                else if (rank === 3) icon = '🥉';
+                
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+                if (isCurrentUser) {
+                    item.classList.add('current-user');
+                }
+                
+                item.innerHTML = `
+                    <div class="leaderboard-rank">${rank}</div>
+                    <div class="leaderboard-avatar">${icon}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">${entry.displayName || entry.username}${isCurrentUser ? ' (You)' : ''}</div>
+                        <div class="leaderboard-school">${entry.school || 'Knox Grammar'}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="leaderboard-score">${entry.overallScore}</div>
+                        <div class="level-badge">Level ${entry.level}</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
         }
 
-       function loadUserProgress() {
-           const savedPushUps = localStorage.getItem('todayPushUps');
-           if (savedPushUps) {
-               userPushUps = parseInt(savedPushUps);
-               if (userPushUps > 0) {
-                   challengeAccepted = true;
-                   document.getElementById('challenge-progress').classList.add('active');
-                   
-                   const progressFill = document.getElementById('progress-fill');
-                   const progressText = document.getElementById('progress-text');
-                   
-                   const percentage = (userPushUps / 50) * 100;
-                   progressFill.style.width = percentage + '%';
-                   progressText.textContent = `${userPushUps}/50 push-ups completed`;
-                   
-                   if (userPushUps >= 50) {
-                       progressText.innerHTML = `🎉 Challenge Complete! You crushed it! 🎉<br><small>+50 XP earned • Streak maintained</small>`;
-                       progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
 
-                       window.fixedFitnessBoard.completeWorkout('pushups');
-                   }
-               }
-           }
-       }
+        function startQuickWorkout() {
+            showNotification('Choose a workout type above to get started!', 'info');
+            document.querySelector('.quick-workouts').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
 
-       function viewLeaderboard() {
-           document.querySelector('.live-leaderboard').scrollIntoView({ behavior: 'smooth' });
-       }
+        function viewLeaderboard() {
+            document.querySelector('.fitness-leaderboard').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
 
-       function inviteFriends() {
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Join me on Vivify!',
-                   text: 'I\'m building elite fitness habits and crushing challenges. Join me!',
-                   url: window.location.origin
-               });
-           } else {
-               const shareText = `I'm building elite fitness habits on Vivify and crushing today's push-up challenge! Join me: ${window.location.origin}`;
-               navigator.clipboard.writeText(shareText).then(() => {
-                   alert('Invite link copied to clipboard!');
-               });
-           }
-       }
+        // Page initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('User authenticated:', username);
+            
+            // Initialize mobile menu
+            createMobileMenu();
+            
+            // Initialize unified leaderboard
+            if (window.VivifyLeaderboard) {
+                window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+                
+                window.VivifyLeaderboard.onUpdate((data) => {
+                    console.log('Leaderboard updated:', data);
+                    displayFitnessLeaderboard();
+                });
+                
+                // Initial display
+                setTimeout(() => {
+                    displayFitnessLeaderboard();
+                }, 1000);
+                
+                console.log('VivifyLeaderboard initialized successfully');
+            } else {
+                console.error('VivifyLeaderboard not loaded - check js/unified-leaderboard.js');
+            }
+            
+            // Load fitness data
+            loadFitnessData();
+            
+            // Set up logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Set up animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            console.log('Fitness page initialization complete');
+        });
 
-       // Quick Start Workout Functions
-       let selectedWorkout = null;
-       let selectedTime = null;
-       let selectedIntensity = null;
-       let selectedEquipment = null;
-
-       function selectWorkout(type) {
-           selectedWorkout = type;
-           
-           document.querySelectorAll('.workout-option').forEach(option => {
-               option.classList.remove('selected');
-           });
-           document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-           
-           updateStartButton();
-       }
-
-       function selectTime(time) {
-           selectedTime = time;
-           
-           document.querySelectorAll('[data-time]').forEach(option => {
-               option.classList.remove('selected');
-           });
-           document.querySelector(`[data-time="${time}"]`).classList.add('selected');
-           
-           updateStartButton();
-       }
-
-       function selectIntensity(intensity) {
-           selectedIntensity = intensity;
-           
-           document.querySelectorAll('[data-intensity]').forEach(option => {
-               option.classList.remove('selected');
-           });
-           document.querySelector(`[data-intensity="${intensity}"]`).classList.add('selected');
-       }
-
-       function selectEquipment(equipment) {
-           selectedEquipment = equipment;
-           
-           document.querySelectorAll('[data-equipment]').forEach(option => {
-               option.classList.remove('selected');
-           });
-           document.querySelector(`[data-equipment="${equipment}"]`).classList.add('selected');
-       }
-
-       function updateStartButton() {
-           const btn = document.getElementById('start-workout-btn');
-           
-           if (selectedWorkout && selectedTime) {
-               btn.disabled = false;
-               btn.textContent = `Start ${selectedTime} Min ${selectedWorkout.charAt(0).toUpperCase() + selectedWorkout.slice(1)} Workout`;
-           } else {
-               btn.disabled = true;
-               btn.textContent = 'Select Workout Type & Duration to Start';
-           }
-       }
-
-       function startCustomWorkout() {
-           if (!selectedWorkout || !selectedTime) return;
-           
-           const workoutData = {
-               type: selectedWorkout,
-               duration: selectedTime,
-               intensity: selectedIntensity || 'moderate',
-               equipment: selectedEquipment || 'none',
-               startTime: Date.now()
-           };
-           
-           localStorage.setItem('currentWorkout', JSON.stringify(workoutData));
-           
-           alert(`Starting ${selectedTime} minute ${selectedWorkout} workout! 🔥\n\nWorkout logged and timer started. Get ready to crush it!`);
-           
-           // In a real app, this would navigate to the workout screen
-           // For demo, we'll simulate workout completion
-           setTimeout(() => {
-               completeWorkout(workoutData);
-           }, 2000);
-       }
-    
-       // Fixed workout completion functions
-       function completeCardioWorkout() {
-           window.fixedFitnessBoard.completeWorkout('cardio');
-       }
-
-       function completeStrengthWorkout() {
-           window.fixedFitnessBoard.completeWorkout('strength');
-       }
-
-       function completeSportsWorkout() {
-           window.fixedFitnessBoard.completeWorkout('sports');
-       }
-
-       function addTestFitnessCompetitor() {
-           const names = ['Emma Thompson', 'Liam Wilson', 'Sophia Chen', 'Oliver Brown', 'Ava Davis', 'Noah Martinez'];
-           const schools = ['Knox Grammar', 'Sydney Grammar', 'Melbourne High', 'Brisbane Grammar'];
-           
-           const randomName = names[Math.floor(Math.random() * names.length)];
-           const randomSchool = schools[Math.floor(Math.random() * schools.length)];
-           
-           // Create realistic competitor
-           const testUserId = 'fitness_' + Date.now() + '_' + Math.random().toString(36).substr(2, 3);
-           const totalWorkouts = Math.floor(Math.random() * 40) + 15;
-           const thisWeekWorkouts = Math.floor(Math.random() * 6) + 1;
-           const fitnessStreak = Math.floor(Math.random() * 15) + 2;
-           const avgPerWeek = Math.round((Math.random() * 2.5 + 2) * 10) / 10;
-           
-           const testUserData = {
-               userId: testUserId,
-               profile: {
-                   id: testUserId,
-                   name: randomName,
-                   school: randomSchool,
-                   avatar: randomName.split(' ').map(n => n[0]).join('').toUpperCase(),
-                   yearLevel: Math.floor(Math.random() * 6) + 7
-               },
-               fitnessMetrics: {
-                   totalWorkouts: totalWorkouts,
-                   thisWeekWorkouts: thisWeekWorkouts,
-                   fitnessStreak: fitnessStreak,
-                   totalFitnessXP: totalWorkouts * 23 + Math.floor(Math.random() * 150),
-                   fitnessScore: Math.min(100, Math.round((thisWeekWorkouts * 10) + (fitnessStreak * 2.5) + (avgPerWeek * 6))),
-                   avgWorkoutsPerWeek: avgPerWeek,
-                   lastWorkout: new Date(Date.now() - Math.random() * 48 * 60 * 60 * 1000).toISOString()
-               },
-               timestamp: new Date().toISOString()
-           };
-
-           let fitnessLeaderboard = JSON.parse(localStorage.getItem('fitnessLeaderboard') || '[]');
-           fitnessLeaderboard.push(testUserData);
-           
-           fitnessLeaderboard.sort((a, b) => b.fitnessMetrics.fitnessScore - a.fitnessMetrics.fitnessScore);
-           fitnessLeaderboard.forEach((user, index) => {
-               user.rank = index + 1;
-           });
-           
-           localStorage.setItem('fitnessLeaderboard', JSON.stringify(fitnessLeaderboard));
-           
-           if (window.fixedFitnessBoard) {
-               window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
-           }
-           
-           showWorkoutToast('New Competitor!', `${randomName} joined the fitness competition!`);
-       }
-
-       function resetFitnessData() {
-           if (confirm('Reset all fitness data? This will clear your workouts and start fresh.')) {
-               localStorage.removeItem('fitnessLeaderboard');
-               
-               // Clear only fitness activities, keep other data
-               const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-               if (performanceData.activities) {
-                   performanceData.activities = performanceData.activities.filter(activity => 
-                       activity.category !== 'physical' && 
-                       activity.type !== 'workout_complete' && 
-                       !activity.workoutType && 
-                       !activity.isFitnessActivity
-                   );
-               }
-               localStorage.setItem('performanceData', JSON.stringify(performanceData));
-               
-               // Reinitialize
-               if (window.fixedFitnessBoard) {
-                   window.fixedFitnessBoard = new FixedFitnessLeaderboard();
-                   window.fixedFitnessBoard.renderFitnessLeaderboard('fitnessLeaderboard');
-               }
-               
-               showWorkoutToast('Data Reset', 'Fitness data cleared. Complete workouts to rebuild your score!');
-           }
-       }
-
-       function completeWorkout(workoutData) {
-           const completionMessage = `Workout Complete!\n\n${workoutData.duration} min ${workoutData.type} workout\n+${workoutData.duration * 2} XP earned\nStreak maintained!\n\nShare your achievement?`;
-               
-           if (confirm(completionMessage)) {
-               shareWorkoutAchievement(workoutData);
-           }
-           
-           updateWorkoutStats();
-       }
-
-       function updateWorkoutStats() {
-           const completionsEl = document.getElementById('today-completions');
-           const current = parseInt(completionsEl.textContent);
-           completionsEl.textContent = current + 1;
-           completionsEl.parentElement.classList.add('bounce-in');
-           setTimeout(() => {
-               completionsEl.parentElement.classList.remove('bounce-in');
-           }, 600);
-       }
-
-       function shareWorkoutAchievement(workoutData) {
-           const shareText = `Just crushed a ${workoutData.duration} minute ${workoutData.type} workout on Vivify! Building elite habits one workout at a time. Join me: ${window.location.origin}`;
-           
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Workout Complete!',
-                   text: shareText,
-                   url: window.location.origin
-               });
-           } else {
-               navigator.clipboard.writeText(shareText).then(() => {
-                   showWorkoutToast('Copied!', 'Achievement copied to clipboard! Share it on social media');
-               });
-           }
-       }
-
-       function shareWithFriends() {
-           const shareText = `I'm building elite fitness habits on Vivify! Join 1,247+ students crushing daily workouts and challenges. Let's train together: ${window.location.origin}`;
-           
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Join me on Vivify!',
-                   text: shareText,
-                   url: window.location.origin
-               });
-           } else {
-               navigator.clipboard.writeText(shareText).then(() => {
-                   showWorkoutToast('Copied!', 'Invite link copied! Share it with your friends');
-               });
-           }
-       }
-
-       function shareFitnessRank() {
-           const fitnessUsers = JSON.parse(localStorage.getItem('fitnessLeaderboard') || '[]');
-           const currentUser = fitnessUsers.find(u => u.userId === window.fixedFitnessBoard?.userId);
-           
-           if (currentUser) {
-               const shareText = `I'm ranked #${currentUser.rank} in fitness on Vivify with a score of ${currentUser.fitnessMetrics.fitnessScore}! Join the competition: ${window.location.origin}`;
-               
-               if (navigator.share) {
-                   navigator.share({
-                       title: 'My Vivify Fitness Rank',
-                       text: shareText,
-                       url: window.location.origin
-                   });
-               } else {
-                   navigator.clipboard.writeText(shareText).then(() => {
-                       showWorkoutToast('Copied!', 'Fitness rank copied to clipboard!');
-                   });
-               }
-           }
-       }
-
-       function inviteFitnessCompetitors() {
-           const shareText = `Challenge me in fitness on Vivify! I'm building elite habits and crushing workouts. Think you can beat my streak? ${window.location.origin}`;
-           
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Fitness Challenge!',
-                   text: shareText,
-                   url: window.location.origin
-               });
-           } else {
-               navigator.clipboard.writeText(shareText).then(() => {
-                   showWorkoutToast('Copied!', 'Challenge copied to clipboard! Send it to friends');
-               });
-           }
-       }
-
-   </script>
-<script src="js/flexible-mobile-nav.js"></script> </body>
+        // Handle window resize for mobile menu
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileBtn = document.getElementById('mobile-menu-btn');
+                
+                if (mobileMenu) mobileMenu.remove();
+                if (mobileBtn) mobileBtn.remove();
+                
+                document.body.style.overflow = '';
+            } else if (window.innerWidth <= 768) {
+                const existingMenu = document.getElementById('mobile-menu');
+                if (!existingMenu) {
+                    createMobileMenu();
+                }
+            }
+        });
+    </script>
+</body>
 </html>
