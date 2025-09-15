@@ -410,6 +410,142 @@
             text-transform: uppercase;
         }
 
+        /* Game Styles */
+        .game-area {
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .game-instructions {
+            background: rgba(243, 156, 18, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stroop-word {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 2rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .stroop-word:hover {
+            transform: scale(1.1);
+        }
+
+        .color-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .color-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .color-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nback-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .nback-cell {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nback-cell.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+        }
+
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border: 4px solid rgba(243, 156, 18, 0.3);
+            border-radius: 50%;
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breathing-inner {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.3), transparent);
+            border-radius: 50%;
+            transition: transform 4s ease-in-out;
+        }
+
+        .breathing-circle.inhale .breathing-inner {
+            transform: scale(1.5);
+        }
+
+        .breathing-circle.exhale .breathing-inner {
+            transform: scale(0.7);
+        }
+
+        .breathing-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f39c12;
+        }
+
+        .game-score {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .game-score .score-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .game-score .score-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
         /* Attention Games */
         .attention-games {
             padding: 6rem 2rem;
@@ -486,325 +622,12 @@
             text-align: center;
         }
 
-        .game-stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .game-stat {
-            text-align: center;
-        }
-
-        .game-stat .number {
-            display: block;
-            font-weight: 700;
-            color: #f39c12;
-        }
-
-        .game-stat .label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
         .game-actions {
             padding: 1.5rem 2rem 2rem;
             text-align: center;
         }
 
-        /* Focus Challenge Widget */
-        .focus-challenge {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 6rem 2rem;
-        }
-
-        .challenge-widget {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
-            border: 1px solid rgba(243, 156, 18, 0.2);
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .challenge-widget::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border-radius: 24px 24px 0 0;
-        }
-
-        .challenge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .challenge-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .challenge-timer {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 0.5rem 1rem;
-            color: #f39c12;
-            font-weight: 600;
-        }
-
-        .challenge-description {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .challenge-participants {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .participant-stat {
-            text-align: center;
-        }
-
-        .participant-stat .number {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #f39c12;
-        }
-
-        .participant-stat .label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-        }
-
-        .challenge-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Focus Streaks */
-        .focus-streaks {
-            padding: 6rem 2rem;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .streaks-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .streak-display {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .current-streak {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-        }
-
-        .streak-label {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-
-        .weekly-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .calendar-day.completed {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-        }
-
-        .calendar-day.today {
-            border: 2px solid #f39c12;
-        }
-
-        .day-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .day-minutes {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        /* Leaderboard */
-        .focus-leaderboard {
-            padding: 6rem 2rem;
-        }
-
-        .leaderboard-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem;
-        }
-
-        .leaderboard-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .leaderboard-filters {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn.active {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            border-color: transparent;
-        }
-
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .leaderboard-item:hover {
-            background: rgba(243, 156, 18, 0.1);
-            transform: translateX(10px);
-        }
-
-        .rank {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #f39c12;
-            min-width: 40px;
-        }
-
-        .rank.first {
-            color: #ffd700;
-        }
-
-        .rank.second {
-            color: #c0c0c0;
-        }
-
-        .rank.third {
-            color: #cd7f32;
-        }
-
-        .player-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: #000;
-        }
-
-        .player-info {
-            flex-grow: 1;
-        }
-
-        .player-name {
-            color: #ffffff;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        .player-school {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-
-        .player-stats {
-            text-align: right;
-        }
-
-        .focus-time {
-            color: #f39c12;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .streak-count {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-
-        /* Footer */
+        /* Footer - FIXED */
         footer {
             background: #000000;
             padding: 3rem 2rem 2rem;
@@ -823,6 +646,7 @@
             gap: 2rem;
             margin-bottom: 2rem;
             list-style: none;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
@@ -842,7 +666,6 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-
             .attention-hero {
                 padding: 120px 1rem 4rem;
             }
@@ -869,72 +692,20 @@
                 align-items: center;
             }
 
-            .weekly-calendar {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 0.5rem;
-            }
-
-            .challenge-actions {
+            .color-buttons {
                 flex-direction: column;
                 align-items: center;
             }
 
-            .challenge-header {
-                flex-direction: column;
-                text-align: center;
+            .stroop-word {
+                font-size: 3rem;
             }
 
             .footer-links {
                 flex-direction: column;
                 gap: 1rem;
             }
-        }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .bounce-in {
-            animation: bounceIn 0.6s ease-out;
-        }
-
-        @keyframes breathing {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .breathing {
-            animation: breathing 4s ease-in-out infinite;
-        }
-    @media (max-width: 768px) {
             /* FORCE hide all desktop navigation */
             nav ul,
             nav li,
@@ -996,19 +767,31 @@
             }
         }
 
-        /* If no mobile button exists, add this emergency button */
-        @media (max-width: 768px) {
-            nav:not(:has(.mobile-menu-btn))::after {
-                content: "☰";
-                position: absolute;
-                right: 1rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: white;
-                font-size: 1.5rem;
-                cursor: pointer;
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes breathing {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .breathing {
+            animation: breathing 4s ease-in-out infinite;
+        }
+
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -1110,164 +893,57 @@
                 visibility: hidden !important;
             }
         }
+
+        /* Game-specific styles */
+        .game-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-modal {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-game {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .close-game:hover {
+            color: #f39c12;
+        }
+
+        .cooldown-notice {
+            background: rgba(243, 156, 18, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #f39c12;
+        }
     </style>
-    <script>
-        // Authentication-aware mobile menu
-function createMobileMenu() {
-    // Only create mobile menu on mobile devices
-    if (window.innerWidth > 768) {
-        return; // Exit early on desktop
-    }
-    
-    // Check authentication status
-    const authToken = localStorage.getItem('authToken');
-    const userLoggedIn = localStorage.getItem('userLoggedIn');
-    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
-    const username = localStorage.getItem('username') || 'User';
-    
-    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
-    
-    // Create mobile menu if it doesn't exist
-    if (!document.getElementById('mobile-menu')) {
-        const header = document.querySelector('header');
-        const mobileMenu = document.createElement('div');
-        mobileMenu.id = 'mobile-menu';
-        mobileMenu.className = 'mobile-menu';
-        
-        // Generate auth-specific menu items
-        let authMenuItems = '';
-        if (isLoggedIn) {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <div class="mobile-user-info">
-                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
-                </div>
-                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
-                <a href="profile.html" class="mobile-menu-link">Profile</a>
-                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
-            `;
-        } else {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <a href="login.html" class="mobile-menu-link">Login</a>
-                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
-            `;
-        }
-        
-        mobileMenu.innerHTML = `
-            <div class="mobile-menu-content">
-                <div class="mobile-menu-header">
-                    <div class="logo"><a href="index.html">Vivify</a></div>
-                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
-                </div>
-                <div class="mobile-menu-links">
-                    <a href="index.html" class="mobile-menu-link">Home</a>
-                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
-                    <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
-                    <a href="about.html" class="mobile-menu-link">About</a>
-                    <a href="community.html" class="mobile-menu-link">Community</a>
-                    ${authMenuItems}
-                </div>
-            </div>
-        `;
-        header.appendChild(mobileMenu);
-    }
-    
-    // Create mobile button if it doesn't exist
-    if (!document.getElementById('mobile-menu-btn')) {
-        const nav = document.querySelector('nav');
-        const rightNav = nav.querySelector('.right-nav') || nav;
-        const mobileBtn = document.createElement('button');
-        mobileBtn.id = 'mobile-menu-btn';
-        mobileBtn.className = 'mobile-menu-btn';
-        mobileBtn.onclick = toggleMobileMenu;
-        mobileBtn.innerHTML = `
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-        `;
-        rightNav.appendChild(mobileBtn);
-    }
-}
-
-function handleMobileLogout(event) {
-    event.preventDefault();
-    if (confirm('Are you sure you want to logout?')) {
-        // Clear all auth data
-        localStorage.clear();
-        
-        // Close mobile menu
-        closeMobileMenu();
-        
-        // Refresh the page to update UI
-        window.location.reload();
-    }
-}
-
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.toggle('active');
-    btn.classList.toggle('active');
-    
-    if (menu.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
-}
-
-function closeMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.remove('active');
-    btn.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Function to update mobile menu when auth state changes
-function updateMobileMenuAuth() {
-    const existingMenu = document.getElementById('mobile-menu');
-    if (existingMenu) {
-        existingMenu.remove();
-    }
-    createMobileMenu();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', createMobileMenu);
-
-// Listen for auth state changes (if you have an auth system that fires events)
-window.addEventListener('authStateChanged', updateMobileMenuAuth);
-
-// Export functions for external use
-window.updateMobileMenuAuth = updateMobileMenuAuth;
-window.handleMobileLogout = handleMobileLogout;
-// Add this at the end of your mobile menu script
-window.addEventListener('resize', function() {
-    if (window.innerWidth > 768) {
-        // Remove mobile elements on desktop
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        
-        if (mobileMenu) mobileMenu.remove();
-        if (mobileBtn) mobileBtn.remove();
-        
-        // Reset body overflow
-        document.body.style.overflow = '';
-    } else if (window.innerWidth <= 768) {
-        // Recreate mobile menu if switching to mobile
-        const existingMenu = document.getElementById('mobile-menu');
-        if (!existingMenu) {
-            createMobileMenu();
-        }
-    }
-});
-        </script>
-<script src="js/vivify-stats.js"></script>
-<script src="js/leaderboard-system.js"></script>
 </head>
 <body>
     <header>
@@ -1299,7 +975,7 @@ window.addEventListener('resize', function() {
         <!-- Hero Section with Live Focus Stats -->
         <section class="attention-hero fade-in-up">
             <div class="hero-content">
-                <div class="attention-badge">🧠 Elite Focus Training</div>
+                <div class="attention-badge">Brain Training Mode</div>
                 <h1>Master Your Attention</h1>
                 <p>Join 892 students building laser-sharp focus through gamified attention training, mindfulness challenges, and cognitive performance tracking.</p>
                 
@@ -1320,7 +996,7 @@ window.addEventListener('resize', function() {
  
                 <div class="hero-buttons">
                     <a href="#focus-timer" class="btn btn-primary">Start Focus Session</a>
-                    <a href="#challenge" class="btn btn-secondary">Join Daily Challenge</a>
+                    <a href="#games" class="btn btn-secondary">Play Brain Games</a>
                 </div>
             </div>
         </section>
@@ -1328,21 +1004,21 @@ window.addEventListener('resize', function() {
         <!-- Interactive Focus Timer -->
         <section class="focus-timer-section fade-in-up">
             <div class="timer-container" id="focus-timer">
-                <h2 class="section-heading">🎯 Focus Timer</h2>
+                <h2 class="section-heading">Focus Timer</h2>
                 <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Choose your focus technique and build your concentration streak. Track your progress and compete with peers!</p>
                 
                 <div class="timer-modes">
                     <div class="timer-mode active" onclick="selectMode('pomodoro')" data-mode="pomodoro">
-                        🍅 Pomodoro (25 min)
+                        Pomodoro (25 min)
                     </div>
                     <div class="timer-mode" onclick="selectMode('deep')" data-mode="deep">
-                        🎯 Deep Focus (50 min)
+                        Deep Focus (50 min)
                     </div>
                     <div class="timer-mode" onclick="selectMode('sprint')" data-mode="sprint">
-                        ⚡ Sprint (15 min)
+                        Sprint (15 min)
                     </div>
                     <div class="timer-mode" onclick="selectMode('custom')" data-mode="custom">
-                        ⚙️ Custom
+                        Custom
                     </div>
                 </div>
  
@@ -1383,15 +1059,15 @@ window.addEventListener('resize', function() {
                 </div>
             </div>
         </section>
- 
-        <!-- Attention Training Games -->
-        <section class="attention-games fade-in-up">
+
+        <!-- Interactive Attention Training Games -->
+        <section class="attention-games fade-in-up" id="games">
             <div class="games-container">
-                <h2 class="section-heading">🎮 Attention Training Games</h2>
-                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Level up your cognitive abilities with scientifically-backed brain training games. Track your progress and compete on leaderboards!</p>
+                <h2 class="section-heading">Brain Training Games</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Level up your cognitive abilities with scientifically-backed brain training games. Click any game to start training!</p>
                 
                 <div class="games-grid">
-                    <div class="game-card" onclick="startGame('stroop')">
+                    <div class="game-card" onclick="openGame('stroop')">
                         <div class="game-icon">
                             <i class="fas fa-palette"></i>
                         </div>
@@ -1399,26 +1075,12 @@ window.addEventListener('resize', function() {
                         <div class="game-description">
                             Test your cognitive flexibility by naming colors while ignoring word meanings. Builds selective attention and mental agility.
                         </div>
-                        <div class="game-stats">
-                            <div class="game-stat">
-                                <span class="number">847</span>
-                                <span class="label">Players</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">92%</span>
-                                <span class="label">Accuracy</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">2.3s</span>
-                                <span class="label">Avg Time</span>
-                            </div>
-                        </div>
                         <div class="game-actions">
                             <button class="btn btn-primary">Play Now</button>
                         </div>
                     </div>
  
-                    <div class="game-card" onclick="startGame('nback')">
+                    <div class="game-card" onclick="openGame('nback')">
                         <div class="game-icon">
                             <i class="fas fa-brain"></i>
                         </div>
@@ -1426,53 +1088,12 @@ window.addEventListener('resize', function() {
                         <div class="game-description">
                             Train working memory by identifying when current stimulus matches one from N steps back. Scientifically proven to boost IQ.
                         </div>
-                        <div class="game-stats">
-                            <div class="game-stat">
-                                <span class="number">623</span>
-                                <span class="label">Players</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">Level 3</span>
-                                <span class="label">Avg Level</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">89%</span>
-                                <span class="label">Accuracy</span>
-                            </div>
-                        </div>
                         <div class="game-actions">
                             <button class="btn btn-primary">Train Memory</button>
                         </div>
                     </div>
  
-                    <div class="game-card" onclick="startGame('attention')">
-                        <div class="game-icon">
-                            <i class="fas fa-crosshairs"></i>
-                        </div>
-                        <h3>Attention Network</h3>
-                        <div class="game-description">
-                            Measure and train your alerting, orienting, and executive attention networks. Track improvement over time.
-                        </div>
-                        <div class="game-stats">
-                            <div class="game-stat">
-                                <span class="number">456</span>
-                                <span class="label">Players</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">1.8s</span>
-                                <span class="label">Reaction Time</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">94%</span>
-                                <span class="label">Accuracy</span>
-                            </div>
-                        </div>
-                        <div class="game-actions">
-                            <button class="btn btn-primary">Test Attention</button>
-                        </div>
-                    </div>
- 
-                    <div class="game-card" onclick="startGame('mindfulness')">
+                    <div class="game-card" onclick="openGame('mindfulness')">
                         <div class="game-icon">
                             <i class="fas fa-leaf"></i>
                         </div>
@@ -1480,260 +1101,24 @@ window.addEventListener('resize', function() {
                         <div class="game-description">
                             Interactive breathing exercises with biofeedback. Build mindfulness and emotional regulation skills through guided practice.
                         </div>
-                        <div class="game-stats">
-                            <div class="game-stat">
-                                <span class="number">1,234</span>
-                                <span class="label">Sessions</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">4.2</span>
-                                <span class="label">Avg BPM</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">12min</span>
-                                <span class="label">Avg Session</span>
-                            </div>
-                        </div>
                         <div class="game-actions">
                             <button class="btn btn-primary">Start Breathing</button>
                         </div>
                     </div>
- 
-                    <div class="game-card" onclick="startGame('flanker')">
-                        <div class="game-icon">
-                            <i class="fas fa-arrows-alt-h"></i>
-                        </div>
-                        <h3>Flanker Task</h3>
-                        <div class="game-description">
-                            Train selective attention and cognitive control by responding to central arrows while ignoring distractors.
-                        </div>
-                        <div class="game-stats">
-                            <div class="game-stat">
-                                <span class="number">567</span>
-                                <span class="label">Players</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">1.4s</span>
-                                <span class="label">Reaction Time</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">91%</span>
-                                <span class="label">Accuracy</span>
-                            </div>
-                        </div>
-                        <div class="game-actions">
-                            <button class="btn btn-primary">Train Focus</button>
-                        </div>
-                    </div>
- 
-                    <div class="game-card" onclick="startGame('dualtask')">
-                        <div class="game-icon">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                        <h3>Dual Task Challenge</h3>
-                        <div class="game-description">
-                            Master multitasking by performing two cognitive tasks simultaneously. Build cognitive flexibility and task-switching skills.
-                        </div>
-                        <div class="game-stats">
-                            <div class="game-stat">
-                                <span class="number">389</span>
-                                <span class="label">Players</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">78%</span>
-                                <span class="label">Dual Accuracy</span>
-                            </div>
-                            <div class="game-stat">
-                                <span class="number">Level 4</span>
-                                <span class="label">Avg Level</span>
-                            </div>
-                        </div>
-                        <div class="game-actions">
-                            <button class="btn btn-primary">Multi-Task</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
- 
-        <!-- Daily Focus Challenge -->
-        <section class="focus-challenge fade-in-up">
-            <div class="challenge-widget" id="challenge">
-                <div class="challenge-header">
-                    <h3 class="challenge-title">🧠 Deep Focus Challenge</h3>
-                    <div class="challenge-timer" id="challenge-timer">Ends in 11:23:47</div>
-                </div>
-                
-                <p class="challenge-description">Complete 2 hours of focused study time today and join 567 students building elite concentration! Use any focus technique - timer, games, or study sessions. Track your progress and climb the leaderboard!</p>
-                
-                <div class="challenge-participants">
-                    <div class="participant-stat">
-                        <span class="number" id="challenge-completed">278</span>
-                        <span class="label">Completed</span>
-                    </div>
-                    <div class="participant-stat">
-                        <span class="number" id="challenge-average">87min</span>
-                        <span class="label">Avg Progress</span>
-                    </div>
-                    <div class="participant-stat">
-                        <span class="number" id="your-focus-rank">#23</span>
-                        <span class="label">Your Rank</span>
-                    </div>
-                </div>
-                
-                <div class="challenge-actions">
-                    <button class="btn btn-primary" onclick="acceptFocusChallenge()">Accept Challenge</button>
-                    <button class="btn btn-secondary" onclick="viewFocusLeaderboard()">View Leaderboard</button>
-                    <button class="btn btn-secondary" onclick="shareProgress()">Share Progress</button>
-                </div>
- 
-                <div class="challenge-progress" id="focus-challenge-progress" style="display: none;">
-                    <div style="margin-top: 2rem;">
-                        <div class="progress-bar" style="width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin-bottom: 1rem;">
-                            <div class="progress-fill" id="focus-progress-fill" style="height: 100%; background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 6px; transition: width 0.5s ease; width: 0%;"></div>
-                        </div>
-                        <div class="progress-text" id="focus-progress-text" style="text-align: center; color: rgba(255,255,255,0.8); font-size: 0.9rem;">0/120 minutes completed</div>
-                        <div style="text-align: center; margin-top: 1rem;">
-                            <button class="btn btn-primary" onclick="logFocusTime()">+ Log Focus Time</button>
-                        </div>
-                    </div>
+
+        <!-- Game Overlay Modal -->
+        <div class="game-overlay" id="game-overlay">
+            <div class="game-modal">
+                <button class="close-game" onclick="closeGame()">&times;</button>
+                <div id="game-content">
+                    <!-- Game content will be dynamically loaded here -->
                 </div>
             </div>
-        </section>
- 
-        <!-- Focus Streak Calendar -->
-        <section class="focus-streaks fade-in-up">
-            <div class="streaks-container">
-                <h2 class="section-heading">🔥 Focus Streak</h2>
-                
-                <div class="streak-display">
-                    <div class="current-streak" id="display-streak">7</div>
-                    <div class="streak-label">Day Focus Streak</div>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 1rem;">Keep it going! You're building elite focus habits that compound daily.</p>
-                    
-                    <div class="weekly-calendar">
-                        <div class="calendar-day completed">
-                            <div class="day-label">Mon</div>
-                            <div class="day-minutes">45</div>
-                        </div>
-                        <div class="calendar-day completed">
-                            <div class="day-label">Tue</div>
-                            <div class="day-minutes">67</div>
-                        </div>
-                        <div class="calendar-day completed">
-                            <div class="day-label">Wed</div>
-                            <div class="day-minutes">52</div>
-                        </div>
-                        <div class="calendar-day completed">
-                            <div class="day-label">Thu</div>
-                            <div class="day-minutes">78</div>
-                        </div>
-                        <div class="calendar-day completed">
-                            <div class="day-label">Fri</div>
-                            <div class="day-minutes">43</div>
-                        </div>
-                        <div class="calendar-day completed">
-                            <div class="day-label">Sat</div>
-                            <div class="day-minutes">89</div>
-                        </div>
-                        <div class="calendar-day today">
-                            <div class="day-label">Sun</div>
-                            <div class="day-minutes" id="today-minutes">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
- 
-        <!-- Focus Leaderboard -->
-        <section class="focus-leaderboard fade-in-up">
-            <div class="leaderboard-container">
-                <div class="leaderboard-header">
-                    <h2 class="section-heading">🏆 Focus Masters</h2>
-                    <p style="color: rgba(255, 255, 255, 0.8);">Top focus performers this week - see where your concentration ranks!</p>
-                </div>
-                
-                <div class="leaderboard-filters">
-                    <div class="filter-btn active" onclick="filterFocusLeaderboard('week')">This Week</div>
-                    <div class="filter-btn" onclick="filterFocusLeaderboard('month')">This Month</div>
-                    <div class="filter-btn" onclick="filterFocusLeaderboard('friends')">Friends</div>
-                    <div class="filter-btn" onclick="filterFocusLeaderboard('school')">My School</div>
-                </div>
- 
-                <div class="leaderboard-list" id="focus-leaderboard-list">
-                    <div class="leaderboard-item">
-                        <div class="rank first">1</div>
-                        <div class="player-avatar">SK</div>
-                        <div class="player-info">
-                            <div class="player-name">Sarah K.</div>
-                            <div class="player-school">Melbourne Grammar</div>
-                        </div>
-                        <div class="player-stats">
-                            <div class="focus-time">847 min 🧠</div>
-                            <div class="streak-count">42 day streak</div>
-                        </div>
-                    </div>
-                    
-                    <div class="leaderboard-item">
-                        <div class="rank second">2</div>
-                        <div class="player-avatar">DL</div>
-                        <div class="player-info">
-                            <div class="player-name">David L.</div>
-                            <div class="player-school">Sydney Boys High</div>
-                        </div>
-                        <div class="player-stats">
-                            <div class="focus-time">789 min 🧠</div>
-                            <div class="streak-count">38 day streak</div>
-                        </div>
-                    </div>
-                    
-                    <div class="leaderboard-item">
-                        <div class="rank third">3</div>
-                        <div class="player-avatar">EM</div>
-                        <div class="player-info">
-                            <div class="player-name">Emma M.</div>
-                            <div class="player-school">Perth Modern</div>
-                        </div>
-                        <div class="player-stats">
-                            <div class="focus-time">723 min 🧠</div>
-                            <div class="streak-count">35 day streak</div>
-                        </div>
-                    </div>
-                    
-                    <div class="leaderboard-item" style="border: 2px solid #f39c12;">
-                        <div class="rank">23</div>
-                        <div class="player-avatar">YOU</div>
-                        <div class="player-info">
-                            <div class="player-name">You</div>
-                            <div class="player-school">Knox Grammar</div>
-                        </div>
-                        <div class="player-stats">
-                            <div class="focus-time">287 min 🧠</div>
-                            <div class="streak-count">7 day streak</div>
-                        </div>
-                    </div>
-                    
-                    <div class="leaderboard-item">
-                        <div class="rank">24</div>
-                        <div class="player-avatar">JR</div>
-                        <div class="player-info">
-                            <div class="player-name">Jake R.</div>
-                            <div class="player-school">Brisbane Grammar</div>
-                        </div>
-                        <div class="player-stats">
-                            <div class="focus-time">276 min 🧠</div>
-                            <div class="streak-count">12 day streak</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 2rem;">
-                    <button class="btn btn-primary">View Full Rankings</button>
-                    <button class="btn btn-secondary">Share Achievement</button>
-                </div>
-            </div>
-        </section>
- 
+        </div>
+
         <!-- Footer -->
         <footer>
             <div class="footer-content">
@@ -1747,134 +1132,147 @@ window.addEventListener('resize', function() {
             </div>
         </footer>
     </div>
- 
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check authentication status
-            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
-            
-            // Update UI based on login status
-            updateAuthState(isLoggedIn);
-            
-            // Initialize focus stats
-            updateFocusStats();
-            
-            // Start challenge timer
-            startFocusChallenge();
-            
-            // Load user progress
-            loadFocusProgress();
-            
-            // Add scroll animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe all fade-in elements
-            document.querySelectorAll('.fade-in-up').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                observer.observe(el);
-            });
-            
-            function updateAuthState(isLoggedIn) {
-                // Navigation updates
-                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
-                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
-                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
-                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
-                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
-            }
-            
-            // Logout functionality
-            const logoutLink = document.getElementById('logout-link');
-            if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    updateAuthState(false);
-                    window.location.href = 'index.html';
-                });
-            }
-            
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                           behavior: 'smooth',
-                           block: 'start'
-                       });
-                   }
-               });
-           });
-           
-           // Header background on scroll
-           window.addEventListener('scroll', function() {
-               const header = document.querySelector('header');
-               if (window.scrollY > 100) {
-                   header.style.background = 'rgba(10, 10, 10, 0.98)';
-               } else {
-                   header.style.background = 'rgba(10, 10, 10, 0.95)';
-               }
-           });
-       });
- 
-        // Focus Stats Simulation
-        function updateFocusStats() {
-            const baseStats = {
-                focusers: 892,
-                activeSessions: 47,
-                minutesToday: 2847,
-                challengeCompleted: 278,
-                challengeAverage: 87
-            };
-            
-            setInterval(() => {
-                // Simulate live updates
-                const variation = () => Math.floor(Math.random() * 8) - 4;
-                
-                document.getElementById('live-focusers').textContent = baseStats.focusers + variation();
-                document.getElementById('active-sessions').textContent = Math.max(0, baseStats.activeSessions + variation());
-                document.getElementById('minutes-today').textContent = baseStats.minutesToday + Math.abs(variation() * 10);
-                document.getElementById('challenge-completed').textContent = baseStats.challengeCompleted + Math.abs(variation());
-            }, 20000); // Update every 20 seconds
-        }
- 
-        // Focus Timer Functions
+        // Timer Variables
         let timerInterval;
         let currentMode = 'pomodoro';
-        let timeRemaining = 25 * 60; // 25 minutes in seconds
+        let timeRemaining = 25 * 60;
         let isTimerRunning = false;
         let sessionTime = 0;
- 
+
         const timeModes = {
             pomodoro: 25 * 60,
             deep: 50 * 60,
             sprint: 15 * 60,
             custom: 25 * 60
         };
- 
+
+        // Enhanced Game System with Anti-Gaming Mechanics
+        let currentGame = null;
+        let gameScore = 0;
+        let gameLevel = 1;
+        let gameCooldowns = {}; // Track when each game was last played
+        let gameMultipliers = {}; // Track diminishing returns for each game
+
+        // Initialize game stats
+        function initializeGameStats() {
+            const gameStats = localStorage.getItem('gameStats');
+            if (gameStats) {
+                const stats = JSON.parse(gameStats);
+                gameCooldowns = stats.cooldowns || {};
+                gameMultipliers = stats.multipliers || {};
+            } else {
+                gameCooldowns = {};
+                gameMultipliers = {};
+            }
+        }
+
+        // Global Leaderboard Integration
+        function updateGlobalLeaderboard(points, gameType) {
+            try {
+                // Get current leaderboard data
+                const leaderboardData = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
+                const username = localStorage.getItem('username') || 'Anonymous';
+                const school = localStorage.getItem('userSchool') || 'Knox Grammar';
+                
+                // Find existing user or create new entry
+                let userEntry = leaderboardData.find(entry => entry.username === username);
+                if (!userEntry) {
+                    userEntry = {
+                        username: username,
+                        school: school,
+                        totalPoints: 0,
+                        focusMinutes: parseInt(document.getElementById('total-minutes').textContent) || 0,
+                        streak: parseInt(document.getElementById('current-streak').textContent) || 0,
+                        gamesPlayed: 0,
+                        lastActive: Date.now()
+                    };
+                    leaderboardData.push(userEntry);
+                }
+                
+                // Update user stats
+                userEntry.totalPoints += points;
+                userEntry.gamesPlayed += 1;
+                userEntry.focusMinutes = parseInt(document.getElementById('total-minutes').textContent) || 0;
+                userEntry.lastActive = Date.now();
+                
+                // Sort leaderboard
+                leaderboardData.sort((a, b) => b.totalPoints - a.totalPoints);
+                
+                // Save updated leaderboard
+                localStorage.setItem('globalLeaderboard', JSON.stringify(leaderboardData));
+                
+                console.log(`${points} points added to global leaderboard for ${gameType}`);
+                
+            } catch (error) {
+                console.error('Error updating global leaderboard:', error);
+            }
+        }
+
+        // Anti-Gaming Point Calculation
+        function calculatePoints(basePoints, gameType, accuracy) {
+            const now = Date.now();
+            const lastPlayed = gameCooldowns[gameType] || 0;
+            const timeSinceLastPlay = now - lastPlayed;
+            
+            // Cooldown system: reduced points if played too recently
+            const cooldownPenalty = Math.min(timeSinceLastPlay / (30 * 60 * 1000), 1); // 30 minute full recovery
+            
+            // Diminishing returns: each play of same game type gives fewer points
+            const playCount = gameMultipliers[gameType] || 0;
+            const diminishingReturns = Math.max(0.1, 1 - (playCount * 0.1)); // Min 10% of original points
+            
+            // Accuracy bonus
+            const accuracyBonus = Math.max(0.5, accuracy / 100); // 50% to 100% based on accuracy
+            
+            // Calculate final points
+            const finalPoints = Math.floor(basePoints * cooldownPenalty * diminishingReturns * accuracyBonus);
+            
+            // Update tracking
+            gameCooldowns[gameType] = now;
+            gameMultipliers[gameType] = (gameMultipliers[gameType] || 0) + 1;
+            
+            // Save to localStorage
+            localStorage.setItem('gameStats', JSON.stringify({
+                cooldowns: gameCooldowns,
+                multipliers: gameMultipliers
+            }));
+            
+            return {
+                points: finalPoints,
+                cooldownPenalty: cooldownPenalty,
+                diminishingReturns: diminishingReturns,
+                accuracyBonus: accuracyBonus
+            };
+        }
+
+        // Check if game is on cooldown
+        function isGameOnCooldown(gameType) {
+            const now = Date.now();
+            const lastPlayed = gameCooldowns[gameType] || 0;
+            const timeSinceLastPlay = now - lastPlayed;
+            const cooldownTime = 5 * 60 * 1000; // 5 minutes minimum cooldown
+            
+            return timeSinceLastPlay < cooldownTime;
+        }
+
+        function getRemainingCooldown(gameType) {
+            const now = Date.now();
+            const lastPlayed = gameCooldowns[gameType] || 0;
+            const timeSinceLastPlay = now - lastPlayed;
+            const cooldownTime = 5 * 60 * 1000; // 5 minutes
+            
+            return Math.max(0, cooldownTime - timeSinceLastPlay);
+        }
+
+        // Timer Functions
         function selectMode(mode) {
             if (isTimerRunning) return;
             
             currentMode = mode;
             timeRemaining = timeModes[mode];
             
-            // Update UI
             document.querySelectorAll('.timer-mode').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
             
@@ -1889,26 +1287,24 @@ window.addEventListener('resize', function() {
                 }
             }
         }
- 
+
         function updateTimerDisplay() {
             const minutes = Math.floor(timeRemaining / 60);
             const seconds = timeRemaining % 60;
             document.getElementById('timer-display').textContent = 
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
- 
+
         function startTimer() {
             if (isTimerRunning) return;
             
             isTimerRunning = true;
             sessionTime = timeRemaining;
             
-            // Update UI
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('pause-btn').style.display = 'inline-block';
             document.getElementById('stop-btn').style.display = 'inline-block';
             
-            // Add breathing animation to timer
             document.getElementById('timer-display').classList.add('breathing');
             
             timerInterval = setInterval(() => {
@@ -1920,385 +1316,653 @@ window.addEventListener('resize', function() {
                 }
             }, 1000);
         }
- 
+
         function pauseTimer() {
             if (!isTimerRunning) return;
             
             isTimerRunning = false;
             clearInterval(timerInterval);
             
-            // Update UI
             document.getElementById('start-btn').style.display = 'inline-block';
             document.getElementById('start-btn').innerHTML = '<i class="fas fa-play"></i> Resume';
             document.getElementById('pause-btn').style.display = 'none';
             
-            // Remove breathing animation
             document.getElementById('timer-display').classList.remove('breathing');
         }
- 
+
         function stopTimer() {
             isTimerRunning = false;
             clearInterval(timerInterval);
             
-            // Reset timer
             timeRemaining = timeModes[currentMode];
             updateTimerDisplay();
             
-            // Update UI
             document.getElementById('start-btn').style.display = 'inline-block';
             document.getElementById('start-btn').innerHTML = '<i class="fas fa-play"></i> Start Focus';
             document.getElementById('pause-btn').style.display = 'none';
             document.getElementById('stop-btn').style.display = 'none';
             
-            // Remove breathing animation
             document.getElementById('timer-display').classList.remove('breathing');
         }
- 
+
         function completeSession() {
             isTimerRunning = false;
             clearInterval(timerInterval);
             
             const completedMinutes = Math.floor(sessionTime / 60);
+            const timerPoints = completedMinutes * 3; // 3 points per minute for timer sessions
             
-            // Update stats
+            // Update local stats
             const sessionsEl = document.getElementById('sessions-today');
             const minutesEl = document.getElementById('total-minutes');
             const scoreEl = document.getElementById('focus-score');
-            const todayMinutesEl = document.getElementById('today-minutes');
             
             sessionsEl.textContent = parseInt(sessionsEl.textContent) + 1;
             minutesEl.textContent = parseInt(minutesEl.textContent) + completedMinutes;
-            scoreEl.textContent = parseInt(scoreEl.textContent) + completedMinutes * 2;
-            todayMinutesEl.textContent = completedMinutes;
+            scoreEl.textContent = parseInt(scoreEl.textContent) + timerPoints;
             
-            // Celebration
-            alert(`🎉 Focus Session Complete! 🎉\n\n${completedMinutes} minutes of deep focus\n+${completedMinutes * 2} focus points earned\nStreak maintained! 🔥`);
+            // Update global leaderboard
+            updateGlobalLeaderboard(timerPoints, 'focus_timer');
             
-            // Update calendar
-            document.querySelector('.calendar-day.today').classList.add('completed');
+            alert(`Focus Session Complete!\n\n${completedMinutes} minutes of deep focus\n+${timerPoints} focus points earned\nStreak maintained!`);
             
-            // Save progress
-            saveFocusProgress();
-            
-            // Reset timer UI
             stopTimer();
         }
- 
-        // Challenge Timer
-        let challengeTimeRemaining = 11 * 3600 + 23 * 60 + 47; // 11:23:47 in seconds
- 
-        function startFocusChallenge() {
-            const timer = document.getElementById('challenge-timer');
+
+        // Enhanced Game System
+        function openGame(gameType) {
+            // Check cooldown
+            if (isGameOnCooldown(gameType)) {
+                const remainingTime = getRemainingCooldown(gameType);
+                const minutes = Math.floor(remainingTime / 60000);
+                const seconds = Math.floor((remainingTime % 60000) / 1000);
+                
+                alert(`Game on cooldown! Wait ${minutes}:${seconds.toString().padStart(2, '0')} before playing again.\n\nThis prevents point farming and encourages diverse training.`);
+                return;
+            }
+            
+            currentGame = gameType;
+            gameScore = 0;
+            gameLevel = 1;
+            
+            const overlay = document.getElementById('game-overlay');
+            const content = document.getElementById('game-content');
+            
+            overlay.style.display = 'flex';
+            
+            switch(gameType) {
+                case 'stroop':
+                    startStroopGame(content);
+                    break;
+                case 'nback':
+                    startNBackGame(content);
+                    break;
+                case 'mindfulness':
+                    startMindfulnessExercise(content);
+                    break;
+            }
+        }
+
+        function closeGame() {
+            document.getElementById('game-overlay').style.display = 'none';
+            currentGame = null;
+        }
+
+        // Enhanced Stroop Game with Progressive Difficulty
+        function startStroopGame(container) {
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown'];
+            const colorWords = ['RED', 'BLUE', 'GREEN', 'YELLOW', 'PURPLE', 'ORANGE', 'PINK', 'BROWN'];
+            
+            let currentWord = '';
+            let currentColor = '';
+            let correctAnswers = 0;
+            let totalQuestions = 0;
+            let startTime = Date.now();
+            let questionStartTime = Date.now();
+            let reactionTimes = [];
+            
+            // Progressive difficulty
+            const maxQuestions = 10 + (gameLevel * 5); // More questions at higher levels
+            const timeLimit = Math.max(2000, 5000 - (gameLevel * 300)); // Less time per question
+            
+            function newStroopQuestion() {
+                questionStartTime = Date.now();
+                
+                // Higher levels use more confusing color combinations
+                if (gameLevel > 3) {
+                    // Intentionally confusing combinations
+                    do {
+                        currentWord = colorWords[Math.floor(Math.random() * colorWords.length)];
+                        currentColor = colors[Math.floor(Math.random() * colors.length)];
+                    } while (currentWord.toLowerCase() === currentColor); // Ensure mismatch
+                } else {
+                    currentWord = colorWords[Math.floor(Math.random() * colorWords.length)];
+                    currentColor = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                container.innerHTML = `
+                    <h3>Stroop Challenge - Level ${gameLevel}</h3>
+                    <div class="game-instructions">
+                        Click the COLOR of the word, not what the word says!<br>
+                        <small>Time limit: ${(timeLimit/1000).toFixed(1)}s per question</small>
+                    </div>
+                    <div class="stroop-word" style="color: ${currentColor}">${currentWord}</div>
+                    <div class="color-buttons">
+                        ${colors.slice(0, Math.min(5 + gameLevel, colors.length)).map(color => 
+                            `<button class="color-btn" style="background: ${color}; color: white;" onclick="stroopAnswer('${color}')">${color.toUpperCase()}</button>`
+                        ).join('')}
+                    </div>
+                    <div class="game-score">
+                        <div class="score-value">${correctAnswers}/${totalQuestions}</div>
+                        <div class="score-label">Correct Answers</div>
+                    </div>
+                    <div style="margin-top: 1rem; color: rgba(255,255,255,0.7);">
+                        Average reaction time: ${reactionTimes.length > 0 ? (reactionTimes.reduce((a,b) => a+b, 0) / reactionTimes.length / 1000).toFixed(2) : '0.00'}s
+                    </div>
+                `;
+                
+                // Auto-advance if time limit exceeded
+                setTimeout(() => {
+                    if (currentGame === 'stroop' && totalQuestions < maxQuestions) {
+                        stroopAnswer('timeout');
+                    }
+                }, timeLimit);
+            }
+            
+            window.stroopAnswer = function(selectedColor) {
+                const reactionTime = Date.now() - questionStartTime;
+                totalQuestions++;
+                
+                if (selectedColor === currentColor) {
+                    correctAnswers++;
+                    reactionTimes.push(reactionTime);
+                }
+                
+                if (totalQuestions >= maxQuestions) {
+                    endStroopGame();
+                } else {
+                    setTimeout(newStroopQuestion, 500);
+                }
+            };
+            
+            function endStroopGame() {
+                const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
+                const avgReactionTime = reactionTimes.length > 0 ? 
+                    (reactionTimes.reduce((a,b) => a+b, 0) / reactionTimes.length / 1000).toFixed(2) : 'N/A';
+                
+                // Calculate points with anti-gaming mechanics
+                const basePoints = 50;
+                const pointsResult = calculatePoints(basePoints, 'stroop', accuracy);
+                
+                // Update local score
+                const scoreEl = document.getElementById('focus-score');
+                scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
+                
+                // Update global leaderboard
+                updateGlobalLeaderboard(pointsResult.points, 'stroop');
+                
+                container.innerHTML = `
+                    <h3>Stroop Challenge Complete!</h3>
+                    <div class="game-score">
+                        <div class="score-value">${accuracy}%</div>
+                        <div class="score-label">Accuracy</div>
+                    </div>
+                    <p>Level ${gameLevel} • ${correctAnswers}/${totalQuestions} correct</p>
+                    <p>Average reaction time: ${avgReactionTime}s</p>
+                    <p><strong>+${pointsResult.points} focus points earned</strong></p>
+                    
+                    ${pointsResult.cooldownPenalty < 1 ? `
+                        <div class="cooldown-notice">
+                            Cooldown penalty: ${Math.round((1 - pointsResult.cooldownPenalty) * 100)}% point reduction<br>
+                            Wait longer between games for full points!
+                        </div>
+                    ` : ''}
+                    
+                    ${pointsResult.diminishingReturns < 0.8 ? `
+                        <div class="cooldown-notice">
+                            Diminishing returns: ${Math.round((1 - pointsResult.diminishingReturns) * 100)}% point reduction<br>
+                            Try different games for better rewards!
+                        </div>
+                    ` : ''}
+                    
+                    <button class="btn btn-primary" onclick="gameLevel++; startStroopGame(document.getElementById('game-content'))">Next Level</button>
+                    <button class="btn btn-secondary" onclick="closeGame()">Close</button>
+                `;
+            }
+            
+            newStroopQuestion();
+        }
+
+        // Enhanced N-Back Game with Progressive Difficulty
+        function startNBackGame(container) {
+            let sequence = [];
+            let currentStep = 0;
+            let nBack = Math.min(2 + Math.floor(gameLevel / 3), 4); // Increase n-back level
+            let correctAnswers = 0;
+            let totalQuestions = 0;
+            let startTime = Date.now();
+            
+            function generateSequence() {
+                sequence = [];
+                const sequenceLength = 15 + (gameLevel * 5); // Longer sequences at higher levels
+                for (let i = 0; i < sequenceLength; i++) {
+                    sequence.push(Math.floor(Math.random() * 9));
+                }
+                currentStep = 0;
+            }
+            
+            function showNextStep() {
+                if (currentStep >= sequence.length) {
+                    endNBackGame();
+                    return;
+                }
+                
+                const currentPosition = sequence[currentStep];
+                const isMatch = currentStep >= nBack && sequence[currentStep] === sequence[currentStep - nBack];
+                
+                container.innerHTML = `
+                    <h3>N-Back Memory Training - Level ${gameLevel}</h3>
+                    <div class="game-instructions">
+                        Remember the position ${nBack} steps back. Click if current position matches!<br>
+                        <small>Step ${currentStep + 1} of ${sequence.length}</small>
+                    </div>
+                    <div class="nback-grid">
+                        ${Array.from({length: 9}, (_, i) => 
+                            `<div class="nback-cell ${i === currentPosition ? 'active' : ''}" data-position="${i}"></div>`
+                        ).join('')}
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="nbackAnswer(true)">MATCH</button>
+                        <button class="btn btn-secondary" onclick="nbackAnswer(false)">NO MATCH</button>
+                    </div>
+                    <div class="game-score">
+                        <div class="score-value">${correctAnswers}/${totalQuestions}</div>
+                        <div class="score-label">Correct</div>
+                    </div>
+                `;
+                
+                window.nbackAnswer = function(userSaysMatch) {
+                    const actualMatch = currentStep >= nBack && sequence[currentStep] === sequence[currentStep - nBack];
+                    totalQuestions++;
+                    
+                    if (userSaysMatch === actualMatch) {
+                        correctAnswers++;
+                    }
+                    
+                    currentStep++;
+                    setTimeout(showNextStep, 1000 - (gameLevel * 50)); // Faster at higher levels
+                };
+            }
+            
+            function endNBackGame() {
+                const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
+                
+                // Calculate points with anti-gaming mechanics
+                const basePoints = 75; // Higher base points for harder game
+                const pointsResult = calculatePoints(basePoints, 'nback', accuracy);
+                
+                // Update local score
+                const scoreEl = document.getElementById('focus-score');
+                scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
+                
+                // Update global leaderboard
+                updateGlobalLeaderboard(pointsResult.points, 'nback');
+                
+                container.innerHTML = `
+                    <h3>N-Back Training Complete!</h3>
+                    <div class="game-score">
+                        <div class="score-value">${accuracy}%</div>
+                        <div class="score-label">Accuracy</div>
+                    </div>
+                    <p>Level ${gameLevel} • ${nBack}-Back • ${correctAnswers}/${totalQuestions} correct</p>
+                    <p><strong>+${pointsResult.points} focus points earned</strong></p>
+                    
+                    ${pointsResult.cooldownPenalty < 1 ? `
+                        <div class="cooldown-notice">
+                            Cooldown penalty: ${Math.round((1 - pointsResult.cooldownPenalty) * 100)}% point reduction
+                        </div>
+                    ` : ''}
+                    
+                    <button class="btn btn-primary" onclick="gameLevel++; startNBackGame(document.getElementById('game-content'))">Next Level</button>
+                    <button class="btn btn-secondary" onclick="closeGame()">Close</button>
+                `;
+            }
+            
+            generateSequence();
+            showNextStep();
+        }
+
+        // Mindfulness Exercise (Points for completion, not spammable)
+        function startMindfulnessExercise(container) {
+            let phase = 'prepare';
+            let cycleCount = 0;
+            let maxCycles = 8 + (gameLevel * 2); // More cycles at higher levels
+            let breathingInterval;
+            let sessionStartTime = Date.now();
+            
+            function updateBreathing() {
+                const circle = container.querySelector('.breathing-circle');
+                const text = container.querySelector('.breathing-text');
+                
+                if (phase === 'prepare') {
+                    text.textContent = 'Get Ready...';
+                    phase = 'inhale';
+                    setTimeout(() => updateBreathing(), 2000);
+                    return;
+                }
+                
+                if (phase === 'inhale') {
+                    circle.className = 'breathing-circle inhale';
+                    text.textContent = 'Breathe In...';
+                    setTimeout(() => {
+                        phase = 'exhale';
+                        updateBreathing();
+                    }, 4000);
+                } else if (phase === 'exhale') {
+                    circle.className = 'breathing-circle exhale';
+                    text.textContent = 'Breathe Out...';
+                    setTimeout(() => {
+                        cycleCount++;
+                        if (cycleCount >= maxCycles) {
+                            endMindfulness();
+                        } else {
+                            phase = 'inhale';
+                            updateBreathing();
+                        }
+                    }, 4000);
+                }
+            }
+            
+            function endMindfulness() {
+                const sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000);
+                const completionRate = 100; // Assume 100% completion for mindfulness
+                
+                // Calculate points - mindfulness gives consistent points, less affected by spam
+                const basePoints = 40;
+                const pointsResult = calculatePoints(basePoints, 'mindfulness', completionRate);
+                
+                // Update local score
+                const scoreEl = document.getElementById('focus-score');
+                scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
+                
+                // Update global leaderboard
+                updateGlobalLeaderboard(pointsResult.points, 'mindfulness');
+                container.innerHTML = `
+                    <h3>Mindfulness Session Complete!</h3>
+                    <div class="game-score">
+                        <div class="score-value">${cycleCount}</div>
+                        <div class="score-label">Breath Cycles</div>
+                    </div>
+                    <p>Level ${gameLevel} • ${cycleCount} mindful breaths in ${sessionDuration}s</p>
+                    <p><strong>+${pointsResult.points} focus points earned</strong></p>
+                    
+                    ${pointsResult.cooldownPenalty < 1 ? `
+                        <div class="cooldown-notice">
+                            Mindfulness is most effective when practiced consistently, not rushed.
+                        </div>
+                    ` : ''}
+                    
+                    <button class="btn btn-primary" onclick="gameLevel++; startMindfulnessExercise(document.getElementById('game-content'))">Deeper Practice</button>
+                    <button class="btn btn-secondary" onclick="closeGame()">Close</button>
+                `;
+            }
+            
+            container.innerHTML = `
+                <h3>Mindful Breathing Exercise - Level ${gameLevel}</h3>
+                <div class="game-instructions">
+                    Follow the circle's rhythm. Breathe in when it expands, out when it contracts.<br>
+                    <small>${maxCycles} breath cycles for level ${gameLevel}</small>
+                </div>
+                <div class="breathing-circle">
+                    <div class="breathing-inner"></div>
+                    <div class="breathing-text">Get Ready...</div>
+                </div>
+                <div class="game-score">
+                    <div class="score-value">${cycleCount}/${maxCycles}</div>
+                    <div class="score-label">Breath Cycles</div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                updateBreathing();
+            }, 2000);
+        }
+
+        // Mobile Menu Functions
+        function createMobileMenu() {
+            if (window.innerWidth > 768) return;
+            
+            const authToken = localStorage.getItem('authToken');
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+            const username = localStorage.getItem('username') || 'User';
+            
+            if (!document.getElementById('mobile-menu')) {
+                const header = document.querySelector('header');
+                const mobileMenu = document.createElement('div');
+                mobileMenu.id = 'mobile-menu';
+                mobileMenu.className = 'mobile-menu';
+                
+                let authMenuItems = '';
+                if (isLoggedIn) {
+                    authMenuItems = `
+                        <div class="mobile-menu-divider"></div>
+                        <div class="mobile-user-info">
+                            <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                        </div>
+                        <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                        <a href="profile.html" class="mobile-menu-link">Profile</a>
+                        <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+                    `;
+                } else {
+                    authMenuItems = `
+                        <div class="mobile-menu-divider"></div>
+                        <a href="login.html" class="mobile-menu-link">Login</a>
+                        <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+                    `;
+                }
+                
+                mobileMenu.innerHTML = `
+                    <div class="mobile-menu-content">
+                        <div class="mobile-menu-header">
+                            <div class="logo"><a href="index.html">Vivify</a></div>
+                            <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                        </div>
+                        <div class="mobile-menu-links">
+                            <a href="index.html" class="mobile-menu-link">Home</a>
+                            <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                            <a href="index.html#habits" class="mobile-menu-link">Habits & Challenges</a>
+                            <a href="about.html" class="mobile-menu-link">About</a>
+                            <a href="community.html" class="mobile-menu-link">Community</a>
+                            ${authMenuItems}
+                        </div>
+                    </div>
+                `;
+                header.appendChild(mobileMenu);
+            }
+            
+            if (!document.getElementById('mobile-menu-btn')) {
+                const nav = document.querySelector('nav');
+                const rightNav = nav.querySelector('.right-nav') || nav;
+                const mobileBtn = document.createElement('button');
+                mobileBtn.id = 'mobile-menu-btn';
+                mobileBtn.className = 'mobile-menu-btn';
+                mobileBtn.onclick = toggleMobileMenu;
+                mobileBtn.innerHTML = `
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                `;
+                rightNav.appendChild(mobileBtn);
+            }
+        }
+
+        function handleMobileLogout(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                closeMobileMenu();
+                window.location.reload();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            menu.classList.remove('active');
+            btn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize game stats and anti-gaming mechanics
+            initializeGameStats();
+            
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            
+            // Mobile menu
+            createMobileMenu();
+            
+            // Update timer display
+            updateTimerDisplay();
+            
+            // Load saved progress
+            const saved = localStorage.getItem('focusProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                const today = new Date().toDateString();
+                const savedDate = new Date(progress.lastSaved).toDateString();
+                
+                if (today === savedDate) {
+                    document.getElementById('sessions-today').textContent = progress.sessionsToday || '0';
+                    document.getElementById('total-minutes').textContent = progress.totalMinutes || '0';
+                    document.getElementById('focus-score').textContent = progress.focusScore || '0';
+                }
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Animate stats
+            animateStats();
+            
+            // Show daily cooldown reset notification
+            showDailyCooldownReset();
+        });
+
+        // Daily cooldown reset
+        function showDailyCooldownReset() {
+            const lastResetDate = localStorage.getItem('lastCooldownReset');
+            const today = new Date().toDateString();
+            
+            if (lastResetDate !== today) {
+                // Reset daily multipliers but keep overall game stats
+                const gameStats = JSON.parse(localStorage.getItem('gameStats') || '{}');
+                gameStats.multipliers = {}; // Reset diminishing returns daily
+                localStorage.setItem('gameStats', JSON.stringify(gameStats));
+                localStorage.setItem('lastCooldownReset', today);
+                
+                if (lastResetDate) { // Don't show on first visit
+                    setTimeout(() => {
+                        alert('Daily reset! Game multipliers refreshed. Start training for full points!');
+                    }, 2000);
+                }
+            }
+        }
+
+        function animateStats() {
+            const baseStats = {
+                focusers: 892,
+                activeSessions: 47,
+                minutesToday: 2847
+            };
             
             setInterval(() => {
-                challengeTimeRemaining--;
-                const hours = Math.floor(challengeTimeRemaining / 3600);
-                const minutes = Math.floor((challengeTimeRemaining % 3600) / 60);
-                const seconds = challengeTimeRemaining % 60;
+                const variation = () => Math.floor(Math.random() * 8) - 4;
+                document.getElementById('live-focusers').textContent = baseStats.focusers + variation();
+                document.getElementById('active-sessions').textContent = Math.max(0, baseStats.activeSessions + variation());
+                document.getElementById('minutes-today').textContent = baseStats.minutesToday + Math.abs(variation() * 10);
+            }, 20000);
+        }
+
+        // Auto-save progress every 30 seconds
+        setInterval(() => {
+            const progress = {
+                sessionsToday: document.getElementById('sessions-today').textContent,
+                totalMinutes: document.getElementById('total-minutes').textContent,
+                focusScore: document.getElementById('focus-score').textContent,
+                currentStreak: document.getElementById('current-streak').textContent,
+                lastSaved: Date.now()
+            };
+            localStorage.setItem('focusProgress', JSON.stringify(progress));
+        }, 30000);
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileBtn = document.getElementById('mobile-menu-btn');
                 
-                timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-               
-               if (challengeTimeRemaining <= 0) {
-                   timer.textContent = 'Challenge Ended';
-               }
-           }, 1000);
-       }
+                if (mobileMenu) mobileMenu.remove();
+                if (mobileBtn) mobileBtn.remove();
+                
+                document.body.style.overflow = '';
+            } else if (window.innerWidth <= 768) {
+                const existingMenu = document.getElementById('mobile-menu');
+                if (!existingMenu) {
+                    createMobileMenu();
+                }
+            }
+        });
 
-       // Challenge Functions
-       let userFocusMinutes = 0;
-       let focusChallengeAccepted = false;
+        // Export functions for debugging (can remove in production)
+        window.debugGameStats = function() {
+            console.log('Current game stats:', {
+                cooldowns: gameCooldowns,
+                multipliers: gameMultipliers,
+                globalLeaderboard: JSON.parse(localStorage.getItem('globalLeaderboard') || '[]')
+            });
+        };
 
-       function acceptFocusChallenge() {
-           focusChallengeAccepted = true;
-           document.getElementById('focus-challenge-progress').style.display = 'block';
-           document.querySelector('.challenge-widget').scrollIntoView({ behavior: 'smooth', block: 'center' });
-           
-           // Update button text
-           event.target.textContent = 'Challenge Accepted! 🧠';
-           event.target.style.background = 'rgba(39, 174, 96, 0.8)';
-       }
-
-       function logFocusTime() {
-           if (!focusChallengeAccepted) {
-               alert('Accept the challenge first!');
-               return;
-           }
-           
-           const increment = parseInt(prompt('How many minutes did you just focus?')) || 0;
-           if (increment > 0) {
-               userFocusMinutes = Math.min(userFocusMinutes + increment, 120);
-               
-               const progressFill = document.getElementById('focus-progress-fill');
-               const progressText = document.getElementById('focus-progress-text');
-               
-               const percentage = (userFocusMinutes / 120) * 100;
-               progressFill.style.width = percentage + '%';
-               progressText.textContent = `${userFocusMinutes}/120 minutes completed`;
-               
-               if (userFocusMinutes >= 120) {
-                   progressText.innerHTML = `🧠 Focus Challenge Complete! Elite concentration! 🧠<br><small>+120 Focus Points earned • Streak maintained</small>`;
-                   progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-                   
-                   // Celebration animation
-                   document.querySelector('.challenge-widget').classList.add('bounce-in');
-                   setTimeout(() => {
-                       document.querySelector('.challenge-widget').classList.remove('bounce-in');
-                   }, 600);
-               }
-               
-               // Save progress
-               localStorage.setItem('todayFocusMinutes', userFocusMinutes);
-           }
-       }
-
-       function viewFocusLeaderboard() {
-           document.querySelector('.focus-leaderboard').scrollIntoView({ behavior: 'smooth' });
-       }
-
-       function shareProgress() {
-           const shareText = `Just completed ${userFocusMinutes} minutes of focused training on Vivify! 🧠 Building elite concentration habits. Join me: ${window.location.origin}`;
-           
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Focus Progress Update!',
-                   text: shareText,
-                   url: window.location.origin
-               });
-           } else {
-               navigator.clipboard.writeText(shareText).then(() => {
-                   alert('Progress update copied to clipboard! Share your focus journey 🧠');
-               });
-           }
-       }
-
-       // Game Functions
-       function startGame(gameType) {
-           const gameNames = {
-               'stroop': 'Stroop Challenge',
-               'nback': 'N-Back Memory Training',
-               'attention': 'Attention Network Test',
-               'mindfulness': 'Mindful Breathing Exercise',
-               'flanker': 'Flanker Task Training',
-               'dualtask': 'Dual Task Challenge'
-           };
-           
-           alert(`Starting ${gameNames[gameType]}! 🎮\n\nThis would launch the interactive brain training game. Track your progress and compete with other students!`);
-           
-           // In a real app, this would navigate to the game
-           // For demo, we'll simulate game completion
-           setTimeout(() => {
-               completeGame(gameType);
-           }, 3000);
-       }
-
-       function completeGame(gameType) {
-           const points = Math.floor(Math.random() * 50) + 25; // 25-75 points
-           const accuracy = Math.floor(Math.random() * 20) + 80; // 80-100% accuracy
-           
-           const completionMessage = `🎮 Game Complete! 🎮\n\n` +
-               `${accuracy}% accuracy achieved\n` +
-               `+${points} brain training points\n` +
-               `Cognitive skills improved! 🧠\n\n` +
-               `Share your achievement?`;
-               
-           if (confirm(completionMessage)) {
-               shareGameAchievement(gameType, accuracy, points);
-           }
-           
-           // Update focus score
-           const scoreEl = document.getElementById('focus-score');
-           scoreEl.textContent = parseInt(scoreEl.textContent) + points;
-       }
-
-       function shareGameAchievement(gameType, accuracy, points) {
-           const shareText = `Just scored ${accuracy}% accuracy in ${gameType} brain training on Vivify! 🧠 +${points} points earned. Building elite cognitive skills: ${window.location.origin}`;
-           
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Brain Training Achievement!',
-                   text: shareText,
-                   url: window.location.origin
-               });
-           } else {
-               navigator.clipboard.writeText(shareText).then(() => {
-                   alert('Achievement copied to clipboard! Share your brain gains 🧠');
-               });
-           }
-       }
-
-       // Leaderboard Functions
-       function filterFocusLeaderboard(filter) {
-           // Update filter buttons
-           document.querySelectorAll('.filter-btn').forEach(btn => {
-               btn.classList.remove('active');
-           });
-           event.target.classList.add('active');
-           
-           const list = document.getElementById('focus-leaderboard-list');
-           list.style.opacity = '0.5';
-           list.style.transform = 'translateX(-20px)';
-           
-           setTimeout(() => {
-               list.style.opacity = '1';
-               list.style.transform = 'translateX(0)';
-               
-               // Simulate different data for different filters
-               if (filter === 'friends') {
-                   list.innerHTML = `
-                       <div class="leaderboard-item" style="border: 2px solid #f39c12;">
-                           <div class="rank first">1</div>
-                           <div class="player-avatar">YOU</div>
-                           <div class="player-info">
-                               <div class="player-name">You</div>
-                               <div class="player-school">Knox Grammar</div>
-                           </div>
-                           <div class="player-stats">
-                               <div class="focus-time">287 min 🧠</div>
-                               <div class="streak-count">7 day streak</div>
-                           </div>
-                       </div>
-                       <div class="leaderboard-item">
-                           <div class="rank second">2</div>
-                           <div class="player-avatar">AL</div>
-                           <div class="player-info">
-                               <div class="player-name">Alex L.</div>
-                               <div class="player-school">Knox Grammar</div>
-                           </div>
-                           <div class="player-stats">
-                               <div class="focus-time">245 min 🧠</div>
-                               <div class="streak-count">5 day streak</div>
-                           </div>
-                       </div>
-                       <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
-                           <p>Invite more friends to see them here!</p>
-                           <button class="btn btn-secondary" onclick="inviteFocusFriends()" style="margin-top: 1rem;">Invite Friends</button>
-                       </div>
-                   `;
-               } else if (filter === 'school') {
-                   list.innerHTML = `
-                       <div class="leaderboard-item" style="border: 2px solid #f39c12;">
-                           <div class="rank first">1</div>
-                           <div class="player-avatar">YOU</div>
-                           <div class="player-info">
-                               <div class="player-name">You</div>
-                               <div class="player-school">Knox Grammar</div>
-                           </div>
-                           <div class="player-stats">
-                               <div class="focus-time">287 min 🧠</div>
-                               <div class="streak-count">7 day streak</div>
-                           </div>
-                       </div>
-                       <div class="leaderboard-item">
-                           <div class="rank second">2</div>
-                           <div class="player-avatar">AL</div>
-                           <div class="player-info">
-                               <div class="player-name">Alex L.</div>
-                               <div class="player-school">Knox Grammar</div>
-                           </div>
-                           <div class="player-stats">
-                               <div class="focus-time">245 min 🧠</div>
-                               <div class="streak-count">5 day streak</div>
-                           </div>
-                       </div>
-                       <div class="leaderboard-item">
-                           <div class="rank third">3</div>
-                           <div class="player-avatar">MK</div>
-                           <div class="player-info">
-                               <div class="player-name">Maya K.</div>
-                               <div class="player-school">Knox Grammar</div>
-                           </div>
-                           <div class="player-stats">
-                               <div class="focus-time">198 min 🧠</div>
-                               <div class="streak-count">3 day streak</div>
-                           </div>
-                       </div>
-                       <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
-                           <p>🧠 You're leading your school's focus training! Keep it up!</p>
-                       </div>
-                   `;
-               }
-           }, 300);
-       }
-
-       function inviteFocusFriends() {
-           const shareText = `I'm building elite focus skills on Vivify! Join me and 892+ students training attention and concentration. Let's level up our minds together: ${window.location.origin}`;
-           
-           if (navigator.share) {
-               navigator.share({
-                   title: 'Join me in focus training!',
-                   text: shareText,
-                   url: window.location.origin
-               });
-           } else {
-               navigator.clipboard.writeText(shareText).then(() => {
-                   alert('Invite link copied! Share with friends to boost focus together 🧠');
-               });
-           }
-       }
-
-       // Progress Saving and Loading
-       function saveFocusProgress() {
-           const progress = {
-               sessionsToday: document.getElementById('sessions-today').textContent,
-               totalMinutes: document.getElementById('total-minutes').textContent,
-               focusScore: document.getElementById('focus-score').textContent,
-               currentStreak: document.getElementById('current-streak').textContent,
-               challengeMinutes: userFocusMinutes,
-               lastSaved: Date.now()
-           };
-           
-           localStorage.setItem('focusProgress', JSON.stringify(progress));
-       }
-
-       function loadFocusProgress() {
-           const saved = localStorage.getItem('focusProgress');
-           if (saved) {
-               const progress = JSON.parse(saved);
-               
-               // Check if it's the same day
-               const today = new Date().toDateString();
-               const savedDate = new Date(progress.lastSaved).toDateString();
-               
-               if (today === savedDate) {
-                   document.getElementById('sessions-today').textContent = progress.sessionsToday || '0';
-                   document.getElementById('total-minutes').textContent = progress.totalMinutes || '0';
-                   document.getElementById('focus-score').textContent = progress.focusScore || '0';
-                   document.getElementById('today-minutes').textContent = progress.totalMinutes || '0';
-                   
-                   // Load challenge progress
-                   const savedChallengeMinutes = localStorage.getItem('todayFocusMinutes');
-                   if (savedChallengeMinutes) {
-                       userFocusMinutes = parseInt(savedChallengeMinutes);
-                       if (userFocusMinutes > 0) {
-                           focusChallengeAccepted = true;
-                           document.getElementById('focus-challenge-progress').style.display = 'block';
-                           
-                           const progressFill = document.getElementById('focus-progress-fill');
-                           const progressText = document.getElementById('focus-progress-text');
-                           
-                           const percentage = (userFocusMinutes / 120) * 100;
-                           progressFill.style.width = percentage + '%';
-                           progressText.textContent = `${userFocusMinutes}/120 minutes completed`;
-                           
-                           if (userFocusMinutes >= 120) {
-                               progressText.innerHTML = `🧠 Focus Challenge Complete! Elite concentration! 🧠<br><small>+120 Focus Points earned • Streak maintained</small>`;
-                               progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-                           }
-                       }
-                   }
-               }
-           }
-           
-           // Update calendar with today's minutes
-           const todayMinutes = document.getElementById('total-minutes').textContent;
-           if (parseInt(todayMinutes) > 0) {
-               document.getElementById('today-minutes').textContent = todayMinutes;
-               document.querySelector('.calendar-day.today').classList.add('completed');
-           }
-       }
-
-       // Auto-save progress every 30 seconds
-       setInterval(saveFocusProgress, 30000);
-  </script>
-<script src="js/flexible-mobile-nav.js"></script> </body>
+        window.resetGameStats = function() {
+            localStorage.removeItem('gameStats');
+            localStorage.removeItem('globalLeaderboard');
+            localStorage.removeItem('lastCooldownReset');
+            gameCooldowns = {};
+            gameMultipliers = {};
+            alert('Game stats reset!');
+        };
+    </script>
+</body>
 </html>
