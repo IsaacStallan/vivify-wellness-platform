@@ -218,4 +218,17 @@ router.put('/challenges/join', async (req, res) => {
     }
   });
 
+  router.get('/debug/:username', async (req, res) => {
+    try {
+      const user = await User.findOne({ username: req.params.username });
+      res.json({
+        username: user.username,
+        challengeData: user.challengeData,
+        hasData: !!user.challengeData
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
 module.exports = router;
