@@ -23,6 +23,19 @@ mongoose.connect(uri)
 
 const User = require('./models/User');
 
+// Add this before your routes in server.js
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  if (req.method === 'OPTIONS') {
+      res.sendStatus(200);
+  } else {
+      next();
+  }
+});
+
 // Routes
 const authRoutes = require('./routes/auth');
 const fitnessRoutes = require('./routes/fitness');
