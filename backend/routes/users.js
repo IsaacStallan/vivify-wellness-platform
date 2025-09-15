@@ -150,9 +150,10 @@ router.get('/profile/:username', async (req, res) => {
     }
 });
 
-// In your backend routes file
-app.get('/api/challenges/participants', async (req, res) => {
+router.get('/challenges/participants', async (req, res) => {
     try {
+      console.log('Fetching challenge participant counts...');
+      
       // Count users who have joined each challenge
       const participantCounts = {};
       
@@ -171,11 +172,13 @@ app.get('/api/challenges/participants', async (req, res) => {
       
       challengeIds.forEach(challengeId => {
         participantCounts[challengeId] = users.filter(user => {
+          // Check if user has challenge data and has joined this specific challenge
           const challengeData = user.challengeData && user.challengeData[challengeId];
           return challengeData && challengeData.joined === true;
         }).length;
       });
       
+      console.log('Challenge participant counts:', participantCounts);
       res.json(participantCounts);
       
     } catch (error) {
@@ -184,4 +187,12 @@ app.get('/api/challenges/participants', async (req, res) => {
     }
   });
 
+  challengeIds.forEach(challengeId => {
+    participantCounts[challengeId] = users.filter(user => {
+      // Check if user has challenge data and has joined this specific challenge
+      const challengeData = user.challengeData && user.challengeData[challengeId];
+      return challengeData && challengeData.joined === true;
+    }).length;
+  });
+  
 module.exports = router;
