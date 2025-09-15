@@ -580,10 +580,23 @@
             transform: rotate(45deg) translate(-5px, -6px);
         }
 
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
     </style>
     <script>
         // Authentication-aware mobile menu
 function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
     // Check authentication status
     const authToken = localStorage.getItem('authToken');
     const userLoggedIn = localStorage.getItem('userLoggedIn');
@@ -710,6 +723,26 @@ window.addEventListener('authStateChanged', updateMobileMenuAuth);
 // Export functions for external use
 window.updateMobileMenuAuth = updateMobileMenuAuth;
 window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
         </script>
 <!-- CSS Loading Order Fix -->
 
@@ -887,10 +920,23 @@ window.handleMobileLogout = handleMobileLogout;
             transform: rotate(45deg) translate(-5px, -6px);
         }
 
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
     </style>
     <script>
         // Authentication-aware mobile menu
 function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
     // Check authentication status
     const authToken = localStorage.getItem('authToken');
     const userLoggedIn = localStorage.getItem('userLoggedIn');
@@ -1017,6 +1063,26 @@ window.addEventListener('authStateChanged', updateMobileMenuAuth);
 // Export functions for external use
 window.updateMobileMenuAuth = updateMobileMenuAuth;
 window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
         </script>
 
 <script>
