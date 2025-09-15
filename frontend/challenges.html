@@ -418,7 +418,12 @@ class ChallengeManager {
   async syncChallengeToBackend(challengeId, challengeData) {
     try {
       const username = localStorage.getItem('username');
-      if (!username) return;
+      if (!username) {
+        console.log('No username found');
+        return;
+      }
+      
+      console.log('Syncing challenge to backend:', { username, challengeId, challengeData });
       
       const response = await fetch('https://vivify-backend.onrender.com/api/users/challenges/join', {
         method: 'PUT',
@@ -426,8 +431,14 @@ class ChallengeManager {
         body: JSON.stringify({ username, challengeId, challengeData })
       });
       
+      console.log('Response status:', response.status);
+      const result = await response.text();
+      console.log('Response body:', result);
+      
       if (response.ok) {
         console.log('Challenge data synced to backend');
+      } else {
+        console.error('Failed to sync challenge:', result);
       }
     } catch (error) {
       console.error('Error syncing challenge to backend:', error);
