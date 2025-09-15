@@ -194,5 +194,5 @@ router.get('/challenges/participants', async (req, res) => {
       return challengeData && challengeData.joined === true;
     }).length;
   });
-  
+
 module.exports = router;
