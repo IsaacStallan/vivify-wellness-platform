@@ -187,4 +187,35 @@ router.get('/challenges/participants', async (req, res) => {
     }
 });
 
+router.put('/challenges/join', async (req, res) => {
+    try {
+      const { username, challengeId, challengeData } = req.body;
+      
+      if (!username || !challengeId || !challengeData) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+      
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Initialize challengeData if it doesn't exist
+      if (!user.challengeData) {
+        user.challengeData = {};
+      }
+      
+      // Update the specific challenge data
+      user.challengeData[challengeId] = challengeData;
+      
+      await user.save();
+      
+      res.json({ success: true, message: 'Challenge joined successfully' });
+      
+    } catch (error) {
+      console.error('Error joining challenge:', error);
+      res.status(500).json({ error: 'Failed to join challenge' });
+    }
+  });
+
 module.exports = router;

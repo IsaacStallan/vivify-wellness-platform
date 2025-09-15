@@ -378,6 +378,62 @@ class ChallengeManager {
     this.displayChallenges();
   }
 
+  async joinChallenge(challengeId) {
+    const ch = challenges[challengeId];
+    if (!ch) return this.showNotification('Challenge not found', 'error');
+
+    if (this.userChallenges[challengeId]?.joined) {
+      this.showNotification('You are already in this challenge', 'info');
+      return;
+    }
+
+    const now = new Date();
+    const challengeData = {
+      joined: true,
+      startDate: now.toISOString(),
+      completedDays: [],
+      lastCompletedDate: null,
+      completed: false,
+      streak: 0,
+      totalDays: 0
+    };
+
+    this.userChallenges[challengeId] = challengeData;
+
+    // Save to local storage
+    this.saveUserData();
+    
+    // NEW: Also sync to backend
+    await this.syncChallengeToBackend(challengeId, challengeData);
+    
+    this.displayChallenges();
+    this.showNotification(`Joined ${ch.name}! Ready to start your journey.`, 'success');
+    
+    if (window.VivifyLeaderboard) {
+      window.VivifyLeaderboard.addPoints(25, 'challenge_join', { challengeId });
+    }
+    this.syncPointsToBackend(25, 'challenge_join', { challengeId });
+  }
+
+  async syncChallengeToBackend(challengeId, challengeData) {
+    try {
+      const username = localStorage.getItem('username');
+      if (!username) return;
+      
+      const response = await fetch('https://vivify-backend.onrender.com/api/users/challenges/join', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, challengeId, challengeData })
+      });
+      
+      if (response.ok) {
+        console.log('Challenge data synced to backend');
+      }
+    } catch (error) {
+      console.error('Error syncing challenge to backend:', error);
+    }
+  }
+
   updateStreak(challengeId) {
     const challenge = this.userChallenges[challengeId];
     const completedDays = challenge.completedDays.sort();
