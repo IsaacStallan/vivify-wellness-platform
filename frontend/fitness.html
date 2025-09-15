@@ -961,19 +961,27 @@
         });
 
         // Load user's fitness data
+        // FIXED: Load real fitness data from backend
         async function loadRealFitnessData() {
             try {
-                // Try to load from backend first
                 const username = localStorage.getItem('username');
                 if (username) {
                     const response = await fetch(`https://vivify-backend.onrender.com/api/users/profile/${username}`);
                     if (response.ok) {
                         const userData = await response.json();
-                        if (userData.fitnessData) {
-                            userFitnessData = userData.fitnessData;
-                            console.log('Loaded fitness data from backend');
-                            return;
+                        
+                        // Load fitness score from backend
+                        if (userData.fitnessScore !== undefined) {
+                            userFitnessData.fitnessPoints = userData.fitnessScore;
                         }
+                        
+                        // Load other fitness data if available
+                        if (userData.fitnessData) {
+                            userFitnessData = { ...userFitnessData, ...userData.fitnessData };
+                        }
+                        
+                        console.log('Loaded fitness data from backend - fitnessScore:', userData.fitnessScore);
+                        return;
                     }
                 }
             } catch (error) {
@@ -1092,25 +1100,36 @@
         }
 
         // Sync workout to backend
+        // FIXED: Sync fitness score to backend
         async function syncWorkoutToBackend(workoutEntry) {
             try {
                 const username = localStorage.getItem('username');
                 if (!username) return;
 
-                const response = await fetch('https://vivify-backend.onrender.com/api/users/update-fitness', {
+                const response = await fetch('https://vivify-backend.onrender.com/api/users/update-score', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         username: username,
-                        fitnessData: userFitnessData,
-                        workout: workoutEntry
+                        pointsToAdd: workoutEntry.points,
+                        activityType: 'fitness_workout',
+                        scoreType: 'fitnessScore', // Specify fitness score specifically
+                        metadata: {
+                            workoutType: workoutEntry.type,
+                            workoutName: workoutEntry.name
+                        }
                     })
                 });
 
                 if (response.ok) {
-                    console.log('✅ Workout synced to backend');
+                    const result = await response.json();
+                    console.log(`✅ Fitness score synced: ${result.oldScore} -> ${result.newScore}`);
+                    
+                    // Update local fitness points to match backend
+                    userFitnessData.fitnessPoints = result.newScore;
+                    updateFitnessStats();
                 } else {
                     console.log('⚠️ Workout saved locally only');
                 }
