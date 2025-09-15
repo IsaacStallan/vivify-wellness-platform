@@ -966,36 +966,42 @@
             try {
                 const username = localStorage.getItem('username');
                 if (username) {
+                    console.log('Fetching fitness data for:', username);
                     const response = await fetch(`https://vivify-backend.onrender.com/api/users/profile/${username}`);
+                    
                     if (response.ok) {
                         const userData = await response.json();
+                        console.log('Backend user data:', userData);
                         
-                        // CRITICAL FIX: Load ONLY fitnessScore, not overallScore
+                        // CRITICAL FIX: Access the correct path in your database
                         if (userData.challengeStats && userData.challengeStats.fitnessScore !== undefined) {
                             userFitnessData.fitnessPoints = userData.challengeStats.fitnessScore;
-                            console.log('Loaded fitnessScore from backend:', userData.challengeStats.fitnessScore);
+                            console.log('✅ Loaded fitnessScore:', userData.challengeStats.fitnessScore);
                         } else {
+                            console.log('⚠️ No challengeStats.fitnessScore found, defaulting to 0');
                             userFitnessData.fitnessPoints = 0;
                         }
                         
-                        // Load other fitness-specific data if available
-                        if (userData.fitnessData) {
-                            userFitnessData = { ...userFitnessData, ...userData.fitnessData };
-                        }
-                        
                         return;
+                    } else {
+                        console.log('❌ Backend response not OK:', response.status);
                     }
                 }
             } catch (error) {
-                console.log('Could not load from backend, using localStorage');
+                console.error('❌ Error loading from backend:', error);
             }
             
             // Fallback to localStorage
+            console.log('Using localStorage fallback');
             const userKey = currentUser?.username || 'defaultUser';
             const localData = JSON.parse(localStorage.getItem(`userData_${userKey}`) || '{}');
             
-            if (localData.fitness) {
-                userFitnessData = localData.fitness;
+            if (localData.fitness && localData.fitness.fitnessPoints) {
+                userFitnessData.fitnessPoints = localData.fitness.fitnessPoints;
+                console.log('Loaded from localStorage:', localData.fitness.fitnessPoints);
+            } else {
+                userFitnessData.fitnessPoints = 0;
+                console.log('No local data found, defaulting to 0');
             }
         }
 
