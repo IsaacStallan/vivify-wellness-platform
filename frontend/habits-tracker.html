@@ -655,6 +655,7 @@
                 </div>
                 <ul>
                     <li><a href="habits-tracker.html" class="active">Daily Habits</a></li>
+                    <li><a href="challenges.html">Challenges</a></li>
                     <li><a href="community.html">Community</a></li>
                     <li><a href="about.html">About</a></li>
                 </ul>
@@ -1124,12 +1125,36 @@
             calculateStats();
             updateDisplay();
 
+            // Sync with leaderboard - ADD THIS LINE
+            syncHabitsWithLeaderboard();
+
             // Add completion animation
             const habitCard = document.querySelector(`[onclick="toggleHabit('${habitId}')"]`).closest('.habit-card');
             habitCard.classList.add('completion-animation');
             
             // Show completion notification
             showNotification(`${habit.name} completed! +${habit.points} points`, 'success');
+        }
+
+        // Add this to your habits.html after habit completion
+        async function syncHabitsWithLeaderboard() {
+        try {
+            const habitsData = JSON.parse(localStorage.getItem('habitsData') || '{}');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const userId = userProfile.id;
+            
+            if (!userId) return;
+
+            await fetch('/api/user/habits', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, habitsData })
+            });
+        } catch (error) {
+            console.error('Failed to sync habits:', error);
+        }
+        // Then sync with leaderboard
+        syncHabitsWithLeaderboard();
         }
 
         function checkAchievements() {

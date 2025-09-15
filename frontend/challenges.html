@@ -148,6 +148,58 @@
       font-weight: 600;
     }
 
+    .achievements-section {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .achievement-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      transition: all .3s ease;
+    }
+
+    .achievement-card.unlocked {
+      border-color: #f39c12;
+      background: rgba(243,156,18,.1);
+    }
+
+    .achievement-card.locked {
+      opacity: 0.5;
+      filter: grayscale(100%);
+    }
+
+    .achievement-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .achievement-name {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .achievement-description {
+      color: rgba(255,255,255,.7);
+      font-size: 0.85rem;
+    }
+
     @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
     .fade-in-up{animation:fadeInUp .6s ease-out}
     .notification{position:fixed;top:100px;right:20px;background:#27ae60;color:#fff;padding:1rem 1.5rem;border-radius:50px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:1000;opacity:0;transform:translateY(-20px);transition:all .3s ease;max-width:350px;font-weight:600}
@@ -210,6 +262,12 @@
         <span class="hero-stat-value" id="totalPoints">0</span>
         <span class="hero-stat-label">Total Points</span>
       </div>
+    </div>
+  </div>
+  <div class="achievements-section fade-in-up" style="margin-bottom: 2rem;">
+    <h2 class="section-title"><i class="fas fa-trophy"></i>Your Achievements</h2>
+    <div class="achievements-grid" id="achievementsGrid">
+      <!-- Achievements will be populated by JavaScript -->
     </div>
   </div>
 
@@ -839,6 +897,20 @@ const challenges = {
   'time-mastery':       { name:'Time Mastery Challenge',    type:'weekly',  category:'habits',   duration:7,  points:300, requirements:['Track every hour','Identify time wasters','Optimize high-impact activities'], goalType:'daily', totalGoal:7 }
 };
 
+const achievementDefinitions = {
+  first_challenge: { name: 'First Challenge', description: 'Complete your first challenge', icon: '🏆' },
+  challenge_veteran: { name: 'Challenge Veteran', description: 'Complete 5 challenges', icon: '🎖️' },
+  challenge_master: { name: 'Challenge Master', description: 'Complete 10 challenges', icon: '👑' },
+  week_warrior: { name: 'Week Warrior', description: '7-day habit streak', icon: '⚡' },
+  month_master: { name: 'Month Master', description: '30-day habit streak', icon: '🔥' },
+  century_streak: { name: 'Century Streak', description: '100-day streak', icon: '💯' },
+  rising_star: { name: 'Rising Star', description: 'Reach 500 points', icon: '⭐' },
+  high_achiever: { name: 'High Achiever', description: 'Reach 1000 points', icon: '🚀' },
+  elite_performer: { name: 'Elite Performer', description: 'Reach 2500 points', icon: '💎' },
+  habit_builder: { name: 'Habit Builder', description: 'Earn 300 habit points', icon: '🧱' },
+  habit_master: { name: 'Habit Master', description: 'Earn 1000 habit points', icon: '🎯' }
+};
+
 /** -----------------------------
  *  Helper Functions
  *  ----------------------------*/
@@ -874,7 +946,7 @@ function getLoggedInUser() {
 /** -----------------------------
  *  Backend I/O
  *  ----------------------------*/
-async function fetchUser(){
+ async function fetchUser(){
   try{
     const res=await fetch(`/api/user/${userId}`);
     if(!res.ok) throw new Error('User not found');
@@ -882,6 +954,10 @@ async function fetchUser(){
     currentUserName = data.displayName || 'You';
     userChallenges  = data.userChallenges || {};
     challengeStats  = data.challengeStats || {active:0,completed:0,totalPoints:0};
+    
+    // Display achievements after fetching user data
+    const achievements = data.achievements || [];
+    displayAchievements(achievements);
   }catch(e){
     // Initialize user record if missing
     currentUserName = localStorage.getItem('username') || 'You';
@@ -894,6 +970,9 @@ async function fetchUser(){
         overallScore: 0, level: 1
       })
     }).catch(()=>{});
+    
+    // Display empty achievements for new users
+    displayAchievements([]);
   }
 }
 
@@ -1117,26 +1196,51 @@ function viewChallenge(challengeId) {
   leaderboardManager.showChallengeLeaderboard(challengeId);
 }
 
-function viewFullLeaderboard(){
-  const me = leaderboardManager.getOverallLeaderboard().find(u=>u.userId===userId);
-  const summary = me ? {
-    challengePoints: me.challengeStats?.totalPoints,
-    habitStreak: me.habitStreak, fitnessScore: me.fitnessScore,
-    nutritionScore: me.nutritionScore, mentalScore: me.mentalScore,
-    lifeSkillsScore: me.lifeSkillsScore, level: me.level
-  } : computeCurrentUserSummary();
+async function viewFullLeaderboard(){
+  try {
+    // Fetch the current user's actual data from the backend
+    const response = await fetch(`/api/user/${userId}`);
+    if (!response.ok) {
+      showNotification('Unable to load score breakdown', 'error');
+      return;
+    }
+    
+    const userData = await response.json();
+    
+    // Use real data from the backend
+    const breakdown = {
+      challengePoints: userData.challengeStats?.totalPoints || 0,
+      habitPoints: userData.habitPoints || 0,
+      currentStreak: userData.currentStreak || 0,
+      streakBonus: Math.floor((userData.currentStreak || 0) / 7) * 50,
+      fitnessScore: userData.fitnessScore || 0,
+      nutritionScore: userData.nutritionScore || 0,
+      mentalScore: userData.mentalScore || 0,
+      lifeSkillsScore: userData.lifeSkillsScore || 0,
+      level: userData.level || 1,
+      levelBonus: (userData.level || 1) * 50,
+      overallScore: userData.overallScore || 0
+    };
 
-  showNotification(
-    `Your Overall Score Breakdown:
-- Challenges: ${summary.challengePoints||0}
-- Habits: ${summary.habitStreak||0}
-- Fitness: ${summary.fitnessScore||0}
-- Nutrition: ${summary.nutritionScore||0}
-- Mental: ${summary.mentalScore||0}
-- Life Skills: ${summary.lifeSkillsScore||0}
-- Level Bonus: ${(summary.level||1)*50}`,
-    'info'
-  );
+    showNotification(
+      `Your Overall Score Breakdown:
+- Challenge Points: ${breakdown.challengePoints}
+- Habit Points: ${breakdown.habitPoints}
+- Current Streak: ${breakdown.currentStreak} days
+- Streak Bonus: ${breakdown.streakBonus}
+- Fitness Score: ${breakdown.fitnessScore}
+- Nutrition Score: ${breakdown.nutritionScore}
+- Mental Score: ${breakdown.mentalScore}
+- Life Skills Score: ${breakdown.lifeSkillsScore}
+- Level Bonus: ${breakdown.levelBonus} (Level ${breakdown.level})
+
+Total Score: ${breakdown.overallScore}`,
+      'info'
+    );
+  } catch (error) {
+    console.error('Error fetching score breakdown:', error);
+    showNotification('Unable to load score breakdown', 'error');
+  }
 }
 
 function filterChallenges(filter){
@@ -1148,10 +1252,33 @@ function filterChallenges(filter){
   });
 }
 
+function displayAchievements(userAchievements = []) {
+  const grid = document.getElementById('achievementsGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = '';
+  
+  Object.entries(achievementDefinitions).forEach(([key, achievement]) => {
+    const isUnlocked = userAchievements.includes(key);
+    
+    const card = document.createElement('div');
+    card.className = `achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    
+    card.innerHTML = `
+      <span class="achievement-icon">${achievement.icon}</span>
+      <div class="achievement-name">${achievement.name}</div>
+      <div class="achievement-description">${achievement.description}</div>
+    `;
+    
+    grid.appendChild(card);
+  });
+}
+
 /** -----------------------------
  *  Initialization
  *  ----------------------------*/
-document.addEventListener('DOMContentLoaded', async () => {
+
+ document.addEventListener('DOMContentLoaded', async () => {
   // Logout functionality
   const logout=document.getElementById('logout-link');
   if(logout){ logout.addEventListener('click',e=>{e.preventDefault(); localStorage.clear(); window.location.href='index.html';}); }
@@ -1177,8 +1304,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loggedInUser = getLoggedInUser();
   if (!loggedInUser) return;
   
-  userId = loggedInUser.userId;        // Isaac's real ID: 68c74b407db7039dc12e6c0c
-  currentUserName = loggedInUser.username; // "Isaac"
+  userId = loggedInUser.userId;
+  currentUserName = loggedInUser.username;
 
   // Initialize enhanced leaderboard system
   await leaderboardManager.initialize(userId, currentUserName);
@@ -1187,7 +1314,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateChallengeStats();
   updateAllChallengeCards();
 
-  // The leaderboard manager now handles all leaderboard updates
+  // The leaderboard manager handles all leaderboard updates
   leaderboardManager.updateDisplays();
   leaderboardManager.updateChallengeParticipants();
 });

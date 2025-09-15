@@ -152,6 +152,12 @@ const userSchema = new mongoose.Schema({
     mentalScore: { type: Number, default: 0 },
     lifeSkillsScore: { type: Number, default: 0 },
     userChallenges: { type: Object, default: {} },
+    // Add to your User schema in models/User.js
+    habitPoints: { type: Number, default: 0 },
+    currentStreak: { type: Number, default: 0 },
+    longestStreak: { type: Number, default: 0 },
+    achievements: [String],
+    habitsData: { type: Object, default: {} },
     challengeStats: {
         active: { type: Number, default: 0 },
         completed: { type: Number, default: 0 },

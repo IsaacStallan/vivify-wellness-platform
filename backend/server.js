@@ -335,6 +335,138 @@ app.get('/api/leaderboard/monthly', async (req, res) => {
   }
 });
 
+// Add this new endpoint to your server.js
+app.post('/api/user/habits', async (req, res) => {
+  try {
+    const { userId, habitsData } = req.body;
+    
+    const user = await findUser(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update habits data
+    if (!user.habitsData) user.habitsData = {};
+    user.habitsData = { ...user.habitsData, ...habitsData };
+
+    // Calculate habit points and streaks
+    const habitStats = calculateHabitStats(user.habitsData);
+    
+    // Update scores
+    user.habitPoints = habitStats.totalPoints;
+    user.longestStreak = habitStats.longestStreak;
+    user.currentStreak = habitStats.currentStreak;
+
+    // Recalculate overall score
+    await recalculateUserScore(user);
+    await user.save();
+
+    res.json({ success: true, habitStats });
+  } catch (error) {
+    console.error('Error updating habits:', error);
+    res.status(500).json({ error: 'Failed to update habits' });
+  }
+});
+
+// Add helper functions
+function calculateHabitStats(habitsData) {
+  let totalPoints = 0;
+  let currentStreak = 0;
+  let longestStreak = 0;
+  let consecutiveDays = 0;
+
+  const dates = Object.keys(habitsData || {}).sort();
+  let lastDate = null;
+
+  for (const date of dates) {
+    const dayData = habitsData[date];
+    if (!dayData) continue;
+
+    const completedHabits = Object.values(dayData).filter(habit => habit.completed).length;
+    totalPoints += completedHabits * 10; // 10 points per completed habit
+
+    if (completedHabits > 0) {
+      if (lastDate && isConsecutiveDay(lastDate, date)) {
+        consecutiveDays++;
+      } else {
+        consecutiveDays = 1;
+      }
+      longestStreak = Math.max(longestStreak, consecutiveDays);
+      lastDate = date;
+    } else {
+      consecutiveDays = 0;
+    }
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  if (lastDate === today) {
+    currentStreak = consecutiveDays;
+  }
+
+  const streakBonus = Math.floor(currentStreak / 7) * 50;
+  totalPoints += streakBonus;
+
+  return { totalPoints, currentStreak, longestStreak, streakBonus };
+}
+
+function isConsecutiveDay(date1, date2) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  const diffTime = Math.abs(d2 - d1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays === 1;
+}
+
+async function recalculateUserScore(user) {
+  const challengePoints = user.challengeStats?.totalPoints || 0;
+  const habitPoints = user.habitPoints || 0;
+  const streakBonus = Math.floor((user.currentStreak || 0) / 7) * 50;
+
+  user.level = Math.floor((challengePoints + habitPoints) / 100) + 1;
+  user.fitnessScore = Math.floor((challengePoints + habitPoints) * 0.8);
+  user.mentalScore = Math.floor((challengePoints + habitPoints) * 0.6);
+  user.nutritionScore = Math.floor((challengePoints + habitPoints) * 0.7);
+  user.lifeSkillsScore = Math.floor((challengePoints + habitPoints) * 0.5);
+
+  user.overallScore = Math.round(
+    challengePoints * 1.0 +
+    habitPoints * 1.2 +
+    streakBonus +
+    user.level * 50
+  );
+}
+
+// Achievement system
+function calculateAchievements(user) {
+  const achievements = [];
+  const challengeStats = user.challengeStats || {};
+  const currentStreak = user.currentStreak || 0;
+  const longestStreak = user.longestStreak || 0;
+  const totalPoints = user.overallScore || 0;
+
+  // Challenge achievements
+  if (challengeStats.completed >= 1) achievements.push('first_challenge');
+  if (challengeStats.completed >= 5) achievements.push('challenge_veteran');
+  if (challengeStats.completed >= 10) achievements.push('challenge_master');
+
+  // Streak achievements
+  if (currentStreak >= 7) achievements.push('week_warrior');
+  if (currentStreak >= 30) achievements.push('month_master');
+  if (longestStreak >= 100) achievements.push('century_streak');
+
+  // Point achievements
+  if (totalPoints >= 500) achievements.push('rising_star');
+  if (totalPoints >= 1000) achievements.push('high_achiever');
+  if (totalPoints >= 2500) achievements.push('elite_performer');
+
+  // Habit-specific achievements
+  const habitPoints = user.habitPoints || 0;
+  if (habitPoints >= 300) achievements.push('habit_builder');
+  if (habitPoints >= 1000) achievements.push('habit_master');
+
+  return achievements;
+}
+
 // Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
