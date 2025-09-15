@@ -1285,7 +1285,8 @@ function getLoggedInUser() {
     
     currentUserName = data.username || data.displayName || 'You';
     userChallenges = data.userChallenges || {};
-    challengeStats = data.challengeStats || {active:0,completed:0,totalPoints:0};
+    userChallengeStats = data.challengeStats || {active:0, completed:0, totalPoints:0};
+    userOverallScore = data.overallScore || 0; // Store the real overall score
     
     // Store actual database scores
     userLevel = data.level || 1;
@@ -1357,24 +1358,18 @@ function computeCurrentUserSummary(){
 }
 
 function updateChallengeStats(){
-  const active = Object.keys(userChallenges).filter(id => userChallenges[id]?.joined && !userChallenges[id]?.completed).length;
-  const completed = Object.keys(userChallenges).filter(id => userChallenges[id]?.completed).length;
+  // Use actual database values instead of calculating
+  const active = userChallengeStats?.active || 0;
+  const completed = userChallengeStats?.completed || 0;
+  const totalPoints = userOverallScore || 0; // Use overall score, not just challenge points
 
-  let totalPoints = 0;
-  for (const id of Object.keys(userChallenges)){
-    const uc=userChallenges[id]; const ch=challenges[id];
-    if(!uc || !ch) continue;
-    if(uc.completed){ totalPoints += ch.points; }
-    else if(uc.joined && ch.type==='ongoing'){ totalPoints += (uc.dailyProgress||0)*(ch.points); }
-  }
-  challengeStats = {active, completed, totalPoints};
-
-  const a=document.getElementById('activeChallenges');
-  const c=document.getElementById('completedChallenges');
-  const p=document.getElementById('totalPoints');
-  if(a) a.textContent=active;
-  if(c) c.textContent=completed;
-  if(p) p.textContent=totalPoints;
+  const a = document.getElementById('activeChallenges');
+  const c = document.getElementById('completedChallenges');
+  const p = document.getElementById('totalPoints');
+  
+  if(a) a.textContent = active;
+  if(c) c.textContent = completed;
+  if(p) p.textContent = totalPoints;
 }
 
 function updateAllChallengeCards(){
