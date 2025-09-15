@@ -1727,6 +1727,26 @@
         function addPointsToLeaderboard(points, activityType) {
             const focusMinutes = parseInt(document.getElementById('total-minutes')?.textContent || '0');
             return window.VivifyLeaderboard.addPoints(points, activityType, { focusMinutes });
+
+            // ADD THIS: Force refresh any leaderboard displays
+            if (success) {
+                // Trigger the update event manually
+                window.dispatchEvent(new CustomEvent('vivifyLeaderboardUpdate', {
+                    detail: { pointsAdded: points, activityType: activityType }
+                }));
+                
+                // If there's a leaderboard on this page, refresh it
+                setTimeout(() => {
+                    if (document.getElementById('leaderboardList')) {
+                        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+                    }
+                    if (document.getElementById('focus-leaderboard-list')) {
+                        window.VivifyLeaderboard.displayForAttentionTraining('focus-leaderboard-list');
+                    }
+                }, 100);
+            }
+            
+            return success;
         }
 
         // Helper function to update leaderboards visible on current page
