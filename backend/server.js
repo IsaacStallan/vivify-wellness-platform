@@ -381,6 +381,23 @@ app.post('/api/user/habits', async (req, res) => {
   }
 });
 
+// Add this route somewhere after your existing routes (probably after the auth routes)
+// Look for other app.get() or app.post() routes and add it near them
+
+app.get('/api/users', async (req, res) => {
+  try {
+      const users = await User.find({})
+          .select('username school overallScore level challengeStats fitnessScore mentalScore habitStreak')
+          .lean();
+      
+      console.log(`Found ${users.length} users for leaderboard`);
+      res.json(users);
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
 // Add helper functions
 function calculateHabitStats(habitsData) {
   let totalPoints = 0;
