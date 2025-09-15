@@ -21,7 +21,8 @@ const STATIC_CACHE_URLS = [
   '/auth-utils.js',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  '/manifest.json'
+  '/js/flexible-mobile-nav.js',
+  '/Manifest.json'
 ];
 
 // URLs that should always be fetched from network (API calls, dynamic content)
@@ -153,21 +154,24 @@ self.addEventListener('fetch', event => {
   }
   
   // Default: Network First strategy for other requests
-  event.respondWith(
-    fetch(request)
-      .then(response => {
-        // Cache successful GET requests
-        if (request.method === 'GET' && response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => cache.put(request, responseClone));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Fallback to cache if network fails
-        return caches.match(request);
-      })
+  // Default: Network First strategy for other requests
+event.respondWith(
+  fetch(request)
+    .then(response => {
+      // Only cache successful responses and avoid caching errors
+      if (request.method === 'GET' && response.status === 200 && response.type === 'basic') {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME)
+          .then(cache => cache.put(request, responseClone))
+          .catch(error => console.log('Cache put failed:', error));
+      }
+      return response;
+    })
+    .catch(error => {
+      console.log('Fetch failed, trying cache:', error);
+      // Fallback to cache if network fails
+      return caches.match(request);
+    })
   );
 });
 
