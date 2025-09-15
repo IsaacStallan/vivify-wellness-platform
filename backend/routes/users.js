@@ -194,19 +194,26 @@ router.put('/challenges/join', async (req, res) => {
       
       const { username, challengeId, challengeData } = req.body;
       
-      const user = await User.findOne({ username });
-      console.log('Found user:', user.username);
-      console.log('Current challengeData:', user.challengeData);
-      
-      if (!user.challengeData) {
-        user.challengeData = {};
+      if (!username || !challengeId || !challengeData) {
+        return res.status(400).json({ error: 'Missing required fields' });
       }
       
-      user.challengeData[challengeId] = challengeData;
-      console.log('Updated challengeData:', user.challengeData);
+      // Use findOneAndUpdate with $set to force the update
+      const updatedUser = await User.findOneAndUpdate(
+        { username: username },
+        { 
+          $set: { 
+            [`challengeData.${challengeId}`]: challengeData 
+          }
+        },
+        { new: true, upsert: false }
+      );
       
-      await user.save();
-      console.log('User saved successfully');
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      console.log('Updated user challengeData:', updatedUser.challengeData);
       
       res.json({ success: true, message: 'Challenge joined successfully' });
       
@@ -214,7 +221,7 @@ router.put('/challenges/join', async (req, res) => {
       console.error('Error joining challenge:', error);
       res.status(500).json({ error: 'Failed to join challenge' });
     }
-});   
+});
 
 router.get('/debug/:username', async (req, res) => {
     try {
