@@ -164,18 +164,9 @@ const userSchema = new mongoose.Schema({
         totalPoints: { type: Number, default: 0 }
     },  
     challengeData: {
-        type: Map,
-        of: {
-          joined: Boolean,
-          startDate: Date,
-          completedDays: [String],
-          lastCompletedDate: Date,
-          completed: Boolean,
-          streak: Number,
-          totalDays: Number
-        },
+        type: mongoose.Schema.Types.Mixed,
         default: {}
-      }
+    }
     }, { timestamps: true });
 
 // Virtual for full name
