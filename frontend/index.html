@@ -1085,13 +1085,17 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Check authentication status
-        const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+        // More robust authentication check
+        const authToken = localStorage.getItem('authToken');
+        const userLoggedIn = localStorage.getItem('userLoggedIn');
+        const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+        
+        console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn }); // Debug log
         
         // Update UI based on login status
         updateAuthState(isLoggedIn);
         
-        // Add scroll animations
+        // Rest of your existing code...
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1116,17 +1120,43 @@
     });
 
     function updateAuthState(isLoggedIn) {
-        // Navigation updates
-        document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
-        document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
-        document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
-        document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
-        document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+        console.log('Updating auth state:', isLoggedIn); // Debug log
+        
+        // Get elements
+        const loginLink = document.getElementById('login-link');
+        const signupLink = document.getElementById('signup-link');
+        const dashboardLink = document.getElementById('dashboard-link');
+        const profileLink = document.getElementById('profile-link');
+        const logoutLink = document.getElementById('logout-link');
         
         if (isLoggedIn) {
+            // Hide login/signup
+            loginLink.style.display = 'none';
+            signupLink.style.display = 'none';
+            
+            // Show logged-in options
+            dashboardLink.classList.remove('hidden');
+            profileLink.classList.remove('hidden');
+            logoutLink.classList.remove('hidden');
+            
+            // Update hero and other content
             updateHeroForLoggedInUser();
             updateCTAForLoggedInUser();
             showPersonalizedStats();
+        } else {
+            // Show login/signup
+            loginLink.style.display = 'block';
+            signupLink.style.display = 'block';
+            
+            // Hide logged-in options
+            dashboardLink.classList.add('hidden');
+            profileLink.classList.add('hidden');
+            logoutLink.classList.add('hidden');
+            
+            // Reset hero content to default
+            resetHeroContent();
+            resetCTAContent();
+            hidePersonalizedStats();
         }
     }
 
@@ -1167,6 +1197,27 @@
         });
     }
 
+    function resetHeroContent() {
+        document.getElementById('hero-badge').textContent = 'Gamified Performance Training';
+        document.getElementById('hero-title').textContent = 'Build Elite Daily Habits';
+        document.getElementById('hero-description').textContent = 'Transform your daily routine into an engaging game. Track sleep, exercise, study habits, and nutrition while earning rewards and connecting with ambitious students building their competitive edge.';
+        
+        const heroButtons = document.getElementById('hero-buttons');
+        heroButtons.innerHTML = `
+            <a href="signup.html" class="btn btn-primary">Start Your Training</a>
+            <a href="#features" class="btn btn-secondary">See How It Works</a>
+        `;
+    }
+
+    function resetCTAContent() {
+        document.getElementById('cta-title').textContent = 'Ready to Build Your Competitive Edge?';
+        document.getElementById('cta-description').textContent = 'Join the community of ambitious students building elite daily habits through gamification, tracking, and peer support. Start your performance transformation today.';
+        
+        const ctaButton = document.getElementById('cta-button');
+        ctaButton.href = 'signup.html';
+        ctaButton.textContent = 'Start Building Elite Habits';
+    }
+
     function updateCTAForLoggedInUser() {
         document.getElementById('cta-title').textContent = 'Keep Building Your Edge';
         document.getElementById('cta-description').textContent = 'You\'re on the path to elite performance. Continue tracking your habits, completing challenges, and building the competitive advantage that sets you apart.';
@@ -1174,6 +1225,32 @@
         const ctaButton = document.getElementById('cta-button');
         ctaButton.href = 'dashboard.html';
         ctaButton.innerHTML = '<i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Continue Your Journey';
+    }
+
+    function hidePersonalizedStats() {
+        const personalStats = document.getElementById('personal-stats');
+        personalStats.classList.remove('active');
+        
+        // Reset stats to default
+        const statsContainer = document.getElementById('stats-container');
+        statsContainer.innerHTML = `
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">21</div>
+                <div class="stat-label">Days to Build Elite Habits</div>
+            </div>
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Core Performance Areas</div>
+            </div>
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Gamified Experience</div>
+            </div>
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Progress Tracking</div>
+            </div>
+        `;
     }
 
     function showPersonalizedStats() {
