@@ -852,15 +852,23 @@ function showNotification(message, type='info'){
   setTimeout(()=>{n.classList.remove('show'); setTimeout(()=>n.remove(),300);},7000); // Longer display for leaderboards
 }
 
-function getOrCreateUserId(){
-  let id=localStorage.getItem('vivifyUserId');
-  if(!id){
-    id='user_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
-    localStorage.setItem('vivifyUserId', id);
-    // Register with backend
-    fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:id,displayName:'Student'})}).catch(()=>{});
+function getLoggedInUser() {
+  // Check if user is logged in using your existing auth system
+  const token = localStorage.getItem('authToken'); // or whatever you use to store login state
+  const userId = localStorage.getItem('userId'); // your actual user ID from login
+  const username = localStorage.getItem('username'); // Isaac
+  
+  if (token && userId) {
+    return {
+      userId: userId,
+      username: username,
+      isLoggedIn: true
+    };
   }
-  return id;
+  
+  // If not logged in, redirect to login page
+  window.location.href = 'login.html';
+  return null;
 }
 
 /** -----------------------------
@@ -1166,8 +1174,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // Initialize user and system
-  userId = getOrCreateUserId();
-  currentUserName = localStorage.getItem('username') || 'You';
+  const loggedInUser = getLoggedInUser();
+  if (!loggedInUser) return; // Will redirect to login if not logged in
+
+  userId = loggedInUser.userId;
+  currentUserName = loggedInUser.username;
 
   // Initialize enhanced leaderboard system
   await leaderboardManager.initialize(userId, currentUserName);
