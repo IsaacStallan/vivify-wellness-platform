@@ -1362,7 +1362,7 @@
             scoreEl.textContent = parseInt(scoreEl.textContent) + timerPoints;
             
             // FIXED: Sync timer points to global leaderboard too
-            syncPointsToGlobalLeaderboard(timerPoints, 'focus_timer');
+            syncPointsToUnifiedLeaderboard(timerPoints, 'focus_timer');
             
             alert(`Focus Session Complete!\n\n${completedMinutes} minutes of deep focus\n+${timerPoints} focus points earned\nStreak maintained!`);
             
@@ -1499,7 +1499,7 @@
                 scoreEl.textContent = newLocalScore;
                 
                 // CRITICAL FIX: Properly sync to global leaderboard
-                syncPointsToGlobalLeaderboard(pointsResult.points, 'brain_training');
+                syncPointsToUnifiedLeaderboard(pointsResult.points, 'brain_training');
                 
                 container.innerHTML = `
                     <h3>Stroop Challenge Complete!</h3>
@@ -1600,7 +1600,7 @@
                 scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
                 
                 // Update global leaderboard
-                updateGlobalLeaderboard(pointsResult.points, 'nback');
+                syncPointsToUnifiedLeaderboard(pointsResult.points, 'nback');
                 
                 container.innerHTML = `
                     <h3>N-Back Training Complete!</h3>
@@ -1680,7 +1680,7 @@
                 scoreEl.textContent = parseInt(scoreEl.textContent) + pointsResult.points;
                 
                 // Update global leaderboard
-                updateGlobalLeaderboard(pointsResult.points, 'mindfulness');
+                syncPointsToUnifiedLeaderboard(pointsResult.points, 'mindfulness');
                 container.innerHTML = `
                     <h3>Mindfulness Session Complete!</h3>
                     <div class="game-score">
@@ -1722,15 +1722,16 @@
             }, 2000);
         }
 
-        function syncPointsToGlobalLeaderboard(points, activity_type) {
+        // UNIFIED LEADERBOARD SYNC - Add this to attention training page
+        function syncPointsToUnifiedLeaderboard(points, activity_type) {
             try {
-                // Get current global leaderboard data
-                let globalLeaderboard = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
                 const username = localStorage.getItem('username') || 'Anonymous';
                 const userSchool = localStorage.getItem('userSchool') || 'Knox Grammar';
                 const userId = localStorage.getItem('userId') || username;
                 
-                // Find existing user or create new entry
+                // Update localStorage leaderboard (for attention training page)
+                let globalLeaderboard = JSON.parse(localStorage.getItem('globalLeaderboard') || '[]');
+                
                 let userEntry = globalLeaderboard.find(entry => 
                     entry.username === username || entry.userId === userId
                 );
@@ -1758,29 +1759,50 @@
                 userEntry.gamesPlayed = (userEntry.gamesPlayed || 0) + 1;
                 userEntry.focusMinutes = parseInt(document.getElementById('total-minutes')?.textContent || '0');
                 userEntry.lastActive = Date.now();
-                
-                // Calculate level based on total points
                 userEntry.level = Math.floor(userEntry.totalPoints / 500) + 1;
                 
-                // Sort leaderboard by total points
                 globalLeaderboard.sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
-                
-                // Keep only top 100 to prevent localStorage bloat
-                if (globalLeaderboard.length > 100) {
-                    globalLeaderboard = globalLeaderboard.slice(0, 100);
-                }
-                
-                // Save updated leaderboard
                 localStorage.setItem('globalLeaderboard', JSON.stringify(globalLeaderboard));
                 
-                console.log(`${points} points synced to global leaderboard for ${activity_type}`);
-                console.log('Updated user entry:', userEntry);
+                // CRITICAL: Also update the challenges page format
+                let challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
                 
-                // Update any visible leaderboards on the page
-                updateVisibleLeaderboards();
+                let challengeUserEntry = challengesLeaderboard.find(entry => 
+                    entry.username === username || entry.userId === userId
+                );
+                
+                if (!challengeUserEntry) {
+                    challengeUserEntry = {
+                        userId: userId,
+                        username: username,
+                        displayName: username,
+                        school: userSchool,
+                        overallScore: 0,
+                        activeChallenges: 0,
+                        completedChallenges: 0,
+                        level: 1,
+                        lastActive: Date.now()
+                    };
+                    challengesLeaderboard.push(challengeUserEntry);
+                }
+                
+                // Update challenges leaderboard entry
+                challengeUserEntry.overallScore = (challengeUserEntry.overallScore || 0) + points;
+                challengeUserEntry.level = Math.floor(challengeUserEntry.overallScore / 500) + 1;
+                challengeUserEntry.lastActive = Date.now();
+                
+                challengesLeaderboard.sort((a, b) => (b.overallScore || 0) - (a.overallScore || 0));
+                localStorage.setItem('challengesLeaderboard', JSON.stringify(challengesLeaderboard));
+                
+                console.log(`${points} points synced to both leaderboards for ${activity_type}`);
+                
+                // Trigger update event for challenges page
+                window.dispatchEvent(new CustomEvent('leaderboardUpdated', {
+                    detail: { points, activity_type, newScore: challengeUserEntry.overallScore }
+                }));
                 
             } catch (error) {
-                console.error('Error syncing to global leaderboard:', error);
+                console.error('Error syncing to unified leaderboard:', error);
             }
         }
 
@@ -2029,9 +2051,6 @@
             
             // Show daily cooldown reset notification
             showDailyCooldownReset();
-                setTimeout(() => {
-            displayGlobalLeaderboard();
-            }, 1000);
         });
 
         // Daily cooldown reset
@@ -2082,22 +2101,58 @@
         }, 30000);
 
         // Responsive handling
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                const mobileMenu = document.getElementById('mobile-menu');
-                const mobileBtn = document.getElementById('mobile-menu-btn');
-                
-                if (mobileMenu) mobileMenu.remove();
-                if (mobileBtn) mobileBtn.remove();
-                
-                document.body.style.overflow = '';
-            } else if (window.innerWidth <= 768) {
-                const existingMenu = document.getElementById('mobile-menu');
-                if (!existingMenu) {
-                    createMobileMenu();
-                }
+        window.addEventListener('leaderboardUpdated', function(event) {
+            console.log('Leaderboard update received:', event.detail);
+            
+            // Force refresh the leaderboard display
+            const challengesLeaderboard = JSON.parse(localStorage.getItem('challengesLeaderboard') || '[]');
+            
+            if (challengesLeaderboard.length > 0) {
+                // Update the challenges page leaderboard display
+                updateChallengesLeaderboardDisplay(challengesLeaderboard);
             }
         });
+
+        // Function to update the challenges page leaderboard display
+        function updateChallengesLeaderboardDisplay(leaderboard) {
+            const list = document.getElementById('leaderboardList');
+            if (!list) return;
+            
+            const username = localStorage.getItem('username');
+            
+            list.innerHTML = '';
+            const top10 = leaderboard.slice(0, 10);
+            
+            top10.forEach((entry, idx) => {
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+                if (entry.username === username) {
+                    item.classList.add('current-user');
+                }
+                
+                let icon = '<i class="fas fa-user"></i>';
+                if (idx === 0) icon = '<i class="fas fa-crown" style="color:#f39c12;"></i>';
+                else if (idx === 1) icon = '<i class="fas fa-medal" style="color:#c0c0c0;"></i>';
+                else if (idx === 2) icon = '<i class="fas fa-medal" style="color:#cd7f32;"></i>';
+                
+                const isCurrentUser = entry.username === username;
+                const displayName = entry.displayName || entry.username || 'Student';
+                
+                item.innerHTML = `
+                    <div class="leaderboard-rank">${idx + 1}</div>
+                    <div class="leaderboard-avatar">${icon}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">${displayName}${isCurrentUser ? ' (You)' : ''}</div>
+                        <div class="leaderboard-school">${entry.school || 'Knox Grammar'}</div>
+                    </div>
+                    <div class="overall-score">
+                        <div class="leaderboard-score">${(entry.overallScore || 0).toLocaleString()}</div>
+                        <div class="level-badge">Level ${entry.level || 1}</div>
+                    </div>`;
+                
+                list.appendChild(item);
+            });
+        }
 
         // Export functions for debugging (can remove in production)
         window.debugGameStats = function() {
