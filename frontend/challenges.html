@@ -485,11 +485,14 @@ class ChallengeManager {
       const participantData = await response.json();
       console.log('Fetched participant data:', participantData);
       
-      // Update each challenge's participant count
+      // Update each challenge's participant count - FIX: Ensure element exists
       Object.entries(participantData).forEach(([challengeId, count]) => {
         const element = document.getElementById(`participants-${challengeId}`);
         if (element) {
-          element.textContent = count;
+          element.textContent = count.toString(); // Convert to string explicitly
+          console.log(`Updated ${challengeId}: ${count} participants`);
+        } else {
+          console.warn(`Element participants-${challengeId} not found`);
         }
       });
       
@@ -498,7 +501,7 @@ class ChallengeManager {
     } catch (error) {
       console.error('❌ Error loading participant counts:', error);
       
-      // Fallback to showing 0 if fetch fails
+      // Fallback: Set all to 0 instead of leaving as "-"
       Object.keys(challenges).forEach(challengeId => {
         const element = document.getElementById(`participants-${challengeId}`);
         if (element && element.textContent === '-') {
