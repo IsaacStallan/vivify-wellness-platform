@@ -961,7 +961,7 @@
         });
 
         // Load user's fitness data
-        // FIXED: Load only fitness score from backend
+        // FIXED: Try different data access paths
         async function loadRealFitnessData() {
             try {
                 const username = localStorage.getItem('username');
@@ -971,20 +971,30 @@
                     
                     if (response.ok) {
                         const userData = await response.json();
-                        console.log('Backend user data:', userData);
+                        console.log('Full backend user data:', JSON.stringify(userData, null, 2));
                         
-                        // CRITICAL FIX: Access the correct path in your database
-                        if (userData.challengeStats && userData.challengeStats.fitnessScore !== undefined) {
-                            userFitnessData.fitnessPoints = userData.challengeStats.fitnessScore;
-                            console.log('✅ Loaded fitnessScore:', userData.challengeStats.fitnessScore);
+                        // Try multiple possible paths for fitness score
+                        let fitnessScore = 0;
+                        
+                        if (userData.challengeStats?.fitnessScore !== undefined) {
+                            fitnessScore = userData.challengeStats.fitnessScore;
+                            console.log('✅ Found fitnessScore in challengeStats:', fitnessScore);
+                        } else if (userData.fitnessScore !== undefined) {
+                            fitnessScore = userData.fitnessScore;
+                            console.log('✅ Found fitnessScore at root level:', fitnessScore);
+                        } else if (userData.fitnessMetrics?.totalPoints !== undefined) {
+                            fitnessScore = userData.fitnessMetrics.totalPoints;
+                            console.log('✅ Found fitnessScore in fitnessMetrics:', fitnessScore);
                         } else {
-                            console.log('⚠️ No challengeStats.fitnessScore found, defaulting to 0');
-                            userFitnessData.fitnessPoints = 0;
+                            console.log('⚠️ No fitness score found in any expected location');
+                            console.log('Available fields:', Object.keys(userData));
+                            if (userData.challengeStats) {
+                                console.log('challengeStats fields:', Object.keys(userData.challengeStats));
+                            }
                         }
                         
+                        userFitnessData.fitnessPoints = fitnessScore;
                         return;
-                    } else {
-                        console.log('❌ Backend response not OK:', response.status);
                     }
                 }
             } catch (error) {
@@ -993,16 +1003,7 @@
             
             // Fallback to localStorage
             console.log('Using localStorage fallback');
-            const userKey = currentUser?.username || 'defaultUser';
-            const localData = JSON.parse(localStorage.getItem(`userData_${userKey}`) || '{}');
-            
-            if (localData.fitness && localData.fitness.fitnessPoints) {
-                userFitnessData.fitnessPoints = localData.fitness.fitnessPoints;
-                console.log('Loaded from localStorage:', localData.fitness.fitnessPoints);
-            } else {
-                userFitnessData.fitnessPoints = 0;
-                console.log('No local data found, defaulting to 0');
-            }
+            userFitnessData.fitnessPoints = 0;
         }
 
         // Complete workout - tracks fitness points separately
