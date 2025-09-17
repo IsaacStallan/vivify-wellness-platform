@@ -31,6 +31,7 @@ mongoose.connect(uri)
   });
 
 const User = require('./models/User');
+const Card = require('./models/Card'); // NEW
 
 // Add this before your routes in server.js
 app.use((req, res, next) => {
@@ -96,6 +97,354 @@ app.get('/api/user/:userId', async (req, res) => {
   }
 });
 
+app.post('/api/cards/generate', async (req, res) => {
+  try {
+    const { username, habitType, streakLength = 1, verified = false, verificationMethod = 'none' } = req.body;
+    
+    if (!username || !habitType) {
+      return res.status(400).json({ error: 'Username and habitType required' });
+    }
+    
+    const user = await findUser(username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Check if user can generate a card (rate limiting)
+    if (!user.canGenerateCard()) {
+      return res.status(429).json({ error: 'Card generation rate limit reached. Try again later.' });
+    }
+    
+    // Generate the card
+    const newCard = await Card.generateFromHabit(user._id, {
+      habitType,
+      streakLength,
+      verified,
+      verificationMethod
+    });
+    
+    await newCard.save();
+    
+    // Update user's card collection stats
+    if (!user.cardBattleData) user.cardBattleData = {};
+    user.cardBattleData.totalCardsUnlocked = (user.cardBattleData.totalCardsUnlocked || 0) + 1;
+    user.cardBattleData.lastCardGenerated = new Date();
+    
+    // Update rarity count
+    if (!user.cardBattleData.cardsByRarity) user.cardBattleData.cardsByRarity = {};
+    user.cardBattleData.cardsByRarity[newCard.rarity] = (user.cardBattleData.cardsByRarity[newCard.rarity] || 0) + 1;
+    
+    await user.save();
+    
+    res.json({
+      success: true,
+      card: newCard,
+      message: `${newCard.rarity} ${newCard.name} unlocked!`
+    });
+    
+  } catch (error) {
+    console.error('Error generating card:', error);
+    res.status(500).json({ error: 'Failed to generate card' });
+  }
+});
+
+// GET /api/cards/:username - Get user's card collection
+app.get('/api/cards/:username', async (req, res) => {
+  try {
+    const { rarity, type, limit = 50 } = req.query;
+    
+    const user = await findUser(req.params.username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const filter = { userId: user._id };
+    if (rarity) filter.rarity = rarity;
+    if (type) filter.type = type;
+    
+    const cards = await Card.find(filter)
+      .sort({ rarity: -1, power: -1, createdAt: -1 })
+      .limit(parseInt(limit));
+    
+    res.json({
+      success: true,
+      cards,
+      total: cards.length,
+      battleData: user.cardBattleData || {}
+    });
+    
+  } catch (error) {
+    console.error('Error fetching cards:', error);
+    res.status(500).json({ error: 'Failed to fetch cards' });
+  }
+});
+
+// POST /api/deck/create - Create/update user's battle deck
+app.post('/api/deck/create', async (req, res) => {
+  try {
+    const { username, deckName, cardIds } = req.body;
+    
+    if (!username || !cardIds || !Array.isArray(cardIds)) {
+      return res.status(400).json({ error: 'Username and cardIds array required' });
+    }
+    
+    if (cardIds.length < 5 || cardIds.length > 7) {
+      return res.status(400).json({ error: 'Deck must contain 5-7 cards' });
+    }
+    
+    const user = await findUser(username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Verify user owns all cards
+    const userCards = await Card.find({ 
+      _id: { $in: cardIds }, 
+      userId: user._id 
+    });
+    
+    if (userCards.length !== cardIds.length) {
+      return res.status(400).json({ error: 'You do not own all selected cards' });
+    }
+    
+    // Calculate total deck cost
+    const totalCost = userCards.reduce((sum, card) => sum + card.cost, 0);
+    if (totalCost > 15) {
+      return res.status(400).json({ error: 'Deck cost too high. Max cost is 15.' });
+    }
+    
+    // Update user's active deck
+    if (!user.cardBattleData) user.cardBattleData = {};
+    user.cardBattleData.activeDeck = {
+      deckName: deckName || 'My Deck',
+      cardIds: cardIds,
+      lastUpdated: new Date()
+    };
+    
+    // Update card states
+    await Card.updateMany({ userId: user._id }, { inActiveDeck: false });
+    await Card.updateMany({ _id: { $in: cardIds } }, { inActiveDeck: true });
+    
+    await user.save();
+    
+    res.json({
+      success: true,
+      deck: user.cardBattleData.activeDeck,
+      cards: userCards
+    });
+    
+  } catch (error) {
+    console.error('Error creating deck:', error);
+    res.status(500).json({ error: 'Failed to create deck' });
+  }
+});
+
+// POST /api/battle/ai - Start AI battle
+app.post('/api/battle/ai', async (req, res) => {
+  try {
+    const { username } = req.body;
+    
+    if (!username) {
+      return res.status(400).json({ error: 'Username required' });
+    }
+    
+    const user = await findUser(username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Check if user has an active deck
+    const activeDeck = user.cardBattleData?.activeDeck;
+    if (!activeDeck || !activeDeck.cardIds || activeDeck.cardIds.length < 5) {
+      return res.status(400).json({ error: 'You need an active deck with at least 5 cards' });
+    }
+    
+    // Get user's deck cards
+    const playerCards = await Card.find({ 
+      _id: { $in: activeDeck.cardIds },
+      userId: user._id 
+    });
+    
+    if (playerCards.length < 5) {
+      return res.status(400).json({ error: 'Invalid deck. Some cards are missing.' });
+    }
+    
+    // Generate AI opponent deck
+    const aiCards = generateAICards(playerCards.length);
+    
+    const battleId = `battle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    res.json({
+      success: true,
+      battleId,
+      playerCards,
+      aiCards,
+      status: 'ready',
+      rounds: [],
+      energy: { player: 5, ai: 5 }
+    });
+    
+  } catch (error) {
+    console.error('Error starting AI battle:', error);
+    res.status(500).json({ error: 'Failed to start battle' });
+  }
+});
+
+// POST /api/battle/play-round - Play battle round
+app.post('/api/battle/play-round', async (req, res) => {
+  try {
+    const { username, battleId, playerCardId } = req.body;
+    
+    if (!username || !battleId || !playerCardId) {
+      return res.status(400).json({ error: 'Username, battleId, and playerCardId required' });
+    }
+    
+    const user = await findUser(username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Get player card
+    const playerCard = await Card.findOne({ _id: playerCardId, userId: user._id });
+    if (!playerCard) {
+      return res.status(400).json({ error: 'Invalid card selection' });
+    }
+    
+    // Generate AI card selection
+    const aiCard = generateRandomAICard();
+    
+    // Calculate battle results
+    const typeAdvantage = getTypeAdvantage(playerCard.type, aiCard.type);
+    let playerPower = playerCard.power * typeAdvantage;
+    let aiPower = aiCard.power;
+    
+    // Apply card effects
+    if (playerCard.effect.type === 'power_boost') {
+      playerPower += playerCard.effect.value;
+    } else if (playerCard.effect.type === 'freeze') {
+      aiPower = Math.max(1, aiPower - playerCard.effect.value);
+    }
+    
+    // Determine winner
+    let winner = 'tie';
+    if (playerPower > aiPower) winner = 'player';
+    else if (aiPower > playerPower) winner = 'ai';
+    
+    // Update card usage
+    playerCard.timesUsed += 1;
+    playerCard.lastUsed = new Date();
+    await playerCard.save();
+    
+    const roundResult = {
+      roundNumber: Date.now(), // Simplified for MVP
+      playerCard: {
+        id: playerCard._id,
+        name: playerCard.name,
+        power: Math.round(playerPower),
+        type: playerCard.type,
+        effect: playerCard.effect
+      },
+      aiCard: {
+        name: aiCard.name,
+        power: Math.round(aiPower),
+        type: aiCard.type
+      },
+      winner,
+      battleComplete: false
+    };
+    
+    res.json({
+      success: true,
+      round: roundResult
+    });
+    
+  } catch (error) {
+    console.error('Error playing round:', error);
+    res.status(500).json({ error: 'Failed to play round' });
+  }
+});
+
+// POST /api/battle/complete - Complete battle and award rewards
+app.post('/api/battle/complete', async (req, res) => {
+  try {
+    const { username, battleId, playerWon, roundsWon, totalRounds } = req.body;
+    
+    const user = await findUser(username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Calculate rewards
+    const baseXP = 25;
+    const baseTrophies = playerWon ? 15 : -5;
+    
+    let xpGained = baseXP;
+    let trophiesGained = baseTrophies;
+    
+    // Bonus for winning
+    if (playerWon) {
+      xpGained += 25;
+      trophiesGained += 10;
+    }
+    
+    // Bonus for streaks
+    const currentStreak = user.cardBattleData?.winStreak || 0;
+    if (playerWon && currentStreak >= 3) {
+      xpGained += 15;
+      trophiesGained += 5;
+    }
+    
+    // Update user battle stats
+    await user.updateBattleStats(playerWon, trophiesGained, xpGained);
+    
+    res.json({
+      success: true,
+      battleResult: {
+        won: playerWon,
+        xpGained,
+        trophiesGained,
+        newBattleLevel: user.cardBattleData.battleLevel,
+        newTrophyCount: user.cardBattleData.battleTrophies,
+        winStreak: user.cardBattleData.winStreak
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error completing battle:', error);
+    res.status(500).json({ error: 'Failed to complete battle' });
+  }
+});
+
+// GET /api/battle/leaderboard - Get battle leaderboard
+app.get('/api/battle/leaderboard', async (req, res) => {
+  try {
+    const { limit = 20 } = req.query;
+    
+    const leaderboard = await User.getBattleLeaderboard(limit);
+    
+    const formattedLeaderboard = leaderboard.map((user, index) => ({
+      rank: index + 1,
+      username: user.username,
+      school: user.school,
+      yearLevel: user.yearLevel,
+      battleTrophies: user.cardBattleData?.battleTrophies || 0,
+      battleLevel: user.cardBattleData?.battleLevel || 1,
+      winRate: Math.round(((user.cardBattleData?.battlesWon || 0) / Math.max(1, user.cardBattleData?.totalBattles || 1)) * 100),
+      totalBattles: user.cardBattleData?.totalBattles || 0,
+      winStreak: user.cardBattleData?.winStreak || 0
+    }));
+    
+    res.json({
+      success: true,
+      leaderboard: formattedLeaderboard
+    });
+    
+  } catch (error) {
+    console.error('Error fetching battle leaderboard:', error);
+    res.status(500).json({ error: 'Failed to fetch battle leaderboard' });
+  }
+});
+
 app.put('/api/user/:userId', async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
@@ -118,15 +467,15 @@ app.put('/api/user/:userId', async (req, res) => {
 // Add the missing progress endpoint
 app.post('/api/user/progress', async (req, res) => {
   try {
-    const { userId, challengeId, progress } = req.body;
+    const { userId, challengeId, progress, username, habitType } = req.body;
     
-    let user = await findUser(userId);
+    let user = await findUser(userId || username);
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Update challenge progress
+    // Update challenge progress (keep existing logic)
     if (!user.userChallenges) user.userChallenges = {};
     if (!user.userChallenges[challengeId]) {
       user.userChallenges[challengeId] = {
@@ -138,7 +487,6 @@ app.post('/api/user/progress', async (req, res) => {
       };
     }
 
-    // Update based on progress type
     if (progress.action === 'join') {
       user.userChallenges[challengeId].joined = true;
     } else if (progress.action === 'daily_progress') {
@@ -150,7 +498,39 @@ app.post('/api/user/progress', async (req, res) => {
       user.userChallenges[challengeId].completedDays = progress.completedDays;
     }
 
-    // Recalculate scores
+    // NEW: Generate card when habit/challenge completed
+    if (progress.action === 'complete' || progress.action === 'progress') {
+      try {
+        const streakLength = progress.completedDays || user.currentStreak || 1;
+        const cardHabitType = habitType || mapChallengeToHabitType(challengeId);
+        
+        if (cardHabitType && user.canGenerateCard()) {
+          const newCard = await Card.generateFromHabit(user._id, {
+            habitType: cardHabitType,
+            streakLength,
+            verified: progress.verified || false,
+            verificationMethod: progress.verificationMethod || 'none'
+          });
+          
+          await newCard.save();
+          
+          // Update user card stats
+          if (!user.cardBattleData) user.cardBattleData = {};
+          user.cardBattleData.totalCardsUnlocked = (user.cardBattleData.totalCardsUnlocked || 0) + 1;
+          user.cardBattleData.lastCardGenerated = new Date();
+          
+          if (!user.cardBattleData.cardsByRarity) user.cardBattleData.cardsByRarity = {};
+          user.cardBattleData.cardsByRarity[newCard.rarity] = (user.cardBattleData.cardsByRarity[newCard.rarity] || 0) + 1;
+          
+          console.log(`🎴 Generated ${newCard.rarity} card "${newCard.name}" for ${user.username}`);
+        }
+      } catch (cardError) {
+        console.error('Card generation failed:', cardError);
+        // Continue with normal flow even if card generation fails
+      }
+    }
+
+    // Recalculate scores (keep existing logic)
     const challengePoints = Object.values(user.userChallenges).reduce((total, challenge) => {
       if (challenge.completed) return total + 500;
       return total;
@@ -186,6 +566,50 @@ app.post('/api/user/progress', async (req, res) => {
     res.status(500).json({ error: 'Failed to update progress' });
   }
 });
+
+// Helper functions for card battle system
+function generateAICards(count) {
+  const types = ['Endurance', 'Focus', 'Calm', 'Discipline'];
+  const names = ['Shadow Warrior', 'Crystal Guardian', 'Storm Caller', 'Iron Will', 'Flame Spirit', 'Wind Walker'];
+  
+  return Array.from({ length: count }, () => ({
+    name: names[Math.floor(Math.random() * names.length)],
+    type: types[Math.floor(Math.random() * types.length)],
+    power: Math.floor(Math.random() * 30) + 10,
+    cost: Math.floor(Math.random() * 3) + 1,
+    rarity: 'common',
+    effect: { type: 'none', value: 0 }
+  }));
+}
+
+function generateRandomAICard() {
+  const cards = generateAICards(1);
+  return cards[0];
+}
+
+function getTypeAdvantage(attacker, defender) {
+  const advantages = {
+    'Endurance': 'Calm',
+    'Calm': 'Focus', 
+    'Focus': 'Discipline',
+    'Discipline': 'Endurance'
+  };
+  
+  return advantages[attacker] === defender ? 1.2 : 1.0;
+}
+
+function mapChallengeToHabitType(challengeId) {
+  const challengeMap = {
+    'fitness-foundation': 'fitness',
+    'morning-energy': 'fitness',
+    'deep-work': 'study',
+    'stress-resilience': 'mental',
+    'elite-morning': 'life_skills',
+    'time-mastery': 'study'
+  };
+  
+  return challengeMap[challengeId] || 'study';
+}
 
 // Leaderboard API Routes
 app.get('/api/leaderboard/overall', async (req, res) => {
@@ -509,5 +933,8 @@ function calculateAchievements(user) {
 // Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🎮 Vivify Card Battle Server running on port ${PORT}`);
+  console.log(`🃏 Card system: ACTIVE`);
+  console.log(`⚔️ Battle system: ACTIVE`);
+  console.log(`🏆 Leaderboards: ACTIVE`);
 });
