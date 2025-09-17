@@ -1281,15 +1281,17 @@ window.addEventListener('resize', function() {
             const completedToday = habitsData.habits.filter(h => h.completed).length;
             const totalHabits = habitsData.habits.length;
             
-            // Calculate current streak
+            // Calculate current streak (70% completion threshold)
             let currentStreak = 0;
             let checkDate = new Date();
+            const streakThreshold = 0.7; // 70% completion required
             
             while (true) {
                 const dateString = checkDate.toDateString();
-                const dayCompletions = habitsData.dailyCompletions[dateString];
+                const dayCompletions = habitsData.dailyCompletions[dateString] || [];
+                const completionRate = dayCompletions.length / totalHabits;
                 
-                if (dayCompletions && dayCompletions.length === totalHabits) {
+                if (completionRate >= streakThreshold) {
                     currentStreak++;
                     checkDate.setDate(checkDate.getDate() - 1);
                 } else {
