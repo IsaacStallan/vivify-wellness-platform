@@ -1059,31 +1059,104 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 </script>
 <script>
-// After challenge completion
-document.addEventListener('DOMContentLoaded', () => {
-    // When a challenge is completed, manually trigger card generation
-    const originalCompleteDay = window.challengeManager?.completeDay;
-    
-    if (originalCompleteDay) {
-        window.challengeManager.completeDay = async function(challengeId, selectedActions = []) {
-            // Call original completion
-            await originalCompleteDay.call(this, challengeId, selectedActions);
-            
-            // Generate card
-            if (window.vivifyCards) {
-                const habitType = {
-                    'fitness-foundation': 'fitness',
-                    'morning-energy': 'fitness',
-                    'deep-work': 'study',
-                    'stress-resilience': 'mental'
-                }[challengeId] || 'study';
-                
-                const streakLength = this.userChallenges[challengeId]?.totalDays || 1;
-                await window.vivifyCards.generateCardFromHabit(habitType, streakLength, selectedActions.length > 0);
-            }
-        };
-    }
-});
-</script>
+  // Card Generation Integration for Challenges
+  document.addEventListener('DOMContentLoaded', () => {
+      // Override the completeDay function to generate cards
+      const originalInit = window.challengeManager;
+      
+      if (challengeManager) {
+          const originalCompleteDay = challengeManager.completeDay;
+          
+          challengeManager.completeDay = async function(challengeId, selectedActions = []) {
+              const challenge = challenges[challengeId];
+              const userChallenge = this.userChallenges[challengeId];
+              
+              // Call original completion
+              await originalCompleteDay.call(this, challengeId, selectedActions);
+              
+              // Generate card for challenge completion
+              const today = new Date().toISOString().split('T')[0];
+              if (userChallenge?.completedDays?.includes(today)) {
+                  // Map challenge types to habit types for card generation
+                  const habitType = {
+                      'fitness-foundation': 'exercise',
+                      'morning-energy': 'exercise',
+                      'deep-work': 'study',
+                      'stress-resilience': 'mindfulness',
+                      'elite-morning': 'study',
+                      'time-mastery': 'study'
+                  }[challengeId] || 'study';
+                  
+                  // Generate card via backend
+                  await generateChallengeCard(challengeId, habitType, userChallenge.totalDays || 1);
+              }
+          };
+      }
+  });
+  
+  // Function to generate card when challenge milestone reached
+  async function generateChallengeCard(challengeId, habitType, streakLength) {
+      const username = localStorage.getItem('username');
+      if (!username) return;
+      
+      try {
+          const response = await fetch('https://vivify-backend.onrender.com/api/habits/update', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  username: username,
+                  habitType: habitType,
+                  value: 100 // Trigger card generation
+              })
+          });
+          
+          const result = await response.json();
+          
+          if (result.newCard) {
+              showCardUnlockAnimation(result.newCard);
+          }
+      } catch (error) {
+          console.error('Failed to generate card:', error);
+      }
+  }
+  
+  function showCardUnlockAnimation(card) {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          animation: fadeIn 0.3s;
+      `;
+      
+      overlay.innerHTML = `
+          <div style="text-align: center; color: white;">
+              <h2 style="font-size: 2em; margin-bottom: 20px; animation: bounce 0.5s;">
+                  🎉 New Card Unlocked! 🎉
+              </h2>
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                          padding: 20px; border-radius: 15px; animation: slideUp 0.5s;">
+                  <h3>${card.name}</h3>
+                  <p>Rarity: ${card.rarity}</p>
+                  <p>Attack: ${card.attack} | Defense: ${card.defense}</p>
+                  <p style="font-style: italic;">${card.special}</p>
+              </div>
+              <button onclick="this.parentElement.parentElement.remove()" 
+                      style="margin-top: 20px; padding: 10px 30px; font-size: 1.2em;
+                             background: white; border: none; border-radius: 25px;
+                             cursor: pointer;">Awesome!</button>
+          </div>
+      `;
+      
+      document.body.appendChild(overlay);
+  }
+  </script>
 </body>
 </html>
