@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const usersRoutes = require('./routes/users');
-const Card = require('./models/Card');
+const CardModel = require('./models/Card');
 
 const app = express();
 
@@ -163,7 +163,8 @@ app.get('/api/cards/:username', async (req, res) => {
     if (rarity) filter.rarity = rarity;
     if (type) filter.type = type;
     
-    const cards = await Card.find(filter)
+    // CHANGED: Card -> CardModel
+    const cards = await CardModel.find(filter)
       .sort({ rarity: -1, power: -1, createdAt: -1 })
       .limit(parseInt(limit));
     
@@ -177,6 +178,58 @@ app.get('/api/cards/:username', async (req, res) => {
   } catch (error) {
     console.error('Error fetching cards:', error);
     res.status(500).json({ error: 'Failed to fetch cards' });
+  }
+});
+
+// POST /api/cards/generate - Generate card from habit completion
+app.post('/api/cards/generate', async (req, res) => {
+  try {
+    const { username, habitType, streakLength = 1, verified = false, verificationMethod = 'none' } = req.body;
+    
+    if (!username || !habitType) {
+      return res.status(400).json({ error: 'Username and habitType required' });
+    }
+    
+    const user = await findUser(username);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Check if user can generate a card (rate limiting)
+    if (!user.canGenerateCard()) {
+      return res.status(429).json({ error: 'Card generation rate limit reached. Try again later.' });
+    }
+    
+    // Generate the card - CHANGED: Card -> CardModel
+    const newCard = await CardModel.generateFromHabit(user._id, {
+      habitType,
+      streakLength,
+      verified,
+      verificationMethod
+    });
+    
+    await newCard.save();
+    
+    // Update user's card collection stats
+    if (!user.cardBattleData) user.cardBattleData = {};
+    user.cardBattleData.totalCardsUnlocked = (user.cardBattleData.totalCardsUnlocked || 0) + 1;
+    user.cardBattleData.lastCardGenerated = new Date();
+    
+    // Update rarity count
+    if (!user.cardBattleData.cardsByRarity) user.cardBattleData.cardsByRarity = {};
+    user.cardBattleData.cardsByRarity[newCard.rarity] = (user.cardBattleData.cardsByRarity[newCard.rarity] || 0) + 1;
+    
+    await user.save();
+    
+    res.json({
+      success: true,
+      card: newCard,
+      message: `${newCard.rarity} ${newCard.name} unlocked!`
+    });
+    
+  } catch (error) {
+    console.error('Error generating card:', error);
+    res.status(500).json({ error: 'Failed to generate card' });
   }
 });
 
@@ -198,8 +251,8 @@ app.post('/api/deck/create', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     
-    // Verify user owns all cards
-    const userCards = await Card.find({ 
+    // Verify user owns all cards - CHANGED: Card -> CardModel
+    const userCards = await CardModel.find({ 
       _id: { $in: cardIds }, 
       userId: user._id 
     });
@@ -222,9 +275,9 @@ app.post('/api/deck/create', async (req, res) => {
       lastUpdated: new Date()
     };
     
-    // Update card states
-    await Card.updateMany({ userId: user._id }, { inActiveDeck: false });
-    await Card.updateMany({ _id: { $in: cardIds } }, { inActiveDeck: true });
+    // Update card states - CHANGED: Card -> CardModel
+    await CardModel.updateMany({ userId: user._id }, { inActiveDeck: false });
+    await CardModel.updateMany({ _id: { $in: cardIds } }, { inActiveDeck: true });
     
     await user.save();
     
@@ -260,8 +313,8 @@ app.post('/api/battle/ai', async (req, res) => {
       return res.status(400).json({ error: 'You need an active deck with at least 5 cards' });
     }
     
-    // Get user's deck cards
-    const playerCards = await Card.find({ 
+    // Get user's deck cards - CHANGED: Card -> CardModel
+    const playerCards = await CardModel.find({ 
       _id: { $in: activeDeck.cardIds },
       userId: user._id 
     });
@@ -291,7 +344,7 @@ app.post('/api/battle/ai', async (req, res) => {
   }
 });
 
-// POST /api/battle/play-round - Play battle round
+// POST /api/battle/play-round - Play battle round  
 app.post('/api/battle/play-round', async (req, res) => {
   try {
     const { username, battleId, playerCardId } = req.body;
@@ -305,8 +358,8 @@ app.post('/api/battle/play-round', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     
-    // Get player card
-    const playerCard = await Card.findOne({ _id: playerCardId, userId: user._id });
+    // Get player card - CHANGED: Card -> CardModel
+    const playerCard = await CardModel.findOne({ _id: playerCardId, userId: user._id });
     if (!playerCard) {
       return res.status(400).json({ error: 'Invalid card selection' });
     }
@@ -506,7 +559,8 @@ app.post('/api/user/progress', async (req, res) => {
         const cardHabitType = habitType || mapChallengeToHabitType(challengeId);
         
         if (cardHabitType && user.canGenerateCard()) {
-          const newCard = await Card.generateFromHabit(user._id, {
+          // CHANGED: Card -> CardModel
+          const newCard = await CardModel.generateFromHabit(user._id, {
             habitType: cardHabitType,
             streakLength,
             verified: progress.verified || false,
@@ -531,7 +585,7 @@ app.post('/api/user/progress', async (req, res) => {
       }
     }
 
-    // Recalculate scores (keep existing logic)
+    // Keep all your existing scoring logic...
     const challengePoints = Object.values(user.userChallenges).reduce((total, challenge) => {
       if (challenge.completed) return total + 500;
       return total;
