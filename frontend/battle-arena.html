@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Arena - Vivify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #f39c12;
+        }
+
+        .arena-container {
+            min-height: 100vh;
+            padding: 100px 2rem 2rem;
+        }
+
+        /* Battle States */
+        .battle-state {
+            display: none;
+        }
+
+        .battle-state.active {
+            display: block;
+        }
+
+        /* Menu State */
+        .arena-menu {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .arena-header {
+            margin-bottom: 3rem;
+        }
+
+        .arena-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .battle-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .battle-option {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 2px solid rgba(243, 156, 18, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .battle-option:hover {
+            transform: translateY(-10px);
+            border-color: #f39c12;
+            box-shadow: 0 20px 40px rgba(243, 156, 18, 0.2);
+        }
+
+        .battle-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .battle-option i {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .battle-option h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .battle-option p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Battle Arena State */
+        .battle-arena {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .battle-header {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .battle-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .battle-energy {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .energy-bar {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .energy-unit {
+            width: 20px;
+            height: 20px;
+            background: rgba(243, 156, 18, 0.3);
+            border-radius: 4px;
+        }
+
+        .energy-unit.active {
+            background: #f39c12;
+        }
+
+        .battlefield {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            min-height: 400px;
+            align-items: center;
+        }
+
+        .player-area, .ai-area {
+            text-align: center;
+        }
+
+        .area-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #f39c12;
+        }
+
+        .card-display {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-back {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .battle-center {
+            text-align: center;
+        }
+
+        .vs-display {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+        }
+
+        .battle-animation {
+            font-size: 2rem;
+            color: #f39c12;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .player-deck {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .deck-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #f39c12;
+        }
+
+        .deck-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .deck-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .deck-card:hover {
+            transform: translateY(-5px);
+            border-color: #f39c12;
+        }
+
+        .deck-card.selected {
+            border-color: #34c759;
+            background: rgba(52, 199, 89, 0.1);
+        }
+
+        .deck-card.used {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .card-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .card-power {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ff3b30;
+            margin: 0.5rem 0;
+        }
+
+        .card-type {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .card-cost {
+            background: #f39c12;
+            color: #000;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .battle-controls {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Battle Result State */
+        .battle-result {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-icon.win {
+            color: #34c759;
+        }
+
+        .result-icon.loss {
+            color: #ff3b30;
+        }
+
+        .result-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .result-stats {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stat-value {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(243, 156, 18, 0.3);
+            border-radius: 50%;
+            border-top-color: #f39c12;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .battlefield {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .deck-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Vivify</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="community.html">Community</a></li>
+                <li><a href="habits-tracker.html">Daily Habits</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
+                <li><a href="card-collection.html">Cards</a></li>
+                <li><a href="battle-arena.html" class="active">Battle Arena</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="arena-container">
+        <!-- Menu State -->
+        <div id="menuState" class="battle-state active">
+            <div class="arena-menu">
+                <div class="arena-header">
+                    <h1>Battle Arena</h1>
+                    <p>Use your earned cards to battle and climb the rankings</p>
+                </div>
+
+                <div class="battle-options">
+                    <div class="battle-option" onclick="battleArena.startAIBattle()">
+                        <i class="fas fa-robot"></i>
+                        <h3>Battle AI</h3>
+                        <p>Fight against computer opponents</p>
+                    </div>
+
+                    <div class="battle-option disabled">
+                        <i class="fas fa-users"></i>
+                        <h3>Player vs Player</h3>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+
+                <div id="userStats" style="margin-top: 3rem;">
+                    <h3 style="color: #f39c12; margin-bottom: 1rem;">Your Battle Stats</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #f39c12;" id="battleLevel">1</div>
+                            <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Battle Level</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #f39c12;" id="battleTrophies">0</div>
+                            <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Trophies</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #f39c12;" id="winRate">0%</div>
+                            <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Win Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Battle State -->
+        <div id="battleState" class="battle-state">
+            <div class="battle-arena">
+                <div class="battle-header">
+                    <div class="battle-score">
+                        <span>Round: <span id="currentRound">1</span>/5</span>
+                        <span style="margin: 0 2rem;">|</span>
+                        <span>Score: <span id="playerScore">0</span> - <span id="aiScore">0</span></span>
+                    </div>
+                    <div class="battle-energy">
+                        <span>Energy:</span>
+                        <div class="energy-bar" id="energyBar">
+                            <div class="energy-unit active"></div>
+                            <div class="energy-unit active"></div>
+                            <div class="energy-unit active"></div>
+                            <div class="energy-unit active"></div>
+                            <div class="energy-unit active"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="battlefield">
+                    <div class="player-area">
+                        <div class="area-label">Your Card</div>
+                        <div class="card-display" id="playerCardDisplay">
+                            <p style="color: rgba(255,255,255,0.5);">Select a card to play</p>
+                        </div>
+                    </div>
+
+                    <div class="battle-center">
+                        <div class="vs-display">VS</div>
+                        <div id="battleStatus"></div>
+                    </div>
+
+                    <div class="ai-area">
+                        <div class="area-label">AI Card</div>
+                        <div class="card-display" id="aiCardDisplay">
+                            <div class="card-back">?</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="player-deck">
+                    <div class="deck-label">Your Deck - Select a Card to Play</div>
+                    <div class="deck-cards" id="playerDeck"></div>
+                </div>
+
+                <div class="battle-controls">
+                    <button class="btn btn-primary" id="playCardBtn" onclick="battleArena.playCard()" disabled>
+                        Play Selected Card
+                    </button>
+                    <button class="btn btn-secondary" onclick="battleArena.forfeit()">
+                        Forfeit Battle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result State -->
+        <div id="resultState" class="battle-state">
+            <div class="battle-result">
+                <div class="result-icon" id="resultIcon"></div>
+                <h2 class="result-title" id="resultTitle"></h2>
+                
+                <div class="result-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">XP Gained:</span>
+                        <span class="stat-value" id="xpGained">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Trophies:</span>
+                        <span class="stat-value" id="trophiesGained">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">New Level:</span>
+                        <span class="stat-value" id="newLevel">1</span>
+                    </div>
+                </div>
+
+                <div class="battle-controls">
+                    <button class="btn btn-primary" onclick="battleArena.startAIBattle()">
+                        Battle Again
+                    </button>
+                    <button class="btn btn-secondary" onclick="battleArena.returnToMenu()">
+                        Back to Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="battle-state">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p style="margin-top: 1rem; color: rgba(255,255,255,0.7);">Starting battle...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class BattleArena {
+            constructor() {
+                this.username = localStorage.getItem('username');
+                this.baseURL = 'https://vivify-backend.onrender.com/api';
+                this.currentBattle = null;
+                this.playerCards = [];
+                this.aiCards = [];
+                this.usedCardIds = [];
+                this.selectedCard = null;
+                this.playerScore = 0;
+                this.aiScore = 0;
+                this.currentRound = 1;
+                this.maxRounds = 5;
+                
+                if (!this.username) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                this.init();
+            }
+
+            async init() {
+                await this.loadUserStats();
+                this.setupEventListeners();
+            }
+
+            async loadUserStats() {
+                try {
+                    const response = await fetch(`${this.baseURL}/cards/${this.username}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const battleData = data.battleData || {};
+                        
+                        document.getElementById('battleLevel').textContent = battleData.battleLevel || 1;
+                        document.getElementById('battleTrophies').textContent = battleData.battleTrophies || 0;
+                        
+                        const winRate = battleData.totalBattles > 0 
+                            ? Math.round((battleData.battlesWon / battleData.totalBattles) * 100)
+                            : 0;
+                        document.getElementById('winRate').textContent = `${winRate}%`;
+                    }
+                } catch (error) {
+                    console.error('Error loading user stats:', error);
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('logoutLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+
+            switchState(stateName) {
+                document.querySelectorAll('.battle-state').forEach(state => {
+                    state.classList.remove('active');
+                });
+                document.getElementById(stateName).classList.add('active');
+            }
+
+            async startAIBattle() {
+                this.switchState('loadingState');
+                
+                try {
+                    const response = await fetch(`${this.baseURL}/battle/ai`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: this.username })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.currentBattle = data;
+                        this.playerCards = data.playerCards;
+                        this.aiCards = data.aiCards;
+                        this.usedCardIds = [];
+                        this.playerScore = 0;
+                        this.aiScore = 0;
+                        this.currentRound = 1;
+                        
+                        this.displayBattle();
+                    } else {
+                        const error = await response.json();
+                        alert(error.error || 'Failed to start battle');
+                        this.returnToMenu();
+                    }
+                } catch (error) {
+                    console.error('Error starting battle:', error);
+                    alert('Failed to start battle. Please try again.');
+                    this.returnToMenu();
+                }
+            }
+
+            displayBattle() {
+                this.switchState('battleState');
+                
+                // Update round display
+                document.getElementById('currentRound').textContent = this.currentRound;
+                document.getElementById('playerScore').textContent = this.playerScore;
+                document.getElementById('aiScore').textContent = this.aiScore;
+                
+                // Display player deck
+                const deckContainer = document.getElementById('playerDeck');
+                deckContainer.innerHTML = this.playerCards.map(card => `
+                    <div class="deck-card ${this.usedCardIds.includes(card._id) ? 'used' : ''}" 
+                         onclick="battleArena.selectCard('${card._id}')"
+                         data-card-id="${card._id}">
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-power">${card.power}</div>
+                        <div class="card-type">${card.type}</div>
+                        <div class="card-cost">⚡${card.cost}</div>
+                    </div>
+                `).join('');
+                
+                // Reset displays
+                document.getElementById('playerCardDisplay').innerHTML = '<p style="color: rgba(255,255,255,0.5);">Select a card to play</p>';
+                document.getElementById('aiCardDisplay').innerHTML = '<div class="card-back">?</div>';
+                document.getElementById('battleStatus').innerHTML = '';
+            }
+
+            selectCard(cardId) {
+                if (this.usedCardIds.includes(cardId)) return;
+                
+                // Remove previous selection
+                document.querySelectorAll('.deck-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Select new card
+                const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+                if (cardElement) {
+                    cardElement.classList.add('selected');
+                    this.selectedCard = this.playerCards.find(card => card._id === cardId);
+                    
+                    // Display selected card
+                    document.getElementById('playerCardDisplay').innerHTML = `
+                        <div class="card-name">${this.selectedCard.name}</div>
+                        <div class="card-power">${this.selectedCard.power}</div>
+                        <div class="card-type">${this.selectedCard.type}</div>
+                        ${this.selectedCard.effect.type !== 'none' ? 
+                            `<div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem;">${this.selectedCard.effect.description}</div>` 
+                            : ''}
+                    `;
+                    
+                    document.getElementById('playCardBtn').disabled = false;
+                }
+            }
+
+            async playCard() {
+                if (!this.selectedCard) return;
+                
+                document.getElementById('playCardBtn').disabled = true;
+                document.getElementById('battleStatus').innerHTML = '<div class="battle-animation">⚔️ BATTLE!</div>';
+                
+                try {
+                    const response = await fetch(`${this.baseURL}/battle/play-round`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: this.username,
+                            battleId: this.currentBattle.battleId,
+                            playerCardId: this.selectedCard._id
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        await this.displayRoundResult(data.round);
+                        
+                        // Mark card as used
+                        this.usedCardIds.push(this.selectedCard._id);
+                        
+                        // Check if battle is complete
+                        if (this.currentRound >= this.maxRounds || this.playerScore > this.maxRounds/2 || this.aiScore > this.maxRounds/2) {
+                            await this.completeBattle();
+                        } else {
+                            this.currentRound++;
+                            this.displayBattle();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error playing card:', error);
+                    alert('Failed to play card. Please try again.');
+                    document.getElementById('playCardBtn').disabled = false;
+                }
+            }
+
+            async displayRoundResult(round) {
+                // Display AI card
+                document.getElementById('aiCardDisplay').innerHTML = `
+                    <div class="card-name">${round.aiCard.name}</div>
+                    <div class="card-power">${round.aiCard.power}</div>
+                    <div class="card-type">${round.aiCard.type}</div>
+                `;
+                
+                // Display result
+                const resultText = round.winner === 'player' ? 'YOU WIN!' : round.winner === 'ai' ? 'AI WINS!' : 'TIE!';
+                const resultColor = round.winner === 'player' ? '#34c759' : round.winner === 'ai' ? '#ff3b30' : '#f39c12';
+                
+                document.getElementById('battleStatus').innerHTML = `
+                    <div style="font-size: 2rem; font-weight: bold; color: ${resultColor};">${resultText}</div>
+                `;
+                
+                // Update scores
+                if (round.winner === 'player') this.playerScore++;
+                if (round.winner === 'ai') this.aiScore++;
+                
+                // Wait for animation
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+
+            async completeBattle() {
+                const playerWon = this.playerScore > this.aiScore;
+                
+                try {
+                    const response = await fetch(`${this.baseURL}/battle/complete`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: this.username,
+                            battleId: this.currentBattle.battleId,
+                            playerWon,
+                            roundsWon: this.playerScore,
+                            totalRounds: this.currentRound
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.displayResult(data.battleResult);
+                    }
+                } catch (error) {
+                    console.error('Error completing battle:', error);
+                }
+            }
+
+            displayResult(result) {
+                this.switchState('resultState');
+                
+                const icon = result.won ? '🏆' : '💀';
+                const iconClass = result.won ? 'win' : 'loss';
+                const title = result.won ? 'VICTORY!' : 'DEFEAT';
+                
+                document.getElementById('resultIcon').innerHTML = icon;
+                document.getElementById('resultIcon').className = `result-icon ${iconClass}`;
+                document.getElementById('resultTitle').textContent = title;
+                
+                document.getElementById('xpGained').textContent = `+${result.xpGained}`;
+                document.getElementById('trophiesGained').textContent = result.trophiesGained > 0 ? `+${result.trophiesGained}` : result.trophiesGained;
+                document.getElementById('newLevel').textContent = result.newBattleLevel;
+                
+                // Update local stats
+                this.loadUserStats();
+            }
+
+            returnToMenu() {
+                this.selectedCard = null;
+                this.currentBattle = null;
+                this.switchState('menuState');
+            }
+
+            forfeit() {
+                if (confirm('Are you sure you want to forfeit this battle?')) {
+                    this.returnToMenu();
+                }
+            }
+        }
+
+        // Initialize battle arena
+        let battleArena;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            battleArena = new BattleArena();
+        });
+    </script>
+</body>
+</html>
