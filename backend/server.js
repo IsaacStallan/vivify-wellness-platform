@@ -149,6 +149,51 @@ app.post('/api/cards/generate', async (req, res) => {
   }
 });
 
+app.get('/api/user/:username', async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username })
+      .select('-password'); // Don't send password
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Extract habits values for backward compatibility
+    const habits = {
+      sleep: user.habitsData?.sleep?.value || 0,
+      exercise: user.habitsData?.exercise?.value || 0,
+      nutrition: user.habitsData?.nutrition?.value || 0,
+      mindfulness: user.habitsData?.mindfulness?.value || 0,
+      study: user.habitsData?.study?.value || 0
+    };
+    
+    res.json({
+      username: user.username,
+      email: user.email,
+      school: user.school,
+      yearLevel: user.yearLevel,
+      habits: habits,
+      habitsData: user.habitsData, // Full habits data
+      challenges: user.challengeData,
+      challengeStats: user.challengeStats,
+      totalPoints: user.habitPoints,
+      currentStreak: user.currentStreak,
+      cards: user.cardBattleData?.cards || [],
+      battleStats: {
+        wins: user.cardBattleData?.battlesWon || 0,
+        losses: user.cardBattleData?.battlesLost || 0,
+        totalBattles: user.cardBattleData?.totalBattles || 0
+      },
+      cardBattleData: user.cardBattleData,
+      overallScore: user.overallScore,
+      level: user.level
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // GET /api/cards/:username - Get user's card collection
 app.get('/api/cards/:username', async (req, res) => {
   try {
@@ -178,6 +223,186 @@ app.get('/api/cards/:username', async (req, res) => {
   } catch (error) {
     console.error('Error fetching cards:', error);
     res.status(500).json({ error: 'Failed to fetch cards' });
+  }
+});
+
+// Update habits and trigger card generation
+app.post('/api/habits/update', async (req, res) => {
+  try {
+    const { username, habitType, value } = req.body;
+    
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Initialize habitsData if it doesn't exist
+    if (!user.habitsData) {
+      user.habitsData = {};
+    }
+    if (!user.habitsData[habitType]) {
+      user.habitsData[habitType] = { value: 0, completedToday: false };
+    }
+    
+    // Update habit value
+    user.habitsData[habitType].value = value;
+    user.habitsData[habitType].lastUpdated = new Date();
+    
+    // Check if habit completed (reached 100) and card not yet generated
+    let newCard = null;
+    if (value === 100 && !user.habitsData.cardsGenerated?.[habitType]) {
+      // Generate card based on habit type
+      const cardData = generateCardFromHabit(habitType, user.cardBattleData?.cards?.length || 0);
+      
+      // Initialize cardBattleData if needed
+      if (!user.cardBattleData) {
+        user.cardBattleData = {
+          cards: [],
+          totalCardsUnlocked: 0,
+          cardsByRarity: { common: 0, uncommon: 0, rare: 0, epic: 0, legendary: 0 }
+        };
+      }
+      if (!user.cardBattleData.cards) {
+        user.cardBattleData.cards = [];
+      }
+      
+      // Add card to collection
+      user.cardBattleData.cards.push(cardData);
+      user.cardBattleData.totalCardsUnlocked = (user.cardBattleData.totalCardsUnlocked || 0) + 1;
+      
+      // Update rarity count
+      const rarityKey = cardData.rarity.toLowerCase();
+      if (user.cardBattleData.cardsByRarity) {
+        user.cardBattleData.cardsByRarity[rarityKey] = 
+          (user.cardBattleData.cardsByRarity[rarityKey] || 0) + 1;
+      }
+      
+      // Mark card as generated for this habit
+      if (!user.habitsData.cardsGenerated) {
+        user.habitsData.cardsGenerated = {};
+      }
+      user.habitsData.cardsGenerated[habitType] = true;
+      user.habitsData[habitType].completedToday = true;
+      
+      // Add points
+      user.habitPoints = (user.habitPoints || 0) + 50;
+      user.overallScore = (user.overallScore || 0) + 50;
+      
+      newCard = cardData;
+    }
+    
+    // Mark as modified for nested objects
+    user.markModified('habitsData');
+    user.markModified('cardBattleData');
+    
+    await user.save();
+    
+    res.json({
+      success: true,
+      habits: {
+        sleep: user.habitsData.sleep?.value || 0,
+        exercise: user.habitsData.exercise?.value || 0,
+        nutrition: user.habitsData.nutrition?.value || 0,
+        mindfulness: user.habitsData.mindfulness?.value || 0,
+        study: user.habitsData.study?.value || 0
+      },
+      totalPoints: user.habitPoints,
+      newCard: newCard
+    });
+  } catch (error) {
+    console.error('Error updating habit:', error);
+    res.status(500).json({ error: 'Failed to update habit' });
+  }
+});
+
+// Update challenge progress
+app.post('/api/challenges/update', async (req, res) => {
+  try {
+    const { username, challengeId, progress } = req.body;
+    
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Initialize challengeData if needed
+    if (!user.challengeData) {
+      user.challengeData = {};
+    }
+    
+    // Find or create challenge
+    let challenge = user.challengeData[challengeId];
+    if (!challenge) {
+      challenge = { 
+        progress: 0, 
+        completed: false,
+        cardGenerated: false 
+      };
+      user.challengeData[challengeId] = challenge;
+    }
+    
+    // Update progress
+    challenge.progress = progress;
+    
+    // Check if challenge completed and card not yet generated
+    let newCard = null;
+    if (progress >= 100 && !challenge.completed && !challenge.cardGenerated) {
+      challenge.completed = true;
+      challenge.completedAt = new Date();
+      
+      // Initialize cardBattleData if needed
+      if (!user.cardBattleData) {
+        user.cardBattleData = {
+          cards: [],
+          totalCardsUnlocked: 0,
+          cardsByRarity: { common: 0, uncommon: 0, rare: 0, epic: 0, legendary: 0 }
+        };
+      }
+      
+      // Generate special challenge card
+      const cardData = generateChallengeCard(challengeId, user.cardBattleData.cards?.length || 0);
+      user.cardBattleData.cards.push(cardData);
+      user.cardBattleData.totalCardsUnlocked = (user.cardBattleData.totalCardsUnlocked || 0) + 1;
+      
+      // Update rarity count
+      const rarityKey = cardData.rarity.toLowerCase();
+      if (user.cardBattleData.cardsByRarity) {
+        user.cardBattleData.cardsByRarity[rarityKey] = 
+          (user.cardBattleData.cardsByRarity[rarityKey] || 0) + 1;
+      }
+      
+      challenge.cardGenerated = true;
+      
+      // Update points and stats
+      user.habitPoints = (user.habitPoints || 0) + 100;
+      user.overallScore = (user.overallScore || 0) + 100;
+      user.challengeStats.completed = (user.challengeStats?.completed || 0) + 1;
+      user.challengeStats.totalPoints = (user.challengeStats?.totalPoints || 0) + 100;
+      
+      newCard = cardData;
+    }
+    
+    // Mark as modified for nested objects
+    user.markModified('challengeData');
+    user.markModified('cardBattleData');
+    user.markModified('challengeStats');
+    
+    await user.save();
+    
+    res.json({
+      success: true,
+      challenge: {
+        id: challengeId,
+        progress: challenge.progress,
+        completed: challenge.completed,
+        completedAt: challenge.completedAt
+      },
+      totalPoints: user.habitPoints,
+      newCard: newCard
+    });
+  } catch (error) {
+    console.error('Error updating challenge:', error);
+    res.status(500).json({ error: 'Failed to update challenge' });
   }
 });
 
@@ -621,6 +846,101 @@ app.post('/api/user/progress', async (req, res) => {
     res.status(500).json({ error: 'Failed to update progress' });
   }
 });
+
+// Add to server.js - run this ONCE to migrate existing data
+app.post('/api/admin/migrate-habits', async (req, res) => {
+  try {
+    const users = await User.find({});
+    
+    for (let user of users) {
+      // Migrate old habits format if exists
+      if (user.habitsData && typeof user.habitsData === 'object') {
+        const oldHabits = user.habitsData;
+        
+        // Convert to new format if needed
+        if (!oldHabits.sleep?.value && typeof oldHabits.sleep === 'number') {
+          user.habitsData = {
+            sleep: { value: oldHabits.sleep || 0, completedToday: false },
+            exercise: { value: oldHabits.exercise || 0, completedToday: false },
+            nutrition: { value: oldHabits.nutrition || 0, completedToday: false },
+            mindfulness: { value: oldHabits.mindfulness || 0, completedToday: false },
+            study: { value: oldHabits.study || 0, completedToday: false },
+            cardsGenerated: {}
+          };
+          
+          user.markModified('habitsData');
+          await user.save();
+        }
+      }
+    }
+    
+    res.json({ success: true, message: `Migrated ${users.length} users` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Card generation helpers
+function generateCardFromHabit(habitType, cardCount) {
+  const habitCards = {
+    sleep: {
+      name: 'Rest Guardian',
+      rarity: 'Common',
+      attack: 3,
+      defense: 5,
+      special: 'Restore 2 HP each turn'
+    },
+    exercise: {
+      name: 'Fitness Warrior',
+      rarity: 'Common',
+      attack: 6,
+      defense: 3,
+      special: '+2 attack when HP > 50%'
+    },
+    nutrition: {
+      name: 'Vitality Keeper',
+      rarity: 'Common',
+      attack: 4,
+      defense: 4,
+      special: 'Heal 3 HP on play'
+    },
+    mindfulness: {
+      name: 'Zen Master',
+      rarity: 'Rare',
+      attack: 5,
+      defense: 4,
+      special: 'Reduce incoming damage by 1'
+    },
+    study: {
+      name: 'Knowledge Sage',
+      rarity: 'Common',
+      attack: 4,
+      defense: 3,
+      special: 'Draw 1 extra card'
+    }
+  };
+  
+  const cardTemplate = habitCards[habitType];
+  return {
+    id: `card_${Date.now()}_${cardCount}`,
+    ...cardTemplate,
+    imageUrl: `/images/cards/${habitType}.png`,
+    unlockedAt: new Date()
+  };
+}
+
+function generateChallengeCard(challengeId, cardCount) {
+  return {
+    id: `card_${Date.now()}_${cardCount}`,
+    name: 'Challenge Champion',
+    rarity: 'Epic',
+    attack: 7,
+    defense: 5,
+    special: 'Deal double damage every 3rd turn',
+    imageUrl: '/images/cards/champion.png',
+    unlockedAt: new Date()
+  };
+}
 
 // Helper functions for card battle system
 function generateAICards(count) {

@@ -496,6 +496,193 @@ app.get('/api/user', async (req, res) => {
   }
 });
 
+class VivifyDataManager {
+  constructor() {
+    this.baseURL = 'https://vivify-backend.onrender.com/api';
+    this.username = localStorage.getItem('username');
+  }
+  
+  // Load all user data on login
+  async loadUserData() {
+    try {
+      const response = await fetch(`${this.baseURL}/user/${this.username}`);
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      // Store in localStorage for offline access
+      localStorage.setItem('userHabits', JSON.stringify(data.habits));
+      localStorage.setItem('userChallenges', JSON.stringify(data.challenges));
+      localStorage.setItem('userPoints', data.totalPoints);
+      localStorage.setItem('userStreak', data.currentStreak);
+      localStorage.setItem('userCards', JSON.stringify(data.cards));
+      localStorage.setItem('battleStats', JSON.stringify(data.battleStats));
+      
+      return data;
+    } catch (error) {
+      console.error('Failed to load user data:', error);
+      return null;
+    }
+  }
+  
+  // Update habit progress
+  async updateHabit(habitType, value) {
+    try {
+      const response = await fetch(`${this.baseURL}/habits/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: this.username,
+          habitType: habitType,
+          value: value
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Update localStorage
+        localStorage.setItem('userHabits', JSON.stringify(result.habits));
+        localStorage.setItem('userPoints', result.totalPoints);
+        
+        // If new card unlocked, show animation
+        if (result.newCard) {
+          this.showCardUnlockAnimation(result.newCard);
+          const cards = JSON.parse(localStorage.getItem('userCards') || '[]');
+          cards.push(result.newCard);
+          localStorage.setItem('userCards', JSON.stringify(cards));
+        }
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Failed to update habit:', error);
+      return null;
+    }
+  }
+  
+  // Update challenge progress
+  async updateChallenge(challengeId, progress) {
+    try {
+      const response = await fetch(`${this.baseURL}/challenges/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: this.username,
+          challengeId: challengeId,
+          progress: progress
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Update localStorage
+        const challenges = JSON.parse(localStorage.getItem('userChallenges') || '[]');
+        const index = challenges.findIndex(c => c.id === challengeId);
+        if (index >= 0) {
+          challenges[index] = result.challenge;
+        } else {
+          challenges.push(result.challenge);
+        }
+        localStorage.setItem('userChallenges', JSON.stringify(challenges));
+        localStorage.setItem('userPoints', result.totalPoints);
+        
+        // If new card unlocked
+        if (result.newCard) {
+          this.showCardUnlockAnimation(result.newCard);
+          const cards = JSON.parse(localStorage.getItem('userCards') || '[]');
+          cards.push(result.newCard);
+          localStorage.setItem('userCards', JSON.stringify(cards));
+        }
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Failed to update challenge:', error);
+      return null;
+    }
+  }
+  
+  // Card unlock animation
+  showCardUnlockAnimation(card) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: fadeIn 0.3s;
+    `;
+    
+    overlay.innerHTML = `
+      <div style="text-align: center; color: white;">
+        <h2 style="font-size: 2em; margin-bottom: 20px; animation: bounce 0.5s;">
+          🎉 New Card Unlocked! 🎉
+        </h2>
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    padding: 20px; border-radius: 15px; animation: slideUp 0.5s;">
+          <h3>${card.name}</h3>
+          <p>Rarity: ${card.rarity}</p>
+          <p>Attack: ${card.attack} | Defense: ${card.defense}</p>
+          <p style="font-style: italic;">${card.special}</p>
+        </div>
+        <button onclick="this.parentElement.parentElement.remove()" 
+                style="margin-top: 20px; padding: 10px 30px; font-size: 1.2em;
+                       background: white; border: none; border-radius: 25px;
+                       cursor: pointer;">Awesome!</button>
+      </div>
+    `;
+    
+    document.body.appendChild(overlay);
+  }
+}
+
+// Initialize on page load
+const dataManager = new VivifyDataManager();
+
+// Load data when user logs in or refreshes page
+if (localStorage.getItem('username')) {
+  dataManager.loadUserData().then(data => {
+    console.log('User data loaded:', data);
+    // Update UI with loaded data
+    updateDashboardUI(data);
+  });
+}
+
+// Example: Update habit when slider changes
+function onHabitSliderChange(habitType, value) {
+  dataManager.updateHabit(habitType, value);
+}
+
+// Example: Update challenge progress
+function onChallengeProgress(challengeId, progress) {
+  dataManager.updateChallenge(challengeId, progress);
+}
+
+// =======================
+// 4. ADD TO LOGIN SUCCESS
+// =======================
+async function onLoginSuccess(username) {
+  localStorage.setItem('username', username);
+  
+  const dataManager = new VivifyDataManager();
+  const userData = await dataManager.loadUserData();
+  
+  if (userData) {
+    // Redirect to dashboard with data loaded
+    window.location.href = 'dashboard.html';
+  }
+}
+
 // =============================================================================
 // CLASS MANAGEMENT API ROUTES
 // =============================================================================

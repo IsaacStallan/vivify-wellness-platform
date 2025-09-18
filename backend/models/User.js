@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    // ... keep all your existing fields ...
+    // EXISTING AUTHENTICATION FIELDS - KEEP AS IS
     username: {
         type: String,
         required: true,
@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'student'
     },
+    
+    // EXISTING PROFILE - KEEP AS IS
     profile: {
         firstName: String,
         lastName: String,
@@ -51,7 +53,7 @@ const userSchema = new mongoose.Schema({
         }
     },
     
-    // ... keep all your existing scoring fields ...
+    // EXISTING SCORING FIELDS - KEEP AS IS
     overallScore: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     habitStreak: { type: Number, default: 0 },
@@ -59,23 +61,72 @@ const userSchema = new mongoose.Schema({
     nutritionScore: { type: Number, default: 0 },
     mentalScore: { type: Number, default: 0 },
     lifeSkillsScore: { type: Number, default: 0 },
-    userChallenges: { type: Object, default: {} },
     habitPoints: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
     longestStreak: { type: Number, default: 0 },
     achievements: [String],
-    habitsData: { type: Object, default: {} },
+    
+    // NEW: ENHANCED HABITS DATA for Daily Tracking
+    habitsData: {
+        // Daily habit tracking (0-100 scale for progress bars)
+        sleep: { 
+            value: { type: Number, default: 0, min: 0, max: 100 },
+            lastUpdated: Date,
+            completedToday: { type: Boolean, default: false }
+        },
+        exercise: { 
+            value: { type: Number, default: 0, min: 0, max: 100 },
+            lastUpdated: Date,
+            completedToday: { type: Boolean, default: false }
+        },
+        nutrition: { 
+            value: { type: Number, default: 0, min: 0, max: 100 },
+            lastUpdated: Date,
+            completedToday: { type: Boolean, default: false }
+        },
+        mindfulness: { 
+            value: { type: Number, default: 0, min: 0, max: 100 },
+            lastUpdated: Date,
+            completedToday: { type: Boolean, default: false }
+        },
+        study: { 
+            value: { type: Number, default: 0, min: 0, max: 100 },
+            lastUpdated: Date,
+            completedToday: { type: Boolean, default: false }
+        },
+        // Track which habits have generated cards
+        cardsGenerated: {
+            sleep: { type: Boolean, default: false },
+            exercise: { type: Boolean, default: false },
+            nutrition: { type: Boolean, default: false },
+            mindfulness: { type: Boolean, default: false },
+            study: { type: Boolean, default: false }
+        }
+    },
+    
+    // EXISTING CHALLENGE STATS - KEEP AS IS
+    userChallenges: { type: Object, default: {} },
     challengeStats: {
         active: { type: Number, default: 0 },
         completed: { type: Number, default: 0 },
         totalPoints: { type: Number, default: 0 }
     },
+    
+    // NEW: ENHANCED CHALLENGE DATA with Card Generation
     challengeData: {
         type: mongoose.Schema.Types.Mixed,
-        default: {}
+        default: {},
+        // Structure: {
+        //   challengeId: {
+        //     progress: Number,
+        //     completed: Boolean,
+        //     completedAt: Date,
+        //     cardGenerated: Boolean
+        //   }
+        // }
     },
 
-    // NEW CARD BATTLE SYSTEM FIELDS
+    // ENHANCED CARD BATTLE SYSTEM (combining your fields with card storage)
     cardBattleData: {
         // XP and Battle Level (separate from existing level)
         battleXP: { type: Number, default: 0 },
@@ -88,6 +139,26 @@ const userSchema = new mongoose.Schema({
         battlesLost: { type: Number, default: 0 },
         winStreak: { type: Number, default: 0 },
         longestWinStreak: { type: Number, default: 0 },
+        
+        // NEW: Card Collection (actual cards stored here)
+        cards: [{
+            id: String,
+            name: String,
+            rarity: { 
+                type: String, 
+                enum: ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'] 
+            },
+            attack: Number,
+            defense: Number,
+            special: String,
+            imageUrl: String,
+            unlockedAt: { type: Date, default: Date.now },
+            source: { 
+                type: String, 
+                enum: ['habit', 'challenge', 'battle', 'special'] 
+            },
+            sourceId: String // e.g., 'sleep', 'challenge_7day'
+        }],
         
         // Card Collection Stats
         totalCardsUnlocked: { type: Number, default: 0 },
@@ -124,7 +195,7 @@ const userSchema = new mongoose.Schema({
         lastCardGenerated: Date
     },
 
-    // Keep all your existing fields
+    // EXISTING FITNESS METRICS - KEEP AS IS
     fitnessMetrics: {
         totalWorkouts: { type: Number, default: 0 },
         thisWeekWorkouts: { type: Number, default: 0 },
@@ -135,6 +206,8 @@ const userSchema = new mongoose.Schema({
         lastWorkout: Date,
         lastUpdated: Date
     },
+    
+    // EXISTING PERFORMANCE DATA - KEEP AS IS
     performanceData: {
         hasCompletedBaseline: {
             type: Boolean,
@@ -206,6 +279,8 @@ const userSchema = new mongoose.Schema({
         level: { type: Number, default: 1 },
         badges: [String]
     },
+    
+    // EXISTING STATUS FIELDS - KEEP AS IS
     isActive: {
         type: Boolean,
         default: true

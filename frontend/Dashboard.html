@@ -2729,5 +2729,24 @@ window.vivifyTracker = {
     }
 };
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const habits = JSON.parse(localStorage.getItem('userHabits') || '{}');
+      const points = localStorage.getItem('userPoints') || 0;
+      
+      // Update habit sliders
+      document.getElementById('sleepSlider').value = habits.sleep || 0;
+      document.getElementById('exerciseSlider').value = habits.exercise || 0;
+      // ... etc for other habits
+      
+      // Update points display
+      document.getElementById('totalPoints').textContent = points;
+    });
+    
+    // When slider changes:
+    document.getElementById('sleepSlider').addEventListener('change', (e) => {
+      dataManager.updateHabit('sleep', parseInt(e.target.value));
+    });
+    </script>
 <script src="js/flexible-mobile-nav.js"></script> </body>
 </html>
