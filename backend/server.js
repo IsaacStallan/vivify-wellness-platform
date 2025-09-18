@@ -886,6 +886,38 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// Add this route to persist habit data
+app.post('/api/user/sync-progress', async (req, res) => {
+  try {
+      const { username, performanceData, habitsData, streaks } = req.body;
+      
+      const user = await findUser(username);
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Store the performance data
+      if (!user.performanceData) user.performanceData = {};
+      Object.assign(user.performanceData, performanceData);
+      
+      // Store habits data
+      user.habitsData = habitsData;
+      
+      // Update streaks
+      if (streaks) {
+          user.currentStreak = streaks.currentStreak || 0;
+          user.longestStreak = streaks.longestStreak || 0;
+      }
+      
+      await user.save();
+      
+      res.json({ success: true, message: 'Progress synced' });
+  } catch (error) {
+      console.error('Error syncing progress:', error);
+      res.status(500).json({ error: 'Failed to sync progress' });
+  }
+});
+
 // Add helper functions
 function calculateHabitStats(habitsData) {
   let totalPoints = 0;

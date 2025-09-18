@@ -2513,10 +2513,37 @@ updateDateTime() {
 
 saveData() {
     try {
+        // Save locally
         localStorage.setItem('performanceData', JSON.stringify(this.data));
-        this.syncPerformanceToAssessment();
+        
+        // NEW: Also sync to backend
+        this.syncToBackend();
     } catch (error) {
         console.error('Error saving data:', error);
+    }
+}
+
+async syncToBackend() {
+    try {
+        const username = localStorage.getItem('username');
+        if (!username) return;
+        
+        const response = await fetch('https://vivify-backend.onrender.com/api/user/sync-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                performanceData: this.data,
+                habitsData: this.data.habitsData || {},
+                streaks: this.data.streaks || {}
+            })
+        });
+        
+        if (response.ok) {
+            console.log('✅ Progress synced to backend');
+        }
+    } catch (error) {
+        console.error('Failed to sync to backend:', error);
     }
 }
 

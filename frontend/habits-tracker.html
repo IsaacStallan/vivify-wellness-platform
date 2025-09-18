@@ -1664,5 +1664,33 @@ window.addEventListener('resize', function() {
             localStorage.setItem('habitsDataInitialized', 'true');
         }
     </script>
-<script src="js/flexible-mobile-nav.js"></script> </body>
+    <script>
+        // After challenge completion
+        document.addEventListener('DOMContentLoaded', () => {
+            // When a challenge is completed, manually trigger card generation
+            const originalCompleteDay = window.challengeManager?.completeDay;
+            
+            if (originalCompleteDay) {
+                window.challengeManager.completeDay = async function(challengeId, selectedActions = []) {
+                    // Call original completion
+                    await originalCompleteDay.call(this, challengeId, selectedActions);
+                    
+                    // Generate card
+                    if (window.vivifyCards) {
+                        const habitType = {
+                            'fitness-foundation': 'fitness',
+                            'morning-energy': 'fitness',
+                            'deep-work': 'study',
+                            'stress-resilience': 'mental'
+                        }[challengeId] || 'study';
+                        
+                        const streakLength = this.userChallenges[challengeId]?.totalDays || 1;
+                        await window.vivifyCards.generateCardFromHabit(habitType, streakLength, selectedActions.length > 0);
+                    }
+                };
+            }
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> 
+</body>
 </html>
