@@ -1354,6 +1354,560 @@ window.addEventListener('resize', function() {
     </main>
     <script src="js/unified-leaderboard.js"></script>
     <script>
+        // Add this to habits-tracker.html BEFORE your existing JavaScript
+        // This will run alongside your current system for testing
+
+        // UNIFIED TRACKING SYSTEM
+        class UnifiedTracker {
+            constructor() {
+                this.baseURL = 'https://vivify-backend.onrender.com/api';
+                this.username = localStorage.getItem('username');
+                
+                // Single data structure for ALL tracking
+                this.data = {
+                    // Core habits (same across all pages)
+                    habits: [
+                        {
+                            id: 'morning_routine',
+                            name: 'Morning Power Routine',
+                            description: 'Complete energizing morning routine within 1 hour of waking',
+                            category: 'Physical Performance',
+                            points: 20,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'physical_training',
+                            name: 'Physical Training',
+                            description: 'Complete 30+ minutes of intentional physical exercise',
+                            category: 'Physical Performance', 
+                            points: 25,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'deep_work',
+                            name: 'Deep Work Session',
+                            description: 'Complete 90 minutes of focused, distraction-free work',
+                            category: 'Mental Focus',
+                            points: 30,
+                            type: 'daily', 
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'nutrition_tracking',
+                            name: 'Performance Nutrition',
+                            description: 'Track all meals and hit protein/hydration targets',
+                            category: 'Performance Nutrition',
+                            points: 15,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'reading',
+                            name: 'Learning & Growth',
+                            description: 'Read or learn something new for 30+ minutes',
+                            category: 'Excellence Habits',
+                            points: 20,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'reflection',
+                            name: 'Performance Review',
+                            description: 'Reflect on wins, losses, and tomorrow\'s priorities',
+                            category: 'Excellence Habits',
+                            points: 15,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'sleep_prep',
+                            name: 'Recovery Preparation',
+                            description: 'Wind down routine and in bed by target time',
+                            category: 'Physical Performance',
+                            points: 20,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        },
+                        {
+                            id: 'skill_practice',
+                            name: 'Skill Development',
+                            description: 'Practice a specific skill for 45+ minutes',
+                            category: 'Excellence Habits',
+                            points: 25,
+                            type: 'daily',
+                            completed: false,
+                            streak: 0
+                        }
+                    ],
+                    
+                    // Custom habits created by students
+                    customHabits: [],
+                    
+                    // Progress tracking
+                    dailyCompletions: {}, // date -> [habitIds]
+                    streaks: {},
+                    totalPoints: 0,
+                    
+                    // Unified activity log
+                    activities: []
+                };
+            }
+
+            async initialize() {
+                await this.loadData();
+                this.resetDailyIfNewDay();
+                this.mergeWithExistingHabits(); // NEW: Merge with current system
+                return this;
+            }
+
+            async loadData() {
+                try {
+                    // Load from backend first
+                    const response = await fetch(`${this.baseURL}/user/${this.username}`);
+                    const serverData = await response.json();
+                    
+                    if (!serverData.error) {
+                        this.mergeServerData(serverData);
+                    }
+                } catch (error) {
+                    console.log('Loading from local storage...');
+                }
+                
+                // Load existing unified data
+                const localData = localStorage.getItem('unifiedTrackerData');
+                if (localData) {
+                    const parsed = JSON.parse(localData);
+                    this.data = { ...this.data, ...parsed };
+                }
+                
+                this.save();
+            }
+
+            mergeWithExistingHabits() {
+                // Merge with your existing habits system for smooth transition
+                const existingHabits = localStorage.getItem('habitsData');
+                if (existingHabits) {
+                    try {
+                        const habitsData = JSON.parse(existingHabits);
+                        
+                        // Migrate daily completions
+                        if (habitsData.dailyCompletions) {
+                            this.data.dailyCompletions = { ...this.data.dailyCompletions, ...habitsData.dailyCompletions };
+                        }
+                        
+                        // Migrate custom habits
+                        if (habitsData.customHabits) {
+                            habitsData.customHabits.forEach(habit => {
+                                if (!this.data.customHabits.find(h => h.id === habit.id)) {
+                                    this.data.customHabits.push(habit);
+                                }
+                            });
+                        }
+                        
+                        // Migrate completion status for today
+                        const today = new Date().toDateString();
+                        if (habitsData.dailyCompletions && habitsData.dailyCompletions[today]) {
+                            habitsData.dailyCompletions[today].forEach(habitId => {
+                                const habit = this.data.habits.find(h => h.id === habitId) || 
+                                            this.data.customHabits.find(h => h.id === habitId);
+                                if (habit) {
+                                    habit.completed = true;
+                                }
+                            });
+                        }
+                        
+                        console.log('Successfully merged existing habits data');
+                    } catch (error) {
+                        console.error('Error merging existing habits:', error);
+                    }
+                }
+            }
+
+            mergeServerData(serverData) {
+                if (serverData.habitsData) {
+                    const today = new Date().toDateString();
+                    Object.keys(serverData.habitsData).forEach(habitType => {
+                        const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
+                        if (habit && serverData.habitsData[habitType].completedToday) {
+                            habit.completed = true;
+                            if (!this.data.dailyCompletions[today]) {
+                                this.data.dailyCompletions[today] = [];
+                            }
+                            if (!this.data.dailyCompletions[today].includes(habit.id)) {
+                                this.data.dailyCompletions[today].push(habit.id);
+                            }
+                        }
+                    });
+                }
+                
+                if (serverData.totalPoints) {
+                    this.data.totalPoints = serverData.totalPoints;
+                }
+            }
+
+            mapHabitToType(habitId) {
+                const map = {
+                    'morning_routine': 'exercise',
+                    'physical_training': 'exercise', 
+                    'deep_work': 'study',
+                    'nutrition_tracking': 'nutrition',
+                    'reading': 'study',
+                    'reflection': 'mindfulness',
+                    'sleep_prep': 'sleep',
+                    'skill_practice': 'study'
+                };
+                return map[habitId] || 'study';
+            }
+
+            resetDailyIfNewDay() {
+                const today = new Date().toDateString();
+                const lastDate = localStorage.getItem('unifiedLastActiveDate');
+                
+                if (lastDate !== today) {
+                    // Reset daily completions
+                    this.data.habits.forEach(habit => {
+                        habit.completed = false;
+                    });
+                    this.data.customHabits.forEach(habit => {
+                        habit.completed = false;
+                    });
+                    
+                    localStorage.setItem('unifiedLastActiveDate', today);
+                    this.save();
+                }
+            }
+
+            // UNIFIED COMPLETION METHOD - this will replace your toggleHabit function
+            async completeHabit(habitId) {
+                const habit = this.data.habits.find(h => h.id === habitId) || 
+                            this.data.customHabits.find(h => h.id === habitId);
+                
+                if (!habit || habit.completed) {
+                    console.log('Habit already completed or not found');
+                    return false;
+                }
+                
+                // Mark as completed
+                habit.completed = true;
+                const today = new Date().toDateString();
+                
+                // Update daily completions
+                if (!this.data.dailyCompletions[today]) {
+                    this.data.dailyCompletions[today] = [];
+                }
+                this.data.dailyCompletions[today].push(habitId);
+                
+                // Update streak
+                habit.streak = (habit.streak || 0) + 1;
+                this.data.streaks[habitId] = habit.streak;
+                
+                // Add points
+                this.data.totalPoints += habit.points;
+                
+                // Log activity
+                this.logActivity(habit.name, habit.points, 'habit');
+                
+                // Sync to backend
+                await this.syncToBackend(habitId, habit.points);
+                
+                // Add to unified leaderboard
+                if (window.VivifyLeaderboard) {
+                    window.VivifyLeaderboard.addPoints(habit.points, 'habit_complete', {
+                        habitId: habitId,
+                        habitName: habit.name
+                    });
+                }
+                
+                this.save();
+                this.notifyCompletion(habit.name, habit.points);
+                
+                console.log(`Completed habit: ${habit.name} (+${habit.points} points)`);
+                return true;
+            }
+
+            logActivity(name, points, type) {
+                this.data.activities.unshift({
+                    id: Date.now(),
+                    name: name,
+                    points: points,
+                    type: type,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Keep last 50 activities
+                if (this.data.activities.length > 50) {
+                    this.data.activities = this.data.activities.slice(0, 50);
+                }
+            }
+
+            async syncToBackend(habitId, points) {
+                try {
+                    const habitType = this.mapHabitToType(habitId);
+                    
+                    await fetch(`${this.baseURL}/habits/update`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: this.username,
+                            habitType: habitType,
+                            value: 100
+                        })
+                    });
+                    
+                    console.log('Synced to backend successfully');
+                } catch (error) {
+                    console.error('Sync failed:', error);
+                }
+            }
+
+            // CREATE CUSTOM HABIT
+            createCustomHabit(data) {
+                const habit = {
+                    id: 'custom_' + Date.now(),
+                    name: data.name,
+                    description: data.description,
+                    category: data.category,
+                    points: data.points,
+                    type: 'daily',
+                    completed: false,
+                    streak: 0,
+                    isCustom: true
+                };
+                
+                this.data.customHabits.push(habit);
+                this.save();
+                
+                console.log('Created custom habit:', habit.name);
+                return habit;
+            }
+
+            deleteCustomHabit(habitId) {
+                if (!habitId.startsWith('custom_')) {
+                    console.error('Cannot delete default habits');
+                    return false;
+                }
+
+                this.data.customHabits = this.data.customHabits.filter(h => h.id !== habitId);
+                
+                // Clean up related data
+                delete this.data.streaks[habitId];
+                Object.keys(this.data.dailyCompletions).forEach(date => {
+                    this.data.dailyCompletions[date] = this.data.dailyCompletions[date].filter(id => id !== habitId);
+                });
+
+                this.save();
+                console.log('Deleted custom habit:', habitId);
+                return true;
+            }
+
+            // GET DATA FOR HABITS PAGE
+            getHabitsPageData() {
+                const allHabits = [...this.data.habits, ...this.data.customHabits];
+                const completedToday = allHabits.filter(h => h.completed).length;
+                const totalHabits = allHabits.length;
+                const currentStreak = this.calculateCurrentStreak();
+                const longestStreak = Math.max(...Object.values(this.data.streaks), 0);
+                const weeklyRate = this.calculateWeeklyCompletionRate();
+
+                return {
+                    habits: allHabits,
+                    stats: {
+                        completedToday,
+                        totalHabits,
+                        currentStreak,
+                        longestStreak,
+                        weeklyRate,
+                        totalPoints: this.data.totalPoints
+                    },
+                    dailyCompletions: this.data.dailyCompletions,
+                    activities: this.data.activities.slice(0, 5)
+                };
+            }
+
+            calculateCurrentStreak() {
+                let streak = 0;
+                let checkDate = new Date();
+                
+                while (true) {
+                    const dateStr = checkDate.toDateString();
+                    const dayCompletions = this.data.dailyCompletions[dateStr] || [];
+                    const completionRate = this.data.habits.length > 0 ? dayCompletions.length / this.data.habits.length : 0;
+                    
+                    if (completionRate >= 0.7) { // 70% completion threshold
+                        streak++;
+                        checkDate.setDate(checkDate.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                
+                return streak;
+            }
+
+            calculateWeeklyCompletionRate() {
+                const today = new Date();
+                let totalPossible = 0;
+                let totalCompleted = 0;
+
+                for (let i = 0; i < 7; i++) {
+                    const checkDate = new Date(today);
+                    checkDate.setDate(today.getDate() - i);
+                    const dateString = checkDate.toDateString();
+                    
+                    totalPossible += this.data.habits.length;
+                    const dayCompletions = this.data.dailyCompletions[dateString] || [];
+                    totalCompleted += dayCompletions.length;
+                }
+
+                return totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
+            }
+
+            save() {
+                localStorage.setItem('unifiedTrackerData', JSON.stringify(this.data));
+            }
+
+            notifyCompletion(name, points) {
+                // Show unified completion notification
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed; top: 100px; right: 20px; z-index: 10000;
+                    background: linear-gradient(135deg, #27ae60, #2ecc71);
+                    color: white; padding: 1rem 1.5rem; border-radius: 12px;
+                    box-shadow: 0 10px 30px rgba(39, 174, 96, 0.4);
+                    transform: translateX(100px); opacity: 0;
+                    transition: all 0.4s ease; font-weight: 600;
+                `;
+                notification.innerHTML = `
+                    <div style="font-size: 1.1rem; margin-bottom: 0.25rem;">✅ ${name} completed!</div>
+                    <div style="font-size: 0.9rem; opacity: 0.9;">+${points} points earned</div>
+                `;
+                
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                    notification.style.opacity = '1';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100px)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 400);
+                }, 3000);
+            }
+        }
+
+        // INITIALIZE UNIFIED SYSTEM
+        let unifiedTracker;
+
+        // Add this initialization BEFORE your existing DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Initializing unified tracker...');
+            unifiedTracker = new UnifiedTracker();
+            await unifiedTracker.initialize();
+            
+            // Make globally available
+            window.unifiedTracker = unifiedTracker;
+            
+            console.log('Unified tracking system initialized');
+            
+            // Test: Add a button to switch to unified display
+            addUnifiedTestButton();
+        });
+
+        // ADD TEST BUTTON to switch between old and new system
+        function addUnifiedTestButton() {
+            const habitsSection = document.querySelector('.habits-section .section-header');
+            if (habitsSection) {
+                const button = document.createElement('button');
+                button.textContent = 'Test Unified System';
+                button.className = 'btn btn-secondary';
+                button.style.marginLeft = '1rem';
+                button.onclick = displayUnifiedHabits;
+                habitsSection.appendChild(button);
+            }
+        }
+
+        // TEST FUNCTION: Display habits using unified system
+        function displayUnifiedHabits() {
+            if (!window.unifiedTracker) {
+                console.error('Unified tracker not initialized');
+                return;
+            }
+            
+            const data = window.unifiedTracker.getHabitsPageData();
+            const grid = document.getElementById('habitsGrid');
+            
+            if (!grid) {
+                console.error('Habits grid not found');
+                return;
+            }
+            
+            console.log('Displaying unified habits:', data);
+            
+            // Update stats
+            document.getElementById('currentStreak').textContent = data.stats.currentStreak;
+            document.getElementById('completedToday').textContent = data.stats.completedToday;
+            document.getElementById('totalHabits').textContent = data.stats.totalHabits;
+            document.getElementById('longestStreak').textContent = data.stats.longestStreak;
+            document.getElementById('completionRate').textContent = data.stats.weeklyRate + '%';
+            document.getElementById('dailyProgress').textContent = 
+                `${data.stats.completedToday} of ${data.stats.totalHabits} completed`;
+            
+            // Display habits
+            grid.innerHTML = data.habits.map(habit => {
+                const progress = habit.completed ? 100 : 0;
+                const deleteBtn = habit.isCustom ? 
+                    `<button class="btn btn-delete" onclick="window.unifiedTracker.deleteCustomHabit('${habit.id}'); displayUnifiedHabits();" title="Delete custom habit">
+                        <i class="fas fa-trash"></i>
+                    </button>` : 
+                    `<button class="btn btn-secondary" title="Edit habit">
+                        <i class="fas fa-edit"></i>
+                    </button>`;
+                    
+                return `
+                    <div class="habit-card ${habit.completed ? 'completed' : ''} fade-in">
+                        <div class="habit-header">
+                            <div class="habit-info">
+                                <h3>${habit.name} ${habit.isCustom ? '<span class="custom-badge">Custom</span>' : ''}</h3>
+                                <div class="habit-category">${habit.category}</div>
+                            </div>
+                            <div class="habit-streak">
+                                ${habit.streak || 0} day streak
+                            </div>
+                        </div>
+                        <div class="habit-description">${habit.description}</div>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span>${habit.completed ? 'Completed' : 'Not started'}</span>
+                                <span>+${habit.points} points</span>
+                            </div>
+                        </div>
+                        <div class="habit-actions">
+                            <button class="btn btn-complete" 
+                                    onclick="window.unifiedTracker.completeHabit('${habit.id}').then(() => displayUnifiedHabits())"
+                                    ${habit.completed ? 'disabled' : ''}>
+                                ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
+                            </button>
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            console.log('Unified habits display updated');
+        }
         // Default performance habits for new users
         const defaultHabits = [
             {
