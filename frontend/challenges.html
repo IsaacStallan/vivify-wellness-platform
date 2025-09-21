@@ -63,7 +63,6 @@
     .challenge-stat-value{font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:.25rem}
     .challenge-stat-label{font-size:.75rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
 
-    /* Daily Tracker System */
     .daily-tracker{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
     .tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
     .tracker-title{color:#f39c12;font-weight:600;font-size:1rem}
@@ -108,7 +107,6 @@
     .btn.completed{background:#27ae60!important;color:#fff!important}
     .btn.active{background:#3498db!important;color:#fff!important}
 
-    /* Leaderboard Styles - Keep your original styles */
     .leaderboard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem 2rem;margin-top:3rem;position:relative;overflow:hidden}
     .leaderboard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22)}
     .leaderboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
@@ -273,7 +271,7 @@
 <script src="js/unified-leaderboard.js"></script>
 
 <script>
-// Data persistence and improved challenge management
+// Enhanced Challenge Manager with backend sync
 class EnhancedChallengeManager {
     constructor() {
         this.userId = localStorage.getItem('username') || 'guest';
@@ -333,6 +331,35 @@ class EnhancedChallengeManager {
         }
     }
 
+    async joinChallenge(challengeId) {
+        const ch = challenges[challengeId];
+        if (!ch) return this.showNotification('Challenge not found', 'error');
+
+        if (this.userChallenges[challengeId]?.joined) {
+            this.showNotification('You are already in this challenge', 'info');
+            return;
+        }
+
+        const now = new Date();
+        this.userChallenges[challengeId] = {
+            joined: true,
+            startDate: now.toISOString(),
+            completedDays: [],
+            lastCompletedDate: null,
+            completed: false,
+            streak: 0,
+            totalDays: 0
+        };
+
+        await this.saveChallengeData();
+        this.displayChallenges();
+        this.showNotification(`Joined ${ch.name}! Ready to start your journey.`, 'success');
+        
+        if (window.VivifyLeaderboard) {
+            window.VivifyLeaderboard.addPoints(25, 'challenge_join', { challengeId });
+        }
+    }
+
     async completeDay(challengeId, selectedActions = []) {
         const ch = challenges[challengeId];
         const uc = this.userChallenges[challengeId];
@@ -372,6 +399,257 @@ class EnhancedChallengeManager {
         this.displayChallenges();
     }
 
+    updateStreak(challengeId) {
+        const challenge = this.userChallenges[challengeId];
+        const completedDays = challenge.completedDays.sort();
+        
+        let streak = 0;
+        const today = new Date();
+        
+        for (let i = 0; i < 30; i++) {
+            const checkDate = new Date(today);
+            checkDate.setDate(today.getDate() - i);
+            const dateStr = checkDate.toISOString().split('T')[0];
+            
+            if (completedDays.includes(dateStr)) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+        
+        challenge.streak = streak;
+    }
+
+    displayChallenges() {
+        const container = document.getElementById('challengesList');
+        if (!container) return;
+
+        container.innerHTML = Object.entries(challenges).map(([id, challenge]) => {
+            const userChallenge = this.userChallenges[id];
+            const isJoined = userChallenge?.joined || false;
+            const isCompleted = userChallenge?.completed || false;
+            
+            let cardClass = 'challenge-card';
+            if (isCompleted) cardClass += ' completed';
+            else if (isJoined) cardClass += ' active';
+            if (challenge.featured) cardClass += ' featured';
+
+            return `
+                <div class="${cardClass}" data-challenge="${id}">
+                    ${this.renderChallengeHeader(id, challenge)}
+                    ${this.renderChallengeDescription(challenge)}
+                    ${this.renderChallengeStats(id, challenge)}
+                    ${isJoined ? this.renderDailyTracker(id, challenge) : ''}
+                    ${isJoined ? this.renderTodayAction(id, challenge) : ''}
+                    ${this.renderChallengeProgress(id, challenge)}
+                    ${this.renderChallengeActions(id, challenge)}
+                </div>
+            `;
+        }).join('');
+
+        this.updateStats();
+    }
+
+    renderChallengeHeader(id, challenge) {
+        return `
+            <div class="challenge-header">
+                <div class="challenge-info">
+                    <h3>${challenge.name}</h3>
+                    <div class="challenge-difficulty">
+                        <span>${challenge.difficulty}</span>
+                        <div class="difficulty-dots">
+                            ${Array(3).fill(0).map((_, i) => 
+                                `<div class="difficulty-dot ${i < challenge.difficultyLevel ? 'active' : ''}"></div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="challenge-badge ${challenge.type}">${challenge.type}</div>
+            </div>
+        `;
+    }
+
+    renderChallengeDescription(challenge) {
+        return `<p class="challenge-description">${challenge.description}</p>`;
+    }
+
+    renderChallengeStats(id, challenge) {
+        const userChallenge = this.userChallenges[id];
+        const daysLeft = challenge.type === 'ongoing' ? '∞' : Math.max(0, challenge.duration - (userChallenge?.totalDays || 0));
+        
+        return `
+            <div class="challenge-stats">
+                <div class="challenge-stat">
+                    <span class="challenge-stat-value" id="participants-${id}">0</span>
+                    <span class="challenge-stat-label">Participants</span>
+                </div>
+                <div class="challenge-stat">
+                    <span class="challenge-stat-value">${daysLeft}</span>
+                    <span class="challenge-stat-label">${challenge.type === 'ongoing' ? 'Duration' : 'Days Left'}</span>
+                </div>
+                <div class="challenge-stat">
+                    <span class="challenge-stat-value">${challenge.points}</span>
+                    <span class="challenge-stat-label">Points</span>
+                </div>
+            </div>
+        `;
+    }
+
+    renderDailyTracker(id, challenge) {
+        const userChallenge = this.userChallenges[id];
+        const completedDays = userChallenge.completedDays || [];
+        const streak = userChallenge.streak || 0;
+        
+        // Generate last 7 days
+        const days = [];
+        const today = new Date();
+        
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+            const dayName = date.toLocaleDateString('en', { weekday: 'short' });
+            const dayNum = date.getDate();
+            
+            let dayClass = 'day-box';
+            if (i === 0) dayClass += ' today';
+            if (completedDays.includes(dateStr)) dayClass += ' completed';
+            else if (i > 0) dayClass += ' missed';
+            
+            days.push(`
+                <div class="${dayClass}" data-date="${dateStr}">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.7rem; opacity: 0.7;">${dayName}</div>
+                        <div>${dayNum}</div>
+                    </div>
+                </div>
+            `);
+        }
+
+        return `
+            <div class="daily-tracker">
+                <div class="tracker-header">
+                    <div class="tracker-title">Daily Progress</div>
+                    <div class="streak-counter">${streak} day streak</div>
+                </div>
+                <div class="days-grid">
+                    ${days.join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    renderTodayAction(id, challenge) {
+        const userChallenge = this.userChallenges[id];
+        const today = new Date().toISOString().split('T')[0];
+        const completedToday = userChallenge.completedDays.includes(today);
+        
+        if (completedToday) {
+            return `
+                <div class="today-action">
+                    <div class="today-title">
+                        <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                        Today's Goal - Completed!
+                    </div>
+                    <div class="today-description">Great work! You've completed today's challenge. Come back tomorrow for your next goal.</div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="today-action">
+                <div class="today-title">
+                    <i class="fas fa-target"></i>
+                    Today's Goal
+                </div>
+                <div class="today-description">${challenge.todayGoal}</div>
+                <div class="quick-actions">
+                    ${challenge.quickActions.map(action => 
+                        `<button class="quick-action" data-action="${action}">${action}</button>`
+                    ).join('')}
+                </div>
+                <button class="complete-today-btn" onclick="challengeManager.completeDay('${id}')">
+                    Mark as Complete
+                </button>
+            </div>
+        `;
+    }
+
+    renderChallengeProgress(id, challenge) {
+        const userChallenge = this.userChallenges[id];
+        const progress = userChallenge ? Math.min(100, Math.round((userChallenge.totalDays / challenge.totalGoal) * 100)) : 0;
+        
+        return `
+            <div class="challenge-progress">
+                <div class="progress-header">
+                    <span class="progress-text">Overall Progress</span>
+                    <span class="progress-percentage">${progress}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+            </div>
+        `;
+    }
+
+    renderChallengeActions(id, challenge) {
+        const userChallenge = this.userChallenges[id];
+        
+        if (!userChallenge?.joined) {
+            return `
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="btn btn-primary" onclick="challengeManager.joinChallenge('${id}')" style="flex: 1;">
+                        Join Challenge
+                    </button>
+                    <button class="btn btn-secondary" onclick="challengeManager.viewDetails('${id}')" title="View Details">
+                        <i class="fas fa-info"></i>
+                    </button>
+                </div>
+            `;
+        }
+        
+        if (userChallenge.completed) {
+            return `
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="btn completed" disabled style="flex: 1;">
+                        Challenge Completed ✓
+                    </button>
+                    <button class="btn btn-secondary" onclick="challengeManager.viewDetails('${id}')" title="View Details">
+                        <i class="fas fa-info"></i>
+                    </button>
+                </div>
+            `;
+        }
+        
+        return `
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="btn active" disabled style="flex: 1;">
+                    Challenge Active
+                </button>
+                <button class="btn btn-secondary" onclick="challengeManager.viewDetails('${id}')" title="View Details">
+                    <i class="fas fa-info"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    updateStats() {
+        const active = Object.values(this.userChallenges).filter(c => c.joined && !c.completed).length;
+        const completed = Object.values(this.userChallenges).filter(c => c.completed).length;
+        
+        const totalPoints = window.VivifyLeaderboard ? window.VivifyLeaderboard.getCurrentUserScore() : 0;
+
+        document.getElementById('activeChallenges').textContent = active;
+        document.getElementById('completedChallenges').textContent = completed;
+        document.getElementById('totalPoints').textContent = totalPoints;
+    }
+
+    viewDetails(challengeId) {
+        const challenge = challenges[challengeId];
+        this.showNotification(`${challenge.name}\n\n${challenge.description}\n\nDaily Goal: ${challenge.todayGoal}\n\nReward: ${challenge.points} points`, 'info');
+    }
+
     async generateChallengeCard(challengeId) {
         const habitTypeMap = {
             'fitness-foundation': 'exercise',
@@ -391,7 +669,7 @@ class EnhancedChallengeManager {
                 body: JSON.stringify({
                     username: this.userId,
                     habitType: habitType,
-                    value: 100 // Trigger card generation
+                    value: 100
                 })
             });
             
@@ -400,7 +678,6 @@ class EnhancedChallengeManager {
             if (result.newCard) {
                 this.showCardUnlockAnimation(result.newCard);
                 
-                // Update local cards
                 const cards = JSON.parse(localStorage.getItem('userCards') || '[]');
                 cards.push(result.newCard);
                 localStorage.setItem('userCards', JSON.stringify(cards));
@@ -411,7 +688,6 @@ class EnhancedChallengeManager {
     }
 
     showCardUnlockAnimation(card) {
-        // Same animation code as above
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -440,7 +716,6 @@ class EnhancedChallengeManager {
         document.body.appendChild(overlay);
     }
 
-    // Keep all your other existing methods...
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -456,7 +731,7 @@ class EnhancedChallengeManager {
     }
 }
 
-// Challenge definitions with better structure
+// Challenge definitions
 const challenges = {
   'fitness-foundation': {
     name: '30-Day Fitness Foundation',
@@ -574,47 +849,6 @@ function displayAchievements(userAchievements = []) {
   });
 }
 
-// Your original backend loading function
-async function loadLeaderboardFromBackend() {
-  try {
-    console.log('Loading fresh leaderboard from backend...');
-    
-    const response = await fetch('https://vivify-backend.onrender.com/api/users/leaderboard');
-    if (!response.ok) throw new Error('Failed to fetch leaderboard');
-    
-    const backendLeaderboard = await response.json();
-    console.log('Fetched leaderboard from backend:', backendLeaderboard.length, 'users');
-    
-    // Convert backend format to frontend format
-    const leaderboardUsers = backendLeaderboard.map(entry => ({
-      userId: entry.userId,
-      username: entry.username,
-      displayName: entry.username,
-      school: entry.school || 'Knox Grammar',
-      overallScore: entry.overallScore || 0,
-      level: entry.level || 1,
-      activeChallenges: entry.activeChallenges || 0,
-      completedChallenges: entry.completedChallenges || 0,
-      lastActive: entry.lastActive || Date.now()
-    }));
-    
-    // Save to unified leaderboard
-    if (window.VivifyLeaderboard) {
-      window.VivifyLeaderboard.saveLeaderboard(leaderboardUsers);
-      
-      // Refresh displays
-      if (document.getElementById('leaderboardList')) {
-        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
-      }
-    }
-    
-    console.log('✅ Leaderboard loaded from backend');
-    
-  } catch (error) {
-    console.error('❌ Error loading leaderboard from backend:', error);
-  }
-}
-
 function viewFullLeaderboard() {
   if (window.VivifyLeaderboard) {
     const currentScore = window.VivifyLeaderboard.getCurrentUserScore();
@@ -626,11 +860,11 @@ function viewFullLeaderboard() {
 // Initialize the challenge manager
 let challengeManager;
 
-// Main initialization
+// Single initialization
 document.addEventListener('DOMContentLoaded', async function() {
   console.log('Page loading...');
   
-  // 1. Check authentication
+  // Check authentication
   const userLoggedIn = localStorage.getItem('userLoggedIn');
   const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
   const username = localStorage.getItem('username');
@@ -643,49 +877,18 @@ document.addEventListener('DOMContentLoaded', async function() {
   
   console.log('User authenticated:', username);
   
-  // 2. Initialize enhanced challenge manager with backend sync
+  // Initialize ENHANCED challenge manager
   challengeManager = new EnhancedChallengeManager();
   await challengeManager.loadUserData();
   challengeManager.displayChallenges();
   
-  // 3. Rest of your existing initialization code...
+  // Initialize leaderboard
   if (window.VivifyLeaderboard) {
     window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
-    
-    window.VivifyLeaderboard.onUpdate((data) => {
-      console.log('Leaderboard updated:', data);
-      if (document.getElementById('leaderboardList')) {
-        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
-      }
-      if (challengeManager) {
-        challengeManager.updateStats();
-      }
-    });
-    
-    // Initial display after short delay
-    setTimeout(() => {
-      if (document.getElementById('leaderboardList')) {
-        window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
-      }
-    }, 1000);
-    
     console.log('VivifyLeaderboard initialized successfully');
-  } else {
-    console.error('VivifyLeaderboard not loaded - check js/unified-leaderboard.js');
   }
-
-  // 3. Load real data from your backend
-  setTimeout(loadLeaderboardFromBackend, 3000);
-
-  // 4. Initialize the improved challenge system
-  challengeManager = new ChallengeManager();
-  challengeManager.displayChallenges();
-
-  setTimeout(() => {
-    challengeManager.loadChallengeParticipants();
-  }, 2000);
   
-  // 5. Set up logout functionality
+  // Set up logout
   const logoutLink = document.getElementById('logout-link');
   if (logoutLink) {
     logoutLink.addEventListener('click', function(e) {
@@ -697,10 +900,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
   }
   
-  // 6. Initialize achievements
+  // Initialize achievements
   displayAchievements();
   
-  // 7. Set up animations
+  // Set up animations
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -720,105 +923,5 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('Challenge page initialization complete');
 });
 </script>
-<script>
-  // Card Generation Integration for Challenges
-  document.addEventListener('DOMContentLoaded', () => {
-      // Override the completeDay function to generate cards
-      const originalInit = window.challengeManager;
-      
-      if (challengeManager) {
-          const originalCompleteDay = challengeManager.completeDay;
-          
-          challengeManager.completeDay = async function(challengeId, selectedActions = []) {
-              const challenge = challenges[challengeId];
-              const userChallenge = this.userChallenges[challengeId];
-              
-              // Call original completion
-              await originalCompleteDay.call(this, challengeId, selectedActions);
-              
-              // Generate card for challenge completion
-              const today = new Date().toISOString().split('T')[0];
-              if (userChallenge?.completedDays?.includes(today)) {
-                  // Map challenge types to habit types for card generation
-                  const habitType = {
-                      'fitness-foundation': 'exercise',
-                      'morning-energy': 'exercise',
-                      'deep-work': 'study',
-                      'stress-resilience': 'mindfulness',
-                      'elite-morning': 'study',
-                      'time-mastery': 'study'
-                  }[challengeId] || 'study';
-                  
-                  // Generate card via backend
-                  await generateChallengeCard(challengeId, habitType, userChallenge.totalDays || 1);
-              }
-          };
-      }
-  });
-  
-  // Function to generate card when challenge milestone reached
-  async function generateChallengeCard(challengeId, habitType, streakLength) {
-      const username = localStorage.getItem('username');
-      if (!username) return;
-      
-      try {
-          const response = await fetch('https://vivify-backend.onrender.com/api/habits/update', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  username: username,
-                  habitType: habitType,
-                  value: 100 // Trigger card generation
-              })
-          });
-          
-          const result = await response.json();
-          
-          if (result.newCard) {
-              showCardUnlockAnimation(result.newCard);
-          }
-      } catch (error) {
-          console.error('Failed to generate card:', error);
-      }
-  }
-  
-  function showCardUnlockAnimation(card) {
-      const overlay = document.createElement('div');
-      overlay.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0,0,0,0.9);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-          animation: fadeIn 0.3s;
-      `;
-      
-      overlay.innerHTML = `
-          <div style="text-align: center; color: white;">
-              <h2 style="font-size: 2em; margin-bottom: 20px; animation: bounce 0.5s;">
-                  🎉 New Card Unlocked! 🎉
-              </h2>
-              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                          padding: 20px; border-radius: 15px; animation: slideUp 0.5s;">
-                  <h3>${card.name}</h3>
-                  <p>Rarity: ${card.rarity}</p>
-                  <p>Attack: ${card.attack} | Defense: ${card.defense}</p>
-                  <p style="font-style: italic;">${card.special}</p>
-              </div>
-              <button onclick="this.parentElement.parentElement.remove()" 
-                      style="margin-top: 20px; padding: 10px 30px; font-size: 1.2em;
-                             background: white; border: none; border-radius: 25px;
-                             cursor: pointer;">Awesome!</button>
-          </div>
-      `;
-      
-      document.body.appendChild(overlay);
-  }
-  </script>
 </body>
 </html>
