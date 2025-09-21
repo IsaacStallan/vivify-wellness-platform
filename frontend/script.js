@@ -57,7 +57,7 @@ const ClassManager = {
             // Use API if available, fallback to localStorage
             const authToken = localStorage.getItem('authToken');
             if (authToken) {
-                const response = await fetch('/api/classes/create', {
+                const response = await fetch('https://vivify-backend.onrender.com/api/classes/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             try {
-                const response = await fetch('https://vivify-knox.onrender.com/auth/signup', {
+                const response = await fetch('https://vivify-backend.onrender.com/api/auth/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password }),
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             try {
-                const response = await fetch('/auth/login', {
+                const response = await fetch('https://vivify-backend.onrender.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }),
@@ -319,7 +319,7 @@ async function checkAuthenticationState() {
     if (isLoggedIn && authToken) {
         try {
             // Verify token with server and get fresh user data
-            const response = await fetch('/api/user', {
+            const response = await fetch('https://vivify-backend.onrender.com/api/user', {
                 headers: { 'Authorization': `Bearer ${authToken}` }
             });
             
@@ -434,7 +434,7 @@ window.joinClass = async function() {
     // Try API first
     if (authToken) {
         try {
-            const response = await fetch('/api/classes/join', {
+            const response = await fetch('https://vivify-backend.onrender.com/api/classes/join', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -564,7 +564,7 @@ async function fetchUserData() {
     }
     
     try {
-        const response = await fetch('/api/user', {
+        const response = await fetch('https://vivify-backend.onrender.com/api/user', {
             headers: { 'Authorization': `Bearer ${authToken}` }
         });
         
