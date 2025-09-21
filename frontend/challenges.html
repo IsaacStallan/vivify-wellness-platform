@@ -329,9 +329,11 @@ class EnhancedChallengeManager {
         } catch (error) {
             console.error('Failed to sync challenge data:', error);
         }
-    }
+      }
 
-    async joinChallenge(challengeId) {
+      // Replace your joinChallenge method in the EnhancedChallengeManager class:
+
+      async joinChallenge(challengeId) {
         const ch = challenges[challengeId];
         if (!ch) return this.showNotification('Challenge not found', 'error');
 
@@ -352,54 +354,83 @@ class EnhancedChallengeManager {
         };
 
         await this.saveChallengeData();
-        this.displayChallenges();
-        this.showNotification(`Joined ${ch.name}! Ready to start your journey.`, 'success');
         
+        // CRITICAL FIX: Award points for joining through unified leaderboard
         if (window.VivifyLeaderboard) {
-            window.VivifyLeaderboard.addPoints(25, 'challenge_join', { challengeId });
+            window.VivifyLeaderboard.addPoints(25, 'challenge_join', { 
+                challengeId: challengeId,
+                challengeName: ch.name 
+            });
         }
-    }
-
-    async completeDay(challengeId, selectedActions = []) {
-        const ch = challenges[challengeId];
-        const uc = this.userChallenges[challengeId];
         
-        if (!ch || !uc?.joined) {
-            return this.showNotification('Join the challenge first', 'info');
-        }
-
-        const today = new Date().toISOString().split('T')[0];
-        if (uc.completedDays.includes(today)) {
-            this.showNotification('Already completed today!', 'info');
-            return;
-        }
-
-        uc.completedDays.push(today);
-        uc.lastCompletedDate = today;
-        uc.totalDays = uc.completedDays.length;
+        // Refresh displays
+        this.displayChallenges(); // This calls updateStats() which refreshes everything
         
-        // Update streak
-        this.updateStreak(challengeId);
-        
-        // Check completion and trigger card generation
-        if (uc.totalDays >= ch.totalGoal) {
-            uc.completed = true;
-            
-            // Trigger card generation via backend
-            await this.generateChallengeCard(challengeId);
-            
-            this.showNotification(`Challenge completed! +${ch.points} points`, 'success');
-        } else {
-            const progressPoints = ch.dailyPoints || 10;
-            this.showNotification(`Day completed! +${progressPoints} points. Keep going!`, 'success');
-        }
+        this.showNotification(`Joined ${ch.name}! Ready to start your journey. +25 points!`, 'success');
+      }
 
-        // Save data
-        await this.saveChallengeData();
-        this.displayChallenges();
-    }
+      // Replace your completeDay method in the EnhancedChallengeManager class:
 
-    updateStreak(challengeId) {
+      async completeDay(challengeId, selectedActions = []) {
+          const ch = challenges[challengeId];
+          const uc = this.userChallenges[challengeId];
+          
+          if (!ch || !uc?.joined) {
+              return this.showNotification('Join the challenge first', 'info');
+          }
+
+          const today = new Date().toISOString().split('T')[0];
+          if (uc.completedDays.includes(today)) {
+              this.showNotification('Already completed today!', 'info');
+              return;
+          }
+
+          uc.completedDays.push(today);
+          uc.lastCompletedDate = today;
+          uc.totalDays = uc.completedDays.length;
+          
+          // Update streak
+          this.updateStreak(challengeId);
+          
+          // CRITICAL FIX: Award points through unified leaderboard
+          const dailyPoints = ch.dailyPoints || 10;
+          
+          if (window.VivifyLeaderboard) {
+              window.VivifyLeaderboard.addPoints(dailyPoints, 'challenge_daily', { 
+                  challengeId: challengeId,
+                  challengeName: ch.name 
+              });
+          }
+          
+          // Check completion and trigger card generation
+          if (uc.totalDays >= ch.totalGoal) {
+              uc.completed = true;
+              
+              // Award completion bonus
+              if (window.VivifyLeaderboard) {
+                  const completionBonus = ch.points - (dailyPoints * ch.totalGoal);
+                  if (completionBonus > 0) {
+                      window.VivifyLeaderboard.addPoints(completionBonus, 'challenge_complete', { 
+                          challengeId: challengeId,
+                          challengeName: ch.name 
+                      });
+                  }
+              }
+              
+              // Trigger card generation via backend
+              await this.generateChallengeCard(challengeId);
+              
+              this.showNotification(`Challenge completed! +${ch.points} total points`, 'success');
+          } else {
+              this.showNotification(`Day completed! +${dailyPoints} points. Keep going!`, 'success');
+          }
+
+          // Save data and refresh displays
+          await this.saveChallengeData();
+          this.displayChallenges(); // This will call updateStats() which refreshes everything
+      }
+
+      updateStreak(challengeId) {
         const challenge = this.userChallenges[challengeId];
         const completedDays = challenge.completedDays.sort();
         
@@ -419,7 +450,7 @@ class EnhancedChallengeManager {
         }
         
         challenge.streak = streak;
-    }
+      } 
 
     displayChallenges() {
         const container = document.getElementById('challengesList');
@@ -634,15 +665,32 @@ class EnhancedChallengeManager {
         `;
     }
 
+    // Replace your updateStats() method in the EnhancedChallengeManager class:
+
     updateStats() {
         const active = Object.values(this.userChallenges).filter(c => c.joined && !c.completed).length;
         const completed = Object.values(this.userChallenges).filter(c => c.completed).length;
         
+        // CRITICAL FIX: Get total points from leaderboard
         const totalPoints = window.VivifyLeaderboard ? window.VivifyLeaderboard.getCurrentUserScore() : 0;
 
-        document.getElementById('activeChallenges').textContent = active;
-        document.getElementById('completedChallenges').textContent = completed;
-        document.getElementById('totalPoints').textContent = totalPoints;
+        // Update the display elements
+        const activeChallengesEl = document.getElementById('activeChallenges');
+        const completedChallengesEl = document.getElementById('completedChallenges');
+        const totalPointsEl = document.getElementById('totalPoints');
+
+        if (activeChallengesEl) activeChallengesEl.textContent = active;
+        if (completedChallengesEl) completedChallengesEl.textContent = completed;
+        if (totalPointsEl) totalPointsEl.textContent = totalPoints;
+
+        // CRITICAL FIX: Also refresh the leaderboard display
+        if (window.VivifyLeaderboard) {
+            setTimeout(() => {
+                window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+            }, 100);
+        }
+
+        console.log(`Stats updated: ${active} active, ${completed} completed, ${totalPoints} total points`);
     }
 
     viewDetails(challengeId) {
@@ -861,6 +909,8 @@ function viewFullLeaderboard() {
 let challengeManager;
 
 // Single initialization
+// Replace your DOMContentLoaded event listener with this fixed version:
+
 document.addEventListener('DOMContentLoaded', async function() {
   console.log('Page loading...');
   
@@ -880,13 +930,20 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Initialize ENHANCED challenge manager
   challengeManager = new EnhancedChallengeManager();
   await challengeManager.loadUserData();
-  challengeManager.displayChallenges();
   
-  // Initialize leaderboard
+  // CRITICAL FIX: Initialize leaderboard BEFORE displaying challenges
   if (window.VivifyLeaderboard) {
     window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
     console.log('VivifyLeaderboard initialized successfully');
+    
+    // CRITICAL FIX: Display leaderboard immediately after initialization
+    setTimeout(() => {
+      window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+    }, 100);
   }
+  
+  // Display challenges (this will also update stats)
+  challengeManager.displayChallenges();
   
   // Set up logout
   const logoutLink = document.getElementById('logout-link');
