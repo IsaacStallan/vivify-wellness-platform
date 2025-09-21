@@ -475,227 +475,86 @@
     </main>
 
     <script>
-        class CardCollection {
+        // Add this to your card-collection.html to properly load cards
+        class CardCollectionManager {
             constructor() {
-                this.cards = [];
-                this.filteredCards = [];
-                this.battleData = {};
                 this.username = localStorage.getItem('username');
-                
-                if (!this.username) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                this.init();
-            }
-
-            async init() {
-                await this.loadCards();
-                this.setupEventListeners();
-                this.displayCards();
-                this.updateStats();
+                this.baseURL = 'https://vivify-backend.onrender.com/api';
             }
 
             async loadCards() {
                 try {
-                    const response = await fetch(`https://vivify-backend.onrender.com/api/cards/${this.username}`);
+                    console.log('Loading cards for user:', this.username);
                     
-                    if (!response.ok) {
-                        throw new Error('Failed to load cards');
-                    }
+                    // Try loading from backend first
+                    const response = await fetch(`${this.baseURL}/user/${this.username}`);
                     
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.cards = data.cards || [];
-                        this.filteredCards = [...this.cards];
-                        this.battleData = data.battleData || {};
-                        console.log('Loaded', this.cards.length, 'cards');
+                    if (response.ok) {
+                        const userData = await response.json();
+                        const cards = userData.cardBattleData?.cards || [];
+                        
+                        console.log('Cards loaded from backend:', cards);
+                        
+                        // Store in localStorage for offline access
+                        localStorage.setItem('userCards', JSON.stringify(cards));
+                        
+                        return cards;
                     } else {
-                        console.error('Failed to load cards:', data.error);
-                        this.showEmptyState('Failed to load cards');
+                        throw new Error('Backend not available');
                     }
+                    
                 } catch (error) {
-                    console.error('Error loading cards:', error);
-                    this.showEmptyState('Error loading cards. Please try again.');
+                    console.error('Failed to load from backend:', error);
+                    
+                    // Fallback to localStorage
+                    const localCards = JSON.parse(localStorage.getItem('userCards') || '[]');
+                    console.log('Using local cards:', localCards);
+                    
+                    return localCards;
                 }
             }
 
-            setupEventListeners() {
-                // Filter event listeners
-                document.getElementById('rarityFilter').addEventListener('change', () => this.applyFilters());
-                document.getElementById('typeFilter').addEventListener('change', () => this.applyFilters());
-                document.getElementById('sortFilter').addEventListener('change', () => this.applyFilters());
-                
-                // Logout
-                document.getElementById('logoutLink').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (confirm('Are you sure you want to logout?')) {
-                        localStorage.clear();
-                        window.location.href = 'index.html';
-                    }
-                });
-            }
-
-            applyFilters() {
-                const rarityFilter = document.getElementById('rarityFilter').value;
-                const typeFilter = document.getElementById('typeFilter').value;
-                const sortFilter = document.getElementById('sortFilter').value;
-
-                // Filter cards
-                this.filteredCards = this.cards.filter(card => {
-                    const matchesRarity = !rarityFilter || card.rarity === rarityFilter;
-                    const matchesType = !typeFilter || card.type === typeFilter;
-                    return matchesRarity && matchesType;
-                });
-
-                // Sort cards
-                this.filteredCards.sort((a, b) => {
-                    switch (sortFilter) {
-                        case 'newest':
-                            return new Date(b.createdAt) - new Date(a.createdAt);
-                        case 'oldest':
-                            return new Date(a.createdAt) - new Date(b.createdAt);
-                        case 'power':
-                            return b.power - a.power;
-                        case 'rarity':
-                            const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
-                            return rarityOrder[b.rarity] - rarityOrder[a.rarity];
-                        case 'type':
-                            return a.type.localeCompare(b.type);
-                        default:
-                            return 0;
-                    }
-                });
-
-                this.displayCards();
-            }
-
-            displayCards() {
+            displayCards(cards) {
                 const container = document.getElementById('cardsContainer');
                 
-                if (this.filteredCards.length === 0) {
-                    if (this.cards.length === 0) {
-                        this.showEmptyState('No cards yet! Complete habits and challenges to unlock your first cards.');
-                    } else {
-                        this.showEmptyState('No cards match your current filters.');
-                    }
+                if (!container) {
+                    console.error('Cards container not found');
                     return;
                 }
 
-                const cardsHTML = this.filteredCards.map(card => this.createCardHTML(card)).join('');
-                
-                container.innerHTML = `
-                    <div class="cards-grid">
-                        ${cardsHTML}
-                    </div>
-                `;
-            }
-
-            createCardHTML(card) {
-                const typeIcon = this.getTypeIcon(card.type);
-                const effectText = card.effect.type !== 'none' ? card.effect.description : 'No special effect';
-                const verifiedBadge = card.generatedFrom?.verified ? '<span class="verified-badge">VERIFIED</span>' : '';
-                
-                return `
-                    <div class="card ${card.rarity}" style="--rarity-color: ${this.getRarityColor(card.rarity)}">
-                        <div class="card-header">
-                            <div class="card-type">
-                                <i class="${typeIcon}"></i>
-                                ${card.type}
-                            </div>
-                            <div class="card-cost">⚡${card.cost}</div>
+                if (!cards || cards.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.7);">
+                            <h3>No Cards Yet</h3>
+                            <p>Complete habits and challenges to unlock your first cards!</p>
+                            <a href="habits-tracker.html" style="color: #f39c12;">Start with Daily Habits →</a>
                         </div>
-                        
-                        <div class="card-name">${card.name}</div>
-                        <div class="card-power">${card.power}</div>
-                        
-                        <div class="card-description">
-                            <div class="card-effect">${effectText}</div>
-                            
-                            <div class="card-meta">
-                                <div>
-                                    <div class="card-rarity">${card.rarity}</div>
-                                    ${verifiedBadge}
-                                </div>
-                                <div class="card-stats">
-                                    Streak: ${card.generatedFrom?.streakLength || 1}<br>
-                                    Used: ${card.timesUsed || 0}x
-                                </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = cards.map(card => `
+                    <div class="card-item" data-rarity="${card.rarity}">
+                        <div class="card-content">
+                            <h3>${card.name}</h3>
+                            <div class="card-rarity">${card.rarity}</div>
+                            <div class="card-stats">
+                                <span>ATK: ${card.attack}</span>
+                                <span>DEF: ${card.defense}</span>
                             </div>
+                            <div class="card-special">${card.special}</div>
+                            <div class="card-source">Source: ${card.source || 'Unknown'}</div>
                         </div>
                     </div>
-                `;
-            }
-
-            showEmptyState(message) {
-                const container = document.getElementById('cardsContainer');
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-cards-blank"></i>
-                        <h3>No Cards Found</h3>
-                        <p>${message}</p>
-                    </div>
-                `;
-            }
-
-            updateStats() {
-                const stats = this.calculateStats();
-                
-                document.getElementById('totalCards').textContent = stats.totalCards;
-                document.getElementById('battleLevel').textContent = this.battleData.battleLevel || 1;
-                document.getElementById('battleTrophies').textContent = this.battleData.battleTrophies || 0;
-            }
-
-            calculateStats() {
-                return {
-                    totalCards: this.cards.length,
-                    byRarity: this.cards.reduce((acc, card) => {
-                        acc[card.rarity] = (acc[card.rarity] || 0) + 1;
-                        return acc;
-                    }, {}),
-                    byType: this.cards.reduce((acc, card) => {
-                        acc[card.type] = (acc[card.type] || 0) + 1;
-                        return acc;
-                    }, {}),
-                    averagePower: this.cards.length > 0 ? 
-                        Math.round(this.cards.reduce((sum, card) => sum + card.power, 0) / this.cards.length) : 0
-                };
-            }
-
-            getTypeIcon(type) {
-                const icons = {
-                    'Endurance': 'fas fa-dumbbell',
-                    'Focus': 'fas fa-brain',
-                    'Calm': 'fas fa-leaf',
-                    'Discipline': 'fas fa-fist-raised'
-                };
-                return icons[type] || 'fas fa-star';
-            }
-
-            getRarityColor(rarity) {
-                const colors = {
-                    common: '#8e8e93',
-                    uncommon: '#34c759',
-                    rare: '#007aff',
-                    epic: '#af52de',
-                    legendary: '#ff9500'
-                };
-                return colors[rarity] || colors.common;
+                `).join('');
             }
         }
 
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-            
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            new CardCollection();
+        // Initialize card collection on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const cardManager = new CardCollectionManager();
+            const cards = await cardManager.loadCards();
+            cardManager.displayCards(cards);
         });
     </script>
 </body>

@@ -1176,6 +1176,151 @@ window.addEventListener('resize', function() {
             }
         ];
 
+        // Add this new class after the defaultHabits array
+        class VivifyDataManager {
+            constructor() {
+                this.baseURL = 'https://vivify-backend.onrender.com/api';
+                this.username = localStorage.getItem('username');
+            }
+
+            // Load ALL user data on login/page load
+            async loadUserData() {
+                try {
+                    console.log('Loading user data for:', this.username);
+                    
+                    const response = await fetch(`${this.baseURL}/user/${this.username}`);
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // Store ALL data in localStorage for offline access
+                    localStorage.setItem('userHabits', JSON.stringify(data.habitsData || {}));
+                    localStorage.setItem('userChallenges', JSON.stringify(data.challengeData || {}));
+                    localStorage.setItem('userPoints', data.totalPoints || 0);
+                    localStorage.setItem('userStreak', data.currentStreak || 0);
+                    localStorage.setItem('userCards', JSON.stringify(data.cards || []));
+                    localStorage.setItem('overallScore', data.overallScore || 0);
+                    
+                    // Store habits data in the format your habits page expects
+                    const habitsData = {
+                        habits: JSON.parse(localStorage.getItem('defaultHabits') || JSON.stringify(defaultHabits)),
+                        dailyCompletions: data.habitsData?.dailyCompletions || {},
+                        streaks: data.habitsData?.streaks || {},
+                        achievements: data.habitsData?.achievements || {},
+                        lastActiveDate: new Date().toDateString()
+                    };
+                    
+                    // Update habit completion status from backend data
+                    if (data.habitsData) {
+                        Object.keys(data.habitsData).forEach(habitType => {
+                            const habitData = data.habitsData[habitType];
+                            if (habitData && habitData.completedToday) {
+                                // Find matching habit and mark as completed
+                                const habit = habitsData.habits.find(h => this.mapHabitIdToType(h.id) === habitType);
+                                if (habit) {
+                                    habit.completed = true;
+                                }
+                            }
+                        });
+                    }
+                    
+                    localStorage.setItem('habitsData', JSON.stringify(habitsData));
+                    
+                    console.log('User data loaded successfully');
+                    return data;
+                } catch (error) {
+                    console.error('Failed to load user data:', error);
+                    return null;
+                }
+            }
+
+            mapHabitIdToType(habitId) {
+                const map = {
+                    'morning_routine': 'exercise',
+                    'exercise': 'exercise',
+                    'deep_work': 'study',
+                    'nutrition_tracking': 'nutrition',
+                    'reading': 'study',
+                    'reflection': 'mindfulness',
+                    'sleep_prep': 'sleep',
+                    'skill_practice': 'study'
+                };
+                return map[habitId] || 'study';
+            }
+
+            // Save habit completion to backend
+            async saveHabitCompletion(habitId, points) {
+                try {
+                    const habitType = this.mapHabitIdToType(habitId);
+                    
+                    const response = await fetch(`${this.baseURL}/habits/update`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: this.username,
+                            habitType: habitType,
+                            value: 100 // Mark as completed
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Update local storage with new data
+                        localStorage.setItem('userHabits', JSON.stringify(result.habits));
+                        localStorage.setItem('userPoints', result.totalPoints);
+                        
+                        // Update cards if new one unlocked
+                        if (result.newCard) {
+                            const cards = JSON.parse(localStorage.getItem('userCards') || '[]');
+                            cards.push(result.newCard);
+                            localStorage.setItem('userCards', JSON.stringify(cards));
+                            
+                            // Show card unlock animation
+                            this.showCardUnlockAnimation(result.newCard);
+                        }
+                    }
+                    
+                    return result;
+                } catch (error) {
+                    console.error('Failed to save habit to backend:', error);
+                    return null;
+                }
+            }
+
+            showCardUnlockAnimation(card) {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.9); display: flex; align-items: center;
+                    justify-content: center; z-index: 10000; animation: fadeIn 0.3s;
+                `;
+                
+                overlay.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <h2 style="font-size: 2em; margin-bottom: 20px;">🎉 New Card Unlocked! 🎉</h2>
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                    padding: 20px; border-radius: 15px;">
+                            <h3>${card.name}</h3>
+                            <p>Rarity: ${card.rarity}</p>
+                            <p>Attack: ${card.attack} | Defense: ${card.defense}</p>
+                            <p style="font-style: italic;">${card.special}</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                style="margin-top: 20px; padding: 10px 30px; font-size: 1.2em;
+                                    background: white; border: none; border-radius: 25px; cursor: pointer;">
+                            Awesome!
+                        </button>
+                    </div>
+                    <style>@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }</style>
+                `;
+                
+                document.body.appendChild(overlay);
+            }
+        }
+
         const achievements = [
             { id: 'first_habit', name: 'Getting Started', icon: 'fas fa-play', description: 'Complete your first habit' },
             { id: 'perfect_day', name: 'Perfect Day', icon: 'fas fa-star', description: 'Complete all habits in one day' },
@@ -1188,13 +1333,63 @@ window.addEventListener('resize', function() {
         let habitsData = {};
         let userStats = {};
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn !== 'true' || !username) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Initialize data manager and load from backend
+            const dataManager = new VivifyDataManager();
+            await dataManager.loadUserData();
+            
+            // Now initialize the rest of your app
             initializeHabitsTracker();
             loadHabitsData();
             updateDisplay();
             
+            // Update your toggleHabit function to save to backend
+            const originalToggleHabit = window.toggleHabit;
+            window.toggleHabit = async function(habitId) {
+                const habit = habitsData.habits.find(h => h.id === habitId);
+                if (!habit || habit.completed) return;
+
+                // Mark as completed locally first
+                habit.completed = true;
+                const today = new Date().toDateString();
+                if (!habitsData.dailyCompletions[today]) {
+                    habitsData.dailyCompletions[today] = [];
+                }
+                habitsData.dailyCompletions[today].push(habitId);
+                
+                // Save locally
+                saveHabitsData();
+                
+                // Save to backend and potentially unlock card
+                await dataManager.saveHabitCompletion(habitId, habit.points);
+                
+                // Update displays
+                calculateStats();
+                updateDisplay();
+                
+                // Add points to leaderboard
+                if (window.VivifyLeaderboard) {
+                    window.VivifyLeaderboard.addPoints(habit.points, 'habit_complete', { 
+                        habitId: habitId,
+                        habitName: habit.name 
+                    });
+                }
+                
+                // Show completion notification
+                showNotification(`${habit.name} completed! +${habit.points} points`, 'success');
+            };
+            
+            // Keep all your existing initialization code below this...
             const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-            const username = localStorage.getItem('username');
             
             if (window.VivifyLeaderboard && username) {
                 window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');

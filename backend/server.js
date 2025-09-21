@@ -406,6 +406,27 @@ app.post('/api/challenges/update', async (req, res) => {
   }
 });
 
+// Add to server.js for challenge data syncing
+app.post('/api/challenges/sync', async (req, res) => {
+  try {
+    const { username, challengeData } = req.body;
+    
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    user.challengeData = challengeData;
+    user.markModified('challengeData');
+    
+    await user.save();
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to sync challenge data' });
+  }
+});
+
 // POST /api/cards/generate - Generate card from habit completion
 app.post('/api/cards/generate', async (req, res) => {
   try {
