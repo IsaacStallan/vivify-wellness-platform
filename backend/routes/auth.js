@@ -237,44 +237,74 @@ router.put('/profile', authenticateToken, async (req, res) => {
 });
 
 // Add this route to your auth.js file if you haven't already:
-// POST /api/auth/performance-baseline - Save performance baseline data
+// POST /api/auth/performance-baseline - Save performance baseline data (FIXED VERSION)
 router.post('/performance-baseline', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const performanceData = req.body;
         
-        console.log('Saving performance data for user:', userId);
-        console.log('Performance data:', performanceData);
+        console.log('=== PERFORMANCE BASELINE SAVE ===');
+        console.log('User ID:', userId);
+        console.log('Raw performance data:', JSON.stringify(performanceData, null, 2));
+        console.log('Calculated scores:', performanceData.calculatedScores);
         
-        // Update user with performance data
+        // Extract the actual scores from the request
+        const scores = performanceData.calculatedScores || {};
+        
+        console.log('Extracted scores:', {
+            physical: scores.physical,
+            mental: scores.mental,
+            nutrition: scores.nutrition,
+            lifeSkills: scores.lifeSkills,
+            overall: scores.overall
+        });
+        
+        // Update user with DIRECT field mapping (matching your MongoDB schema)
+        const updateData = {
+            // Direct score fields (matching MongoDB structure)
+            fitnessScore: scores.physical || 0,
+            mentalScore: scores.mental || 0,
+            nutritionScore: scores.nutrition || 0,
+            lifeSkillsScore: scores.lifeSkills || 0,
+            overallScore: scores.overall || 0,
+            
+            // Baseline completion tracking
+            baselineCompleted: true,
+            
+            // Store the structured performance data for potential future use
+            'performanceData.hasCompletedBaseline': true,
+            'performanceData.baselineCompletedAt': new Date(),
+            'performanceData.physicalFitness': performanceData.physicalFitness,
+            'performanceData.academicPerformance': performanceData.academicPerformance,
+            'performanceData.mentalWellbeing': performanceData.mentalWellbeing,
+            'performanceData.socialSkills': performanceData.socialSkills
+        };
+        
+        console.log('Update data being sent to MongoDB:', updateData);
+        
         const user = await User.findByIdAndUpdate(
             userId,
-            {
-                $set: {
-                    'performanceData.hasCompletedBaseline': true,
-                    'performanceData.baselineCompletedAt': new Date(),
-                    'performanceData.physicalFitness': performanceData.physicalFitness,
-                    'performanceData.academicPerformance': performanceData.academicPerformance,
-                    'performanceData.mentalWellbeing': performanceData.mentalWellbeing,
-                    'performanceData.socialSkills': performanceData.socialSkills,
-                    'performanceData.scores.physical': performanceData.calculatedScores?.physical || 0,
-                    'performanceData.scores.mental': performanceData.calculatedScores?.mental || 0,
-                    'performanceData.scores.academic': performanceData.calculatedScores?.nutrition || 0,
-                    'performanceData.scores.overall': performanceData.calculatedScores?.overall || 0
-                }
-            },
+            { $set: updateData },
             { new: true, runValidators: true }
         ).select('-password');
 
         if (!user) {
+            console.log('❌ User not found for ID:', userId);
             return res.status(404).json({
                 success: false,
                 error: 'User not found'
             });
         }
 
-        console.log('Performance data saved successfully for:', user.username);
-        console.log('hasCompletedBaseline is now:', user.performanceData?.hasCompletedBaseline);
+        console.log('✅ Performance data saved successfully');
+        console.log('Updated user scores:', {
+            fitnessScore: user.fitnessScore,
+            mentalScore: user.mentalScore,
+            nutritionScore: user.nutritionScore,
+            lifeSkillsScore: user.lifeSkillsScore,
+            overallScore: user.overallScore,
+            baselineCompleted: user.baselineCompleted
+        });
 
         res.json({
             success: true,
@@ -286,12 +316,21 @@ router.post('/performance-baseline', authenticateToken, async (req, res) => {
                 school: user.school,
                 yearLevel: user.yearLevel,
                 hasCompletedBaseline: user.performanceData?.hasCompletedBaseline || false,
+                baselineCompleted: user.baselineCompleted,
+                scores: {
+                    fitness: user.fitnessScore,
+                    mental: user.mentalScore,
+                    nutrition: user.nutritionScore,
+                    lifeSkills: user.lifeSkillsScore,
+                    overall: user.overallScore
+                },
                 performanceData: user.performanceData
             }
         });
 
     } catch (error) {
-        console.error('Performance data save error:', error);
+        console.error('❌ Performance data save error:', error);
+        console.error('Error details:', error.message);
         res.status(500).json({
             success: false,
             error: 'Failed to save performance data',
