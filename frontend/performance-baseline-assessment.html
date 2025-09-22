@@ -1321,15 +1321,17 @@ window.addEventListener('resize', function() {
 
         // NEW: Backend integration function that matches your backend route structure
         async function savePerformanceDataToBackend(scores, responses) {
-            const API_BASE_URL = 'http://localhost:3001/api';
+            const API_BASE_URL = 'https://vivify-backend.onrender.com/api'; // FIXED URL
             const authToken = localStorage.getItem('authToken');
             
+            console.log('🔍 API_BASE_URL:', API_BASE_URL);
+            console.log('🔑 Auth token:', authToken ? 'EXISTS' : 'MISSING');
+            
             if (!authToken) {
-                console.log('No auth token, skipping backend save');
+                console.log('❌ No auth token, skipping backend save');
                 return;
             }
 
-            // Transform the data to match your backend User model structure
             const backendData = {
                 physicalFitness: {
                     currentLevel: scores.physical >= 75 ? 'advanced' : scores.physical >= 55 ? 'intermediate' : 'beginner',
@@ -1350,7 +1352,7 @@ window.addEventListener('resize', function() {
                     confidenceLevel: Math.floor(scores.overall / 10),
                     socialGoals: ['leadership', 'communication']
                 },
-                // ADD THIS: Include the actual calculated scores
+                // CRITICAL: Include the calculated scores
                 calculatedScores: {
                     physical: scores.physical,
                     mental: scores.mental,
@@ -1361,7 +1363,8 @@ window.addEventListener('resize', function() {
             };
 
             try {
-                console.log('Sending performance data to backend:', backendData);
+                console.log('🚀 Sending assessment data to:', `${API_BASE_URL}/auth/performance-baseline`);
+                console.log('📤 Request data:', JSON.stringify(backendData, null, 2));
                 
                 const response = await fetch(`${API_BASE_URL}/auth/performance-baseline`, {
                     method: 'POST',
@@ -1372,25 +1375,24 @@ window.addEventListener('resize', function() {
                     body: JSON.stringify(backendData)
                 });
 
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response ok:', response.ok);
+
                 const result = await response.json();
-                console.log('Backend response:', result);
+                console.log('📊 Backend response:', result);
 
                 if (result.success) {
-                    console.log('✅ Performance data saved to backend successfully');
-                    // Update local storage with backend response if it has additional data
-                    if (result.user && result.user.performanceData) {
-                        const existingData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-                        existingData.backendSynced = true;
-                        existingData.serverData = result.user.performanceData;
-                        localStorage.setItem('performanceData', JSON.stringify(existingData));
-                    }
+                    console.log('✅ Assessment scores saved to database');
+                    return result;
                 } else {
                     console.error('❌ Backend save failed:', result.error);
+                    throw new Error(result.error || 'Backend save failed');
                 }
 
             } catch (error) {
                 console.error('❌ Network error saving to backend:', error);
-                // Don't throw - we'll continue with local storage only
+                console.error('❌ Error details:', error.message);
+                throw error;
             }
         }
 
