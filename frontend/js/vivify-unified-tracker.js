@@ -709,8 +709,12 @@ class VivifyUnifiedTracker {
         const totalHabits = allHabits.length;
         const currentStreak = this.calculateCurrentStreak();
         const longestStreak = Math.max(...Object.values(this.data.streaks), 0);
-        const weeklyRate = this.calculateWeeklyCompletionRate();
-
+        
+        // Use the existing method and average the rates
+        const rates = this.calculateWeeklyCompletionRates();
+        const avgRate = Object.values(rates).reduce((sum, rate) => sum + rate, 0) / 4;
+        const weeklyRate = Math.round(avgRate * 100);
+    
         return {
             habits: allHabits,
             stats: {
