@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivify - Performance Hub</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #f39c12;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+        }
+
+        /* Tab Navigation */
+        .app-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 0.5rem;
+            margin-bottom: 3rem;
+            gap: 0.5rem;
+        }
+
+        .tab-button {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .tab-button i {
+            font-size: 1rem;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Styles */
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #f39c12;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .overall-score {
+            text-align: center;
+        }
+
+        .score-display {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#f39c12 var(--percentage), rgba(255, 255, 255, 0.1) var(--percentage));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            width: 140px;
+            height: 140px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #f39c12;
+            position: relative;
+            z-index: 1;
+        }
+
+        .score-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .category-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .physical-icon { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        .mental-icon { background: rgba(52, 152, 219, 0.15); color: #3498db; }
+        .nutrition-icon { background: rgba(39, 174, 96, 0.15); color: #27ae60; }
+        .skills-icon { background: rgba(155, 89, 182, 0.15); color: #9b59b6; }
+
+        .category-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .category-score {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .physical-score { color: #e74c3c; }
+        .mental-score { color: #3498db; }
+        .nutrition-score { color: #27ae60; }
+        .skills-score { color: #9b59b6; }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Habits Styles */
+        .habits-header {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habits-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .header-content h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .streak-display {
+            text-align: center;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 2rem;
+            border-radius: 20px;
+            min-width: 150px;
+        }
+
+        .streak-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .streak-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: #f39c12;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Habit Cards */
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .habit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .habit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .habit-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .habit-card.completed {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .habit-card.completed::before {
+            background: #27ae60;
+            transform: scaleX(1);
+        }
+
+        .habit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .habit-info h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .habit-category {
+            color: #f39c12;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .habit-streak {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #f39c12;
+            font-weight: 600;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 0.5rem;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .habit-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .habit-progress {
+            margin-bottom: 2rem;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .habit-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: #fff;
+            flex: 1;
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-complete:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #f39c12;
+            border: 2px solid rgba(243, 156, 18, 0.2);
+            padding: 0.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.4);
+        }
+
+        /* Challenges Styles */
+        .challenges-hero {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenges-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .challenges-hero h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .challenges-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .challenge-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .challenge-info h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .challenge-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .action-card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f39c12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #000;
+            font-size: 1.25rem;
+        }
+
+        .action-label {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            font-weight: 600;
+        }
+
+        .notification.info {
+            background: #3498db;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-overview {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .app-container {
+                padding: 100px 1rem 2rem;
+            }
+
+            .app-tabs {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .habits-header {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Load your unified tracker and scripts -->
+    <script src="js/vivify-unified-tracker.js"></script>
+    <script src="js/unified-leaderboard.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Vivify</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="app.html" class="active">App</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logout-link">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="app-container">
+        <!-- Tab Navigation -->
+        <div class="app-tabs">
+            <button class="tab-button active" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </button>
+            <button class="tab-button" data-tab="habits">
+                <i class="fas fa-target"></i>
+                Daily Habits
+            </button>
+            <button class="tab-button" data-tab="challenges">
+                <i class="fas fa-trophy"></i>
+                Challenges
+            </button>
+        </div>
+
+        <!-- Dashboard Tab Content -->
+        <div id="dashboard-tab" class="tab-content active">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span id="userName">Champion</span>!</h1>
+                    <p>Track your performance metrics and build championship habits</p>
+                </div>
+            </div>
+
+            <!-- Performance Overview -->
+            <div class="dashboard-grid">
+                <div class="main-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-chart-line"></i>
+                                Performance Overview
+                            </h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="performance-overview">
+                                <div class="overall-score">
+                                    <div class="score-display">
+                                        <div class="score-circle" style="--percentage: 0deg">
+                                            <span class="score-value" id="overallScore">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-label">Performance Score</div>
+                                </div>
+                                
+                                <div class="categories-grid">
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon physical-icon">
+                                                <i class="fas fa-dumbbell"></i>
+                                            </div>
+                                            <span class="category-name">Physical Performance</span>
+                                        </div>
+                                        <div class="category-score physical-score" id="physicalScore">0</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="physicalProgress" style="width: 0%; background: #e74c3c;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon mental-icon">
+                                                <i class="fas fa-brain"></i>
+                                            </div>
+                                            <span class="category-name">Focus & Resilience</span>
+                                        </div>
+                                        <div class="category-score mental-score" id="mentalScore">0</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="mentalProgress" style="width: 0%; background: #3498db;"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon nutrition-icon">
+                                                <i class="fas fa-apple-alt"></i>
+                                            </div>
+                                            <span class="category-name">Smart Nutrition</span>
+                                        </div>
+                                        <div class="category-score nutrition-score" id="nutritionScore">0</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="nutritionProgress" style="width: 0%; background: #27ae60;"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon skills-icon">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </div>
+                                            <span class="category-name">Life Mastery</span>
+                                        </div>
+                                        <div class="category-score skills-score" id="lifeSkillsScore">0</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="skillsProgress" style="width: 0%; background: #9b59b6;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-clock"></i>
+                                Recent Activity
+                            </h2>
+                        </div>
+                        <div class="card-content">
+                            <div id="recentActivity">
+                                <!-- Recent activity will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Panel -->
+                <div class="sidebar-panel">
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-bolt"></i>
+                                Quick Actions
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="quick-actions">
+                                <button class="action-card" onclick="switchTab('habits')">
+                                    <div class="action-icon">
+                                        <i class="fas fa-target"></i>
+                                    </div>
+                                    <span class="action-label">Track Habits</span>
+                                </button>
+                                <button class="action-card" onclick="switchTab('challenges')">
+                                    <div class="action-icon">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <span class="action-label">Challenges</span>
+                                </button>
+                                <a href="community.html" class="action-card">
+                                    <div class="action-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <span class="action-label">Community</span>
+                                </a>
+                                <a href="profile.html" class="action-card">
+                                    <div class="action-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <span class="action-label">Profile</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-bar"></i>
+                                This Week
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stats-grid" id="weeklyStats">
+                                <div class="stat-card">
+                                    <div class="stat-value" id="weeklyStreak">0</div>
+                                    <div class="stat-label">Day Streak</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="weeklyHabits">0</div>
+                                    <div class="stat-label">Habits Done</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="weeklyScore">0</div>
+                                    <div class="stat-label">Avg Score</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="weeklyXP">0</div>
+                                    <div class="stat-label">XP Earned</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habits Tab Content -->
+        <div id="habits-tab" class="tab-content">
+            <!-- Habits Header -->
+            <div class="habits-header">
+                <div class="header-content">
+                    <h2>Daily Performance Habits</h2>
+                    <p>Build the daily routines that separate high performers from everyone else</p>
+                </div>
+                <div class="streak-display">
+                    <div class="streak-number" id="habitsStreak">0</div>
+                    <div class="streak-label">Day Streak</div>
+                </div>
+            </div>
+
+            <!-- Habits Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-value" id="completedToday">0</div>
+                    <div class="stat-label">Completed Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-target"></i>
+                    </div>
+                    <div class="stat-value" id="totalHabits">0</div>
+                    <div class="stat-label">Daily Habits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-value" id="longestStreak">0</div>
+                    <div class="stat-label">Best Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-value" id="completionRate">0%</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+
+            <!-- Today's Habits -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-calendar-day"></i>
+                        Today's Performance Habits
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <div class="habits-grid" id="habitsGrid">
+                        <!-- Habit cards will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges Tab Content -->
+        <div id="challenges-tab" class="tab-content">
+            <!-- Challenges Hero -->
+            <div class="challenges-hero">
+                <h2>Performance Challenges</h2>
+                <p>Push your limits, compete with peers, and unlock your peak potential through structured challenges</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="activeChallenges">0</span>
+                        <span class="hero-stat-label">Active Challenges</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="completedChallenges">0</span>
+                        <span class="hero-stat-label">Completed</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="totalPoints">0</span>
+                        <span class="hero-stat-label">Total Points</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenge Cards -->
+            <div id="challengesList">
+                <!-- Challenges will be populated by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables
+        let vivifyTracker;
+        let currentTab = 'dashboard';
+
+        // Challenge definitions
+        const challenges = {
+            'fitness-foundation': {
+                name: '30-Day Fitness Foundation',
+                type: 'monthly',
+                difficulty: 'Beginner',
+                description: 'Build a solid fitness foundation with 30 minutes of daily physical activity.',
+                points: 500,
+                dailyPoints: 15,
+                duration: 30,
+                totalGoal: 30
+            },
+            'morning-energy': {
+                name: 'Morning Energy Boost',
+                type: 'weekly',
+                difficulty: 'Beginner',
+                description: 'Start each day with 10 minutes of movement to boost energy and mental clarity.',
+                points: 150,
+                dailyPoints: 20,
+                duration: 7,
+                totalGoal: 7
+            },
+            'deep-work': {
+                name: 'Deep Work Mastery',
+                type: 'weekly',
+                difficulty: 'Intermediate',
+                description: 'Complete 90-minute focused work sessions without distractions.',
+                points: 200,
+                dailyPoints: 25,
+                duration: 7,
+                totalGoal: 7
+            }
+        };
+
+        // Tab Management
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+
+            // Handle URL hash navigation
+            const hash = window.location.hash.substring(1);
+            if (hash && ['dashboard', 'habits', 'challenges'].includes(hash)) {
+                switchTab(hash);
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            // Update URL hash
+            window.location.hash = tabName;
+            currentTab = tabName;
+
+            // Load content for the active tab
+            loadTabContent(tabName);
+        }
+
+        async function loadTabContent(tabName) {
+            switch(tabName) {
+                case 'dashboard':
+                    displayDashboard();
+                    break;
+                case 'habits':
+                    displayHabits();
+                    break;
+                case 'challenges':
+                    displayChallenges();
+                    break;
+            }
+        }
+
+        // Dashboard Functions
+        function displayDashboard() {
+            const data = vivifyTracker.getDashboardData();
+            
+            updateUserName();
+            updatePerformanceScores(data.scores);
+            updateRecentActivity(data.activities);
+            updateWeeklyStats(data.streaks, data.totalPoints);
+        }
+
+        function updateUserName() {
+            const username = localStorage.getItem('username');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const displayName = username || userProfile.name || 'Performer';
+            
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = displayName;
+            }
+        }
+
+        function updatePerformanceScores(scores) {
+            const safeScore = (value) => isNaN(value) ? 0 : Math.round(value);
+            
+            document.getElementById('overallScore').textContent = safeScore(scores.overall);
+            document.getElementById('physicalScore').textContent = safeScore(scores.physical);
+            document.getElementById('mentalScore').textContent = safeScore(scores.mental);
+            document.getElementById('nutritionScore').textContent = safeScore(scores.nutrition);
+            document.getElementById('lifeSkillsScore').textContent = safeScore(scores.lifeSkills);
+            
+            // Update progress bars
+            document.getElementById('physicalProgress').style.width = `${safeScore(scores.physical)}%`;
+            document.getElementById('mentalProgress').style.width = `${safeScore(scores.mental)}%`;
+            document.getElementById('nutritionProgress').style.width = `${safeScore(scores.nutrition)}%`;
+            document.getElementById('skillsProgress').style.width = `${safeScore(scores.lifeSkills)}%`;
+            
+            // Update score circle
+            const scoreCircle = document.querySelector('.score-circle');
+            if (scoreCircle) {
+                const percentage = (safeScore(scores.overall) / 100) * 360;
+                scoreCircle.style.setProperty('--percentage', `${percentage}deg`);
+            }
+        }
+
+        function updateRecentActivity(activities) {
+            const container = document.getElementById('recentActivity');
+            if (!container) return;
+
+            if (!activities || activities.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #666;">
+                        <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <h3 style="color: #ccc; margin-bottom: 1rem;">No recent activity</h3>
+                        <p>Start tracking your performance to see your progress here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const recentActivities = activities.slice(0, 5);
+            container.innerHTML = recentActivities.map(activity => {
+                const timeAgo = getTimeAgo(activity.timestamp);
+                return `
+                    <div style="display: flex; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(243,156,18,0.1); display: flex; align-items: center; justify-content: center; margin-right: 1rem; color: #f39c12;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-weight: 500; margin-bottom: 0.25rem;">${activity.description}</div>
+                            <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">${timeAgo}</div>
+                        </div>
+                        <div style="color: #27ae60; font-weight: 600;">+${activity.points} XP</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateWeeklyStats(streaks, totalPoints) {
+            const weeklyStreak = streaks.currentStreak || 0;
+            const habitsCompleted = vivifyTracker.getHabitsPageData().stats.completedToday;
+            const weeklyScore = Math.round(vivifyTracker.data.scores?.overall || 0);
+            const weeklyXP = vivifyTracker.data.totalXP || 0;
+
+            document.getElementById('weeklyStreak').textContent = weeklyStreak;
+            document.getElementById('weeklyHabits').textContent = habitsCompleted;
+            document.getElementById('weeklyScore').textContent = weeklyScore;
+            document.getElementById('weeklyXP').textContent = weeklyXP;
+        }
+
+        // Habits Functions
+        function displayHabits() {
+            const data = vivifyTracker.getHabitsPageData();
+            
+            updateHabitsStats(data.stats);
+            updateHabitsGrid(data.habits);
+        }
+
+        function updateHabitsStats(stats) {
+            document.getElementById('habitsStreak').textContent = stats.currentStreak;
+            document.getElementById('completedToday').textContent = stats.completedToday;
+            document.getElementById('totalHabits').textContent = stats.totalHabits;
+            document.getElementById('longestStreak').textContent = stats.longestStreak;
+            document.getElementById('completionRate').textContent = stats.weeklyRate + '%';
+        }
+
+        function updateHabitsGrid(habits) {
+            const grid = document.getElementById('habitsGrid');
+            
+            grid.innerHTML = habits.map(habit => {
+                const progress = habit.completed ? 100 : 0;
+                    
+                return `
+                    <div class="habit-card ${habit.completed ? 'completed' : ''}">
+                        <div class="habit-header">
+                            <div class="habit-info">
+                                <h3>${habit.name}</h3>
+                                <div class="habit-category">${habit.category}</div>
+                            </div>
+                            <div class="habit-streak">
+                                ${habit.streak || 0} day streak
+                            </div>
+                        </div>
+                        <div class="habit-description">${habit.description}</div>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span>${habit.completed ? 'Completed' : 'Not started'}</span>
+                                <span>+${habit.points} XP</span>
+                            </div>
+                        </div>
+                        <div class="habit-actions">
+                            <button class="btn btn-complete" 
+                                    onclick="completeHabit('${habit.id}')"
+                                    ${habit.completed ? 'disabled' : ''}>
+                                ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
+                            </button>
+                            <button class="btn btn-secondary" onclick="editHabit('${habit.id}')" title="Edit habit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Challenges Functions
+        function displayChallenges() {
+            const data = vivifyTracker.getChallengesData();
+            
+            updateChallengeStats(data.stats);
+            updateChallengesGrid(data.challenges);
+        }
+
+        function updateChallengeStats(stats) {
+            document.getElementById('activeChallenges').textContent = stats.active;
+            document.getElementById('completedChallenges').textContent = stats.completed;
+            document.getElementById('totalPoints').textContent = stats.totalPoints;
+        }
+
+        function updateChallengesGrid(userChallenges) {
+            const container = document.getElementById('challengesList');
+            if (!container) return;
+
+            container.innerHTML = Object.entries(challenges).map(([id, challenge]) => {
+                const userChallenge = userChallenges[id];
+                const isJoined = userChallenge?.joined || false;
+                const isCompleted = userChallenge?.completed || false;
+                
+                let cardClass = 'challenge-card';
+                if (isCompleted) cardClass += ' completed';
+                else if (isJoined) cardClass += ' active';
+
+                return `
+                    <div class="${cardClass}" data-challenge="${id}">
+                        <div class="challenge-header">
+                            <div class="challenge-info">
+                                <h3>${challenge.name}</h3>
+                            </div>
+                            <div class="challenge-badge">${challenge.type}</div>
+                        </div>
+                        <div class="challenge-description">${challenge.description}</div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            ${!isJoined ? 
+                                `<button class="btn btn-complete" onclick="joinChallenge('${id}')" style="flex: 1;">Join Challenge</button>` :
+                                isCompleted ? 
+                                    `<button class="btn" disabled style="flex: 1; background: #27ae60; color: #fff;">Challenge Completed ✓</button>` :
+                                    `<button class="btn" disabled style="flex: 1; background: #3498db; color: #fff;">Challenge Active</button>`
+                            }
+                            <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Interaction Functions
+        async function completeHabit(habitId) {
+            const success = await vivifyTracker.completeHabit(habitId);
+            if (success) {
+                // Refresh current tab display
+                loadTabContent(currentTab);
+            }
+        }
+
+        async function joinChallenge(challengeId) {
+            const success = await vivifyTracker.joinChallenge(challengeId);
+            if (success) {
+                loadTabContent(currentTab);
+            }
+        }
+
+        function editHabit(habitId) {
+            showNotification('Habit editing feature coming soon!', 'info');
+        }
+
+        function viewDetails(challengeId) {
+            const challenge = challenges[challengeId];
+            showNotification(`${challenge.name}\n\n${challenge.description}\n\nReward: ${challenge.points} points`, 'info');
+        }
+
+        // Utility Functions
+        function getTimeAgo(timestamp) {
+            try {
+                const now = new Date();
+                const activityTime = new Date(timestamp);
+                const diffInMinutes = Math.floor((now - activityTime) / (1000 * 60));
+                
+                if (diffInMinutes < 1) return 'Just now';
+                if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+                
+                const diffInHours = Math.floor(diffInMinutes / 60);
+                if (diffInHours < 24) return `${diffInHours}h ago`;
+                
+                const diffInDays = Math.floor(diffInHours / 24);
+                if (diffInDays === 1) return 'Yesterday';
+                return `${diffInDays} days ago`;
+            } catch (error) {
+                return 'Recently';
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.whiteSpace = 'pre-line';
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        function setupLogoutHandler() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
+
+        // Main Initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('User authenticated:', username);
+            
+            // Initialize unified tracker
+            vivifyTracker = new VivifyUnifiedTracker();
+            await vivifyTracker.initialize();
+            
+            // Initialize leaderboard if available
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            if (window.VivifyLeaderboard && username) {
+                window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+                console.log('Unified leaderboard initialized');
+            }
+            
+            // Initialize tabs
+            initializeTabs();
+            
+            // Load initial content
+            loadTabContent(currentTab);
+            
+            // Setup logout
+            setupLogoutHandler();
+            
+            console.log('Unified app initialization complete');
+        });
+    </script>
+</body>
+</html>
