@@ -125,9 +125,8 @@ class VivifyUnifiedTracker {
     }
 
     async initialize() {
-        await this.loadData();              // will set this._scoresFromServer when present
+        await this.loadData(); // will set this._scoresFromServer when server sent scores
       
-        // Recover signup points if they exist
         const signupPoints = localStorage.getItem('signupPoints');
         if (signupPoints && !this.data.signupPointsRecovered) {
           this.data.totalPoints += parseInt(signupPoints);
@@ -139,17 +138,18 @@ class VivifyUnifiedTracker {
         this.resetDailyIfNewDay();
         this.migrateExistingData();
       
-        // Only compute local scores if we did NOT get scores from server
+        // Only compute local scores if we didn't get them from server
         if (!this._scoresFromServer) {
           this.calculateScores();
         }
       
         return this;
-      }
+    }
+      
       
 
-      async loadData() {
-        // 1) Load existing local cache FIRST (so server can override it)
+    async loadData() {
+        // 1) Load local cache FIRST
         const localData = localStorage.getItem('vivifyUnifiedData');
         if (localData) {
           try {
@@ -160,7 +160,7 @@ class VivifyUnifiedTracker {
           }
         }
       
-        // 2) Then fetch from backend with Authorization (if token exists)
+        // 2) THEN fetch server and override what we got locally
         try {
           const token = localStorage.getItem('authToken');
           const res = await fetch(`${this.baseURL}/user/${this.username}`, {
@@ -168,17 +168,18 @@ class VivifyUnifiedTracker {
           });
           const serverData = await res.json();
           if (!serverData.error) {
-            this.mergeServerData(serverData);    // sets _scoresFromServer when it maps scores
+            this.mergeServerData(serverData); // sets this._scoresFromServer if scores present
           } else {
-            console.warn('Server returned error for user fetch:', serverData.error);
+            console.warn('Server error on user fetch:', serverData.error);
           }
-        } catch (error) {
-          console.log('Backend fetch failed, using local only.', error);
+        } catch (err) {
+          console.warn('Backend fetch failed; using local only.', err);
         }
       
-        // 3) Persist the merged result
+        // 3) Persist merged state
         this.save();
-      }      
+    }
+            
 
     migrateExistingData() {
         // Migrate from old habits system
@@ -251,16 +252,13 @@ class VivifyUnifiedTracker {
     }
 
     mergeServerData(serverData) {
-        // Habits completion mirror
         if (serverData.habitsData) {
           const today = new Date().toDateString();
           Object.keys(serverData.habitsData).forEach(habitType => {
             const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
             if (habit && serverData.habitsData[habitType].completedToday) {
               habit.completed = true;
-              if (!this.data.dailyCompletions[today]) {
-                this.data.dailyCompletions[today] = [];
-              }
+              if (!this.data.dailyCompletions[today]) this.data.dailyCompletions[today] = [];
               if (!this.data.dailyCompletions[today].includes(habit.id)) {
                 this.data.dailyCompletions[today].push(habit.id);
               }
@@ -268,15 +266,12 @@ class VivifyUnifiedTracker {
           });
         }
       
-        if (serverData.totalPoints != null) {
-          this.data.totalPoints = serverData.totalPoints;
-        }
-      
+        if (serverData.totalPoints != null) this.data.totalPoints = serverData.totalPoints;
         if (serverData.challengeData) {
           this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
         }
       
-        // ---- NEW: pull server scores (challengeStats/performanceData.scores) ----
+        // ---- pull server scores ----
         const cs = serverData.challengeStats || serverData.performanceData?.scores;
         if (cs) {
           const mapped = {
@@ -289,11 +284,12 @@ class VivifyUnifiedTracker {
           mapped.overall = rawOverall > 100 ? Math.min(100, Math.round(rawOverall / 20))
                                             : Math.round(rawOverall);
       
-          // Server should win over local cache
+          // Server wins over any local values
           this.data.scores = { ...this.data.scores, ...mapped };
-          this._scoresFromServer = true;   // flag so calculateScores() won’t clobber them
+          this._scoresFromServer = true;
         }
-      }
+    }
+      
       
 
     mapHabitToType(habitId) {
@@ -407,10 +403,9 @@ class VivifyUnifiedTracker {
     }
 
     calculateScores() {
-        // If we already have authoritative scores from server, do nothing
-        if (this._scoresFromServer) return;
+        if (this._scoresFromServer) return; // trust what the server gave us
       
-        const completionRates = this.calculateWeeklyCompletionRates();
+        const completionRates = this.calculateWeeklyCompletionRates(); // returns 0..1 per category
         this.data.scores.physical   = Math.min(100, 20 + (completionRates.physical   * 80));
         this.data.scores.mental     = Math.min(100, 20 + (completionRates.mental     * 80));
         this.data.scores.nutrition  = Math.min(100, 20 + (completionRates.nutrition  * 80));
@@ -423,7 +418,8 @@ class VivifyUnifiedTracker {
           this.data.scores.lifeSkills
         ];
         this.data.scores.overall = Math.round(cats.reduce((s,v)=>s+v,0) / cats.length);
-      }
+    }
+      
       
 
     calculateWeeklyCompletionRates() {
