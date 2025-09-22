@@ -939,7 +939,7 @@
                 <a href="index.html">Vivify</a>
             </div>
             <ul class="nav-links">
-                <li><a href="app.html" class="active">App</a></li>
+                <li><a href="app.html" class="active">Performance Hub</a></li>
                 <li><a href="community.html">Community</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="profile.html">Profile</a></li>
@@ -1233,8 +1233,8 @@
     </main>
 
     <script>
-        // Global variables
-        let vivifyTracker;
+        // Global variables - declare first to avoid reference errors
+        let vivifyTracker = null;
         let currentTab = 'dashboard';
 
         // Challenge definitions
@@ -1274,11 +1274,12 @@
         // Tab Management
         function initializeTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-
+            
             tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
                     const tabName = button.dataset.tab;
+                    console.log('Tab clicked:', tabName);
                     switchTab(tabName);
                 });
             });
@@ -1291,42 +1292,66 @@
         }
 
         function switchTab(tabName) {
+            console.log('Switching to tab:', tabName);
+            
             // Update tab buttons
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            const activeTabButton = document.querySelector(`[data-tab="${tabName}"]`);
+            if (activeTabButton) {
+                activeTabButton.classList.add('active');
+            }
 
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
-            document.getElementById(`${tabName}-tab`).classList.add('active');
+            const activeTabContent = document.getElementById(`${tabName}-tab`);
+            if (activeTabContent) {
+                activeTabContent.classList.add('active');
+            }
 
             // Update URL hash
             window.location.hash = tabName;
             currentTab = tabName;
 
-            // Load content for the active tab
-            loadTabContent(tabName);
+            // Load content for the active tab (only if tracker is initialized)
+            if (vivifyTracker) {
+                loadTabContent(tabName);
+            }
         }
 
         async function loadTabContent(tabName) {
-            switch(tabName) {
-                case 'dashboard':
-                    displayDashboard();
-                    break;
-                case 'habits':
-                    displayHabits();
-                    break;
-                case 'challenges':
-                    displayChallenges();
-                    break;
+            if (!vivifyTracker) {
+                console.log('VivifyTracker not initialized yet');
+                return;
+            }
+            
+            console.log('Loading content for tab:', tabName);
+            
+            try {
+                switch(tabName) {
+                    case 'dashboard':
+                        displayDashboard();
+                        break;
+                    case 'habits':
+                        displayHabits();
+                        break;
+                    case 'challenges':
+                        displayChallenges();
+                        break;
+                }
+            } catch (error) {
+                console.error('Error loading tab content:', error);
+                showNotification('Error loading content. Please refresh the page.', 'error');
             }
         }
 
         // Dashboard Functions
         function displayDashboard() {
+            if (!vivifyTracker) return;
+            
             const data = vivifyTracker.getDashboardData();
             
             updateUserName();
@@ -1349,17 +1374,31 @@
         function updatePerformanceScores(scores) {
             const safeScore = (value) => isNaN(value) ? 0 : Math.round(value);
             
-            document.getElementById('overallScore').textContent = safeScore(scores.overall);
-            document.getElementById('physicalScore').textContent = safeScore(scores.physical);
-            document.getElementById('mentalScore').textContent = safeScore(scores.mental);
-            document.getElementById('nutritionScore').textContent = safeScore(scores.nutrition);
-            document.getElementById('lifeSkillsScore').textContent = safeScore(scores.lifeSkills);
+            const elements = {
+                'overallScore': safeScore(scores.overall),
+                'physicalScore': safeScore(scores.physical),
+                'mentalScore': safeScore(scores.mental),
+                'nutritionScore': safeScore(scores.nutrition),
+                'lifeSkillsScore': safeScore(scores.lifeSkills)
+            };
+            
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
             
             // Update progress bars
-            document.getElementById('physicalProgress').style.width = `${safeScore(scores.physical)}%`;
-            document.getElementById('mentalProgress').style.width = `${safeScore(scores.mental)}%`;
-            document.getElementById('nutritionProgress').style.width = `${safeScore(scores.nutrition)}%`;
-            document.getElementById('skillsProgress').style.width = `${safeScore(scores.lifeSkills)}%`;
+            const progressBars = {
+                'physicalProgress': safeScore(scores.physical),
+                'mentalProgress': safeScore(scores.mental),
+                'nutritionProgress': safeScore(scores.nutrition),
+                'skillsProgress': safeScore(scores.lifeSkills)
+            };
+            
+            Object.entries(progressBars).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.style.width = `${value}%`;
+            });
             
             // Update score circle
             const scoreCircle = document.querySelector('.score-circle');
@@ -1403,19 +1442,31 @@
         }
 
         function updateWeeklyStats(streaks, totalPoints) {
+            if (!vivifyTracker) return;
+            
             const weeklyStreak = streaks.currentStreak || 0;
-            const habitsCompleted = vivifyTracker.getHabitsPageData().stats.completedToday;
+            const habitsData = vivifyTracker.getHabitsPageData();
+            const habitsCompleted = habitsData.stats.completedToday;
             const weeklyScore = Math.round(vivifyTracker.data.scores?.overall || 0);
             const weeklyXP = vivifyTracker.data.totalXP || 0;
 
-            document.getElementById('weeklyStreak').textContent = weeklyStreak;
-            document.getElementById('weeklyHabits').textContent = habitsCompleted;
-            document.getElementById('weeklyScore').textContent = weeklyScore;
-            document.getElementById('weeklyXP').textContent = weeklyXP;
+            const weeklyElements = {
+                'weeklyStreak': weeklyStreak,
+                'weeklyHabits': habitsCompleted,
+                'weeklyScore': weeklyScore,
+                'weeklyXP': weeklyXP
+            };
+            
+            Object.entries(weeklyElements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
         }
 
         // Habits Functions
         function displayHabits() {
+            if (!vivifyTracker) return;
+            
             const data = vivifyTracker.getHabitsPageData();
             
             updateHabitsStats(data.stats);
@@ -1423,15 +1474,23 @@
         }
 
         function updateHabitsStats(stats) {
-            document.getElementById('habitsStreak').textContent = stats.currentStreak;
-            document.getElementById('completedToday').textContent = stats.completedToday;
-            document.getElementById('totalHabits').textContent = stats.totalHabits;
-            document.getElementById('longestStreak').textContent = stats.longestStreak;
-            document.getElementById('completionRate').textContent = stats.weeklyRate + '%';
+            const habitsElements = {
+                'habitsStreak': stats.currentStreak,
+                'completedToday': stats.completedToday,
+                'totalHabits': stats.totalHabits,
+                'longestStreak': stats.longestStreak,
+                'completionRate': stats.weeklyRate + '%'
+            };
+            
+            Object.entries(habitsElements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
         }
 
         function updateHabitsGrid(habits) {
             const grid = document.getElementById('habitsGrid');
+            if (!grid) return;
             
             grid.innerHTML = habits.map(habit => {
                 const progress = habit.completed ? 100 : 0;
@@ -1457,7 +1516,452 @@
                                 <span>+${habit.points} XP</span>
                             </div>
                         </div>
-                        <div class="habit-actions">
+                            <button class="btn btn-complete" 
+                                    onclick="completeHabit('${habit.id}')"
+                                    ${habit.completed ? 'disabled' : ''}>
+                                ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
+                            </button>
+                            <button class="btn btn-secondary" onclick="editHabit('${habit.id}')" title="Edit habit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Challenges Functions
+        function displayChallenges() {
+            if (!vivifyTracker) return;
+            
+            const data = vivifyTracker.getChallengesData();
+            
+            updateChallengeStats(data.stats);
+            updateChallengesGrid(data.challenges);
+        }
+
+        function updateChallengeStats(stats) {
+            const challengeElements = {
+                'activeChallenges': stats.active,
+                'completedChallenges': stats.completed,
+                'totalPoints': stats.totalPoints
+            };
+            
+            Object.entries(challengeElements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+        }
+
+        function updateChallengesGrid(userChallenges) {
+            const container = document.getElementById('challengesList');
+            if (!container) return;
+
+            container.innerHTML = Object.entries(challenges).map(([id, challenge]) => {
+                const userChallenge = userChallenges[id];
+                const isJoined = userChallenge?.joined || false;
+                const isCompleted = userChallenge?.completed || false;
+                
+                let cardClass = 'challenge-card';
+                if (isCompleted) cardClass += ' completed';
+                else if (isJoined) cardClass += ' active';
+
+                return `
+                    <div class="${cardClass}" data-challenge="${id}">
+                        <div class="challenge-header">
+                            <div class="challenge-info">
+                                <h3>${challenge.name}</h3>
+                            </div>
+                            <div class="challenge-badge">${challenge.type}</div>
+                        </div>
+                        <div class="challenge-description">${challenge.description}</div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            ${!isJoined ? 
+                                `<button class="btn btn-complete" onclick="joinChallenge('${id}')" style="flex: 1;">Join Challenge</button>` :
+                                isCompleted ? 
+                                    `<button class="btn" disabled style="flex: 1; background: #27ae60; color: #fff;">Challenge Completed ✓</button>` :
+                                    `<button class="btn" disabled style="flex: 1; background: #3498db; color: #fff;">Challenge Active</button>`
+                            }
+                            <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Interaction Functions
+        async function completeHabit(habitId) {
+            if (!vivifyTracker) return;
+            
+            try {
+                const success = await vivifyTracker.completeHabit(habitId);
+                if (success) {
+                    // Refresh current tab display
+                    loadTabContent(currentTab);
+                    showNotification('Habit completed! Great work!', 'success');
+                }
+            } catch (error) {
+                console.error('Error completing habit:', error);
+                showNotification('Error completing habit. Please try again.', 'error');
+            }
+        }
+
+        async function joinChallenge(challengeId) {
+            if (!vivifyTracker) return;
+            
+            try {
+                const success = await vivifyTracker.joinChallenge(challengeId);
+                if (success) {
+                    loadTabContent(currentTab);
+                    showNotification('Challenge joined! Let\'s do this!', 'success');
+                }
+            } catch (error) {
+                console.error('Error joining challenge:', error);
+                showNotification('Error joining challenge. Please try again.', 'error');
+            }
+        }
+
+        function editHabit(habitId) {
+            showNotification('Habit editing feature coming soon!', 'info');
+        }
+
+        function viewDetails(challengeId) {
+            const challenge = challenges[challengeId];
+            showNotification(`${challenge.name}\n\n${challenge.description}\n\nReward: ${challenge.points} points`, 'info');
+        }
+
+        // Utility Functions
+        function getTimeAgo(timestamp) {
+            try {
+                const now = new Date();
+                const activityTime = new Date(timestamp);
+                const diffInMinutes = Math.floor((now - activityTime) / (1000 * 60));
+                
+                if (diffInMinutes < 1) return 'Just now';
+                if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+                
+                const diffInHours = Math.floor(diffInMinutes / 60);
+                if (diffInHours < 24) return `${diffInHours}h ago`;
+                
+                const diffInDays = Math.floor(diffInHours / 24);
+                if (diffInDays === 1) return 'Yesterday';
+                return `${diffInDays} days ago`;
+            } catch (error) {
+                return 'Recently';
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            // Set background color based on type
+            if (type === 'success') notification.style.background = '#27ae60';
+            else if (type === 'error') notification.style.background = '#e74c3c';
+            else notification.style.background = '#3498db';
+            
+            notification.style.whiteSpace = 'pre-line';
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        function setupLogoutHandler() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
+
+        // Main Initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('App initializing...');
+            
+            // Check authentication first
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('User authenticated:', username);
+            
+            try {
+                // Initialize tabs first (before vivifyTracker to avoid reference errors)
+                initializeTabs();
+                
+                // Check if VivifyUnifiedTracker is available
+                if (typeof VivifyUnifiedTracker === 'undefined') {
+                    console.error('VivifyUnifiedTracker not found. Make sure the script is loaded.');
+                    showNotification('Error: Tracking system not loaded. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                // Initialize unified tracker
+                vivifyTracker = new VivifyUnifiedTracker();
+                await vivifyTracker.initialize();
+                console.log('VivifyTracker initialized');
+                
+                // Initialize leaderboard if available
+                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                if (window.VivifyLeaderboard && username) {
+                    window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+                    console.log('Unified leaderboard initialized');
+                }
+                
+                // Load initial content for current tab
+                loadTabContent(currentTab);
+                
+                // Setup logout
+                setupLogoutHandler();
+                
+                console.log('Unified app initialization complete');
+                
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                showNotification('Error initializing app. Please refresh the page.', 'error');
+            }
+        });
+    </script>
+                            <button class="btn btn-complete" 
+                                    onclick="completeHabit('${habit.id}')"
+                                    ${habit.completed ? 'disabled' : ''}>
+                                ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
+                            </button>
+                            <button class="btn btn-secondary" onclick="editHabit('${habit.id}')" title="Edit habit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Challenges Functions
+        function displayChallenges() {
+            if (!vivifyTracker) return;
+            
+            const data = vivifyTracker.getChallengesData();
+            
+            updateChallengeStats(data.stats);
+            updateChallengesGrid(data.challenges);
+        }
+
+        function updateChallengeStats(stats) {
+            const challengeElements = {
+                'activeChallenges': stats.active,
+                'completedChallenges': stats.completed,
+                'totalPoints': stats.totalPoints
+            };
+            
+            Object.entries(challengeElements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+        }
+
+        function updateChallengesGrid(userChallenges) {
+            const container = document.getElementById('challengesList');
+            if (!container) return;
+
+            container.innerHTML = Object.entries(challenges).map(([id, challenge]) => {
+                const userChallenge = userChallenges[id];
+                const isJoined = userChallenge?.joined || false;
+                const isCompleted = userChallenge?.completed || false;
+                
+                let cardClass = 'challenge-card';
+                if (isCompleted) cardClass += ' completed';
+                else if (isJoined) cardClass += ' active';
+
+                return `
+                    <div class="${cardClass}" data-challenge="${id}">
+                        <div class="challenge-header">
+                            <div class="challenge-info">
+                                <h3>${challenge.name}</h3>
+                            </div>
+                            <div class="challenge-badge">${challenge.type}</div>
+                        </div>
+                        <div class="challenge-description">${challenge.description}</div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            ${!isJoined ? 
+                                `<button class="btn btn-complete" onclick="joinChallenge('${id}')" style="flex: 1;">Join Challenge</button>` :
+                                isCompleted ? 
+                                    `<button class="btn" disabled style="flex: 1; background: #27ae60; color: #fff;">Challenge Completed ✓</button>` :
+                                    `<button class="btn" disabled style="flex: 1; background: #3498db; color: #fff;">Challenge Active</button>`
+                            }
+                            <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Interaction Functions
+        async function completeHabit(habitId) {
+            if (!vivifyTracker) return;
+            
+            try {
+                const success = await vivifyTracker.completeHabit(habitId);
+                if (success) {
+                    // Refresh current tab display
+                    loadTabContent(currentTab);
+                    showNotification('Habit completed! Great work!', 'success');
+                }
+            } catch (error) {
+                console.error('Error completing habit:', error);
+                showNotification('Error completing habit. Please try again.', 'error');
+            }
+        }
+
+        async function joinChallenge(challengeId) {
+            if (!vivifyTracker) return;
+            
+            try {
+                const success = await vivifyTracker.joinChallenge(challengeId);
+                if (success) {
+                    loadTabContent(currentTab);
+                    showNotification('Challenge joined! Let\'s do this!', 'success');
+                }
+            } catch (error) {
+                console.error('Error joining challenge:', error);
+                showNotification('Error joining challenge. Please try again.', 'error');
+            }
+        }
+
+        function editHabit(habitId) {
+            showNotification('Habit editing feature coming soon!', 'info');
+        }
+
+        function viewDetails(challengeId) {
+            const challenge = challenges[challengeId];
+            showNotification(`${challenge.name}\n\n${challenge.description}\n\nReward: ${challenge.points} points`, 'info');
+        }
+
+        // Utility Functions
+        function getTimeAgo(timestamp) {
+            try {
+                const now = new Date();
+                const activityTime = new Date(timestamp);
+                const diffInMinutes = Math.floor((now - activityTime) / (1000 * 60));
+                
+                if (diffInMinutes < 1) return 'Just now';
+                if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+                
+                const diffInHours = Math.floor(diffInMinutes / 60);
+                if (diffInHours < 24) return `${diffInHours}h ago`;
+                
+                const diffInDays = Math.floor(diffInHours / 24);
+                if (diffInDays === 1) return 'Yesterday';
+                return `${diffInDays} days ago`;
+            } catch (error) {
+                return 'Recently';
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            // Set background color based on type
+            if (type === 'success') notification.style.background = '#27ae60';
+            else if (type === 'error') notification.style.background = '#e74c3c';
+            else notification.style.background = '#3498db';
+            
+            notification.style.whiteSpace = 'pre-line';
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        function setupLogoutHandler() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
+
+        // Main Initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('App initializing...');
+            
+            // Check authentication first
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('User authenticated:', username);
+            
+            try {
+                // Initialize tabs first (before vivifyTracker to avoid reference errors)
+                initializeTabs();
+                
+                // Check if VivifyUnifiedTracker is available
+                if (typeof VivifyUnifiedTracker === 'undefined') {
+                    console.error('VivifyUnifiedTracker not found. Make sure the script is loaded.');
+                    showNotification('Error: Tracking system not loaded. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                // Initialize unified tracker
+                vivifyTracker = new VivifyUnifiedTracker();
+                await vivifyTracker.initialize();
+                console.log('VivifyTracker initialized');
+                
+                // Initialize leaderboard if available
+                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                if (window.VivifyLeaderboard && username) {
+                    window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+                    console.log('Unified leaderboard initialized');
+                }
+                
+                // Load initial content for current tab
+                loadTabContent(currentTab);
+                
+                // Setup logout
+                setupLogoutHandler();
+                
+                console.log('Unified app initialization complete');
+                
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                showNotification('Error initializing app. Please refresh the page.', 'error');
+            }
+        });
+    </script>
                             <button class="btn btn-complete" 
                                     onclick="completeHabit('${habit.id}')"
                                     ${habit.completed ? 'disabled' : ''}>
