@@ -615,6 +615,17 @@
     </footer>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Redirect logged-in users to their dashboard
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                const hasPerformanceData = localStorage.getItem('performanceData');
+                if (hasPerformanceData) {
+                    window.location.href = 'dashboard.html';
+                }
+                // If they don't have performance data, let them stay on homepage
+                // They can click login to complete assessment
+            }
+        });
         // Simple smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {

@@ -488,14 +488,19 @@
             const loginBtn = document.getElementById('loginBtn');
             
             if (localStorage.getItem('userLoggedIn') === 'true') {
+                const needsAssessment = localStorage.getItem('needsBaselineAssessment') === 'true';
                 const hasPerformanceData = localStorage.getItem('performanceData');
-                if (hasPerformanceData) {
+                
+                // If they don't need assessment OR they have performance data, go to dashboard
+                if (!needsAssessment || hasPerformanceData) {
                     window.location.href = 'dashboard.html';
                 } else {
+                    // They need the assessment
                     window.location.href = 'performance-baseline-assessment.html';
                 }
                 return;
             }
+
             
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('message')) {
@@ -536,6 +541,7 @@
                     const data = await response.json();
 
                     if (data.success && data.token) {
+                        // Store authentication data
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('authToken', data.token);
                         localStorage.setItem('username', data.user.username);
@@ -551,15 +557,21 @@
                         };
                         localStorage.setItem('userProfile', JSON.stringify(userProfile));
                         
+                        // Check assessment completion - fix the logic here
                         const hasCompletedBaseline = data.user.hasCompletedBaseline || false;
-
-                        if (!hasCompletedBaseline) {
+                        const hasPerformanceData = localStorage.getItem('performanceData');
+                        
+                        // FIXED: Both conditions need to be checked properly
+                        if (!hasCompletedBaseline && !hasPerformanceData) {
                             localStorage.setItem('needsBaselineAssessment', 'true');
                             showMessage('Welcome back! Let\'s complete your performance baseline...', 'success');
                             setTimeout(() => {
                                 window.location.href = 'performance-baseline-assessment.html';
                             }, 1500);
                         } else {
+                            // User has completed assessment - remove the flag and go to dashboard
+                            localStorage.removeItem('needsBaselineAssessment');
+                            
                             if (data.user.performanceData) {
                                 const backendData = data.user.performanceData;
                                 const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
