@@ -279,9 +279,16 @@ class VivifyUnifiedTracker {
             this.data.scores.lifeSkills = serverData.lifeSkillsScore;
             
             // Handle the large overallScore (scale it down)
-            this.data.scores.overall = serverData.overallScore > 100 
-                ? Math.min(100, Math.round(serverData.overallScore / 20))
-                : serverData.overallScore;
+            this.data.scores.overall = Math.round((
+                this.data.scores.physical + 
+                this.data.scores.mental + 
+                this.data.scores.nutrition + 
+                this.data.scores.lifeSkills
+            ) / 4);
+            
+            // Store the leaderboard points separately
+            this.data.totalPoints = serverData.overallScore || this.data.totalPoints;
+            this.data.totalXP = serverData.overallScore || this.data.totalXP;
                 
             this._scoresFromServer = true;
         }
