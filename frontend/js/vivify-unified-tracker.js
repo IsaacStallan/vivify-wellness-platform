@@ -253,40 +253,37 @@ class VivifyUnifiedTracker {
 
     mergeServerData(serverData) {
         if (serverData.habitsData) {
-          const today = new Date().toDateString();
-          Object.keys(serverData.habitsData).forEach(habitType => {
-            const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
-            if (habit && serverData.habitsData[habitType].completedToday) {
-              habit.completed = true;
-              if (!this.data.dailyCompletions[today]) this.data.dailyCompletions[today] = [];
-              if (!this.data.dailyCompletions[today].includes(habit.id)) {
-                this.data.dailyCompletions[today].push(habit.id);
-              }
-            }
-          });
+            const today = new Date().toDateString();
+            Object.keys(serverData.habitsData).forEach(habitType => {
+                const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
+                if (habit && serverData.habitsData[habitType].completedToday) {
+                    habit.completed = true;
+                    if (!this.data.dailyCompletions[today]) this.data.dailyCompletions[today] = [];
+                    if (!this.data.dailyCompletions[today].includes(habit.id)) {
+                        this.data.dailyCompletions[today].push(habit.id);
+                    }
+                }
+            });
         }
-      
+    
         if (serverData.totalPoints != null) this.data.totalPoints = serverData.totalPoints;
         if (serverData.challengeData) {
-          this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
+            this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
         }
-      
-        // ---- pull server scores ----
-        const cs = serverData.challengeStats || serverData.performanceData?.scores;
-        if (cs) {
-          const mapped = {
-            physical:   cs.fitnessScore    ?? cs.physical    ?? 0,
-            mental:     cs.mentalScore     ?? cs.mental      ?? 0,
-            nutrition:  cs.nutritionScore  ?? cs.nutrition   ?? 0,
-            lifeSkills: cs.lifeSkillsScore ?? cs.lifeSkills  ?? 0,
-          };
-          const rawOverall = cs.overallScore ?? cs.overall ?? 0;
-          mapped.overall = rawOverall > 100 ? Math.min(100, Math.round(rawOverall / 20))
-                                            : Math.round(rawOverall);
-      
-          // Server wins over any local values
-          this.data.scores = { ...this.data.scores, ...mapped };
-          this._scoresFromServer = true;
+    
+        // Fix: Properly map your MongoDB scores
+        if (serverData.fitnessScore !== undefined) {
+            this.data.scores.physical = serverData.fitnessScore;
+            this.data.scores.mental = serverData.mentalScore;
+            this.data.scores.nutrition = serverData.nutritionScore;
+            this.data.scores.lifeSkills = serverData.lifeSkillsScore;
+            
+            // Handle the large overallScore (scale it down)
+            this.data.scores.overall = serverData.overallScore > 100 
+                ? Math.min(100, Math.round(serverData.overallScore / 20))
+                : serverData.overallScore;
+                
+            this._scoresFromServer = true;
         }
     }
       
