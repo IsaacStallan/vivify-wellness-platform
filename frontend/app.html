@@ -1232,7 +1232,7 @@
 
     <script>
         // Global variables - declare first to avoid reference errors
-        let vivifyTracker = null;
+        let appTracker = null;
         let currentTab = 'dashboard';
 
         // Challenge definitions
@@ -1315,14 +1315,14 @@
             currentTab = tabName;
 
             // Load content for the active tab (only if tracker is initialized)
-            if (vivifyTracker) {
+            if (appTracker) {
                 loadTabContent(tabName);
             }
         }
 
         async function loadTabContent(tabName) {
-            if (!vivifyTracker) {
-                console.log('VivifyTracker not initialized yet');
+            if (!appTracker) {
+                console.log('appTracker not initialized yet');
                 return;
             }
             
@@ -1348,9 +1348,9 @@
 
         // Dashboard Functions
         function displayDashboard() {
-            if (!vivifyTracker) return;
+            if (!appTracker) return;
             
-            const data = vivifyTracker.getDashboardData();
+            const data = appTracker.getDashboardData();
             
             updateUserName();
             updatePerformanceScores(data.scores);
@@ -1440,13 +1440,13 @@
         }
 
         function updateWeeklyStats(streaks, totalPoints) {
-            if (!vivifyTracker) return;
+            if (!appTracker) return;
             
             const weeklyStreak = streaks.currentStreak || 0;
-            const habitsData = vivifyTracker.getHabitsPageData();
+            const habitsData = appTracker.getHabitsPageData();
             const habitsCompleted = habitsData.stats.completedToday;
-            const weeklyScore = Math.round(vivifyTracker.data.scores?.overall || 0);
-            const weeklyXP = vivifyTracker.data.totalXP || 0;
+            const weeklyScore = Math.round(appTracker.data.scores?.overall || 0);
+            const weeklyXP = appTracker.data.totalXP || 0;
 
             const weeklyElements = {
                 'weeklyStreak': weeklyStreak,
@@ -1463,9 +1463,9 @@
 
         // Habits Functions
         function displayHabits() {
-            if (!vivifyTracker) return;
+            if (!appTracker) return;
             
-            const data = vivifyTracker.getHabitsPageData();
+            const data = appTracker.getHabitsPageData();
             
             updateHabitsStats(data.stats);
             updateHabitsGrid(data.habits);
@@ -1531,9 +1531,9 @@
 
         // Challenges Functions
         function displayChallenges() {
-            if (!vivifyTracker) return;
+            if (!appTracker) return;
             
-            const data = vivifyTracker.getChallengesData();
+            const data = appTracker.getChallengesData();
             
             updateChallengeStats(data.stats);
             updateChallengesGrid(data.challenges);
@@ -1592,10 +1592,10 @@
 
         // Interaction Functions
         async function completeHabit(habitId) {
-            if (!vivifyTracker) return;
+            if (!appTracker) return;
             
             try {
-                const success = await vivifyTracker.completeHabit(habitId);
+                const success = await appTracker.completeHabit(habitId);
                 if (success) {
                     loadTabContent(currentTab);
                     showNotification('Habit completed! Great work!', 'success');
@@ -1607,10 +1607,10 @@
         }
 
         async function joinChallenge(challengeId) {
-            if (!vivifyTracker) return;
+            if (!appTracker) return;
             
             try {
-                const success = await vivifyTracker.joinChallenge(challengeId);
+                const success = await appTracker.joinChallenge(challengeId);
                 if (success) {
                     loadTabContent(currentTab);
                     showNotification('Challenge joined! Let\'s do this!', 'success');
@@ -1701,7 +1701,7 @@
             console.log('User authenticated:', username);
             
             try {
-                // Initialize tabs first (before vivifyTracker to avoid reference errors)
+                // Initialize tabs first (before appTracker to avoid reference errors)
                 initializeTabs();
                 
                 // Check if VivifyUnifiedTracker is available
@@ -1712,9 +1712,9 @@
                 }
                 
                 // Initialize unified tracker
-                vivifyTracker = new VivifyUnifiedTracker();
-                await vivifyTracker.initialize();
-                console.log('VivifyTracker initialized');
+                appTracker = new VivifyUnifiedTracker();
+                await appTracker.initialize();
+                console.log('appTracker initialized');
                 
                 // Initialize leaderboard if available
                 const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
