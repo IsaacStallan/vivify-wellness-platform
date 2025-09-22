@@ -126,6 +126,15 @@ class VivifyUnifiedTracker {
 
     async initialize() {
         await this.loadData();
+        
+        // Recover signup points if they exist
+        const signupPoints = localStorage.getItem('signupPoints');
+        if (signupPoints && !this.data.signupPointsRecovered) {
+            this.data.totalPoints += parseInt(signupPoints);
+            this.data.totalXP += parseInt(signupPoints);
+            this.data.signupPointsRecovered = true;
+            console.log(`Recovered ${signupPoints} signup points`);
+        }
         this.resetDailyIfNewDay();
         this.migrateExistingData();
         this.calculateScores();
