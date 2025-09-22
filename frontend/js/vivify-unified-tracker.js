@@ -125,44 +125,60 @@ class VivifyUnifiedTracker {
     }
 
     async initialize() {
-        await this.loadData();
-        
+        await this.loadData();              // will set this._scoresFromServer when present
+      
         // Recover signup points if they exist
         const signupPoints = localStorage.getItem('signupPoints');
         if (signupPoints && !this.data.signupPointsRecovered) {
-            this.data.totalPoints += parseInt(signupPoints);
-            this.data.totalXP += parseInt(signupPoints);
-            this.data.signupPointsRecovered = true;
-            console.log(`Recovered ${signupPoints} signup points`);
+          this.data.totalPoints += parseInt(signupPoints);
+          this.data.totalXP += parseInt(signupPoints);
+          this.data.signupPointsRecovered = true;
+          console.log(`Recovered ${signupPoints} signup points`);
         }
+      
         this.resetDailyIfNewDay();
         this.migrateExistingData();
-        this.calculateScores();
-        return this;
-    }
-
-    async loadData() {
-        try {
-            // Load from backend first
-            const response = await fetch(`${this.baseURL}/user/${this.username}`);
-            const serverData = await response.json();
-            
-            if (!serverData.error) {
-                this.mergeServerData(serverData);
-            }
-        } catch (error) {
-            console.log('Loading from local storage...');
+      
+        // Only compute local scores if we did NOT get scores from server
+        if (!this._scoresFromServer) {
+          this.calculateScores();
         }
-        
-        // Load existing unified data
+      
+        return this;
+      }
+      
+
+      async loadData() {
+        // 1) Load existing local cache FIRST (so server can override it)
         const localData = localStorage.getItem('vivifyUnifiedData');
         if (localData) {
+          try {
             const parsed = JSON.parse(localData);
             this.data = { ...this.data, ...parsed };
+          } catch (e) {
+            console.warn('Bad vivifyUnifiedData JSON, ignoring.');
+          }
         }
-        
+      
+        // 2) Then fetch from backend with Authorization (if token exists)
+        try {
+          const token = localStorage.getItem('authToken');
+          const res = await fetch(`${this.baseURL}/user/${this.username}`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+          });
+          const serverData = await res.json();
+          if (!serverData.error) {
+            this.mergeServerData(serverData);    // sets _scoresFromServer when it maps scores
+          } else {
+            console.warn('Server returned error for user fetch:', serverData.error);
+          }
+        } catch (error) {
+          console.log('Backend fetch failed, using local only.', error);
+        }
+      
+        // 3) Persist the merged result
         this.save();
-    }
+      }      
 
     migrateExistingData() {
         // Migrate from old habits system
@@ -235,46 +251,50 @@ class VivifyUnifiedTracker {
     }
 
     mergeServerData(serverData) {
+        // Habits completion mirror
         if (serverData.habitsData) {
-            const today = new Date().toDateString();
-            Object.keys(serverData.habitsData).forEach(habitType => {
-                const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
-                if (habit && serverData.habitsData[habitType].completedToday) {
-                    habit.completed = true;
-                    if (!this.data.dailyCompletions[today]) {
-                        this.data.dailyCompletions[today] = [];
-                    }
-                    if (!this.data.dailyCompletions[today].includes(habit.id)) {
-                        this.data.dailyCompletions[today].push(habit.id);
-                    }
-                }
-            });
+          const today = new Date().toDateString();
+          Object.keys(serverData.habitsData).forEach(habitType => {
+            const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
+            if (habit && serverData.habitsData[habitType].completedToday) {
+              habit.completed = true;
+              if (!this.data.dailyCompletions[today]) {
+                this.data.dailyCompletions[today] = [];
+              }
+              if (!this.data.dailyCompletions[today].includes(habit.id)) {
+                this.data.dailyCompletions[today].push(habit.id);
+              }
+            }
+          });
         }
-    
-        if (serverData.totalPoints) {
-            this.data.totalPoints = serverData.totalPoints;
+      
+        if (serverData.totalPoints != null) {
+          this.data.totalPoints = serverData.totalPoints;
         }
-    
+      
         if (serverData.challengeData) {
-            this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
+          this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
         }
-    
-        // NEW: pull challengeStats → scores
+      
+        // ---- NEW: pull server scores (challengeStats/performanceData.scores) ----
         const cs = serverData.challengeStats || serverData.performanceData?.scores;
         if (cs) {
-            const mapped = {
-                physical:   cs.fitnessScore    ?? cs.physical    ?? 0,
-                mental:     cs.mentalScore     ?? cs.mental      ?? 0,
-                nutrition:  cs.nutritionScore  ?? cs.nutrition   ?? 0,
-                lifeSkills: cs.lifeSkillsScore ?? cs.lifeSkills  ?? 0,
-            };
-            const rawOverall = cs.overallScore ?? cs.overall ?? 0;
-            // scale if your DB stores XP-style big numbers
-            mapped.overall = rawOverall > 100 ? Math.min(100, Math.round(rawOverall / 20)) : Math.round(rawOverall);
-    
-            this.data.scores = { ...this.data.scores, ...mapped };
+          const mapped = {
+            physical:   cs.fitnessScore    ?? cs.physical    ?? 0,
+            mental:     cs.mentalScore     ?? cs.mental      ?? 0,
+            nutrition:  cs.nutritionScore  ?? cs.nutrition   ?? 0,
+            lifeSkills: cs.lifeSkillsScore ?? cs.lifeSkills  ?? 0,
+          };
+          const rawOverall = cs.overallScore ?? cs.overall ?? 0;
+          mapped.overall = rawOverall > 100 ? Math.min(100, Math.round(rawOverall / 20))
+                                            : Math.round(rawOverall);
+      
+          // Server should win over local cache
+          this.data.scores = { ...this.data.scores, ...mapped };
+          this._scoresFromServer = true;   // flag so calculateScores() won’t clobber them
         }
-    }    
+      }
+      
 
     mapHabitToType(habitId) {
         const map = {
@@ -387,25 +407,24 @@ class VivifyUnifiedTracker {
     }
 
     calculateScores() {
-        // Calculate based on habit completion rate
+        // If we already have authoritative scores from server, do nothing
+        if (this._scoresFromServer) return;
+      
         const completionRates = this.calculateWeeklyCompletionRates();
-        this.data.scores.physical = Math.min(100, 20 + (completionRates.physical * 80));
-        this.data.scores.mental = Math.min(100, 20 + (completionRates.mental * 80));
-        this.data.scores.nutrition = Math.min(100, 20 + (completionRates.nutrition * 80));
+        this.data.scores.physical   = Math.min(100, 20 + (completionRates.physical   * 80));
+        this.data.scores.mental     = Math.min(100, 20 + (completionRates.mental     * 80));
+        this.data.scores.nutrition  = Math.min(100, 20 + (completionRates.nutrition  * 80));
         this.data.scores.lifeSkills = Math.min(100, 20 + (completionRates.lifeSkills * 80));
-        
-        // Calculate overall
-        const categoryScores = [
-            this.data.scores.physical,
-            this.data.scores.mental,
-            this.data.scores.nutrition,
-            this.data.scores.lifeSkills
+      
+        const cats = [
+          this.data.scores.physical,
+          this.data.scores.mental,
+          this.data.scores.nutrition,
+          this.data.scores.lifeSkills
         ];
-        
-        this.data.scores.overall = Math.round(
-            categoryScores.reduce((sum, score) => sum + score, 0) / categoryScores.length
-        );
-    }
+        this.data.scores.overall = Math.round(cats.reduce((s,v)=>s+v,0) / cats.length);
+      }
+      
 
     calculateWeeklyCompletionRates() {
         const today = new Date();
