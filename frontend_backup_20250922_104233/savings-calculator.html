@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Savings Calculator - Vivify</title>
+   
+    
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .calculator-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .calculator-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .calculator-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .calculator-container {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .calculator-section {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 2rem;
+           margin-bottom: 3rem;
+       }
+
+       .input-panel {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+       }
+
+       .results-panel {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+       }
+
+       .input-group {
+           margin-bottom: 1.5rem;
+       }
+
+       .input-group label {
+           display: block;
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .input-group input,
+       .input-group select {
+           width: 100%;
+           padding: 0.8rem;
+           border: 2px solid #444;
+           border-radius: 5px;
+           background-color: #333;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .input-group input:focus,
+       .input-group select:focus {
+           outline: none;
+           border-color: #f39c12;
+       }
+
+       .form-row {
+           display: flex;
+           gap: 1rem;
+       }
+
+       .form-row .input-group {
+           flex: 1;
+       }
+
+       .calculate-btn {
+           width: 100%;
+           padding: 1rem;
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           border-radius: 5px;
+           font-size: 1.1rem;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .calculate-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .result-item {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 1rem;
+           margin-bottom: 1rem;
+           border-radius: 5px;
+           color: white;
+       }
+
+       .result-primary {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+           font-size: 1.2rem;
+       }
+
+       .result-success {
+           background-color: #27ae60;
+       }
+
+       .result-info {
+           background-color: #3498db;
+       }
+
+       .result-warning {
+           background-color: #e67e22;
+       }
+
+       .preset-goals {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .goals-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .goal-card {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 1.5rem;
+           text-align: center;
+           cursor: pointer;
+           transition: transform 0.3s, background-color 0.3s;
+           border: 2px solid transparent;
+       }
+
+       .goal-card:hover {
+           transform: translateY(-3px);
+           background-color: #333;
+       }
+
+       .goal-card.selected {
+           border-color: #f39c12;
+           background-color: #333;
+       }
+
+       .goal-icon {
+           font-size: 2.5rem;
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .goal-card h3 {
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+       }
+
+       .goal-amount {
+           font-size: 1.5rem;
+           font-weight: bold;
+           color: white;
+           margin-bottom: 0.5rem;
+       }
+
+       .goal-description {
+           color: #ddd;
+           font-size: 0.9rem;
+       }
+
+       .savings-breakdown {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .breakdown-table {
+           width: 100%;
+           border-collapse: collapse;
+           margin: 1rem 0;
+       }
+
+       .breakdown-table th,
+       .breakdown-table td {
+           border: 1px solid #555;
+           padding: 0.8rem;
+           text-align: left;
+       }
+
+       .breakdown-table th {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+       }
+
+       .breakdown-table td {
+           background-color: #2c3e50;
+           color: white;
+       }
+
+       .breakdown-table tr:nth-child(even) td {
+           background-color: #34495e;
+       }
+
+       .progress-visualization {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .progress-bar {
+           width: 100%;
+           height: 30px;
+           background-color: #444;
+           border-radius: 15px;
+           overflow: hidden;
+           margin: 1rem 0;
+       }
+
+       .progress-fill {
+           height: 100%;
+           background: linear-gradient(90deg, #27ae60, #2ecc71);
+           border-radius: 15px;
+           transition: width 0.3s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: white;
+           font-weight: bold;
+       }
+
+       .milestone-markers {
+           display: flex;
+           justify-content: space-between;
+           margin: 1rem 0;
+           color: #ddd;
+           font-size: 0.9rem;
+       }
+
+       .tips-section {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .tips-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .tip-card {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 1.5rem;
+           border-left: 4px solid #f39c12;
+       }
+
+       .tip-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .tip-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+           font-size: 0.9rem;
+       }
+
+       .compound-interest-demo {
+           background-color: #27ae60;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           text-align: center;
+           grid-column: span 2;
+       }
+
+       .compound-stats {
+           display: flex;
+           justify-content: space-around;
+           margin: 2rem 0;
+           flex-wrap: wrap;
+       }
+
+       .compound-stat {
+           text-align: center;
+           margin: 1rem;
+       }
+
+       .compound-value {
+           font-size: 2rem;
+           font-weight: bold;
+           margin-bottom: 0.5rem;
+       }
+
+       .compound-label {
+           font-size: 0.9rem;
+           opacity: 0.9;
+       }
+
+       .warning-section {
+           background-color: #e67e22;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           text-align: center;
+           grid-column: span 2;
+       }
+
+       @media (max-width: 768px) {
+           .calculator-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .calculator-section {
+               grid-template-columns: 1fr;
+           }
+           
+           .preset-goals {
+               grid-column: span 1;
+           }
+           
+           .savings-breakdown {
+               grid-column: span 1;
+           }
+           
+           .progress-visualization {
+               grid-column: span 1;
+           }
+           
+           .tips-section {
+               grid-column: span 1;
+           }
+           
+           .compound-interest-demo {
+               grid-column: span 1;
+           }
+           
+           .warning-section {
+               grid-column: span 1;
+           }
+           
+           .form-row {
+               flex-direction: column;
+           }
+           
+           .compound-stats {
+               flex-direction: column;
+           }
+       }
+   @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                               <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="calculator-hero">
+           <h1>Savings Goal Calculator</h1>
+           <p>Plan your financial future with our Australian student savings calculator. Set realistic savings goals, track your progress, and see how compound interest can help you achieve your dreams.</p>
+       </section>
+
+       <!-- Calculator Container -->
+       <div class="calculator-container">
+           <!-- Preset Goals -->
+           <div class="preset-goals">
+               <h2 class="section-title">Common Student Savings Goals</h2>
+               <p style="color: #ddd; text-align: center; margin-bottom: 2rem;">Select a preset goal or enter your own custom savings target below.</p>
+               
+               <div class="goals-grid">
+                   <div class="goal-card" onclick="selectGoal(3000, 'Emergency Fund')">
+                       <div class="goal-icon">
+                           <i class="fas fa-shield-alt"></i>
+                       </div>
+                       <h3>Emergency Fund</h3>
+                       <div class="goal-amount">$3,000</div>
+                       <div class="goal-description">3 months of basic expenses for financial security</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(12000, 'Car Purchase')">
+                       <div class="goal-icon">
+                           <i class="fas fa-car"></i>
+                       </div>
+                       <h3>First Car</h3>
+                       <div class="goal-amount">$12,000</div>
+                       <div class="goal-description">Reliable used car for independence and work</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(8000, 'Study Abroad')">
+                       <div class="goal-icon">
+                           <i class="fas fa-globe-asia"></i>
+                       </div>
+                       <h3>Study Abroad</h3>
+                       <div class="goal-amount">$8,000</div>
+                       <div class="goal-description">Semester exchange or international experience</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(5000, 'Graduate School')">
+                       <div class="goal-icon">
+                           <i class="fas fa-graduation-cap"></i>
+                       </div>
+                       <h3>Graduate School</h3>
+                       <div class="goal-amount">$5,000</div>
+                       <div class="goal-description">Application fees, tests, and initial expenses</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(15000, 'House Deposit')">
+                       <div class="goal-icon">
+                           <i class="fas fa-home"></i>
+                       </div>
+                       <h3>House Deposit</h3>
+                       <div class="goal-amount">$15,000</div>
+                       <div class="goal-description">Start saving early for your first home deposit</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(2500, 'Laptop/Tech')">
+                       <div class="goal-icon">
+                           <i class="fas fa-laptop"></i>
+                       </div>
+                       <h3>New Laptop</h3>
+                       <div class="goal-amount">$2,500</div>
+                       <div class="goal-description">High-quality laptop for studies and career</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(4000, 'Gap Year')">
+                       <div class="goal-icon">
+                           <i class="fas fa-backpack"></i>
+                       </div>
+                       <h3>Gap Year Travel</h3>
+                       <div class="goal-amount">$4,000</div>
+                       <div class="goal-description">Domestic travel and experiences around Australia</div>
+                   </div>
+                   
+                   <div class="goal-card" onclick="selectGoal(25000, 'Wedding Fund')">
+                       <div class="goal-icon">
+                           <i class="fas fa-ring"></i>
+                       </div>
+                       <h3>Future Wedding</h3>
+                       <div class="goal-amount">$25,000</div>
+                       <div class="goal-description">Start early for your dream wedding</div>
+                   </div>
+               </div>
+           </div>
+
+           <div class="calculator-section">
+               <!-- Input Panel -->
+               <div class="input-panel">
+                   <h2 class="section-title">Savings Calculator</h2>
+                   
+                   <div class="input-group">
+                       <label for="savingsGoal">Savings Goal ($AUD)</label>
+                       <input type="number" id="savingsGoal" placeholder="10000" min="1" step="100">
+                   </div>
+                   
+                   <div class="input-group">
+                       <label for="goalName">Goal Name (Optional)</label>
+                       <input type="text" id="goalName" placeholder="e.g., Emergency Fund">
+                   </div>
+                   
+                   <div class="form-row">
+                       <div class="input-group">
+                           <label for="currentSavings">Current Savings ($)</label>
+                           <input type="number" id="currentSavings" placeholder="500" min="0" step="50">
+                       </div>
+                       
+                       <div class="input-group">
+                           <label for="monthlySavings">Monthly Savings ($)</label>
+                           <input type="number" id="monthlySavings" placeholder="200" min="1" step="10">
+                       </div>
+                   </div>
+                   
+                   <div class="form-row">
+                       <div class="input-group">
+                           <label for="interestRate">Annual Interest Rate (%)</label>
+                           <input type="number" id="interestRate" placeholder="2.5" min="0" max="20" step="0.1">
+                       </div>
+                       
+                       <div class="input-group">
+                           <label for="compoundFrequency">Compound Frequency</label>
+                           <select id="compoundFrequency">
+                               <option value="12">Monthly</option>
+                               <option value="4">Quarterly</option>
+                               <option value="1">Annually</option>
+                           </select>
+                       </div>
+                   </div>
+                   
+                   <div class="input-group">
+                       <label for="savingsAccount">Savings Account Type</label>
+                       <select id="savingsAccount" onchange="updateInterestRate()">
+                           <option value="2.5">High Interest Savings (2.5%)</option>
+                           <option value="4.0">Term Deposit - 1 Year (4.0%)</option>
+                           <option value="0.1">Basic Savings (0.1%)</option>
+                           <option value="custom">Custom Rate</option>
+                       </select>
+                   </div>
+                   
+                   <button class="calculate-btn" onclick="calculateSavings()">Calculate My Savings Plan</button>
+               </div>
+
+               <!-- Results Panel -->
+               <div class="results-panel">
+                   <h2 class="section-title">Your Savings Plan</h2>
+                   
+                   <div id="goalNameResult" class="result-item result-primary">
+                       <span>Savings Goal</span>
+                       <span id="goalAmount">$0</span>
+                   </div>
+                   
+                   <div class="result-item result-success">
+                       <span>Time to Reach Goal</span>
+                       <span id="timeToGoal">-</span>
+                   </div>
+                   
+                   <div class="result-item result-info">
+                       <span>Total Interest Earned</span>
+                       <span id="totalInterest">$0</span>
+                   </div>
+                   
+                   <div class="result-item result-warning">
+                       <span>Total Contributions</span>
+                       <span id="totalContributions">$0</span>
+                   </div>
+                   
+                   <div style="margin-top: 2rem;">
+                       <h3 style="color: #f39c12; margin-bottom: 1rem;">Alternative Scenarios</h3>
+                       <div class="result-item" style="background-color: #34495e;">
+                           <span>If you save $50 more/month</span>
+                           <span id="higherSavings">-</span>
+                       </div>
+                       <div class="result-item" style="background-color: #34495e;">
+                           <span>Without interest (cash only)</span>
+                           <span id="noInterest">-</span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Progress Visualization -->
+           <div class="progress-visualization">
+               <h2 class="section-title" style="color: #f39c12;">Savings Progress Visualization</h2>
+               <div class="progress-bar">
+                   <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+               </div>
+               <div class="milestone-markers">
+                   <span>Start: $<span id="startAmount">0</span></span>
+                   <span>25%: $<span id="milestone25">0</span></span>
+                   <span>50%: $<span id="milestone50">0</span></span>
+                   <span>75%: $<span id="milestone75">0</span></span>
+                   <span>Goal: $<span id="milestoneGoal">0</span></span>
+               </div>
+               
+               <div style="margin-top: 2rem; text-align: center;">
+                   <h3 style="color: #f39c12; margin-bottom: 1rem;">Projected Monthly Growth</h3>
+                   <div id="monthlyBreakdown" style="background-color: #333; padding: 1rem; border-radius: 5px; color: #ddd;">
+                       Select your savings goal and monthly amount to see projected growth.
+                   </div>
+               </div>
+           </div>
+
+           <!-- Compound Interest Demo -->
+           <div class="compound-interest-demo">
+               <h2 class="section-title" style="color: white;">The Power of Compound Interest</h2>
+               <p style="margin-bottom: 2rem;">See how starting early can dramatically increase your wealth over time.</p>
+               
+               <div class="compound-stats">
+                   <div class="compound-stat">
+                       <div class="compound-value" id="compound10">$0</div>
+                       <div class="compound-label">After 10 Years</div>
+                   </div>
+                   <div class="compound-stat">
+                       <div class="compound-value" id="compound20">$0</div>
+                       <div class="compound-label">After 20 Years</div>
+                   </div>
+                   <div class="compound-stat">
+                       <div class="compound-value" id="compound30">$0</div>
+                       <div class="compound-label">After 30 Years</div>
+                   </div>
+               </div>
+               
+               <p style="font-size: 0.9rem; opacity: 0.9;">*Assumes continuing monthly contributions and compound growth</p>
+           </div>
+
+           <!-- Savings Breakdown Table -->
+           <div class="savings-breakdown">
+               <h2 class="section-title" style="color: #f39c12;">Year-by-Year Breakdown</h2>
+               <table class="breakdown-table" id="breakdownTable">
+                   <thead>
+                       <tr>
+                           <th>Year</th>
+                           <th>Starting Balance</th>
+                           <th>Contributions</th>
+                           <th>Interest Earned</th>
+                           <th>Ending Balance</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <td colspan="5" style="text-align: center; color: #ccc;">Enter your savings goal and monthly amount to see year-by-year breakdown</td>
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+
+           <!-- Savings Tips -->
+           <div class="tips-section">
+               <h2 class="section-title" style="color: #f39c12;">Australian Student Savings Tips</h2>
+               <div class="tips-grid">
+                   <div class="tip-card">
+                       <h4>High Interest Savings Accounts</h4>
+                       <p>Look for accounts offering 2-5% interest with no fees. Many Australian banks offer competitive rates for students, especially online banks like ING and Macquarie.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Government Savings Incentives</h4>
+                       <p>Consider opening a First Home Super Saver Scheme account if saving for a house, or look into government co-contribution schemes for super.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Automate Your Savings</h4>
+                       <p>Set up automatic transfers from your transaction account to savings immediately after pay day. Even $50/week adds up to $2,600 per year!</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Use the 52-Week Challenge</h4>
+                       <p>Start by saving $1 in week 1, $2 in week 2, and so on. By week 52, you'll have saved $1,378 - perfect for a small goal!</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Student Budgeting Apps</h4>
+                       <p>Use apps like Pocketbook (Australian) or Goodbudget to track spending and identify where you can save more money each month.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Side Income Opportunities</h4>
+                       <p>Consider tutoring, delivery driving, or freelancing to boost your savings rate. Even an extra $100/month can significantly reduce your savings timeline.</p>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Warning Section -->
+           <div class="warning-section">
+               <h3><i class="fas fa-exclamation-triangle"></i> Important Australian Considerations</h3>
+               <p>Remember that interest earned on savings accounts is taxable income in Australia. If you're earning over the tax-free threshold ($18,200 in 2024), you'll need to declare this interest on your tax return. Consider speaking with a financial advisor about tax-effective savings strategies.</p>
+           </div>
+       </div>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2025 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       let selectedGoalCard = null;
+
+       function selectGoal(amount, name) {
+           // Remove previous selection
+           if (selectedGoalCard) {
+               selectedGoalCard.classList.remove('selected');
+           }
+           
+           // Add selection to clicked card
+           event.currentTarget.classList.add('selected');
+           selectedGoalCard = event.currentTarget;
+           
+           // Update form fields
+           document.getElementById('savingsGoal').value = amount;
+           document.getElementById('goalName').value = name;
+           
+           // Auto-calculate if monthly savings is set
+           if (document.getElementById('monthlySavings').value) {
+               calculateSavings();
+           }
+       }
+
+       function updateInterestRate() {
+           const accountType = document.getElementById('savingsAccount').value;
+           const interestRateInput = document.getElementById('interestRate');
+           
+           if (accountType !== 'custom') {
+               interestRateInput.value = accountType;
+               interestRateInput.readOnly = true;
+               interestRateInput.style.backgroundColor = '#444';
+           } else {
+               interestRateInput.readOnly = false;
+               interestRateInput.style.backgroundColor = '#333';
+               interestRateInput.focus();
+           }
+       }
+
+       function calculateSavings() {
+           // Get input values
+           const goal = parseFloat(document.getElementById('savingsGoal').value) || 0;
+           const current = parseFloat(document.getElementById('currentSavings').value) || 0;
+           const monthly = parseFloat(document.getElementById('monthlySavings').value) || 0;
+           const annualRate = parseFloat(document.getElementById('interestRate').value) || 0;
+           const compoundFreq = parseInt(document.getElementById('compoundFrequency').value) || 12;
+           const goalName = document.getElementById('goalName').value || 'Your Goal';
+           
+           if (goal === 0 || monthly === 0) {
+               alert('Please enter your savings goal and monthly savings amount.');
+               return;
+           }
+           
+           // Calculate time to reach goal with compound interest
+           const monthlyRate = annualRate / 100 / 12;
+           let balance = current;
+           let months = 0;
+           let totalInterest = 0;
+           let yearlyData = [];
+           
+           // For visualization and breakdown
+           const yearlyBreakdown = [];
+           let currentYear = 1;
+           let yearStartBalance = current;
+           let yearContributions = 0;
+           let yearInterest = 0;
+           
+           while (balance < goal && months < 600) { // Max 50 years
+               months++;
+               
+               // Add monthly contribution
+               balance += monthly;
+               yearContributions += monthly;
+               
+               // Apply monthly compound interest
+               if (monthlyRate > 0) {
+                   const interest = balance * monthlyRate;
+                   balance += interest;
+                   totalInterest += interest;
+                   yearInterest += interest;
+               }
+               
+               // Check if year is complete for breakdown table
+               if (months % 12 === 0) {
+                   yearlyBreakdown.push({
+                       year: currentYear,
+                       startBalance: yearStartBalance,
+                       contributions: yearContributions,
+                       interest: yearInterest,
+                       endBalance: balance
+                   });
+                   
+                   currentYear++;
+                   yearStartBalance = balance;
+                   yearContributions = 0;
+                   yearInterest = 0;
+               }
+           }
+           
+           // Calculate alternative scenarios
+           const higherMonthlySavings = monthly + 50;
+           let higherBalance = current;
+           let higherMonths = 0;
+           
+           while (higherBalance < goal && higherMonths < 600) {
+               higherMonths++;
+               higherBalance += higherMonthlySavings;
+               if (monthlyRate > 0) {
+                   higherBalance += higherBalance * monthlyRate;
+               }
+           }
+           
+           // Calculate without interest (cash only)
+           const cashOnlyMonths = Math.ceil((goal - current) / monthly);
+           
+           // Update results
+           document.getElementById('goalAmount').textContent = `${goal.toLocaleString()}`;
+           document.getElementById('goalNameResult').querySelector('span').textContent = goalName;
+           
+           if (months < 600) {
+               const years = Math.floor(months / 12);
+               const remainingMonths = months % 12;
+               let timeText = '';
+               if (years > 0) timeText += `${years} year${years > 1 ? 's' : ''}`;
+               if (remainingMonths > 0) {
+                   if (timeText) timeText += ' ';
+                   timeText += `${remainingMonths} month${remainingMonths > 1 ? 's' : ''}`;
+               }
+               document.getElementById('timeToGoal').textContent = timeText;
+           } else {
+               document.getElementById('timeToGoal').textContent = 'Goal too large';
+           }
+           
+           document.getElementById('totalInterest').textContent = `${totalInterest.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+           document.getElementById('totalContributions').textContent = `${(monthly * months).toLocaleString()}`;
+           
+           // Alternative scenarios
+           if (higherMonths < 600) {
+               const timeSaved = months - higherMonths;
+               document.getElementById('higherSavings').textContent = `${timeSaved} months faster`;
+           } else {
+               document.getElementById('higherSavings').textContent = 'Still too long';
+           }
+           
+           document.getElementById('noInterest').textContent = `${cashOnlyMonths} months`;
+           
+           // Update progress visualization
+           updateProgressVisualization(goal, current);
+           
+           // Update breakdown table
+           updateBreakdownTable(yearlyBreakdown);
+           
+           // Update compound interest demo
+           updateCompoundInterestDemo(monthly, annualRate);
+           
+           // Update monthly breakdown
+           updateMonthlyBreakdown(current, monthly, monthlyRate, goal);
+       }
+
+       function updateProgressVisualization(goal, current) {
+           const progressPercent = Math.min((current / goal) * 100, 100);
+           document.getElementById('progressFill').style.width = progressPercent + '%';
+           document.getElementById('progressFill').textContent = progressPercent.toFixed(1) + '%';
+           
+           // Update milestones
+           document.getElementById('startAmount').textContent = current.toLocaleString();
+           document.getElementById('milestone25').textContent = (goal * 0.25).toLocaleString();
+           document.getElementById('milestone50').textContent = (goal * 0.5).toLocaleString();
+           document.getElementById('milestone75').textContent = (goal * 0.75).toLocaleString();
+           document.getElementById('milestoneGoal').textContent = goal.toLocaleString();
+       }
+
+       function updateBreakdownTable(yearlyData) {
+           const tbody = document.getElementById('breakdownTable').querySelector('tbody');
+           
+           if (yearlyData.length === 0) {
+               tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ccc;">Enter your savings goal and monthly amount to see year-by-year breakdown</td></tr>';
+               return;
+           }
+           
+           tbody.innerHTML = yearlyData.slice(0, 10).map(year => `
+               <tr>
+                   <td>${year.year}</td>
+                   <td>${year.startBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                   <td>${year.contributions.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                   <td>${year.interest.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                   <td>${year.endBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+               </tr>
+           `).join('');
+           
+           if (yearlyData.length > 10) {
+               tbody.innerHTML += '<tr><td colspan="5" style="text-align: center; color: #ccc; font-style: italic;">... and more years</td></tr>';
+           }
+       }
+
+       function updateCompoundInterestDemo(monthly, annualRate) {
+           const monthlyRate = annualRate / 100 / 12;
+           
+           // Calculate compound growth over 10, 20, 30 years
+           function calculateCompound(years) {
+               let balance = 0;
+               const totalMonths = years * 12;
+               
+               for (let month = 1; month <= totalMonths; month++) {
+                   balance += monthly;
+                   if (monthlyRate > 0) {
+                       balance += balance * monthlyRate;
+                   }
+               }
+               return balance;
+           }
+           
+           document.getElementById('compound10').textContent = `${calculateCompound(10).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+           document.getElementById('compound20').textContent = `${calculateCompound(20).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+           document.getElementById('compound30').textContent = `${calculateCompound(30).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+       }
+
+       function updateMonthlyBreakdown(current, monthly, monthlyRate, goal) {
+           let breakdown = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; text-align: center;">';
+           
+           let balance = current;
+           for (let month = 1; month <= Math.min(12, Math.ceil((goal - current) / monthly)); month++) {
+               balance += monthly;
+               if (monthlyRate > 0) {
+                   balance += balance * monthlyRate;
+               }
+               
+               breakdown += `
+                   <div style="background-color: #444; padding: 0.5rem; border-radius: 5px;">
+                       <div style="font-weight: bold; color: #f39c12;">Month ${month}</div>
+                       <div style="font-size: 0.9rem;">${balance.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
+                   </div>
+               `;
+           }
+           
+           breakdown += '</div>';
+           document.getElementById('monthlyBreakdown').innerHTML = breakdown;
+       }
+
+       // Initialize interest rate based on default selection
+       document.addEventListener('DOMContentLoaded', function() {
+           updateInterestRate();
+           
+           // Login status check
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+       });
+   </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> <script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

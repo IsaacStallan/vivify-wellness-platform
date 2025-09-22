@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Hub - Vivify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .logo a:hover {
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #f39c12;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .date-time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #f39c12;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .overall-score {
+            text-align: center;
+        }
+
+        .score-display {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#f39c12 var(--percentage), rgba(255, 255, 255, 0.1) var(--percentage));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            width: 140px;
+            height: 140px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #f39c12;
+            position: relative;
+            z-index: 1;
+        }
+
+        .score-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* XP Progress Section */
+        .xp-progress-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .xp-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .current-xp {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .xp-to-next {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .xp-progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .xp-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .level-info:hover {
+            color: #f39c12;
+        }
+
+        .level-info-btn {
+            background: transparent;
+            border: 1px solid rgba(243, 156, 18, 0.5);
+            color: #f39c12;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .level-info-btn:hover {
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .score-message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .category-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .physical-icon { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        .mental-icon { background: rgba(52, 152, 219, 0.15); color: #3498db; }
+        .nutrition-icon { background: rgba(39, 174, 96, 0.15); color: #27ae60; }
+        .skills-icon { background: rgba(155, 89, 182, 0.15); color: #9b59b6; }
+
+        .category-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .category-score {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .physical-score { color: #e74c3c; }
+        .mental-score { color: #3498db; }
+        .nutrition-score { color: #27ae60; }
+        .skills-score { color: #9b59b6; }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* XP Notification */
+        .xp-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.4s ease;
+            font-weight: 600;
+        }
+
+        .xp-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .xp-gain {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .xp-reason {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Level Guide Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .level-guide-modal {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .xp-sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .xp-source-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .xp-source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .xp-source-name {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .xp-source-amount {
+            color: #f39c12;
+            font-weight: 700;
+        }
+
+        .levels-progression {
+            margin-top: 2rem;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .level-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .level-name {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-tier {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-xp-range {
+            font-size: 0.8rem;
+            color: #f39c12;
+        }
+
+        /* Habits Tracking */
+        .habits-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .habit-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .habit-item:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .habit-item.completed {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .habit-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .habit-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .habit-checkbox.checked {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+
+        .habit-details {
+            flex: 1;
+        }
+
+        .habit-name {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .habit-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .habit-points {
+            background: #f39c12;
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .habit-item.completed .habit-points {
+            background: #27ae60;
+            color: white;
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(243, 156, 18, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #f39c12;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-meta {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .activity-points {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .action-card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f39c12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #000;
+            font-size: 1.25rem;
+        }
+
+        .action-label {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Weekly Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #e67e22;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #f39c12;
+            border: 1px solid #f39c12;
+        }
+
+        .btn-secondary:hover {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-overview {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .dashboard-container {
+                padding: 5rem 1rem 2rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .xp-sources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .levels-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+<script src="js/vivify-unified-tracker.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <header>
+            <nav>
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="community.html">Community</a></li>
+                    <li><a href="habits-tracker.html">Daily Habits</a></li>
+                    <li><a href="challenges.html">Challenges</a></li>
+                    <li><a href="dashboard.html" class="active">Performance Hub</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="#" id="logoutLink">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Level Guide Modal -->
+        <div class="modal-overlay" id="levelGuideModal">
+            <div class="level-guide-modal">
+                <div class="modal-header">
+                    <h2 class="modal-title">How to Level Up & Earn XP</h2>
+                    <button class="close-modal" onclick="closeLevelGuide()">&times;</button>
+                </div>
+                
+                <div class="xp-sources-section">
+                    <h3 style="color: #f39c12; margin-bottom: 1rem;">Ways to Earn XP</h3>
+                    <div class="xp-sources-grid" id="xpSourcesGrid">
+                        <!-- XP sources will be populated here -->
+                    </div>
+                </div>
+
+                <div class="levels-progression">
+                    <h3 style="color: #f39c12; margin-bottom: 1rem;">Level Progression</h3>
+                    <div class="levels-grid" id="levelsGrid">
+                        <!-- Levels will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="dashboard-container">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <div class="welcome-text">
+                    <h1>Unlock Your Full Potential, <span id="userName">Champion</span>!</h1>
+                    <p>Track your performance metrics and build championship habits</p>
+                </div>
+                <div class="date-time">
+                    <div id="currentDate"></div>
+                    <div id="currentTime"></div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Main Panel -->
+                <div class="main-panel">
+                    <!-- Performance Overview -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-chart-line"></i>
+                                Performance Overview
+                            </h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="performance-overview">
+                                <div class="overall-score">
+                                    <div class="score-display">
+                                        <div class="score-circle" style="--percentage: 0deg">
+                                            <span class="score-value" id="overallScore">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-label">Performance Score</div>
+                                    
+                                    <!-- XP Progress Section -->
+                                    <div class="xp-progress-section">
+                                        <div class="xp-info">
+                                            <div class="current-xp">
+                                                <span id="currentXP">0</span> XP
+                                            </div>
+                                            <div class="xp-to-next">
+                                                <span id="xpToNext">100</span> XP to <span id="nextLevel">Rising</span>
+                                            </div>
+                                        </div>
+                                        <div class="xp-progress-bar">
+                                            <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
+                                        </div>
+                                        <div class="level-info" onclick="showLevelGuide()">
+                                            <span><span id="currentTier">Bronze Tier</span> • Level <span id="currentLevel">Beginner</span></span>
+                                            <button class="level-info-btn">
+                                                <i class="fas fa-info-circle"></i> How to level up?
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="score-message" id="scoreMessage">Building your performance foundation</div>
+                                </div>
+                                
+                                <div class="categories-grid">
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon physical-icon">
+                                                <i class="fas fa-dumbbell"></i>
+                                            </div>
+                                            <span class="category-name">Physical Performance</span>
+                                        </div>
+                                        <div class="category-score physical-score" id="physicalScore">0</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="physicalProgress" style="width: 0%; background: #e74c3c;"></div>
+                                        </div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-header">
+                                                <div class="category-icon mental-icon">
+                                                    <i class="fas fa-brain"></i>
+                                                </div>
+                                                <span class="category-name">Focus & Resilience</span>
+                                            </div>
+                                            <div class="category-score mental-score" id="mentalScore">0</div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" id="mentalProgress" style="width: 0%; background: #3498db;"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="category-item">
+                                            <div class="category-header">
+                                                <div class="category-icon nutrition-icon">
+                                                    <i class="fas fa-apple-alt"></i>
+                                                </div>
+                                                <span class="category-name">Smart Nutrition</span>
+                                            </div>
+                                            <div class="category-score nutrition-score" id="nutritionScore">0</div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" id="nutritionProgress" style="width: 0%; background: #27ae60;"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="category-item">
+                                            <div class="category-header">
+                                                <div class="category-icon skills-icon">
+                                                    <i class="fas fa-graduation-cap"></i>
+                                                </div>
+                                                <span class="category-name">Life Mastery</span>
+                                            </div>
+                                            <div class="category-score skills-score" id="lifeSkillsScore">0</div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" id="skillsProgress" style="width: 0%; background: #9b59b6;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Daily Habits -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i class="fas fa-target"></i>
+                                    Daily Performance Habits
+                                </h2>
+                                <button class="btn btn-secondary btn-small" id="resetDayBtn">Reset Day</button>
+                            </div>
+                            <div class="card-content">
+                                <div class="habits-grid" id="dailyHabits">
+                                    <!-- Habits will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Recent Activity -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i class="fas fa-clock"></i>
+                                    Recent Activity
+                                </h2>
+                            </div>
+                            <div class="card-content">
+                                <div class="activity-feed" id="activityFeed">
+                                    <!-- Activity items will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Sidebar Panel -->
+                    <div class="sidebar-panel">
+                        <!-- Quick Actions -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-bolt"></i>
+                                    Quick Actions
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="quick-actions">
+                                    <a href="habits-tracker.html" class="action-card">
+                                        <div class="action-icon">
+                                            <i class="fas fa-target"></i>
+                                        </div>
+                                        <span class="action-label">Track Habits</span>
+                                    </a>
+                                    <a href="challenges.html" class="action-card">
+                                        <div class="action-icon">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                        <span class="action-label">Challenges</span>
+                                    </a>
+                                    <a href="fitness.html" class="action-card">
+                                        <div class="action-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <span class="action-label">Physical Training</span>
+                                    </a>
+                                    <a href="nutrition.html" class="action-card">
+                                        <div class="action-icon">
+                                            <i class="fas fa-apple-alt"></i>
+                                        </div>
+                                        <span class="action-label">Smart Nutrition</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Export Data Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-download"></i>
+                                    Export Data
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <button class="btn btn-secondary" onclick="exportForParents()">
+                                        Share with Parents
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="createBackup()">
+                                        Create Backup
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="showComingSoon('parent_dashboard')">
+                                        Parent Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Performance Stats -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-bar"></i>
+                                    This Week
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="stats-grid" id="weeklyStats">
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="weeklyStreak">0</div>
+                                        <div class="stat-label">Day Streak</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="weeklyHabits">0</div>
+                                        <div class="stat-label">Habits Done</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="weeklyScore">0</div>
+                                        <div class="stat-label">Avg Score</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="weeklyXP">0</div>
+                                        <div class="stat-label">XP Earned</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        
+            <footer>
+                <div class="footer-content">
+                    <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+                </div>
+            </footer>
+        </div>
+    <script>
+    // DASHBOARD PAGE - UNIFIED IMPLEMENTATION
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Check authentication
+        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+        const authToken = localStorage.getItem('authToken');
+        
+        if (!isLoggedIn || !authToken) {
+            window.location.href = 'login.html?redirect=dashboard';
+            return;
+        }
+
+        // Initialize unified tracker
+        vivifyTracker = new VivifyUnifiedTracker();
+        await vivifyTracker.initialize();
+
+        // Initialize unified leaderboard
+        const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+        const username = localStorage.getItem('username');
+        if (window.VivifyLeaderboard && username) {
+            window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+            console.log('Unified leaderboard initialized for dashboard');
+        }
+
+        // Display dashboard data
+        displayDashboard();
+
+        // Handle logout
+        const logoutLink = document.getElementById('logoutLink');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+
+        // Reset day button
+        const resetDayBtn = document.getElementById('resetDayBtn');
+        if (resetDayBtn) {
+            resetDayBtn.addEventListener('click', function() {
+                resetDailyActivities();
+            });
+        }
+
+        // Start date/time updater
+        startDateTimeUpdater();
+
+        // Track dashboard view
+        setTimeout(() => {
+            vivifyTracker.logActivity('Dashboard viewed', 2, 'page_visit');
+        }, 1000);
+    });
+
+    function displayDashboard() {
+        const data = vivifyTracker.getDashboardData();
+        
+        updateUserName();
+        updatePerformanceScores(data.scores);
+        updateXPDisplay(data.level);
+        updateDailyHabits(data.habits);
+        updateRecentActivity(data.activities);
+        updateWeeklyStats(data.streaks, data.totalPoints);
+    }
+
+    function updateUserName() {
+        try {
+            const storedUsername = localStorage.getItem('username');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const yearLevel = userProfile.yearLevel || '';
+            
+            let displayName = storedUsername || userProfile.name || 'Performer';
+            
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                if (yearLevel && yearLevel !== 'Year Level' && yearLevel !== '') {
+                    userNameElement.textContent = `${displayName} (Year ${yearLevel})`;
+                } else {
+                    userNameElement.textContent = displayName;
+                }
+            }
+        } catch (error) {
+            console.error('Error updating user name:', error);
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = 'Performer';
+            }
+        }
+    }
+
+    function updatePerformanceScores(scores) {
+        try {
+            const safeScore = (value) => isNaN(value) ? 0 : Math.round(value);
+            
+            const overallElement = document.getElementById('overallScore');
+            if (overallElement) {
+                overallElement.textContent = safeScore(scores.overall);
+            }
+            
+            // Update score message
+            const scoreMessage = document.getElementById('scoreMessage');
+            if (scoreMessage) {
+                scoreMessage.innerHTML = getScoreMessage(scores.overall);
+            }
+            
+            // Update each category
+            const categories = [
+                { key: 'physical', element: 'physicalScore', progress: 'physicalProgress' },
+                { key: 'mental', element: 'mentalScore', progress: 'mentalProgress' },
+                { key: 'nutrition', element: 'nutritionScore', progress: 'nutritionProgress' },
+                { key: 'lifeSkills', element: 'lifeSkillsScore', progress: 'skillsProgress' }
+            ];
+
+            categories.forEach(category => {
+                const scoreElement = document.getElementById(category.element);
+                const progressElement = document.getElementById(category.progress);
+                
+                const scoreValue = safeScore(scores[category.key]);
+                
+                if (scoreElement) {
+                    scoreElement.textContent = scoreValue;
+                }
+                
+                if (progressElement) {
+                    progressElement.style.width = `${scoreValue}%`;
+                }
+            });
+            
+            // Update score circle
+            const scoreCircle = document.querySelector('.score-circle');
+            if (scoreCircle) {
+                const percentage = (safeScore(scores.overall) / 100) * 360;
+                scoreCircle.style.setProperty('--percentage', `${percentage}deg`);
+            }
+            
+        } catch (error) {
+            console.error('Error updating performance scores:', error);
+        }
+    }
+
+    function updateXPDisplay(levelData) {
+        try {
+            document.getElementById('currentXP').textContent = levelData.xp;
+            document.getElementById('currentTier').textContent = `${levelData.tier} Tier`;
+            document.getElementById('currentLevel').textContent = levelData.name;
+            
+            if (levelData.nextLevelXP) {
+                const xpToNext = levelData.nextLevelXP - levelData.xp;
+                document.getElementById('xpToNext').textContent = xpToNext;
+                document.getElementById('nextLevel').textContent = getNextLevelName(levelData.name);
+            } else {
+                document.getElementById('xpToNext').textContent = 'Max';
+                document.getElementById('nextLevel').textContent = 'Level';
+            }
+            
+            // Update progress bar
+            const progressPercent = levelData.progress;
+            document.getElementById('xpFill').style.width = `${progressPercent}%`;
+            
+        } catch (error) {
+            console.error('Error updating XP display:', error);
+        }
+    }
+
+    function updateDailyHabits(habits) {
+        const container = document.getElementById('dailyHabits');
+        if (!container) return;
+
+        container.innerHTML = habits.map(habit => {
+            return `
+                <div class="habit-item ${habit.completed ? 'completed' : ''}" 
+                    onclick="${habit.completed ? '' : `toggleDailyHabit('${habit.id}')`}"
+                    style="${habit.completed ? 'cursor: default;' : 'cursor: pointer;'}">
+                    <div class="habit-info">
+                        <div class="habit-checkbox ${habit.completed ? 'checked' : ''}">
+                            ${habit.completed ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                        <div class="habit-details">
+                            <div class="habit-name">${habit.name}</div>
+                            <div class="habit-description">${habit.description}</div>
+                        </div>
+                    </div>
+                    <div class="habit-points">
+                        ${habit.completed ? 'Done ✓' : '+'} ${habit.points} XP
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function updateRecentActivity(activities) {
+        try {
+            const container = document.getElementById('activityFeed');
+            if (!container) return;
+
+            if (!activities || activities.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #666;">
+                        <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <h3 style="color: #ccc; margin-bottom: 1rem;">No recent activity</h3>
+                        <p>Start tracking your performance to see your progress here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const recentActivities = activities.slice(0, 8);
+
+            container.innerHTML = recentActivities.map(activity => {
+                const timeAgo = getTimeAgo(activity.timestamp);
+                const icon = getActivityIcon(activity.type);
+                
+                return `
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">${activity.description || activity.name}</div>
+                            <div class="activity-meta">
+                                <span>${timeAgo}</span>
+                                <span>•</span>
+                                <span>Performance</span>
+                            </div>
+                        </div>
+                        <div class="activity-points">+${activity.points} XP</div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error updating recent activity:', error);
+        }
+    }
+
+    function updateWeeklyStats(streaks, totalPoints) {
+        try {
+            const weeklyStreak = streaks.currentStreak || 0;
+            const habitsCompleted = vivifyTracker.getHabitsPageData().stats.completedToday;
+            const weeklyScore = Math.round(vivifyTracker.data.scores?.overall || 0);
+            const weeklyXP = vivifyTracker.data.totalXP || 0;
+
+            document.getElementById('weeklyStreak').textContent = weeklyStreak;
+            document.getElementById('weeklyHabits').textContent = habitsCompleted;
+            document.getElementById('weeklyScore').textContent = weeklyScore;
+            document.getElementById('weeklyXP').textContent = weeklyXP;
+        } catch (error) {
+            console.error('Error updating weekly stats:', error);
+        }
+    }
+
+    async function toggleDailyHabit(habitId) {
+        const success = await vivifyTracker.completeHabit(habitId);
+        if (success) {
+            displayDashboard(); // Refresh the display
+        }
+    }
+
+    function resetDailyActivities() {
+        if (confirm('Reset all daily habits for today?')) {
+            vivifyTracker.getAllHabits().forEach(habit => {
+                habit.completed = false;
+            });
+            
+            const today = new Date().toDateString();
+            delete vivifyTracker.data.dailyCompletions[today];
+            
+            vivifyTracker.save();
+            displayDashboard();
+            vivifyTracker.notifyCompletion('Daily habits reset!', 'info');
+        }
+    }
+
+    // Utility functions
+    function getScoreMessage(score) {
+        if (score >= 80) return "Champion level! You're performing at your peak potential.";
+        if (score >= 60) return "Strong performer! You're building elite habits.";
+        if (score >= 40) return "Good momentum! Keep building your performance edge.";
+        if (score >= 20) return "Getting started! Every champion started somewhere.";
+        return "Building your performance foundation. Time to unlock your potential.";
+    }
+
+    function getNextLevelName(currentLevel) {
+        const levels = ['Beginner', 'Rising', 'Developing', 'Skilled', 'Advanced', 'Expert', 'Elite', 'Champion', 'Legend'];
+        const currentIndex = levels.indexOf(currentLevel);
+        return currentIndex < levels.length - 1 ? levels[currentIndex + 1] : 'Max Level';
+    }
+
+    function getActivityIcon(type) {
+        const icons = {
+            'habit': 'fas fa-target',
+            'challenge_join': 'fas fa-trophy',
+            'challenge_daily': 'fas fa-calendar-check',
+            'page_visit': 'fas fa-eye'
+        };
+        return icons[type] || 'fas fa-circle';
+    }
+
+    function getTimeAgo(timestamp) {
+        try {
+            const now = new Date();
+            const activityTime = new Date(timestamp);
+            const diffInMinutes = Math.floor((now - activityTime) / (1000 * 60));
+            
+            if (diffInMinutes < 1) return 'Just now';
+            if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+            
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) return `${diffInHours}h ago`;
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays === 1) return 'Yesterday';
+            return `${diffInDays} days ago`;
+        } catch (error) {
+            return 'Recently';
+        }
+    }
+
+    function startDateTimeUpdater() {
+        updateDateTime();
+        setInterval(() => updateDateTime(), 1000);
+    }
+
+    function updateDateTime() {
+        try {
+            const now = new Date();
+            const dateElement = document.getElementById('currentDate');
+            const timeElement = document.getElementById('currentTime');
+            
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-AU', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleTimeString('en-AU', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        } catch (error) {
+            console.error('Error updating date/time:', error);
+        }
+    }
+
+    // Export functions
+    function exportForParents() {
+        const data = vivifyTracker.getDashboardData();
+        const report = {
+            studentName: JSON.parse(localStorage.getItem('userProfile') || '{}').name || 'Student',
+            reportDate: new Date().toLocaleDateString(),
+            scores: data.scores,
+            weeklyActivities: data.activities.slice(0, 7),
+            currentStreak: data.streaks.currentStreak
+        };
+        
+        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${report.studentName}_progress_report.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        vivifyTracker.notifyCompletion('Progress report exported! Share this with your parents to show your performance journey.', 'success');
+    }
+
+    function createBackup() {
+        const blob = new Blob([JSON.stringify(vivifyTracker.data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `vivify_backup_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        vivifyTracker.notifyCompletion('Backup created successfully! Your data is safe.', 'success');
+    }
+
+    function showComingSoon(feature) {
+        vivifyTracker.notifyCompletion('Premium feature coming soon! Join our waiting list to get early access.', 'info');
+    }
+
+    // Level guide modal functions
+    function showLevelGuide() {
+        document.getElementById('levelGuideModal').classList.add('active');
+    }
+
+    function closeLevelGuide() {
+        document.getElementById('levelGuideModal').classList.remove('active');
+    }
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>performance Chat - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Enhanced Professional Chat Styles */
+        .chat-hero {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=1950&q=80') center/cover;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .chat-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+        
+        .chat-hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .chat-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .chat-feature {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .chat-container {
+            max-width: 1000px;
+            margin: -3rem auto 3rem;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: 75vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            padding: 1.5rem 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .chat-info h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+        
+        .chat-info p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-action-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .chat-action-btn.danger {
+            background: rgba(231, 76, 60, 0.3);
+        }
+        
+        .chat-action-btn.danger:hover {
+            background: rgba(231, 76, 60, 0.5);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .message {
+            max-width: 75%;
+            position: relative;
+            animation: messageSlide 0.3s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-user {
+            align-self: flex-end;
+        }
+        
+        .message-user .message-bubble {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 20px 20px 5px 20px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(243, 156, 18, 0.3);
+        }
+        
+        .message-assistant {
+            align-self: flex-start;
+        }
+        
+        .message-assistant .message-bubble {
+            background: white;
+            color: #333;
+            border-radius: 20px 20px 20px 5px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 0.5rem;
+            text-align: right;
+        }
+        
+        .message-assistant .message-time {
+            color: #999;
+            text-align: left;
+        }
+        
+        .welcome-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-header {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .welcome-message ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
+        .welcome-message li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .welcome-message li::before {
+            content: "✨";
+            font-size: 1rem;
+        }
+        
+        .suggestions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .suggestion-chip {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+        
+        .suggestion-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+        }
+        
+        .message-resource {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #f39c12;
+            align-self: flex-start;
+            width: 85%;
+            margin: 1rem 0;
+        }
+        
+        .resource-header {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .resource-header h4 {
+            margin: 0;
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .resource-content {
+            padding: 1.5rem;
+        }
+        
+        .resource-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
+        .resource-content li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .resource-content li:last-child {
+            border-bottom: none;
+        }
+        
+        .resource-content li::before {
+            content: "🔹";
+            color: #f39c12;
+        }
+        
+        .resource-actions {
+            display: flex;
+            gap: 1rem;
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        .resource-btn {
+            flex: 1;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #495057;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .resource-btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+        }
+        
+        .resource-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            background: white;
+            border-radius: 20px 20px 20px 5px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            display: none;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f39c12;
+            opacity: 0.4;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.4;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .chat-input {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        
+        .input-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .chat-input textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            background: #f8f9fa;
+            color: #495057;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            max-height: 100px;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-input textarea:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+        
+        .chat-input textarea::placeholder {
+            color: #999;
+        }
+        
+        .send-button {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+        
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .privacy-notice {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+        
+        .privacy-notice p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-hero {
+                padding: 3rem 1rem 1rem;
+            }
+            
+            .chat-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .chat-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .chat-container {
+                margin: -2rem 1rem 2rem;
+                height: 70vh;
+            }
+            
+            .chat-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .chat-messages {
+                padding: 1rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .chat-input {
+                padding: 1rem;
+            }
+            
+            .chat-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .chat-action-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chat-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .chat-hero p {
+                font-size: 1rem;
+            }
+            
+            .suggestions-container {
+                flex-direction: column;
+            }
+            
+            .suggestion-chip {
+                text-align: center;
+            }
+            
+            .resource-actions {
+                flex-direction: column;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" class="active" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="chat-hero">
+                <h1>Your Personal performance Assistant</h1>
+                <p>Get personalized support, resources, and guidance for your Focus & Resilience, fitness, nutrition, and academic success. Our AI-powered assistant is here to help you thrive.</p>
+                
+                <div class="chat-features">
+                    <div class="chat-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Private & Confidential</span>
+                    </div>
+                    <div class="chat-feature">
+                        <i class="fas fa-clock"></i>
+                        <span>Available 24/7</span>
+                    </div>
+                    <div class="chat-feature">
+                        <i class="fas fa-brain"></i>
+                        <span>AI-Powered Support</span>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <div class="chat-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="chat-info">
+                            <h3>performance Assistant</h3>
+                            <p>Here to support your journey to better health</p>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button id="resourcesButton" class="chat-action-btn">
+                            <i class="fas fa-book-medical"></i>
+                            <span>Resources</span>
+                        </button>
+                        <button id="crisisButton" class="chat-action-btn">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Crisis</span>
+                        </button>
+                        <button id="clearChatButton" class="chat-action-btn danger">
+                            <i class="fas fa-refresh"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="chatMessages" class="chat-messages">
+                    <!-- Messages will be inserted here by JavaScript -->
+                    
+                    <!-- Typing indicator -->
+                    <div id="typingIndicator" class="typing-indicator">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <div class="input-container">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Share what's on your mind or ask me anything about performance..." 
+                            rows="1"
+                            aria-label="Message input"
+                        ></textarea>
+                    </div>
+                    <button id="sendButton" class="send-button" disabled aria-label="Send message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="privacy-notice">
+                <p><strong>Privacy & Safety:</strong> This chat is for informational and support purposes only. In case of emergency, please contact emergency services (911) or the National Suicide Prevention Lifeline (988). All conversations are private and not stored permanently.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Enhanced Professional performance Chat Implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const clearChatButton = document.getElementById('clearChatButton');
+            const resourcesButton = document.getElementById('resourcesButton');
+            const crisisButton = document.getElementById('crisisButton');
+            
+            // Keep track of conversation for context
+            let conversationHistory = [];
+            let currentTopic = null;
+            
+            // Response database organized by topic
+            const responseDatabase = {
+                // Focus & Resilience Topics
+                depression: {
+                    info: "Depression is more than feeling sad. It's a common but serious mood disorder affecting how you feel, think, and handle daily activities. Many college students experience depression, and effective help is available.",
+                    tips: [
+                        "Reach out to a Focus & Resilience professional - counseling services offer free confidential sessions for students.",
+                        "Stay connected with supportive friends and family, even when it feels difficult.",
+                        "Try to maintain regular routines for sleep, meals, and daily activities.",
+                        "Physical activity, even short walks, can help improve mood through endorphin release.",
+                        "Practice self-compassion and remember that experiencing depression doesn't define you."
+                    ],
+                    resources: {
+                        title: 'Depression Support Resources',
+                        content: 'These resources can help you manage depression and find support:',
+                        resources: [
+                            'Campus Counseling Services: Free, confidential sessions available',
+                            'Depression Support Group: Weekly meetings in a safe environment',
+                            'Online Screening Tool: Confidential self-assessment available',
+                            'Therapy Assistance Online (TAO): Self-help modules and resources',
+                            'Crisis Support Line: Available 24/7 at (555) 123-4567'
+                        ],
+                        primaryAction: 'Schedule Counseling',
+                        secondaryAction: 'Join Support Group'
+                    },
+                    suggestions: [
+                        "Tell me about counseling services",
+                        "How can I support a friend with depression?",
+                        "What's the difference between sadness and depression?",
+                        "I want to talk to someone now"
+                    ]
+                },
+                
+                anxiety: {
+                    info: "Anxiety is a normal emotion that sometimes becomes overwhelming. Many students experience anxiety, especially during exams or major transitions. When anxiety persists and interferes with daily life, it's highly treatable.",
+                    tips: [
+                        "Practice the 5-4-3-2-1 grounding technique: 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste.",
+                        "Challenge negative thoughts by examining the evidence for and against them.",
+                        "Limit caffeine and sugar, which can increase anxiety symptoms.",
+                        "Try progressive muscle relaxation to release physical tension.",
+                        "Set aside specific 'worry time' to contain anxious thoughts to one period."
+                    ],
+                    resources: {
+                        title: 'Anxiety Management Resources',
+                        content: 'These resources can help you manage anxiety effectively:',
+                        resources: [
+                            'Anxiety Support Group: Weekly meetings every Wednesday at 5PM',
+                            'Anxiety Management Workbooks: Available at the performance Center',
+                            'Individual Counseling: One-on-one support with trained professionals',
+                            'Mindfulness App: Free access to guided meditations and exercises',
+                            'Crisis Support: 24/7 hotline for immediate anxiety support'
+                        ],
+                        primaryAction: 'Join Support Group',
+                        secondaryAction: 'Download Mindfulness App'
+                    },
+                    suggestions: [
+                        "Quick techniques for anxiety relief",
+                        "How to manage test anxiety",
+                        "What's the difference between anxiety and stress?",
+                        "I need help right now"
+                    ]
+                },
+                
+                stress: {
+                    info: "Stress is your body's natural response to challenges. While some stress can be motivating, chronic stress can impact your physical and Focus & Resilience. College brings unique stressors that many students face.",
+                    tips: [
+                        "Practice deep breathing: inhale for 4 counts, hold for 4, exhale for 6 counts.",
+                        "Take regular breaks during study sessions to prevent burnout.",
+                        "Engage in physical activity to help reduce stress hormones naturally.",
+                        "Talk to someone you trust about what's causing your stress.",
+                        "Keep a stress journal to identify patterns and triggers."
+                    ],
+                    resources: {
+                        title: 'Stress Management Resources',
+                        content: 'These resources can help you manage stress effectively:',
+                        resources: [
+                            'Stress Management Workshops: Every Tuesday at 4PM in the performance Center',
+                            'Peer Support Groups: Connect with students facing similar challenges',
+                            'Mindfulness Sessions: Daily drop-in sessions for meditation and relaxation',
+                            'Academic Coaching: Help with time management and study strategies',
+                            'Campus Recreation: Physical activities to help reduce stress'
+                        ],
+                        primaryAction: 'Join Stress Workshop',
+                        secondaryAction: 'View All Resources'
+                    },
+                    suggestions: [
+                        "Quick stress relief techniques",
+                        "How to manage academic stress",
+                        "Long-term stress management strategies",
+                        "I'm feeling overwhelmed"
+                    ]
+                },
+                
+                // Physical Health Topics
+                sleep: {
+                    info: "Quality sleep is essential for learning, memory, and emotional wellbeing. Most college students need 7-9 hours per night. Sleep problems are common but significantly impact academic performance and Focus & Resilience.",
+                    tips: [
+                        "Keep a consistent sleep schedule, even on weekends.",
+                        "Create a relaxing bedtime routine with activities like reading or gentle stretching.",
+                        "Make your sleep environment dark, quiet, and cool.",
+                        "Avoid screens for at least 30 minutes before bed.",
+                        "Limit caffeine after midday and avoid alcohol before sleep."
+                    ],
+                    resources: {
+                        title: 'Sleep Improvement Resources',
+                        content: 'These resources can help you improve your sleep quality:',
+                        resources: [
+                            'Sleep Hygiene Workshop: Monthly sessions on building better sleep habits',
+                            'Sleep Assessment: Available at the Campus Health Center',
+                            'Relaxation Audio Library: Guided sleep meditations and soundscapes',
+                            'Sleep Environment Consultation: Tips for optimizing your dorm room',
+                            'Sleep Tracking Apps: Free tools to monitor your sleep patterns'
+                        ],
+                        primaryAction: 'Schedule Sleep Assessment',
+                        secondaryAction: 'Download Sleep Guide'
+                    },
+                    suggestions: [
+                        "Tips for better sleep environment",
+                        "How to create a bedtime routine",
+                        "Managing late-night study sessions",
+                        "I can't fall asleep"
+                    ]
+                },
+                
+                exercise: {
+                    info: "Regular physical activity improves not just physical health but also mental wellbeing, focus, and sleep quality. Even small amounts of movement make a difference, and finding enjoyable activities makes exercise sustainable.",
+                    tips: [
+                        "Start small - even 10 minutes of daily activity provides significant benefits.",
+                        "Find activities you enjoy so exercise feels less like a chore.",
+                        "Schedule workouts like classes to maintain consistency.",
+                        "Use campus facilities like the gym, pool, or recreation center.",
+                        "Consider walking or biking to class for built-in physical activity."
+                    ],
+                    resources: {
+                        title: 'Fitness & Exercise Resources',
+                        content: 'These resources can help you stay physically active:',
+                        resources: [
+                            'Campus Recreation Center: Free access with student ID',
+                            'Group Fitness Classes: From yoga to high-intensity interval training',
+                            'Personal Training: Discounted sessions available for students',
+                            'Intramural Sports: Casual leagues for various skill levels',
+                            'Walking/Running Trails: Campus maps available at performance Center'
+                        ],
+                        primaryAction: 'View Fitness Schedule',
+                        secondaryAction: 'Get Workout Plans'
+                    },
+                    suggestions: [
+                        "Beginner workout routines",
+                        "Exercise for stress relief",
+                        "Campus fitness facilities",
+                        "Quick dorm room exercises"
+                    ]
+                },
+                
+                nutrition: {
+                    info: "Proper nutrition fuels your brain and body for optimal performance. Good eating habits can improve focus, memory, and mood while supporting your immune system during stressful periods.",
+                    tips: [
+                        "Plan and prep meals ahead to avoid relying on unhealthy convenience options.",
+                        "Keep nutritious snacks handy like nuts, fruits, yogurt, or whole grain crackers.",
+                        "Stay hydrated - even mild dehydration affects concentration and energy.",
+                        "Include protein with each meal to help you feel satisfied longer.",
+                        "Choose complex carbohydrates like whole grains for sustained energy."
+                    ],
+                    resources: {
+                        title: 'Nutrition Support Resources',
+                        content: 'These resources can help you maintain healthy eating habits:',
+                        resources: [
+                            'Nutrition Counseling: Free consultations with registered dietitians',
+                            'Healthy Cooking Classes: Learn to prepare quick, nutritious meals',
+                            'Campus Food Pantry: Free groceries for students experiencing food insecurity',
+                            'Dining Hall Nutrition Guide: Finding healthy options in campus dining',
+                            'Budget-Friendly Recipe Collection: Eating well on a student budget'
+                        ],
+                        primaryAction: 'Schedule Nutrition Counseling',
+                        secondaryAction: 'Get Healthy Recipes'
+                    },
+                    suggestions: [
+                        "Healthy eating on a budget",
+                        "Quick meal ideas for busy students",
+                        "Brain foods for studying",
+                        "Dining hall healthy choices"
+                    ]
+                },
+                
+                // Social & Academic performance
+                lonely: {
+                    info: "Feeling lonely is a common experience in college, especially when adjusting to new environments. Building meaningful connections takes time, but there are many opportunities to meet people and develop friendships.",
+                    tips: [
+                        "Join clubs or organizations that align with your interests and values.",
+                        "Attend campus events, even if you initially go alone - many others do too.",
+                        "Study in common areas like libraries or student centers rather than isolating in your room.",
+                        "Volunteer for campus or community service projects to meet like-minded people.",
+                        "Form study groups with classmates - academic collaboration often leads to friendships."
+                    ],
+                    resources: {
+                        title: 'Social Connection Resources',
+                        content: 'These resources can help you build meaningful relationships:',
+                        resources: [
+                            'Student Organizations Fair: Explore hundreds of clubs and activities',
+                            'Peer Mentor Program: Connect with experienced upperclass students',
+                            'Community Building Workshops: Learn social skills and conversation techniques',
+                            'Volunteer Opportunities: Meet others while making a positive impact',
+                            'Social Events Calendar: Find activities and gatherings to attend'
+                        ],
+                        primaryAction: 'Find Student Organizations',
+                        secondaryAction: 'Join Peer Support'
+                    },
+                    suggestions: [
+                        "How to make friends in college",
+                        "Overcoming social anxiety",
+                        "Finding my community on campus",
+                        "Building deeper connections"
+                    ]
+                },
+                
+                academic: {
+                    info: "Academic success is closely connected to your overall wellbeing. Effective study strategies, good time management, and maintaining balance with self-care all contribute to better performance and reduced stress.",
+                    tips: [
+                        "Break large assignments into smaller, manageable tasks with specific deadlines.",
+                        "Use the Pomodoro Technique: 25-minute focused work sessions with 5-minute breaks.",
+                        "Vary your study methods - reading, writing, discussing, and teaching others.",
+                        "Take advantage of campus resources like tutoring centers and writing labs.",
+                        "Balance academic work with physical activity, social time, and adequate sleep."
+                    ],
+                    resources: {
+                        title: 'Academic Success Resources',
+                        content: 'These resources support your academic achievement:',
+                        resources: [
+                            'Academic Success Center: Study skills coaching and tutoring services',
+                            'Writing Center: Help with papers, essays, and research projects',
+                            'Subject-Specific Tutoring: Available for most courses and majors',
+                            'Time Management Workshops: Learn to balance coursework and life',
+                            'Study Skills Assessment: Identify your learning strengths and areas for growth'
+                        ],
+                        primaryAction: 'Schedule Academic Coaching',
+                        secondaryAction: 'Find Tutoring Services'
+                    },
+                    suggestions: [
+                        "Effective study techniques",
+                        "Time management for students",
+                        "Overcoming procrastination",
+                        "Test preparation strategies"
+                    ]
+                },
+                
+                general: {
+                    info: "performance encompasses physical, mental, social, and academic health. Each dimension affects the others, creating a holistic picture of wellbeing that supports your success and happiness in college.",
+                    tips: [
+                        "Make self-care a regular part of your routine, not just during crisis times.",
+                        "Start small when building new healthy habits - consistency matters more than perfection.",
+                        "Connect with others who share your performance goals for mutual support and accountability.",
+                        "Regularly check in with yourself about what's working well and what needs adjustment.",
+                        "Take advantage of the many free performance resources available on campus."
+                    ],
+                    resources: {
+                        title: 'Comprehensive performance Resources',
+                        content: 'These resources support all aspects of student wellbeing:',
+                        resources: [
+                            'Campus performance Center: Central hub for health and wellbeing services',
+                            'Counseling Services: Free Focus & Resilience support for all students',
+                            'Recreation Facilities: Fitness equipment, courts, pools, and group classes',
+                            'Health Services: Medical care, health education, and preventive services',
+                            'Peer performance Coaching: One-on-one support from trained student volunteers'
+                        ],
+                        primaryAction: 'Schedule performance Assessment',
+                        secondaryAction: 'Explore All Resources'
+                    },
+                    suggestions: [
+                        "Focus & Resilience resources",
+                        "Physical performance tips",
+                        "Academic success strategies",
+                        "Social connection opportunities"
+                    ]
+                }
+            };
+            
+            // Greeting and response variations
+            const greetings = [
+                "Hello! I'm here to support your performance journey. What would you like to talk about today?",
+                "Hi there! How can I help you with your wellbeing today?",
+                "Welcome! I'm your performance assistant. What aspect of health and performance interests you?",
+                "Hello! I'm here to provide support and resources. What's on your mind?"
+            ];
+            
+            const thankYouResponses = [
+                "You're very welcome! I'm glad I could help. Is there anything else you'd like to explore?",
+                "Happy to assist! Feel free to ask if you have any other performance questions.",
+                "You're welcome! Remember, I'm here whenever you need support or information.",
+                "Glad I could be helpful! Don't hesitate to reach out anytime you need guidance."
+            ];
+            
+            // Initialize chat with welcome message
+            function addWelcomeMessage() {
+                const welcomeMessage = document.createElement('div');
+                welcomeMessage.className = 'welcome-message';
+                welcomeMessage.innerHTML = `
+                    <h3 class="welcome-header">Welcome to Your Personal performance Assistant</h3>
+                    <p>I'm here to provide personalized support, resources, and guidance for your performance journey. You can ask me about:</p>
+                    <ul>
+                        <li>Focus & Resilience support including stress, anxiety, and depression</li>
+                        <li>Physical performance with fitness and exercise guidance</li>
+                        <li>Nutrition advice and healthy eating strategies</li>
+                        <li>Sleep improvement and healthy sleep habits</li>
+                        <li>Academic performance and study success strategies</li>
+                        <li>Social performance and building meaningful connections</li>
+                    </ul>
+                    <p>What would you like to talk about today? I'm here to listen and help.</p>
+                `;
+                chatMessages.appendChild(welcomeMessage);
+                
+                // Add initial assistant message
+                addAssistantMessage(getRandomGreeting());
+                
+                // Add initial suggestion chips
+                addSuggestionChips([
+                    "I'm feeling stressed about school",
+                    "Help me sleep better",
+                    "I'm feeling anxious lately",
+                    "How can I eat healthier?",
+                    "I'm feeling lonely on campus"
+                ]);
+            }
+            
+            function getRandomGreeting() {
+                return greetings[Math.floor(Math.random() * greetings.length)];
+            }
+            
+            function getRandomThankYouResponse() {
+                return thankYouResponses[Math.floor(Math.random() * thankYouResponses.length)];
+            }
+            
+            // Add user message with enhanced styling
+            function addUserMessage(text) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message message-user';
+                
+                const bubbleElement = document.createElement('div');
+                bubbleElement.className = 'message-bubble';
+                bubbleElement.innerHTML = text.replace(/\n/g, '<br>');
+                
+                const timeElement = document.createElement('div');
+                timeElement.className = 'message-time';
+                timeElement.textContent = 'Just now';
+                
+                messageElement.appendChild(bubbleElement);
+                messageElement.appendChild(timeElement);
+                chatMessages.appendChild(messageElement);
+                
+                conversationHistory.push({ role: "user", content: text });
+                if (conversationHistory.length > 10) {
+                    conversationHistory = conversationHistory.slice(-10);
+                }
+                
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Add assistant message with enhanced styling
+            function addAssistantMessage(text) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message message-assistant';
+                
+                const bubbleElement = document.createElement('div');
+                bubbleElement.className = 'message-bubble';
+                bubbleElement.innerHTML = text.replace(/\n/g, '<br>');
+                
+                const timeElement = document.createElement('div');
+                timeElement.className = 'message-time';
+                timeElement.textContent = 'Just now';
+                
+                messageElement.appendChild(bubbleElement);
+                messageElement.appendChild(timeElement);
+                chatMessages.appendChild(messageElement);
+                
+                conversationHistory.push({ role: "assistant", content: text });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Add suggestion chips
+            function addSuggestionChips(suggestions) {
+                const suggestionsContainer = document.createElement('div');
+                suggestionsContainer.className = 'suggestions-container';
+                
+                suggestions.forEach(suggestion => {
+                    const chip = document.createElement('button');
+                    chip.className = 'suggestion-chip';
+                    chip.textContent = suggestion;
+                    chip.addEventListener('click', function() {
+                        addUserMessage(this.textContent);
+                        suggestionsContainer.remove();
+                        processUserMessage(this.textContent);
+                    });
+                    suggestionsContainer.appendChild(chip);
+                });
+                
+                chatMessages.appendChild(suggestionsContainer);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Add resource message card
+            function addResourceMessage(resource) {
+                const resourceElement = document.createElement('div');
+                resourceElement.className = 'message-resource';
+                
+                const headerElement = document.createElement('div');
+                headerElement.className = 'resource-header';
+                headerElement.innerHTML = `<h4>${resource.title}</h4>`;
+                resourceElement.appendChild(headerElement);
+                
+                const contentElement = document.createElement('div');
+                contentElement.className = 'resource-content';
+                
+                const contentParagraph = document.createElement('p');
+                contentParagraph.textContent = resource.content;
+                contentElement.appendChild(contentParagraph);
+                
+                if (resource.resources && resource.resources.length) {
+                    const resourcesList = document.createElement('ul');
+                    resource.resources.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = item;
+                        resourcesList.appendChild(listItem);
+                    });
+                    contentElement.appendChild(resourcesList);
+                }
+                
+                resourceElement.appendChild(contentElement);
+                
+                const actionsElement = document.createElement('div');
+                actionsElement.className = 'resource-actions';
+                
+                if (resource.primaryAction) {
+                    const primaryBtn = document.createElement('button');
+                    primaryBtn.className = 'resource-btn resource-btn-primary';
+                    primaryBtn.innerHTML = `<i class="fas fa-external-link-alt"></i> ${resource.primaryAction}`;
+                    primaryBtn.addEventListener('click', function() {
+                        addUserMessage(`I want to ${resource.primaryAction}`);
+                        processUserMessage(`I want to ${resource.primaryAction}`);
+                    });
+                    actionsElement.appendChild(primaryBtn);
+                }
+                
+                if (resource.secondaryAction) {
+                    const secondaryBtn = document.createElement('button');
+                    secondaryBtn.className = 'resource-btn';
+                    secondaryBtn.innerHTML = `<i class="fas fa-list"></i> ${resource.secondaryAction}`;
+                    secondaryBtn.addEventListener('click', function() {
+                        addUserMessage(`I want to ${resource.secondaryAction}`);
+                        processUserMessage(`I want to ${resource.secondaryAction}`);
+                    });
+                    actionsElement.appendChild(secondaryBtn);
+                }
+                
+                resourceElement.appendChild(actionsElement);
+                chatMessages.appendChild(resourceElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Show/hide typing indicator
+            function showTypingIndicator() {
+                typingIndicator.style.display = 'block';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function hideTypingIndicator() {
+                typingIndicator.style.display = 'none';
+            }
+            
+            // Send message function
+            function sendMessage() {
+                if (!messageInput || !messageInput.value.trim()) return;
+                
+                const messageText = messageInput.value.trim();
+                addUserMessage(messageText);
+                
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                sendButton.setAttribute('disabled', 'disabled');
+                
+                processUserMessage(messageText);
+            }
+            
+            // Process user message and generate response
+            function processUserMessage(message) {
+                showTypingIndicator();
+                
+                const topic = identifyTopic(message);
+                currentTopic = topic;
+                
+                const responseType = determineResponseType(message, topic);
+                const delay = Math.floor(Math.random() * 1500) + 1000;
+                
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const response = generateResponse(topic, responseType);
+                    addAssistantMessage(response);
+                    handleFollowUp(topic, responseType);
+                }, delay);
+            }
+            
+            // Identify topic from message
+            function identifyTopic(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
+                    return "thanks";
+                }
+                
+                if (lowerMessage.includes("hello") || lowerMessage.includes("hi") || lowerMessage.includes("hey")) {
+                    return "greeting";
+                }
+                
+                // Focus & Resilience topics
+                if (lowerMessage.includes("depress") || lowerMessage.includes("sad") || 
+                    lowerMessage.includes("hopeless") || lowerMessage.includes("worthless")) {
+                    return "depression";
+                }
+                
+                if (lowerMessage.includes("anxi") || lowerMessage.includes("worr") || 
+                    lowerMessage.includes("panic") || lowerMessage.includes("nervous")) {
+                    return "anxiety";
+                }
+                
+                if (lowerMessage.includes("stress") || lowerMessage.includes("overwhelm") || 
+                    lowerMessage.includes("pressure") || lowerMessage.includes("burnout")) {
+                    return "stress";
+                }
+                
+                // Physical health topics
+                if (lowerMessage.includes("sleep") || lowerMessage.includes("tired") || 
+                    lowerMessage.includes("insomnia") || lowerMessage.includes("rest")) {
+                    return "sleep";
+                }
+                
+                if (lowerMessage.includes("exercise") || lowerMessage.includes("fitness") || 
+                    lowerMessage.includes("workout") || lowerMessage.includes("physical")) {
+                    return "exercise";
+                }
+                
+                if (lowerMessage.includes("nutrition") || lowerMessage.includes("eat") || 
+                    lowerMessage.includes("food") || lowerMessage.includes("diet")) {
+                    return "nutrition";
+                }
+                
+                // Social performance
+                if (lowerMessage.includes("lonely") || lowerMessage.includes("alone") || 
+                    lowerMessage.includes("isolat") || lowerMessage.includes("friend")) {
+                    return "lonely";
+                }
+                
+                // Academic performance
+                if (lowerMessage.includes("study") || lowerMessage.includes("academic") || 
+                    lowerMessage.includes("school") || lowerMessage.includes("grade")) {
+                    return "academic";
+                }
+                
+                return currentTopic || "general";
+            }
+            
+            // Determine response type
+            function determineResponseType(message, topic) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (topic === "thanks") return "thanks";
+                if (topic === "greeting") return "greeting";
+                
+                if (lowerMessage.includes("?") || lowerMessage.includes("what") || 
+                    lowerMessage.includes("how") || lowerMessage.includes("tell me")) {
+                    return "info";
+                }
+                
+                if (lowerMessage.includes("help") || lowerMessage.includes("tip") || 
+                    lowerMessage.includes("advice") || lowerMessage.includes("how to")) {
+                    return "tips";
+                }
+                
+                if (lowerMessage.includes("resource") || lowerMessage.includes("support") || 
+                    lowerMessage.includes("service") || lowerMessage.includes("counseling")) {
+                    return "resources";
+                }
+                
+                return "info";
+            }
+            
+            // Generate response
+            function generateResponse(topic, responseType) {
+                const data = responseDatabase[topic];
+                
+                switch(responseType) {
+                    case "greeting":
+                        return getRandomGreeting();
+                    case "thanks":
+                        return getRandomThankYouResponse();
+                    case "info":
+                        return data.info;
+                    case "tips":
+                        const tips = data.tips;
+                        const selectedTips = tips.slice(0, 3);
+                        return `Here are some helpful strategies:\n\n• ${selectedTips.join('\n\n• ')}`;
+                    case "resources":
+                        setTimeout(() => {
+                            if (data.resources) {
+                                addResourceMessage(data.resources);
+                            }
+                        }, 500);
+                        return `I have some great resources that can help with ${topic}. Let me share those with you.`;
+                    default:
+                        return data.info;
+                }
+            }
+            
+            // Handle follow-up after response
+            function handleFollowUp(topic, responseType) {
+                if (responseType !== "greeting" && responseType !== "thanks") {
+                    setTimeout(() => {
+                        const suggestions = responseDatabase[topic].suggestions || 
+                            responseDatabase.general.suggestions;
+                        addSuggestionChips(suggestions);
+                    }, 1000);
+                }
+            }
+            
+            // Event listeners
+            if (sendButton) {
+                sendButton.addEventListener('click', sendMessage);
+            }
+            
+            if (messageInput) {
+                messageInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+                
+                messageInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                    
+                    if (this.value.trim()) {
+                        sendButton.removeAttribute('disabled');
+                    } else {
+                        sendButton.setAttribute('disabled', 'disabled');
+                    }
+                });
+            }
+            
+            // Resource and crisis buttons
+            if (resourcesButton) {
+                resourcesButton.addEventListener('click', function() {
+                    addAssistantMessage("I'd be happy to share performance resources with you. What area would you like to focus on?");
+                    addSuggestionChips([
+                        "Focus & Resilience resources",
+                        "Physical performance options",
+                        "Academic support services",
+                        "Social connection opportunities",
+                        "Show me everything"
+                    ]);
+                });
+            }
+            
+            if (crisisButton) {
+                crisisButton.addEventListener('click', function() {
+                    addResourceMessage({
+                        title: 'Crisis Support Resources',
+                        content: 'If you\'re experiencing a Focus & Resilience crisis or need immediate support, these resources are available 24/7:',
+                        resources: [
+                            'National Suicide Prevention Lifeline: Call or text 988',
+                            'Crisis Text Line: Text HOME to 741741',
+                            'Campus Crisis Line: (555) 123-4567 available 24/7',
+                            'Campus Counseling Center: Walk-in crisis hours 10am-4pm daily',
+                            'Emergency Services: Call 911 for immediate emergency assistance'
+                        ],
+                        primaryAction: 'Call Crisis Line Now',
+                        secondaryAction: 'Text Crisis Support'
+                    });
+                });
+            }
+            
+            if (clearChatButton) {
+                clearChatButton.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to start a new conversation? This will clear your chat history.')) {
+                        chatMessages.innerHTML = '';
+                        conversationHistory = [];
+                        currentTopic = null;
+                        addWelcomeMessage();
+                    }
+                });
+            }
+            
+            // Initialize the chat
+            addWelcomeMessage();
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

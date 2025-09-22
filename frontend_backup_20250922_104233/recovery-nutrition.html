@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Nutrition - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section with Recovery Focus */
+        .recovery-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .recovery-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .recovery-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .recovery-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Live Recovery Stats */
+        .recovery-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .recovery-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .recovery-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .recovery-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Recovery Timer & Tracker */
+        .recovery-tracker {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .tracker-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .tracker-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .recovery-phases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .phase-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .phase-card:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .phase-card.active {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .phase-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        .phase-timer {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .phase-title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .nutrition-checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nutrition-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nutrition-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nutrition-item.completed {
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .nutrition-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nutrition-item.completed .nutrition-check {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .nutrition-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Recovery Calculator */
+        .recovery-calculator {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .calculator-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .calculator-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .calc-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calc-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .calculate-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .calc-results {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .calc-results.active {
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .result-amount {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Recovery Challenge */
+        .recovery-challenge {
+            padding: 6rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .recovery-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .metric-card:hover {
+            background: rgba(243, 156, 18, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .metric-card.completed {
+            background: rgba(243, 156, 18, 0.2);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(243, 156, 18, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: #f39c12;
+        }
+
+        .metric-card.completed .metric-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .metric-title {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Success Stories */
+        .recovery-stories {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .story-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .story-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .story-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .story-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .story-metric {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .story-metric .value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .story-metric .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* CTA Section */
+        .recovery-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .recovery-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .recovery-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .recovery-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .recovery-phases {
+                grid-template-columns: 1fr;
+            }
+
+            .calculator-form {
+                grid-template-columns: 1fr;
+            }
+
+            .recovery-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .challenge-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes countUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .count-up {
+            animation: countUp 0.6s ease-out;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Recovery Focus -->
+        <section class="recovery-hero fade-in-up">
+            <div class="hero-content">
+                <div class="recovery-badge">Performance Recovery</div>
+                <h1>Recovery Nutrition</h1>
+                <p>Master the science of recovery nutrition to optimize your training adaptations, reduce fatigue, and maintain peak performance. Join student-athletes building elite recovery protocols.</p>
+                
+                <div class="recovery-stats">
+                    <div class="recovery-stat">
+                        <span class="stat-number" id="active-athletes">1,892</span>
+                        <span class="stat-label">Active Athletes</span>
+                    </div>
+                    <div class="recovery-stat">
+                        <span class="stat-number" id="recovery-sessions">346</span>
+                        <span class="stat-label">Recovery Sessions Today</span>
+                    </div>
+                    <div class="recovery-stat">
+                        <span class="stat-number" id="performance-gains">88%</span>
+                        <span class="stat-label">Report Faster Recovery</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#tracker" class="btn btn-primary">Start Recovery Tracking</a>
+                    <a href="#calculator" class="btn btn-secondary">Calculate My Needs</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Phases Tracker -->
+        <section class="recovery-tracker fade-in-up">
+            <div class="tracker-container" id="tracker">
+                <h2 class="section-heading">Recovery Nutrition Timeline</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track your post-workout nutrition across the critical recovery phases. Optimize muscle protein synthesis, glycogen replenishment, and adaptation.</p>
+                
+                <div class="recovery-phases">
+                    <div class="phase-card" onclick="selectPhase(this, 'immediate')" data-phase="immediate">
+                        <div class="phase-header">
+                            <div class="phase-icon">
+                                <i class="fas fa-stopwatch"></i>
+                            </div>
+                            <div class="phase-timer" id="immediate-timer">0-30 min</div>
+                        </div>
+                        <div class="phase-title">Immediate Recovery</div>
+                        <div class="phase-description">Critical window for muscle protein synthesis and initial glycogen replenishment.</div>
+                        <div class="nutrition-checklist">
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'protein-shake')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Protein shake (20-25g whey)</div>
+                            </div>
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'fast-carbs')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Fast carbs (30-40g)</div>
+                            </div>
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'hydration')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Rehydration (500-750ml)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="phase-card" onclick="selectPhase(this, 'short')" data-phase="short">
+                        <div class="phase-header">
+                            <div class="phase-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="phase-timer" id="short-timer">30-120 min</div>
+                        </div>
+                        <div class="phase-title">Short-term Recovery</div>
+                        <div class="phase-description">Continued protein synthesis and substantial glycogen replenishment with complete nutrition.</div>
+                        <div class="nutrition-checklist">
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'complete-meal')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Complete meal with protein & carbs</div>
+                            </div>
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'electrolytes')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Electrolyte replacement</div>
+                            </div>
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'anti-inflammatory')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Anti-inflammatory foods</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="phase-card" onclick="selectPhase(this, 'extended')" data-phase="extended">
+                        <div class="phase-header">
+                            <div class="phase-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="phase-timer" id="extended-timer">24-48 hours</div>
+                        </div>
+                        <div class="phase-title">Extended Recovery</div>
+                        <div class="phase-description">Long-term adaptation, tissue repair, and preparation for next training session.</div>
+                        <div class="nutrition-checklist">
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'protein-distribution')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Protein every 3-4 hours</div>
+                            </div>
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'micronutrients')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Micronutrient-rich foods</div>
+                            </div>
+                            <div class="nutrition-item" onclick="toggleNutritionItem(event, this, 'sleep-nutrition')">
+                                <div class="nutrition-check">✓</div>
+                                <div class="nutrition-text">Sleep-supporting nutrition</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <div class="metric-value" id="recovery-score">0/9</div>
+                    <div class="metric-label">Recovery Actions Completed</div>
+                    <button class="btn btn-primary" onclick="saveRecoveryProgress()" id="save-recovery-btn" style="display: none; margin-top: 1rem;">Save Recovery Session</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Calculator -->
+        <section class="recovery-calculator fade-in-up">
+            <div class="calculator-container" id="calculator">
+                <h2 class="section-heading">Personalized Recovery Calculator</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Calculate your optimal recovery nutrition based on training type, duration, intensity, and body composition goals.</p>
+                
+                <div class="calculator-tabs">
+                    <div class="calc-tab active" onclick="switchCalcTab('endurance')">Endurance</div>
+                    <div class="calc-tab" onclick="switchCalcTab('strength')">Strength</div>
+                    <div class="calc-tab" onclick="switchCalcTab('team-sports')">Team Sports</div>
+                    <div class="calc-tab" onclick="switchCalcTab('recovery')">Recovery Day</div>
+                </div>
+
+                <div id="endurance" class="calculator-form">
+                    <div class="form-group">
+                        <label>Training Duration</label>
+                        <select id="training-duration">
+                            <option value="30">30-45 minutes</option>
+                            <option value="60">60-90 minutes</option>
+                            <option value="120">2-3 hours</option>
+                            <option value="180">3+ hours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Training Intensity</label>
+                        <select id="training-intensity">
+                            <option value="moderate">Moderate (60-75% max HR)</option>
+                            <option value="vigorous">Vigorous (75-85% max HR)</option>
+                            <option value="high">High (85-95% max HR)</option>
+                            <option value="maximal">Maximal (95%+ max HR)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Body Weight (kg)</label>
+                        <input type="number" id="body-weight" placeholder="70" min="40" max="150">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Training Goal</label>
+                        <select id="training-goal">
+                            <option value="endurance">Endurance Performance</option>
+                            <option value="fat-loss">Fat Loss</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="muscle-gain">Lean Mass Gain</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Next Training Session</label>
+                        <select id="next-session">
+                            <option value="6">Within 6 hours</option>
+                            <option value="12">Within 12 hours</option>
+                            <option value="24">Within 24 hours</option>
+                            <option value="48">48+ hours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Environmental Factors</label>
+                        <select id="environment">
+                            <option value="normal">Normal conditions</option>
+                            <option value="hot">Hot weather</option>
+                            <option value="humid">High humidity</option>
+                            <option value="altitude">High altitude</option>
+                        </select>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateRecoveryNeeds()">Calculate My Recovery Plan</button>
+                </div>
+                
+                <div class="calc-results" id="recovery-results">
+                    <h4 style="color: #f39c12; margin-bottom: 1rem;">Your Personalized Recovery Protocol</h4>
+                    <div class="results-grid" id="recovery-recommendations">
+                        <!-- Results will be populated here -->
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="startRecoveryProtocol()">Start This Protocol</button>
+                        <button class="btn btn-secondary" onclick="saveRecoveryPlan()">Save to My Plans</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Challenge -->
+        <section class="recovery-challenge fade-in-up">
+            <div class="challenge-widget">
+                <h3 class="challenge-title">7-Day Recovery Optimization Challenge</h3>
+                <p class="challenge-description">Join 1,892 student-athletes optimizing their recovery nutrition! Track post-workout nutrition, hydration, and sleep for one week to maximize your training adaptations.</p>
+                
+                <div class="recovery-metrics">
+                    <div class="metric-card" onclick="toggleRecoveryMetric(this, 'hydration')">
+                        <div class="metric-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="metric-title">Hydration</div>
+                        <div class="metric-value" id="hydration-score">0/7</div>
+                    </div>
+
+                    <div class="metric-card" onclick="toggleRecoveryMetric(this, 'protein')">
+                        <div class="metric-icon">
+                            <i class="fas fa-drumstick-bite"></i>
+                        </div>
+                        <div class="metric-title">Post-Workout Protein</div>
+                        <div class="metric-value" id="protein-score">0/7</div>
+                    </div>
+
+                    <div class="metric-card" onclick="toggleRecoveryMetric(this, 'carbs')">
+                        <div class="metric-icon">
+                            <i class="fas fa-bread-slice"></i>
+                        </div>
+                        <div class="metric-title">Glycogen Replenishment</div>
+                        <div class="metric-value" id="carbs-score">0/7</div>
+                    </div>
+
+                    <div class="metric-card" onclick="toggleRecoveryMetric(this, 'sleep')">
+                        <div class="metric-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="metric-title">Recovery Sleep</div>
+                        <div class="metric-value" id="sleep-score">0/7</div>
+                    </div>
+                </div>
+                
+                <div class="challenge-stats">
+                    <div class="challenge-stat">
+                        <span class="number" id="challenge-progress">0%</span>
+                        <span class="label">Weekly Progress</span>
+                    </div>
+                    <div class="challenge-stat">
+                        <span class="number" id="leaderboard-position">#--</span>
+                        <span class="label">Leaderboard Position</span>
+                    </div>
+                    <div class="challenge-stat">
+                        <span class="number" id="recovery-streak">0</span>
+                        <span class="label">Perfect Recovery Days</span>
+                    </div>
+                </div>
+                
+                <div class="challenge-actions">
+                    <button class="btn btn-primary" onclick="joinRecoveryChallenge()">Join Recovery Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewAthleteLeaderboard()">Athlete Leaderboard</button>
+                    <button class="btn btn-secondary" onclick="shareRecoveryProgress()">Share Progress</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Stories -->
+        <section class="recovery-stories fade-in-up">
+            <div class="stories-container">
+                <h2 class="section-heading">Athlete Recovery Success Stories</h2>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">MK</div>
+                            <div class="story-info">
+                                <h4>Marcus K.</h4>
+                                <p>Track & Field • Division I</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Optimizing my recovery nutrition cut my between-session fatigue in half. I can now train at higher intensities more frequently. The immediate post-workout protocol made the biggest difference."
+                        </div>
+                        <div class="story-metrics">
+                            <div class="story-metric">
+                                <span class="value">67</span>
+                                <span class="label">Recovery Sessions</span>
+                            </div>
+                            <div class="story-metric">
+                                <span class="value">-40%</span>
+                                <span class="label">Fatigue Reduction</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">SJ</div>
+                            <div class="story-info">
+                                <h4>Sarah J.</h4>
+                                <p>Swimming • NCAA Division II</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Learning proper recovery timing helped me drop 2 seconds off my 200m freestyle. The calculator showed me I was under-fueling for my training volume. Game changer!"
+                        </div>
+                        <div class="story-metrics">
+                            <div class="story-metric">
+                                <span class="value">94</span>
+                                <span class="label">Day Streak</span>
+                            </div>
+                            <div class="story-metric">
+                                <span class="value">-2sec</span>
+                                <span class="label">200m PR</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">DL</div>
+                            <div class="story-info">
+                                <h4>David L.</h4>
+                                <p>Basketball • Club Level</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The recovery challenge taught me that nutrition timing matters as much as what I eat. My energy levels during practice improved dramatically, especially in the fourth quarter."
+                        </div>
+                        <div class="story-metrics">
+                            <div class="story-metric">
+                                <span class="value">156</span>
+                                <span class="label">Day Streak</span>
+                            </div>
+                            <div class="story-metric">
+                                <span class="value">+35%</span>
+                                <span class="label">Energy Improvement</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary" onclick="shareAthleteStory()">Share Your Recovery Story</button>
+                    <button class="btn btn-secondary" onclick="joinAthletesCommunity()">Join Athletes Community</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="recovery-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Optimize Your Recovery Today</h2>
+                <p class="cta-subtitle">Join 1,892 student-athletes using evidence-based recovery nutrition to maximize training adaptations, reduce fatigue, and achieve peak performance. Your competitive edge starts with recovery.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="signup.html" class="btn btn-primary">Start Free Trial</a>
+                    <button class="btn btn-secondary" onclick="watchRecoveryDemo()">Watch Recovery Science Demo</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Load saved progress and start updates
+            loadRecoveryProgress();
+            startLiveUpdates();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+
+        // Live Data Updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                const activeAthletes = document.getElementById('active-athletes');
+                const recoverySessions = document.getElementById('recovery-sessions');
+                
+                if (activeAthletes) {
+                    const currentVal = parseInt(activeAthletes.textContent.replace(',', ''));
+                    activeAthletes.textContent = (currentVal + Math.floor(Math.random() * 2)).toLocaleString();
+                }
+                
+                if (recoverySessions) {
+                    const currentVal = parseInt(recoverySessions.textContent);
+                    recoverySessions.textContent = currentVal + Math.floor(Math.random() * 8);
+                }
+            }, 25000); // Update every 25 seconds
+        }
+
+        // Recovery Tracking Functions
+        let completedNutritionItems = new Set();
+        let currentPhase = null;
+        let recoveryMetrics = {
+            hydration: 0,
+            protein: 0,
+            carbs: 0,
+            sleep: 0
+        };
+
+        function selectPhase(element, phase) {
+            // Remove active from all phases
+            document.querySelectorAll('.phase-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active to selected phase
+            element.classList.add('active');
+            currentPhase = phase;
+            
+            // Start phase timer
+            startPhaseTimer(phase);
+        }
+
+        function startPhaseTimer(phase) {
+            // This would start an actual timer in a real application
+            console.log(`Started ${phase} recovery phase timer`);
+        }
+
+        function toggleNutritionItem(event, element, itemId) {
+            event.stopPropagation();
+            
+            const check = element.querySelector('.nutrition-check');
+            const fullItemId = `${currentPhase || 'immediate'}-${itemId}`;
+            
+            if (completedNutritionItems.has(fullItemId)) {
+                completedNutritionItems.delete(fullItemId);
+                element.classList.remove('completed');
+                check.style.color = 'transparent';
+            } else {
+                completedNutritionItems.add(fullItemId);
+                element.classList.add('completed');
+                check.style.color = '#000';
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 1000);
+            }
+            
+            updateRecoveryScore();
+            saveRecoveryProgress();
+        }
+
+        function updateRecoveryScore() {
+            const recoveryScore = document.getElementById('recovery-score');
+            const saveBtn = document.getElementById('save-recovery-btn');
+            const score = completedNutritionItems.size;
+            
+            recoveryScore.textContent = `${score}/9`;
+            recoveryScore.classList.add('count-up');
+            setTimeout(() => recoveryScore.classList.remove('count-up'), 600);
+            
+            if (score > 0) {
+                saveBtn.style.display = 'inline-block';
+            } else {
+                saveBtn.style.display = 'none';
+            }
+        }
+
+        // Calculator Functions
+        function switchCalcTab(tabName) {
+            document.querySelectorAll('.calc-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            // Here you would show different calculator forms based on the tab
+        }
+
+        function calculateRecoveryNeeds() {
+            const duration = parseInt(document.getElementById('training-duration').value);
+            const intensity = document.getElementById('training-intensity').value;
+            const bodyWeight = parseFloat(document.getElementById('body-weight').value);
+            const goal = document.getElementById('training-goal').value;
+            const nextSession = parseInt(document.getElementById('next-session').value);
+            const environment = document.getElementById('environment').value;
+            
+            if (!bodyWeight || bodyWeight < 40 || bodyWeight > 150) {
+                alert('Please enter a valid body weight between 40-150 kg');
+                return;
+            }
+            
+            const recommendations = generateRecoveryRecommendations({
+                duration, intensity, bodyWeight, goal, nextSession, environment
+            });
+            
+            const resultsContainer = document.getElementById('recovery-results');
+            const recommendationsDiv = document.getElementById('recovery-recommendations');
+            
+            recommendationsDiv.innerHTML = recommendations.map(rec => `
+                <div class="result-item">
+                    <span class="result-amount">${rec.amount}</span>
+                    <span class="result-label">${rec.label}</span>
+                </div>
+            `).join('');
+            
+            resultsContainer.classList.add('active');
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function generateRecoveryRecommendations(params) {
+            const { duration, intensity, bodyWeight, goal, nextSession, environment } = params;
+            
+            // Base calculations for recovery nutrition
+            const proteinNeeds = Math.round(bodyWeight * 0.3); // 0.25-0.4g/kg
+            const carbsNeeds = Math.round(bodyWeight * (duration >= 120 ? 1.2 : 0.8)); // 0.5-1.2g/kg
+            const fluidNeeds = Math.round(duration * 15 + (environment === 'hot' ? 200 : 0)); // ml
+            
+            const baseRecommendations = [
+                { amount: `${proteinNeeds}g`, label: 'Protein (within 30 min)' },
+                { amount: `${carbsNeeds}g`, label: 'Carbohydrates' },
+                { amount: `${fluidNeeds}ml`, label: 'Fluid Replacement' }
+            ];
+            
+            // Add specific recommendations based on parameters
+            if (intensity === 'high' || intensity === 'maximal') {
+                baseRecommendations.push({ amount: '200-300mg', label: 'Sodium' });
+            }
+            
+            if (nextSession <= 12) {
+                baseRecommendations.push({ amount: '3:1 ratio', label: 'Carb:Protein for rapid recovery' });
+            }
+            
+            if (environment === 'hot' || environment === 'humid') {
+                baseRecommendations.push({ amount: '300-500mg', label: 'Additional Electrolytes' });
+            }
+            
+            return baseRecommendations.slice(0, 6);
+        }
+
+        function startRecoveryProtocol() {
+            alert('Starting your personalized recovery protocol! You\'ll receive timed reminders for optimal nutrition timing.');
+        }
+
+        function saveRecoveryPlan() {
+            alert('Recovery plan saved to your nutrition library! Access it anytime from your dashboard.');
+        }
+
+        // Challenge Functions
+        function toggleRecoveryMetric(element, metric) {
+            if (recoveryMetrics[metric] >= 7) return; // Max 7 days
+            
+            recoveryMetrics[metric]++;
+            element.classList.add('completed');
+            
+            const valueElement = document.getElementById(`${metric}-score`);
+            valueElement.textContent = `${recoveryMetrics[metric]}/7`;
+            
+            element.classList.add('pulse');
+            setTimeout(() => element.classList.remove('pulse'), 1000);
+            
+            updateChallengeProgress();
+            saveRecoveryProgress();
+        }
+
+        function updateChallengeProgress() {
+            const totalProgress = Object.values(recoveryMetrics).reduce((sum, val) => sum + val, 0);
+            const progressPercent = Math.round((totalProgress / 28) * 100); // 28 = 4 metrics × 7 days
+            
+            document.getElementById('challenge-progress').textContent = `${progressPercent}%`;
+            
+            const perfectDays = Math.min(...Object.values(recoveryMetrics));
+            document.getElementById('recovery-streak').textContent = perfectDays;
+            
+            if (totalProgress > 0) {
+                const rank = Math.max(1, 300 - (totalProgress * 8) + Math.floor(Math.random() * 20));
+                document.getElementById('leaderboard-position').textContent = `#${rank}`;
+            }
+        }
+
+        function joinRecoveryChallenge() {
+            alert('Welcome to the 7-Day Recovery Optimization Challenge! Track your post-workout nutrition to maximize your training adaptations and performance gains.');
+        }
+
+        function viewAthleteLeaderboard() {
+            alert('Athlete Leaderboard:\n\n1. Marcus K. - 98% completion\n2. Sarah J. - 96% completion\n3. David L. - 94% completion\n\n...Your current rank and progress will be displayed here!');
+        }
+
+        function shareRecoveryProgress() {
+            const totalProgress = Object.values(recoveryMetrics).reduce((sum, val) => sum + val, 0);
+            alert(`Sharing recovery progress: ${Math.round((totalProgress / 28) * 100)}% completion in the 7-day recovery optimization challenge! Join me in maximizing training adaptations.`);
+        }
+
+        // Progress Functions
+        function loadRecoveryProgress() {
+            const saved = localStorage.getItem('recoveryProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                completedNutritionItems = new Set(progress.completedNutritionItems || []);
+                recoveryMetrics = progress.recoveryMetrics || recoveryMetrics;
+                
+                // Apply saved state to UI
+                completedNutritionItems.forEach(itemId => {
+                    const [phase, item] = itemId.split('-', 2);
+                    const element = document.querySelector(`[data-phase="${phase}"] [onclick*="${item}"]`);
+                    if (element) {
+                        element.classList.add('completed');
+                        element.querySelector('.nutrition-check').style.color = '#000';
+                    }
+                });
+                
+                // Update metric displays
+                Object.keys(recoveryMetrics).forEach(metric => {
+                    const scoreElement = document.getElementById(`${metric}-score`);
+                    if (scoreElement) {
+                        scoreElement.textContent = `${recoveryMetrics[metric]}/7`;
+                        if (recoveryMetrics[metric] > 0) {
+                            const metricCard = document.querySelector(`[onclick*="${metric}"]`);
+                            if (metricCard) {
+                                metricCard.classList.add('completed');
+                            }
+                        }
+                    }
+                });
+                
+                updateRecoveryScore();
+                updateChallengeProgress();
+            }
+        }
+
+        function saveRecoveryProgress() {
+            const progress = {
+                completedNutritionItems: Array.from(completedNutritionItems),
+                recoveryMetrics: recoveryMetrics,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('recoveryProgress', JSON.stringify(progress));
+        }
+
+        function saveRecoveryProgress() {
+            const btn = document.getElementById('save-recovery-btn');
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = 'Recovery Session Saved!';
+                setTimeout(() => {
+                    btn.textContent = 'Save Recovery Session';
+                    btn.disabled = false;
+                }, 2000);
+            }, 1000);
+            
+            // Save to localStorage
+            const progress = {
+                completedNutritionItems: Array.from(completedNutritionItems),
+                recoveryMetrics: recoveryMetrics,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('recoveryProgress', JSON.stringify(progress));
+        }
+
+        // Success Story Functions
+        function shareAthleteStory() {
+            alert('Share your recovery optimization story! Inspire other athletes with your journey to faster recovery and improved performance.');
+        }
+
+        function joinAthletesCommunity() {
+            alert('Welcome to the Athletes Recovery Community! Connect with student-athletes optimizing their recovery nutrition and performance.');
+        }
+
+        function watchRecoveryDemo() {
+            alert('Watch our evidence-based recovery nutrition demo showing the science behind optimal post-workout nutrition timing and composition for maximum training adaptations.');
+        }
+
+        // Auto-save progress periodically
+        setInterval(() => {
+            if (completedNutritionItems.size > 0 || Object.values(recoveryMetrics).some(val => val > 0)) {
+                saveRecoveryProgress();
+            }
+        }, 30000); // Save every 30 seconds
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

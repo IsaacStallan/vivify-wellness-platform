@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Stretching - Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Active Stretching specific styles */
+        .stretching-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1593164842264-0820ab39e724?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .stretching-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .stretching-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .section-heading {
+            text-align: center;
+            color: #f39c12;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .benefits-container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .benefits-container h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .vs-passive {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .vs-content {
+            padding: 2rem;
+        }
+
+        .vs-content h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #444;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: #333;
+            color: #f39c12;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+
+        .stretches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .stretch-card {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1.5rem;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .stretch-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .stretch-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stretch-details h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .stretch-details p {
+            color: #ddd;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .stretch-meta {
+            display: flex;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .guidelines-container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 3rem auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .guidelines-container h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .guidelines-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guidelines-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .guidelines-list li::before {
+            content: '→';
+            color: #f39c12;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background-color: #1a365d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box h4 {
+            color: #63b3ed;
+            margin-top: 0;
+        }
+
+        .highlight-box p {
+            color: #ddd;
+            margin-bottom: 0;
+        }
+
+        .routine-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .routine-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .routine-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .routine-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .routine-details {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .routine-details h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .routine-details ul {
+            color: #ddd;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .routine-details li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .stretching-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stretches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stretch-card {
+                grid-template-columns: 1fr;
+            }
+
+            .stretch-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="../about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="../fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="../strength.html" aria-label="Strength Training Page">Strength Training</a>
+                                <a href="../cardio.html" aria-label="Cardio Training Page">Cardio Training</a>
+                                <a href="../flexibility.html" class="active" aria-label="Flexibility Training Page">Flexibility</a>
+                                <a href="../endurance.html" aria-label="Endurance Training Page">Endurance</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="../profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="../login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="../signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="stretching-hero">
+            <h1>Active Stretching</h1>
+            <p>Build both flexibility and strength by using your own muscles to create and maintain stretches</p>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <h2 class="section-heading">What is Active Stretching?</h2>
+            <p>Active stretching is a technique where you achieve and maintain a stretch through the contraction of opposing muscle groups, without external assistance. Unlike passive stretching where gravity, props, or a partner provide the stretching force, active stretching relies solely on your own muscular strength to create and hold the stretch position.</p>
+            <p>During active stretching, the antagonist muscle (the muscle being stretched) relaxes while the agonist muscle (the opposite muscle group) contracts to create the stretching force. This dual action of contraction and relaxation helps develop both strength and flexibility simultaneously, making it an efficient and functional approach to improving range of motion.</p>
+            <p>This method is particularly valuable for students and athletes as it develops the kind of flexibility that directly translates to improved performance in sports and daily activities. By strengthening the muscles that create certain movements while stretching their opposing muscle groups, active stretching helps build usable, functional flexibility.</p>
+        </section>
+
+        <!-- Benefits Section -->
+        <div class="benefits-container">
+            <h3>Benefits of Active Stretching</h3>
+            <ul class="benefits-list">
+                <li><strong>Simultaneous Strength & Flexibility:</strong> Develops both strength in the contracting muscles and flexibility in the stretching muscles.</li>
+                <li><strong>Functional Mobility:</strong> Improves usable, practical range of motion that translates directly to everyday movements and athletic performance.</li>
+                <li><strong>Better Body Control:</strong> Enhances neuromuscular coordination and body awareness as you learn to isolate and control specific muscle groups.</li>
+                <li><strong>Reduced Injury Risk:</strong> Builds strength throughout the range of motion, potentially reducing vulnerability at end ranges.</li>
+                <li><strong>Independence:</strong> Requires no equipment, partners, or props, making it accessible anywhere and anytime.</li>
+                <li><strong>Improved Circulation:</strong> The active muscle contractions increase blood flow to the working tissues, enhancing recovery and tissue health.</li>
+                <li><strong>Enhanced Mind-Body Connection:</strong> The focus required for proper execution improves kinesthetic awareness and proprioception.</li>
+                <li><strong>Balance Development:</strong> Many active stretches challenge and improve balance, especially those performed standing or in unilateral positions.</li>
+            </ul>
+        </div>
+
+        <!-- Active vs Passive Comparison -->
+        <div class="vs-passive">
+            <div class="vs-content">
+                <h3>Active vs. Passive Stretching: Key Differences</h3>
+                <p>Understanding the distinction between active and passive stretching can help you choose the right approach for your needs:</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th>Active Stretching</th>
+                        <th>Passive Stretching</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Force Source</strong></td>
+                        <td>Your own muscular contraction</td>
+                        <td>External force (gravity, partner, props)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Muscle Activity</strong></td>
+                        <td>Active contraction of opposing muscles</td>
+                        <td>Relaxation of target muscles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Benefits</strong></td>
+                        <td>Develops both strength and flexibility</td>
+                        <td>Primarily increases flexibility</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Energy Expenditure</strong></td>
+                        <td>Higher (requires muscular work)</td>
+                        <td>Lower (requires minimal effort)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duration</strong></td>
+                        <td>Typically shorter holds (10-15 seconds)</td>
+                        <td>Longer holds possible (30-90+ seconds)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Translation to Function</strong></td>
+                        <td>Direct carryover to dynamic movements</td>
+                        <td>May require additional training for functional use</td>
+                    </tr>
+                </table>
+                
+                <div class="highlight-box">
+                    <h4>Student Tip: Combining Methods</h4>
+                    <p>For optimal flexibility development, consider incorporating both active and passive stretching into your routine. Active stretching works well as part of warm-ups or during study breaks, while passive stretching can be perfect for longer, relaxing evening sessions when unwinding from academic stress.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Active Stretches -->
+        <h2 class="section-heading">Essential Active Stretches</h2>
+        <div class="stretches-grid">
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1593164842264-0820ab39e724?auto=format&fit=crop&w=600&q=80" alt="Standing Quad Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Standing Active Quad Stretch</h3>
+                    <p>Stretches the quadriceps while strengthening the hamstrings. Helpful for students who experience tight quads from prolonged sitting.</p>
+                    <p><strong>How to perform:</strong> Stand on one leg (use a wall for balance if needed). Bend your other knee and actively pull your heel toward your buttock by engaging your hamstrings, without using your hands. Hold for 10-15 seconds, then switch legs. Repeat 2-3 times per side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Intermediate</span>
+                        <span>Hold Time: 10-15 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1600881333217-47fea5d1a19e?auto=format&fit=crop&w=600&q=80" alt="Active Hamstring Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Supine Active Hamstring Stretch</h3>
+                    <p>Stretches the hamstrings while strengthening the hip flexors and quadriceps. Excellent for counteracting the effects of prolonged sitting during classes or studying.</p>
+                    <p><strong>How to perform:</strong> Lie on your back with both legs extended. Activate your quadriceps to straighten one leg and lift it toward the ceiling using your hip flexors, keeping your leg straight. Hold for 10-15 seconds, then switch legs. Repeat 2-3 times per side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner-Intermediate</span>
+                        <span>Hold Time: 10-15 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1581093450021-a7360e9a6b5?auto=format&fit=crop&w=600&q=80" alt="Active Chest Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Standing Active Chest Stretch</h3>
+                    <p>Stretches the chest muscles while strengthening the upper back. Perfect for improving posture after long periods of studying or screen time.</p>
+                    <p><strong>How to perform:</strong> Stand with arms at your sides, palms facing forward. Actively pull your shoulder blades together and down while keeping your chest lifted, creating an opening across your chest. Hold for 10-15 seconds. Repeat 3-4 times.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Hold Time: 10-15 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1571019613591-2dd0a8f9f2c1?auto=format&fit=crop&w=600&q=80" alt="Active Calf Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Active Calf Stretch</h3>
+                    <p>Stretches the calf muscles while strengthening the anterior tibialis. Beneficial for students who experience calf tightness from walking around campus.</p>
+                    <p><strong>How to perform:</strong> Stand with one foot slightly forward. Keep the back leg straight with the heel on the ground. Actively flex the front foot, pulling your toes toward your shin to create a stretch in the back leg's calf. Hold for 10-15 seconds, then switch sides. Repeat 2-3 times per leg.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Hold Time: 10-15 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1609899537878-88d5ba422bd6?auto=format&fit=crop&w=600&q=80" alt="Active Hip Flexor Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Active Hip Flexor Stretch</h3>
+                    <p>Stretches the hip flexors while strengthening the glutes. Ideal for addressing tight hips from prolonged sitting during lectures and study sessions.</p>
+                    <p><strong>How to perform:</strong> Kneel in a lunge position with one knee on the ground and the other foot planted in front. Actively squeeze the glute of the kneeling leg while keeping your torso upright to create a stretch in the front of the hip. Hold for 10-15 seconds, then switch sides. Repeat 2-3 times per side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Intermediate</span>
+                        <span>Hold Time: 10-15 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" alt="Active Shoulder Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Active Shoulder Stretch</h3>
+                    <p>Stretches the anterior deltoids and chest while strengthening the posterior shoulder muscles. Excellent for improving posture after computer work.</p>
+                    <p><strong>How to perform:</strong> Stand with arms at your sides. Rotate your arms externally so your palms face forward, then actively move your arms backward while squeezing your shoulder blades together. Hold for 10-15 seconds. Repeat 3-4 times.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Hold Time: 10-15 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1598575468023-d594d8edb4f4?auto=format&fit=crop&w=600&q=80" alt="Active Neck Stretch">
+                </div>
+                <div class="stretch-details">
+                    <h3>Active Neck Stretch</h3>
+                    <p>Stretches one side of the neck while strengthening the opposing side. Helps relieve tension from studying and screen time.</p>
+                    <p><strong>How to perform:</strong> Sit or stand with good posture. Tilt your head to one side (ear toward shoulder) by actively using the muscles on that side of your neck. Hold for 5-10 seconds, then switch sides. Repeat 2-3 times per side. Perform gently and avoid excessive force.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Hold Time: 5-10 seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stretch-card">
+                <div class="stretch-image">
+                    <img src="https://images.unsplash.com/photo-1600618528240-fb9fc964b853?auto=format&fit=crop&w=600&q=80" alt="Active Spine Rotation">
+                </div>
+                <div class="stretch-details">
+                    <h3>Active Seated Spinal Rotation</h3>
+                    <p>Stretches the muscles of the back and core through rotation. Excellent for relieving stiffness from sitting in lectures or studying.</p>
+                    <p><strong>How to perform:</strong> Sit on a chair with your feet flat on the floor. Cross your arms over your chest or place hands on shoulders. Actively rotate your torso to one side using your core muscles (not momentum). Hold for 10 seconds, then switch sides. Repeat 2-3 times per side.</p>
+                    <div class="stretch-meta">
+                        <span>Difficulty: Beginner</span>
+                        <span>Hold Time: 10 seconds</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guidelines Section -->
+        <div class="guidelines-container">
+            <h3>Active Stretching Guidelines</h3>
+            <ul class="guidelines-list">
+                <li><strong>Warm up first:</strong> Perform 5-10 minutes of light activity before active stretching to increase blood flow and tissue temperature.</li>
+                <li><strong>Focus on proper alignment:</strong> Maintain good body position throughout each stretch to target the intended muscles and prevent compensation.</li>
+                <li><strong>Use controlled movements:</strong> Move deliberately into each position without momentum or bouncing.</li>
+                <li><strong>Breathe naturally:</strong> Continue normal breathing throughout the stretch, without holding your breath.</li>
+                <li><strong>Start with shorter holds:</strong> Begin with 5-10 second holds and gradually work up to 15-20 seconds as your strength and endurance improve.</li>
+                <li><strong>Use moderate contraction:</strong> Aim for about 20-30% of your maximum contraction force—enough to create and maintain the stretch but not so much that you fatigue quickly.</li>
+                <li><strong>Include major muscle groups:</strong> Target all primary muscle groups for balanced flexibility development.</li>
+                <li><strong>Repeat 2-3 times:</strong> Multiple repetitions of each stretch enhance both flexibility and strength gains.</li>
+                <li><strong>Incorporate regularly:</strong> Include active stretching 3-4 times per week for optimal benefits.</li>
+                <li><strong>Progress gradually:</strong> Increase the intensity, duration, and difficulty of stretches as your flexibility and strength improve.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h4>Perfect for Students</h4>
+                <p>Active stretching is particularly valuable for students as it can be performed quickly between classes or study sessions to counteract prolonged sitting. The dual benefit of strength and flexibility development makes it an efficient use of limited time, and the energizing effect can help combat mental fatigue during long study periods.</p>
+            </div>
+        </div>
+
+        <!-- Sample Routines -->
+        <section class="routine-section">
+            <h2 class="section-heading">Active Stretching Routines for Students</h2>
+            
+            <div class="routine-card">
+                <h3>Morning Activation Routine</h3>
+                <p>A quick routine to wake up your body and mind, enhancing circulation and preparing for the day ahead.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 5-7 minutes</li>
+                        <li><strong>When to Use:</strong> First thing in the morning</li>
+                        <li><strong>Stretches (hold each for 10 seconds, repeat twice):</strong>
+                            <ol>
+                                <li>Active neck stretches (all directions)</li>
+                                <li>Standing chest stretch with shoulder blade retraction</li>
+                                <li>Standing active quadriceps stretch</li>
+                                <li>Active hamstring stretch</li>
+                                <li>Seated spinal rotation</li>
+                                <li>Active calf stretch</li>
+                            </ol>
+                        </li>
+                        <li><strong>Benefits:</strong> Increases alertness, improves circulation, reduces morning stiffness</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>Study Break Revitalizer</h3>
+                <p>A targeted routine to counteract the negative effects of prolonged sitting during study sessions, improving circulation and reducing stiffness.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 3-5 minutes</li>
+                        <li><strong>When to Use:</strong> Every 45-60 minutes during studying</li>
+                        <li><strong>Stretches (hold each for 10 seconds, one set):</strong>
+                            <ol>
+                                <li>Active neck stretches</li>
+                                <li>Standing shoulder stretches</li>
+                                <li>Active chest opener</li>
+                                <li>Standing hip flexor stretch with glute activation</li>
+                                <li>Standing hamstring stretch</li>
+                            </ol>
+                        </li>
+                        <li><strong>Benefits:</strong> Reduces mental fatigue, relieves muscle tension, improves focus when returning to studies</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="routine-card">
+                <h3>Pre-Workout Activation</h3>
+                <p>A comprehensive active stretching routine to prepare your body for exercise by activating key muscle groups and enhancing joint mobility.</p>
+                <div class="routine-details">
+                    <h4>Routine Details:</h4>
+                    <ul>
+                        <li><strong>Duration:</strong> 8-10 minutes</li>
+                        <li><strong>When to Use:</strong> Before workouts or athletic activities</li>
+                        <li><strong>Preparation:</strong> Begin with 2-3 minutes of light cardio (marching in place, jumping jacks)</li>
+                        <li><strong>Stretches (hold each for 10-15 seconds, repeat twice):</strong>
+                            <ol>
+                                <li>Active shoulder circles and rotations</li>
+                                <li>Standing chest stretch</li>
+                                <li>Active hip flexor stretch</li>
+                                <li>Active hamstring stretch</li>
+                                <li>Active quadriceps stretch</li>
+                                <li>Calf stretches</li>
+                                <li>Ankle mobility exercises</li>
+                                <li>Spinal rotations</li>
+                            </ol>
+                        </li>
+                        <li><strong>Progression:</strong> Move from top to bottom of the body, activating major muscle groups</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="../privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="../terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="../contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication state check
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> <script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

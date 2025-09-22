@@ -1,0 +1,2965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Thinking - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section with Live Community */
+        .strategic-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .strategic-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .strategic-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .strategic-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Elite Mind Stats */
+        .elite-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .elite-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .elite-stat::before {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 8px;
+            height: 8px;
+            background: #9b59b6;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(155, 89, 182, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(155, 89, 182, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(155, 89, 182, 0); }
+        }
+
+        .elite-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .elite-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Weekly Strategy Challenge */
+        .strategy-challenge {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+            border: 1px solid rgba(155, 89, 182, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .challenge-timer {
+            background: rgba(155, 89, 182, 0.2);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: #9b59b6;
+            font-weight: 600;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .challenge-participants {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .participant-stat {
+            text-align: center;
+        }
+
+        .participant-stat .number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #9b59b6;
+        }
+
+        .participant-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Strategic Thinking Framework */
+        .thinking-framework {
+            padding: 6rem 2rem;
+        }
+
+        .framework-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .framework-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .framework-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .framework-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .framework-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .framework-content {
+            display: none;
+        }
+
+        .framework-content.active {
+            display: block;
+        }
+
+        .thinking-exercises {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .exercise-item:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .exercise-item.completed {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(243, 156, 18, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #f39c12;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-item.completed .exercise-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .exercise-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .exercise-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .exercise-streak {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .exercise-item.completed .exercise-streak {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+        }
+
+        .exercise-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .difficulty-level {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .difficulty-dot.active {
+            background: #f39c12;
+        }
+
+        .time-estimate {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        /* Decision Making Simulator */
+        .decision-simulator {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .simulator-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .simulator-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .scenario-card {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(155, 89, 182, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .scenario-title {
+            color: #9b59b6;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .decision-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .decision-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .decision-option:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+            transform: scale(1.02);
+        }
+
+        .decision-option.selected {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: rgba(243, 156, 18, 0.5);
+        }
+
+        .option-label {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .analysis-section {
+            display: none;
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .analysis-section.active {
+            display: block;
+        }
+
+        .analysis-title {
+            color: #27ae60;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .thinking-frameworks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .framework-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .framework-name {
+            color: #27ae60;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .framework-score {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Leadership Scenarios */
+        .leadership-scenarios {
+            padding: 6rem 2rem;
+        }
+
+        .scenarios-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .scenario-card-grid {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-card-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .scenario-card-grid:hover::before {
+            transform: scaleX(1);
+        }
+
+        .scenario-card-grid:hover {
+            transform: translateY(-10px);
+            background: rgba(155, 89, 182, 0.05);
+            border-color: rgba(155, 89, 182, 0.2);
+        }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .scenario-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .scenario-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .scenario-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .scenario-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-item {
+            background: rgba(155, 89, 182, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #9b59b6;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Strategic Leaderboard */
+        .strategic-leaderboard {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .leaderboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .leaderboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .leaderboard-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(155, 89, 182, 0.1);
+            transform: translateX(10px);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #9b59b6;
+            min-width: 40px;
+        }
+
+        .rank.first {
+            color: #ffd700;
+        }
+
+        .rank.second {
+            color: #c0c0c0;
+        }
+
+        .rank.third {
+            color: #cd7f32;
+        }
+
+        .player-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .player-info {
+            flex-grow: 1;
+        }
+
+        .player-name {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .player-school {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        .player-stats {
+            text-align: right;
+        }
+
+        .strategic-score {
+            color: #9b59b6;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .scenarios-completed {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        /* CTA Section */
+        .strategic-cta {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+}
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .left-nav ul, .right-nav ul {
+            display: none;
+        }
+
+        .strategic-hero {
+            padding: 120px 1rem 4rem;
+        }
+
+        .strategic-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .elite-stats {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .thinking-exercises {
+            grid-template-columns: 1fr;
+        }
+
+        .framework-tabs {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scenarios-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .decision-options {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-links {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .challenge-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .challenge-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(-100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    .slide-in {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.6s ease-out;
+    }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+<div class="wrapper">
+    <!-- Hero Section with Elite Mind Stats -->
+    <section class="strategic-hero fade-in-up">
+        <div class="hero-content">
+            <div class="strategic-badge">🧠 Elite Mind Training</div>
+            <h1>Strategic Thinking</h1>
+            <p>Develop the strategic mindset of elite performers. Master decision-making frameworks, systems thinking, and leadership strategies used by top achievers to navigate complex challenges.</p>
+            
+            <div class="elite-stats">
+                <div class="elite-stat">
+                    <span class="stat-number">1,834</span>
+                    <span class="stat-label">Students Training</span>
+                </div>
+                <div class="elite-stat">
+                    <span class="stat-number">156</span>
+                    <span class="stat-label">Scenarios Completed Today</span>
+                </div>
+                <div class="elite-stat">
+                    <span class="stat-number">91%</span>
+                    <span class="stat-label">Report Better Decisions</span>
+                </div>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="#framework" class="btn btn-primary">Start Training</a>
+                <a href="#challenge" class="btn btn-secondary">Join Challenge</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weekly Strategy Challenge -->
+    <section class="strategy-challenge fade-in-up">
+        <div class="challenge-widget" id="challenge">
+            <div class="challenge-header">
+                <h3 class="challenge-title">🎯 Strategic Decision Challenge</h3>
+                <div class="challenge-timer" id="challenge-timer">Ends in 6 days 14:32:45</div>
+            </div>
+            
+            <p class="challenge-description">Navigate a complex leadership scenario this week! Make strategic decisions, analyze outcomes, and compete with 1,834 students building elite decision-making skills.</p>
+            
+            <div class="challenge-participants">
+                <div class="participant-stat">
+                    <span class="number" id="challenge-completed">392</span>
+                    <span class="label">Completed</span>
+                </div>
+                <div class="participant-stat">
+                    <span class="number" id="avg-score">87%</span>
+                    <span class="label">Avg Strategic Score</span>
+                </div>
+                <div class="participant-stat">
+                    <span class="number" id="your-rank">#23</span>
+                    <span class="label">Your Rank</span>
+                </div>
+            </div>
+            
+            <div class="challenge-actions">
+                <button class="btn btn-primary" onclick="startStrategicChallenge()">Accept Challenge</button>
+                <button class="btn btn-secondary" onclick="viewStrategicLeaderboard()">Strategic Leaderboard</button>
+                <button class="btn btn-secondary" onclick="joinThinkTank()">Join Think Tank</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategic Thinking Framework -->
+    <section class="thinking-framework fade-in-up">
+        <div class="framework-container" id="framework">
+            <h2 class="section-heading">Elite Thinking Frameworks</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Master the mental models and frameworks used by top leaders, strategists, and decision-makers to think clearly under pressure.</p>
+            
+            <div class="framework-tabs">
+                <div class="framework-tab active" onclick="switchFramework('systems')">Systems Thinking</div>
+                <div class="framework-tab" onclick="switchFramework('decision')">Decision Making</div>
+                <div class="framework-tab" onclick="switchFramework('problem')">Problem Solving</div>
+                <div class="framework-tab" onclick="switchFramework('leadership')">Leadership Strategy</div>
+            </div>
+
+            <div id="systems" class="framework-content active">
+                <div class="thinking-exercises">
+                    <div class="exercise-item" onclick="toggleExercise(this, 'systems-mapping')">
+                        <div class="exercise-streak">Week 2</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Systems Mapping</h4>
+                                <p>Visualize complex relationships</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Learn to map interconnected systems and identify leverage points for maximum impact in complex situations.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">15-20 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item completed" onclick="toggleExercise(this, 'feedback-loops')">
+                        <div class="exercise-streak">Week 3</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-sync"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Feedback Loop Analysis</h4>
+                                <p>Understand cause and effect</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Master identifying reinforcing and balancing feedback loops that drive long-term system behavior.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">25-30 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'leverage-points')">
+                        <div class="exercise-streak">New</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Leverage Point Identification</h4>
+                                <p>Find high-impact interventions</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Discover where small changes can produce big results by identifying the most powerful leverage points in any system.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">20-25 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'mental-models')">
+                        <div class="exercise-streak">Week 1</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Mental Model Toolkit</h4>
+                                <p>Build thinking frameworks</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Develop a toolkit of mental models for faster, more accurate thinking across diverse situations and domains.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">10-15 min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="decision" class="framework-content">
+                <div class="thinking-exercises">
+                    <div class="exercise-item completed" onclick="toggleExercise(this, 'decision-trees')">
+                        <div class="exercise-streak">Week 4</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-code-branch"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Decision Tree Analysis</h4>
+                                <p>Map decision pathways</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Create visual decision trees to evaluate complex choices and their potential outcomes systematically.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">20-25 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'risk-assessment')">
+                        <div class="exercise-streak">Week 2</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Risk Assessment Matrix</h4>
+                                <p>Evaluate probability and impact</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Learn to systematically assess risks by evaluating both probability and potential impact of different outcomes.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">15-20 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'scenario-planning')">
+                        <div class="exercise-streak">Week 1</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Scenario Planning</h4>
+                                <p>Prepare for multiple futures</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Develop multiple plausible scenarios to make robust decisions that work across different possible futures.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">30-35 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'cognitive-biases')">
+                        <div class="exercise-streak">New</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Bias Recognition</h4>
+                                <p>Overcome thinking traps</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Identify and overcome cognitive biases that distort judgment and lead to poor decision-making.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">12-18 min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="problem" class="framework-content">
+                <div class="thinking-exercises">
+                    <div class="exercise-item" onclick="toggleExercise(this, 'root-cause')">
+                        <div class="exercise-streak">Week 3</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Root Cause Analysis</h4>
+                                <p>Find the real problem</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Master techniques like 5 Whys and Fishbone diagrams to identify the true root causes of problems.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">18-22 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item completed" onclick="toggleExercise(this, 'design-thinking')">
+                        <div class="exercise-streak">Week 5</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Design Thinking Process</h4>
+                                <p>Human-centered solutions</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Apply the design thinking methodology: empathize, define, ideate, prototype, and test for innovative solutions.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">25-30 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'first-principles')">
+                        <div class="exercise-streak">Week 1</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>First Principles Thinking</h4>
+                                <p>Break down to fundamentals</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Learn to break down complex problems to their fundamental truths and build up innovative solutions from scratch.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">20-25 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'lateral-thinking')">
+                        <div class="exercise-streak">New</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-puzzle-piece"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Lateral Thinking</h4>
+                                <p>Creative problem solving</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Develop creative problem-solving skills using lateral thinking techniques and creative constraints.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">15-20 min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="leadership" class="framework-content">
+                <div class="thinking-exercises">
+                    <div class="exercise-item completed" onclick="toggleExercise(this, 'stakeholder-analysis')">
+                        <div class="exercise-streak">Week 6</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Stakeholder Analysis</h4>
+                                <p>Map influence and interest</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Identify and analyze stakeholders to understand their influence, interests, and potential impact on your initiatives.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">20-25 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'strategic-planning')">
+                        <div class="exercise-streak">Week 2</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-chess"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Strategic Planning</h4>
+                                <p>Long-term vision and execution</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Learn to create comprehensive strategic plans that align vision, goals, and tactical execution for maximum impact.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">35-40 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'change-management')">
+                        <div class="exercise-streak">Week 1</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Change Management</h4>
+                                <p>Lead transformation effectively</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Master frameworks for leading change initiatives and helping organizations adapt to new realities.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                            </div>
+                            <div class="time-estimate">25-30 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item" onclick="toggleExercise(this, 'influence-strategy')">
+                        <div class="exercise-streak">New</div>
+                        <div class="exercise-header">
+                            <div class="exercise-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h4>Influence Strategy</h4>
+                                <p>Persuade without authority</p>
+                            </div>
+                        </div>
+                        <div class="exercise-description">Develop sophisticated influence strategies to drive results through persuasion, negotiation, and relationship building.</div>
+                        <div class="progress-indicator">
+                            <div class="difficulty-level">
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot active"></div>
+                                <div class="difficulty-dot"></div>
+                            </div>
+                            <div class="time-estimate">22-28 min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <div style="background: rgba(155, 89, 182, 0.1); border-radius: 16px; padding: 2rem; margin-bottom: 2rem;">
+                    <h3 style="color: #9b59b6; margin-bottom: 1rem;">Strategic Thinking Score</h3>
+                    <div style="font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #9b59b6, #8e44ad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="strategic-score">82/100</div>
+                    <p style="color: rgba(255, 255, 255, 0.8);">Elite level! You're thinking like a strategic leader.</p>
+                </div>
+                <button class="btn btn-primary" onclick="startDecisionSimulator()">Try Decision Simulator</button>
+                <button class="btn btn-secondary" onclick="shareStrategicProgress()">Share Progress</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Decision Making Simulator -->
+    <section class="decision-simulator fade-in-up">
+        <div class="simulator-container">
+            <h2 class="section-heading">Strategic Decision Simulator</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Practice high-stakes decision making in realistic scenarios. Develop your strategic thinking through immersive simulations.</p>
+            
+            <div class="scenario-card">
+                <div class="scenario-title">🏫 School Leadership Crisis</div>
+                <div class="scenario-description">
+                    You're the student council president. A controversial decision by the administration has sparked protests, with students planning a walkout. The media is involved, parents are calling, and you need to navigate between student concerns and school leadership. How do you handle this complex situation?
+                </div>
+                
+                <div class="decision-options">
+                    <div class="decision-option" onclick="selectDecision(this, 'mediation')">
+                        <div class="option-label">Organize Mediation</div>
+                        <div class="option-description">Facilitate dialogue between students and administration</div>
+                    </div>
+                    <div class="decision-option" onclick="selectDecision(this, 'support')">
+                        <div class="option-label">Support Students</div>
+                        <div class="option-description">Publicly back the student position and demands</div>
+                    </div>
+                    <div class="decision-option" onclick="selectDecision(this, 'neutral')">
+                        <div class="option-label">Stay Neutral</div>
+                        <div class="option-description">Avoid taking sides and focus on procedural solutions</div>
+                    </div>
+                    <div class="decision-option" onclick="selectDecision(this, 'alternative')">
+                        <div class="option-label">Create Alternative</div>
+                        <div class="option-description">Propose a third option that addresses root concerns</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="analyzeDecision()" id="analyze-btn" disabled>Analyze My Decision</button>
+                </div>
+            </div>
+            
+            <div class="analysis-section" id="decision-analysis">
+                <div class="analysis-title">🧠 Strategic Analysis</div>
+                <div id="analysis-content">
+                    <!-- Analysis will be populated here -->
+                </div>
+                <div class="thinking-frameworks-grid">
+                    <div class="framework-item">
+                        <div class="framework-name">Systems Thinking</div>
+                        <div class="framework-score" id="systems-score">--</div>
+                    </div>
+                    <div class="framework-item">
+                        <div class="framework-name">Stakeholder Analysis</div>
+                        <div class="framework-score" id="stakeholder-score">--</div>
+                    </div>
+                    <div class="framework-item">
+                        <div class="framework-name">Risk Assessment</div>
+                        <div class="framework-score" id="risk-score">--</div>
+                    </div>
+                    <div class="framework-item">
+                        <div class="framework-name">Long-term Impact</div>
+                        <div class="framework-score" id="impact-score">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Scenarios */
+    <section class="leadership-scenarios fade-in-up">
+        <div class="scenarios-container">
+            <h2 class="section-heading">Student Success Stories</h2>
+            <div class="scenarios-grid">
+                <div class="scenario-card-grid">
+                    <div class="scenario-header">
+                        <div class="scenario-avatar">AW</div>
+                        <div class="scenario-info">
+                            <h4>Alex W.</h4>
+                            <p>Year 12, Sydney Grammar</p>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        "The strategic thinking modules completely changed how I approach complex problems. I used systems thinking to redesign our school's charity fundraising and increased donations by 300%."
+                    </div>
+                    <div class="scenario-metrics">
+                        <div class="metric-item">
+                            <span class="metric-value">89</span>
+                            <span class="metric-label">Strategic Score</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">23</span>
+                            <span class="metric-label">Scenarios Completed</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scenario-card-grid">
+                    <div class="scenario-header">
+                        <div class="scenario-avatar">MK</div>
+                        <div class="scenario-info">
+                            <h4>Maya K.</h4>
+                            <p>Year 11, Melbourne High</p>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        "Learning decision frameworks helped me choose my subjects strategically. I now think 3 steps ahead and consider long-term impacts. My teachers say I think like a future CEO."
+</div>
+<div class="scenario-metrics">
+<div class="metric-item">
+<span class="metric-value">92</span>
+<span class="metric-label">Strategic Score</span>
+</div>
+<div class="metric-item">
+<span class="metric-value">31</span>
+<span class="metric-label">Scenarios Completed</span>
+</div>
+</div>
+</div>
+                <div class="scenario-card-grid">
+                    <div class="scenario-header">
+                        <div class="scenario-avatar">JL</div>
+                        <div class="scenario-info">
+                            <h4>Jake L.</h4>
+                            <p>Year 10, Brisbane Grammar</p>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        "The leadership scenarios are so realistic! I practiced handling team conflicts and now I'm confident leading group projects. Everyone wants me on their team."
+                    </div>
+                    <div class="scenario-metrics">
+                        <div class="metric-item">
+                            <span class="metric-value">86</span>
+                            <span class="metric-label">Strategic Score</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">18</span>
+                            <span class="metric-label">Scenarios Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-primary">Share Your Strategic Success</button>
+                <button class="btn btn-secondary">Join Strategic Minds Community</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategic Leaderboard -->
+    <section class="strategic-leaderboard fade-in-up">
+        <div class="leaderboard-container">
+            <div class="leaderboard-header">
+                <h2 class="section-heading">🧠 Strategic Minds Leaderboard</h2>
+                <p style="color: rgba(255, 255, 255, 0.8);">Top strategic thinkers this month - compete with elite student minds across Australia!</p>
+            </div>
+            
+            <div class="leaderboard-filters">
+                <div class="filter-btn active" onclick="filterStrategicLeaderboard('month')">This Month</div>
+                <div class="filter-btn" onclick="filterStrategicLeaderboard('scenarios')">Most Scenarios</div>
+                <div class="filter-btn" onclick="filterStrategicLeaderboard('friends')">Friends</div>
+                <div class="filter-btn" onclick="filterStrategicLeaderboard('school')">My School</div>
+            </div>
+
+            <div class="leaderboard-list" id="strategic-leaderboard-list">
+                <div class="leaderboard-item">
+                    <div class="rank first">1</div>
+                    <div class="player-avatar">MW</div>
+                    <div class="player-info">
+                        <div class="player-name">Maya W.</div>
+                        <div class="player-school">Sydney Grammar</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="strategic-score">98/100 🧠</div>
+                        <div class="scenarios-completed">47 scenarios</div>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="rank second">2</div>
+                    <div class="player-avatar">LH</div>
+                    <div class="player-info">
+                        <div class="player-name">Lucas H.</div>
+                        <div class="player-school">Melbourne High</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="strategic-score">96/100 🧠</div>
+                        <div class="scenarios-completed">42 scenarios</div>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="rank third">3</div>
+                    <div class="player-avatar">SC</div>
+                    <div class="player-info">
+                        <div class="player-name">Sophie C.</div>
+                        <div class="player-school">Brisbane Grammar</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="strategic-score">94/100 🧠</div>
+                        <div class="scenarios-completed">39 scenarios</div>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-item" style="border: 2px solid #9b59b6;">
+                    <div class="rank">8</div>
+                    <div class="player-avatar">YOU</div>
+                    <div class="player-info">
+                        <div class="player-name">You</div>
+                        <div class="player-school">Knox Grammar</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="strategic-score">82/100 🧠</div>
+                        <div class="scenarios-completed">23 scenarios</div>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="rank">9</div>
+                    <div class="player-avatar">RP</div>
+                    <div class="player-info">
+                        <div class="player-name">Ryan P.</div>
+                        <div class="player-school">Adelaide High</div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="strategic-score">81/100 🧠</div>
+                        <div class="scenarios-completed">21 scenarios</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary">View Full Rankings</button>
+                <button class="btn btn-secondary">Challenge Top Player</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="strategic-cta fade-in-up">
+        <div class="cta-content">
+            <h2 class="cta-title">Master Strategic Thinking Today</h2>
+            <p class="cta-subtitle">Join 1,834+ ambitious students developing the strategic mindset that separates future leaders from followers. Your strategic advantage starts now.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="signup.html" class="btn btn-primary">Start Strategic Training</a>
+                <button class="btn btn-secondary" onclick="watchStrategicDemo()">Watch Strategy Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <ul class="footer-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check authentication status
+        const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+        
+        // Update UI based on login status
+        updateAuthState(isLoggedIn);
+        
+        // Load saved progress
+        loadStrategicProgress();
+        
+        // Start challenge timer
+        startStrategicTimer();
+        
+        // Update live stats
+        updateStrategicStats();
+        
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+        
+        function updateAuthState(isLoggedIn) {
+            // Navigation updates
+            document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+        }
+        
+        // Logout functionality
+        const logoutLink = document.getElementById('logout-link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.clear();
+                updateAuthState(false);
+                window.location.href = 'index.html';
+            });
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                       behavior: 'smooth',
+                       block: 'start'
+                   });
+               }
+           });
+       });
+       
+       // Header background on scroll
+       window.addEventListener('scroll', function() {
+           const header = document.querySelector('header');
+           if (window.scrollY > 100) {
+               header.style.background = 'rgba(10, 10, 10, 0.98)';
+           } else {
+               header.style.background = 'rgba(10, 10, 10, 0.95)';
+           }
+       });
+    });
+    
+    // Strategic Challenge Timer
+    let strategicTimeRemaining = 6 * 24 * 3600 + 14 * 3600 + 32 * 60 + 45; // 6 days 14:32:45
+    
+    function startStrategicTimer() {
+        const timer = document.getElementById('challenge-timer');
+        
+        setInterval(() => {
+            strategicTimeRemaining--;
+            const days = Math.floor(strategicTimeRemaining / (24 * 3600));
+            const hours = Math.floor((strategicTimeRemaining % (24 * 3600)) / 3600);
+            const minutes = Math.floor((strategicTimeRemaining % 3600) / 60);
+            const seconds = strategicTimeRemaining % 60;
+            
+            if (days > 0) {
+                timer.textContent = `Ends in ${days} days ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            if (strategicTimeRemaining <= 0) {
+                timer.textContent = 'Challenge Ended';
+            }
+        }, 1000);
+    }
+    
+    // Live Stats Updates
+    function updateStrategicStats() {
+        const baseStats = {
+            completed: 392,
+            avgScore: 87
+        };
+        
+        setInterval(() => {
+            // Simulate live updates
+            const variation = () => Math.floor(Math.random() * 8) - 4;
+            
+            document.getElementById('challenge-completed').textContent = baseStats.completed + Math.abs(variation());
+            document.getElementById('avg-score').textContent = Math.max(75, Math.min(95, baseStats.avgScore + variation())) + '%';
+        }, 45000); // Update every 45 seconds
+    }
+    
+    // Framework Switching
+    let currentFramework = 'systems';
+    
+    function switchFramework(frameworkName) {
+        currentFramework = frameworkName;
+        
+        // Update tab buttons
+        document.querySelectorAll('.framework-tab').forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update content
+        document.querySelectorAll('.framework-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(frameworkName).classList.add('active');
+        
+        // Update strategic score based on active framework
+        updateStrategicScore();
+    }
+    
+    // Exercise Tracking with Daily Reset
+    let completedExercises = {};
+    
+    function toggleExercise(element, exerciseId) {
+        const today = new Date().toDateString();
+        
+        if (!completedExercises[today]) {
+            completedExercises[today] = new Set();
+        }
+        
+        if (completedExercises[today].has(exerciseId)) {
+            completedExercises[today].delete(exerciseId);
+            element.classList.remove('completed');
+        } else {
+            completedExercises[today].add(exerciseId);
+            element.classList.add('completed');
+            
+            // Add celebration animation
+            element.classList.add('bounce-in');
+            setTimeout(() => element.classList.remove('bounce-in'), 600);
+            
+            // Show positive feedback
+            showStrategicFeedback(element);
+        }
+        
+        updateStrategicScore();
+        saveStrategicProgress();
+    }
+    
+    function showStrategicFeedback(element) {
+        const feedback = document.createElement('div');
+        feedback.innerHTML = '🧠 +10 Strategic XP';
+        feedback.style.cssText = `
+            position: absolute;
+            top: -20px;
+            right: 10px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 100;
+            animation: slideUp 2s ease-out forwards;
+        `;
+        
+        element.style.position = 'relative';
+        element.appendChild(feedback);
+        
+        setTimeout(() => {
+            if (feedback.parentNode) {
+                feedback.parentNode.removeChild(feedback);
+            }
+        }, 2000);
+    }
+    
+    function updateStrategicScore() {
+        const today = new Date().toDateString();
+        const todaysExercises = completedExercises[today] || new Set();
+        
+        const totalExercises = document.querySelectorAll('.exercise-item').length;
+        const completedCount = todaysExercises.size;
+        const score = Math.min(Math.round((completedCount / totalExercises) * 100) + 20, 100); // Base score of 20
+        
+        document.getElementById('strategic-score').textContent = `${score}/100`;
+        
+        // Update leaderboard with current score
+        updateLeaderboardScore(score);
+        
+        // Update score description
+        const scoreContainer = document.getElementById('strategic-score').parentElement;
+        const description = scoreContainer.querySelector('p');
+        
+        if (score >= 90) {
+            description.textContent = "🧠 Visionary! You think like a strategic mastermind.";
+        } else if (score >= 80) {
+            description.textContent = "🎯 Elite level! You're thinking like a strategic leader.";
+        } else if (score >= 70) {
+            description.textContent = "📈 Great progress! Your strategic thinking is developing well.";
+        } else {
+            description.textContent = "🚀 Ready to think strategically? Start with your first framework!";
+        }
+    }
+    
+    function updateLeaderboardScore(score) {
+        // Update the player's score in the leaderboard
+        const playerItem = document.querySelector('.leaderboard-item[style*="border: 2px solid #9b59b6"]');
+        if (playerItem) {
+            const scoreElement = playerItem.querySelector('.strategic-score');
+            if (scoreElement) {
+                scoreElement.textContent = `${score}/100 🧠`;
+            }
+        }
+    }
+    
+    function saveStrategicProgress() {
+        const saveData = {
+            completedExercises: {},
+            simulatorProgress: simulatorProgress,
+            lastUpdated: new Date().toISOString()
+        };
+        
+        // Convert Sets to Arrays for storage
+        Object.keys(completedExercises).forEach(date => {
+            saveData.completedExercises[date] = Array.from(completedExercises[date]);
+        });
+        
+        localStorage.setItem('strategicProgress', JSON.stringify(saveData));
+    }
+    
+    function loadStrategicProgress() {
+        const saved = localStorage.getItem('strategicProgress');
+        
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                
+                // Load exercises with daily reset logic
+                completedExercises = {};
+                Object.keys(data.completedExercises || {}).forEach(date => {
+                    completedExercises[date] = new Set(data.completedExercises[date]);
+                });
+                
+                // Load simulator progress
+                if (data.simulatorProgress) {
+                    simulatorProgress = data.simulatorProgress;
+                }
+                
+                // Apply visual state for today's exercises only
+                const today = new Date().toDateString();
+                const todaysExercises = completedExercises[today] || new Set();
+                
+                setTimeout(() => {
+                    todaysExercises.forEach(exerciseId => {
+                        const element = document.querySelector(`[onclick*="${exerciseId}"]`);
+                        if (element) {
+                            element.classList.add('completed');
+                        }
+                    });
+                    updateStrategicScore();
+                }, 100);
+                
+            } catch (e) {
+                console.error('Error loading strategic progress:', e);
+                completedExercises = {};
+            }
+        }
+    }
+    
+    // Decision Simulator with Multiple Scenarios
+    let selectedDecision = null;
+    let currentScenarioIndex = 0;
+    let simulatorProgress = {
+        completedScenarios: 0,
+        totalScore: 0,
+        scenarioScores: []
+    };
+    
+    const scenarios = [
+        {
+            title: "🏫 School Leadership Crisis",
+            description: "You're the student council president. A controversial decision by the administration has sparked protests, with students planning a walkout. The media is involved, parents are calling, and you need to navigate between student concerns and school leadership. How do you handle this complex situation?",
+            options: [
+                { id: 'mediation', label: 'Organize Mediation', description: 'Facilitate dialogue between students and administration' },
+                { id: 'support', label: 'Support Students', description: 'Publicly back the student position and demands' },
+                { id: 'neutral', label: 'Stay Neutral', description: 'Avoid taking sides and focus on procedural solutions' },
+                { id: 'alternative', label: 'Create Alternative', description: 'Propose a third option that addresses root concerns' }
+            ],
+            analyses: {
+                'mediation': {
+                    content: `<strong>Excellent strategic choice!</strong> By choosing mediation, you've demonstrated advanced systems thinking and stakeholder management. This approach addresses the root conflict while preserving relationships and building long-term trust.`,
+                    scores: { systems: 92, stakeholder: 95, risk: 88, impact: 90 },
+                    totalScore: 91
+                },
+                'support': {
+                    content: `<strong>Bold but risky approach.</strong> Supporting students shows courage and values alignment, but may create long-term consequences for your leadership credibility with administration.`,
+                    scores: { systems: 75, stakeholder: 70, risk: 65, impact: 78 },
+                    totalScore: 72
+                },
+                'neutral': {
+                    content: `<strong>Safe but potentially ineffective.</strong> Neutrality preserves your position but may be seen as weak leadership in crisis situations.`,
+                    scores: { systems: 68, stakeholder: 60, risk: 85, impact: 55 },
+                    totalScore: 67
+                },
+                'alternative': {
+                    content: `<strong>Visionary strategic thinking!</strong> Creating a third option shows advanced problem-solving and innovation. This demonstrates the highest level of strategic thinking.`,
+                    scores: { systems: 98, stakeholder: 92, risk: 90, impact: 95 },
+                    totalScore: 94
+                }
+            }
+        },
+        {
+            title: "📚 Academic Team Conflict",
+            description: "You're leading a group project worth 40% of your grade. Two team members have conflicting ideas and refuse to compromise, while a third member isn't contributing. The deadline is approaching and tensions are high. Your teacher expects a unified presentation. How do you resolve this?",
+            options: [
+                { id: 'divide', label: 'Divide Tasks', description: 'Separate conflicting members and assign different sections' },
+                { id: 'vote', label: 'Democratic Vote', description: 'Have the team vote on which direction to take' },
+                { id: 'synthesis', label: 'Synthesize Ideas', description: 'Find ways to combine both conflicting approaches' },
+                { id: 'restructure', label: 'Restructure Team', description: 'Reassign roles based on strengths and interests' }
+            ],
+            analyses: {
+                'divide': {
+                    content: `<strong>Practical solution with risks.</strong> Division avoids immediate conflict but may result in a disjointed final product and doesn't address underlying team dynamics.`,
+                    scores: { systems: 70, stakeholder: 65, risk: 75, impact: 68 },
+                    totalScore: 70
+                },
+                'vote': {
+                    content: `<strong>Democratic but potentially divisive.</strong> Voting creates winners and losers, which could worsen relationships and reduce buy-in from the losing side.`,
+                    scores: { systems: 60, stakeholder: 55, risk: 70, impact: 60 },
+                    totalScore: 61
+                },
+                'synthesis': {
+                    content: `<strong>Elite collaborative leadership!</strong> Synthesizing ideas demonstrates advanced problem-solving and creates the best possible outcome while maintaining team unity.`,
+                    scores: { systems: 95, stakeholder: 90, risk: 85, impact: 92 },
+                    totalScore: 91
+                },
+                'restructure': {
+                    content: `<strong>Strategic team optimization.</strong> Restructuring based on strengths shows good leadership insight and may prevent future conflicts while maximizing individual contributions.`,
+                    scores: { systems: 88, stakeholder: 85, risk: 80, impact: 87 },
+                    totalScore: 85
+                }
+            }
+        },
+        {
+            title: "💰 Budget Allocation Challenge",
+            description: "As treasurer of the school's largest club, you have a limited budget of $2000 for the year. Three important initiatives are proposed: a major fundraising event ($800), new equipment for weekly activities ($600), and a members' appreciation dinner ($400). You can only fund two. How do you decide?",
+            options: [
+                { id: 'revenue', label: 'Prioritize Revenue', description: 'Fund the fundraising event and equipment for long-term benefits' },
+                { id: 'members', label: 'Prioritize Members', description: 'Fund equipment and appreciation dinner for member satisfaction' },
+                { id: 'data', label: 'Data-Driven Decision', description: 'Survey members and analyze ROI for each option' },
+                { id: 'creative', label: 'Creative Compromise', description: 'Find ways to reduce costs and potentially fund all three' }
+            ],
+            analyses: {
+                'revenue': {
+                    content: `<strong>Strong long-term thinking.</strong> Prioritizing revenue generation and infrastructure shows good strategic planning, though member satisfaction might suffer short-term.`,
+                    scores: { systems: 85, stakeholder: 70, risk: 80, impact: 88 },
+                    totalScore: 81
+                },
+                'members': {
+                    content: `<strong>Member-focused approach.</strong> Prioritizing member satisfaction and immediate needs shows good stakeholder management but may limit future growth opportunities.`,
+                    scores: { systems: 75, stakeholder: 90, risk: 75, impact: 72 },
+                    totalScore: 78
+                },
+                'data': {
+                    content: `<strong>Excellent strategic process!</strong> Using data and member input demonstrates sophisticated decision-making and ensures stakeholder buy-in for whatever choice is made.`,
+                    scores: { systems: 92, stakeholder: 95, risk: 85, impact: 90 },
+                    totalScore: 91
+                },
+                'creative': {
+                    content: `<strong>Innovative problem-solving!</strong> Finding creative solutions to budget constraints shows exceptional strategic thinking and maximizes value for all stakeholders.`,
+                    scores: { systems: 98, stakeholder: 92, risk: 88, impact: 95 },
+                    totalScore: 93
+                }
+            }
+        },
+        {
+            title: "🌟 Leadership Transition",
+            description: "You're graduating and need to choose your successor as club president. Three candidates emerge: your best friend (popular but inexperienced), a skilled but divisive student (competent but controversial), and a quiet member (capable but lacks confidence). The club's future depends on this decision. How do you approach this?",
+            options: [
+                { id: 'friend', label: 'Choose Friend', description: 'Select your best friend and provide extensive mentoring' },
+                { id: 'skilled', label: 'Choose Skilled', description: 'Select the competent candidate despite controversy' },
+                { id: 'develop', label: 'Develop Quiet One', description: 'Invest in building the quiet member\'s confidence' },
+                { id: 'committee', label: 'Selection Committee', description: 'Create a formal process with multiple stakeholders' }
+            ],
+            analyses: {
+                'friend': {
+                    content: `<strong>Loyalty-based decision with risks.</strong> Choosing based on personal relationship shows loyalty but may not serve the organization's best interests long-term.`,
+                    scores: { systems: 65, stakeholder: 70, risk: 60, impact: 68 },
+                    totalScore: 66
+                },
+                'skilled': {
+                    content: `<strong>Merit-based but risky choice.</strong> Prioritizing competence over politics shows good judgment, but controversy could divide the organization.`,
+                    scores: { systems: 80, stakeholder: 65, risk: 70, impact: 78 },
+                    totalScore: 73
+                },
+                'develop': {
+                    content: `<strong>Visionary leadership development!</strong> Investing in developing potential shows excellent long-term thinking and could create the most effective leader.`,
+                    scores: { systems: 90, stakeholder: 85, risk: 80, impact: 92 },
+                    totalScore: 87
+                },
+                'committee': {
+                    content: `<strong>Outstanding process design!</strong> Creating a formal selection process demonstrates advanced organizational thinking and ensures the best outcome while maintaining legitimacy.`,
+                    scores: { systems: 95, stakeholder: 98, risk: 90, impact: 95 },
+                    totalScore: 95
+                }
+            }
+        }
+    ];
+    
+    function selectDecision(element, decisionType) {
+        selectedDecision = decisionType;
+        
+        // Update UI
+        document.querySelectorAll('.decision-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        element.classList.add('selected');
+        
+        // Enable analyze button
+        document.getElementById('analyze-btn').disabled = false;
+    }
+    
+    function analyzeDecision() {
+        if (!selectedDecision) return;
+        
+        const currentScenario = scenarios[currentScenarioIndex];
+        const analysis = currentScenario.analyses[selectedDecision];
+        
+        // Record the score
+        simulatorProgress.scenarioScores.push(analysis.totalScore);
+        simulatorProgress.completedScenarios++;
+        simulatorProgress.totalScore = Math.round(
+            simulatorProgress.scenarioScores.reduce((a, b) => a + b, 0) / simulatorProgress.scenarioScores.length
+        );
+        
+        // Show analysis section
+        document.getElementById('decision-analysis').classList.add('active');
+        document.getElementById('analysis-content').innerHTML = analysis.content;
+        
+        // Update framework scores
+        document.getElementById('systems-score').textContent = analysis.scores.systems + '/100';
+        document.getElementById('stakeholder-score').textContent = analysis.scores.stakeholder + '/100';
+        document.getElementById('risk-score').textContent = analysis.scores.risk + '/100';
+        document.getElementById('impact-score').textContent = analysis.scores.impact + '/100';
+        
+        // Update leaderboard with simulator scores
+        updateSimulatorLeaderboard();
+        
+        // Show score celebration
+        setTimeout(() => {
+            showScoreResults(analysis.totalScore);
+        }, 1000);
+        
+        // Save progress
+        saveStrategicProgress();
+    }
+    
+    function showScoreResults(score) {
+        let message = `🧠 Scenario Complete!\n\nYour Strategic Score: ${score}/100\n`;
+        
+        if (score >= 90) {
+            message += "🎉 Elite Strategic Thinking! You're operating at CEO level.";
+        } else if (score >= 80) {
+            message += "🎯 Excellent Strategy! You show strong leadership potential.";
+        } else if (score >= 70) {
+            message += "📈 Good Strategic Thinking! Keep developing your skills.";
+        } else {
+            message += "🚀 Learning Opportunity! Strategy is a skill that improves with practice.";
+        }
+        
+        message += `\n\nTotal Scenarios Completed: ${simulatorProgress.completedScenarios}`;
+        message += `\nOverall Strategic Average: ${simulatorProgress.totalScore}/100`;
+        
+        if (currentScenarioIndex < scenarios.length - 1) {
+            message += "\n\nReady for the next scenario?";
+            
+            if (confirm(message)) {
+                loadNextScenario();
+            }
+        } else {
+            message += "\n\n🎊 You've completed all scenarios! Master strategist status achieved!";
+            alert(message);
+        }
+    }
+    
+    function loadNextScenario() {
+        currentScenarioIndex = (currentScenarioIndex + 1) % scenarios.length;
+        const scenario = scenarios[currentScenarioIndex];
+        
+        // Reset UI
+        selectedDecision = null;
+        document.getElementById('analyze-btn').disabled = true;
+        document.getElementById('decision-analysis').classList.remove('active');
+        
+        // Clear previous selections
+        document.querySelectorAll('.decision-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        // Update scenario content
+        document.querySelector('.scenario-title').textContent = scenario.title;
+        document.querySelector('.scenario-description').textContent = scenario.description;
+        
+        // Update options
+        const optionsContainer = document.querySelector('.decision-options');
+        optionsContainer.innerHTML = scenario.options.map(option => `
+            <div class="decision-option" onclick="selectDecision(this, '${option.id}')">
+                <div class="option-label">${option.label}</div>
+                <div class="option-description">${option.description}</div>
+            </div>
+        `).join('');
+        
+        // Scroll to top of simulator
+        document.querySelector('.decision-simulator').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function updateSimulatorLeaderboard() {
+        // Update scenarios completed in leaderboard
+        const playerItem = document.querySelector('.leaderboard-item[style*="border: 2px solid #9b59b6"]');
+        if (playerItem) {
+            const scenariosElement = playerItem.querySelector('.scenarios-completed');
+            if (scenariosElement) {
+                scenariosElement.textContent = `${simulatorProgress.completedScenarios} scenarios`;
+            }
+            
+            // Also update the strategic score to reflect simulator performance
+            const scoreElement = playerItem.querySelector('.strategic-score');
+            if (scoreElement) {
+                const frameworkScore = parseInt(document.getElementById('strategic-score').textContent.split('/')[0]);
+                const combinedScore = Math.round((frameworkScore + simulatorProgress.totalScore) / 2);
+                scoreElement.textContent = `${combinedScore}/100 🧠`;
+            }
+        }
+    }
+    
+    // Challenge Functions
+    function startStrategicChallenge() {
+        alert('🧠 Strategic Challenge Accepted!\n\nYou\'ll receive a complex leadership scenario to analyze over the next week. Use your strategic thinking frameworks to develop a comprehensive solution.');
+    }
+    
+    function viewStrategicLeaderboard() {
+        document.querySelector('.strategic-leaderboard').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function joinThinkTank() {
+        alert('🎓 Joining Strategic Think Tank!\n\nConnecting you with 47 other elite strategic thinkers for collaborative problem-solving sessions. Premium thinking partnership awaits!');
+    }
+    
+    function startDecisionSimulator() {
+        document.querySelector('.decision-simulator').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function shareStrategicProgress() {
+        const frameworkScore = document.getElementById('strategic-score').textContent;
+        const completedScenarios = simulatorProgress.completedScenarios;
+        const avgScore = simulatorProgress.totalScore;
+        
+        const shareText = `🧠 Strategic Thinking Update!\n\nFramework Score: ${frameworkScore}\nScenarios Completed: ${completedScenarios}\nAverage Decision Score: ${avgScore}/100\n\nBuilding elite strategic thinking with Vivify: ${window.location.origin}`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'My Strategic Thinking Progress',
+                text: shareText,
+                url: window.location.origin
+            });
+        } else {
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert('Strategic progress shared! Inspire others to think strategically 🧠');
+            });
+        }
+    }
+    
+    function filterStrategicLeaderboard(filter) {
+        // Update filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // Simulate different data for different filters
+        const list = document.getElementById('strategic-leaderboard-list');
+        list.style.opacity = '0.5';
+        list.style.transform = 'translateX(-20px)';
+        
+        setTimeout(() => {
+            list.style.opacity = '1';
+            list.style.transform = 'translateX(0)';
+            
+            if (filter === 'friends') {
+                const currentScore = document.querySelector('.leaderboard-item[style*="border: 2px solid #9b59b6"] .strategic-score').textContent;
+                const currentScenarios = document.querySelector('.leaderboard-item[style*="border: 2px solid #9b59b6"] .scenarios-completed').textContent;
+                
+                list.innerHTML = `
+                    <div class="leaderboard-item" style="border: 2px solid #9b59b6;">
+                        <div class="rank first">1</div>
+                        <div class="player-avatar">YOU</div>
+                        <div class="player-info">
+                            <div class="player-name">You</div>
+                            <div class="player-school">Knox Grammar</div>
+                        </div>
+                        <div class="player-stats">
+                            <div class="strategic-score">${currentScore}</div>
+                            <div class="scenarios-completed">${currentScenarios}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
+                        <p>Invite strategic friends to see them here!</p>
+                        <button class="btn btn-secondary" onclick="inviteStrategicFriends()" style="margin-top: 1rem;">Invite Strategic Minds</button>
+                    </div>
+                `;
+            } else if (filter === 'school') {
+                const currentScore = document.querySelector('.leaderboard-item[style*="border: 2px solid #9b59b6"] .strategic-score').textContent;
+                const currentScenarios = document.querySelector('.leaderboard-item[style*="border: 2px solid #9b59b6"] .scenarios-completed').textContent;
+                
+                list.innerHTML = `
+                    <div class="leaderboard-item" style="border: 2px solid #9b59b6;">
+                        <div class="rank first">1</div>
+                        <div class="player-avatar">YOU</div>
+                        <div class="player-info">
+                            <div class="player-name">You</div>
+                            <div class="player-school">Knox Grammar</div>
+                        </div>
+                        <div class="player-stats">
+                            <div class="strategic-score">${currentScore}</div>
+                            <div class="scenarios-completed">${currentScenarios}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
+                        <p>🧠 You're leading strategic thinking at your school!</p>
+                    </div>
+                `;
+            } else {
+                // Reset to default view with updated scores
+                loadDefaultLeaderboard();
+            }
+        }, 300);
+    }
+    
+    function loadDefaultLeaderboard() {
+        const currentScore = document.getElementById('strategic-score') ? 
+            document.getElementById('strategic-score').textContent.split('/')[0] : '82';
+        const currentScenarios = simulatorProgress.completedScenarios;
+        
+        const list = document.getElementById('strategic-leaderboard-list');
+        list.innerHTML = `
+            <div class="leaderboard-item">
+                <div class="rank first">1</div>
+                <div class="player-avatar">MW</div>
+                <div class="player-info">
+                    <div class="player-name">Maya W.</div>
+                    <div class="player-school">Sydney Grammar</div>
+                </div>
+                <div class="player-stats">
+                    <div class="strategic-score">98/100 🧠</div>
+                    <div class="scenarios-completed">47 scenarios</div>
+                </div>
+            </div>
+            
+            <div class="leaderboard-item">
+                <div class="rank second">2</div>
+                <div class="player-avatar">LH</div>
+                <div class="player-info">
+                    <div class="player-name">Lucas H.</div>
+                    <div class="player-school">Melbourne High</div>
+                </div>
+                <div class="player-stats">
+                    <div class="strategic-score">96/100 🧠</div>
+                    <div class="scenarios-completed">42 scenarios</div>
+                </div>
+            </div>
+            
+            <div class="leaderboard-item">
+                <div class="rank third">3</div>
+                <div class="player-info">
+                    <div class="player-name">Sophie C.</div>
+<div class="player-school">Brisbane Grammar</div>
+</div>
+<div class="player-stats">
+<div class="strategic-score">94/100 🧠</div>
+<div class="scenarios-completed">39 scenarios</div>
+</div>
+</div>
+    <div class="leaderboard-item" style="border: 2px solid #9b59b6;">
+        <div class="rank">8</div>
+        <div class="player-avatar">YOU</div>
+        <div class="player-info">
+            <div class="player-name">You</div>
+            <div class="player-school">Knox Grammar</div>
+        </div>
+        <div class="player-stats">
+            <div class="strategic-score">${currentScore}/100 🧠</div>
+            <div class="scenarios-completed">${currentScenarios} scenarios</div>
+        </div>
+    </div>
+    
+    <div class="leaderboard-item">
+        <div class="rank">9</div>
+        <div class="player-avatar">RP</div>
+        <div class="player-info">
+            <div class="player-name">Ryan P.</div>
+            <div class="player-school">Adelaide High</div>
+        </div>
+        <div class="player-stats">
+            <div class="strategic-score">81/100 🧠</div>
+            <div class="scenarios-completed">21 scenarios</div>
+        </div>
+    </div>
+`;
+}
+function inviteStrategicFriends() {
+    const shareText = `I'm developing elite strategic thinking skills on Vivify! 🧠\n\nJoin me in mastering decision frameworks, systems thinking, and leadership strategies: ${window.location.origin}`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Join my strategic thinking journey!',
+            text: shareText,
+            url: window.location.origin
+        });
+    } else {
+        navigator.clipboard.writeText(shareText).then(() => {
+            alert('Strategic invite copied! Share with future leaders 🧠');
+        });
+    }
+}
+
+function watchStrategicDemo() {
+    alert('🎬 Strategic Thinking Demo\n\nThis would show students navigating complex decisions, using frameworks, and developing strategic mindsets through interactive scenarios.');
+}
+
+// Add CSS animation for slideUp effect
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideUp {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-30px); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+// Auto-save progress every 30 seconds
+setInterval(saveStrategicProgress, 30000);
+// Initialize on page load
+setTimeout(() => {
+// Load default leaderboard with current scores
+loadDefaultLeaderboard();
+// Welcome new users with a strategic tour
+if (!localStorage.getItem('strategicTourShown')) {
+    if (confirm('🧠 Welcome to Strategic Thinking!\n\nWant a quick tour of how to develop elite decision-making skills and compete with strategic minds?')) {
+        startStrategicTour();
+    }
+    localStorage.setItem('strategicTourShown', 'true');
+}
+}, 2000);
+function startStrategicTour() {
+alert('🎯 Step 1: Choose Your Framework\n\nStart with "Systems Thinking" to build the foundation of strategic analysis. Each framework develops different aspects of strategic intelligence.');
+setTimeout(() => {
+    alert('🧠 Step 2: Practice With Scenarios\n\nComplete exercises and simulations to apply frameworks to real situations. Build your strategic thinking muscles!');
+    
+    setTimeout(() => {
+        alert('🏆 Step 3: Join Strategic Challenges\n\nCompete with 1,834+ students in complex decision-making scenarios. Develop elite strategic thinking!');
+        
+        setTimeout(() => {
+            alert('🚀 Ready to Think Strategically?\n\nStart with one framework today. Strategic thinking is the ultimate competitive advantage!');
+        }, 2000);
+    }, 2000);
+}, 2000);
+}
+// Reset frameworks daily but keep simulator progress
+function checkDailyReset() {
+const today = new Date().toDateString();
+const lastReset = localStorage.getItem('lastFrameworkReset');
+if (lastReset !== today) {
+    // Reset only framework exercises, not simulator progress
+    const savedSimulator = simulatorProgress;
+    
+    // Clear today's exercises but keep historical data
+    if (!completedExercises[today]) {
+        completedExercises[today] = new Set();
+    }
+    
+    // Clear visual state of exercises
+    document.querySelectorAll('.exercise-item').forEach(item => {
+        item.classList.remove('completed');
+    });
+    
+    // Restore simulator progress
+    simulatorProgress = savedSimulator;
+    
+    // Update scores
+    updateStrategicScore();
+    
+    // Save reset date
+    localStorage.setItem('lastFrameworkReset', today);
+    
+    console.log('Daily framework reset completed');
+}
+}
+// Check for daily reset on page load
+document.addEventListener('DOMContentLoaded', function() {
+setTimeout(checkDailyReset, 1000);
+});
+</script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

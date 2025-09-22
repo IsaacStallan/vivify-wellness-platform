@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .right-nav a.active {
+            color: #f39c12;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        /* Main Form Section */
+        .form-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 6rem 2rem 2rem;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%);
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-container h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-container > p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1.5rem 0;
+            letter-spacing: 0.01em;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .success-message {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .demo-section {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(243, 156, 18, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .demo-section p {
+            color: #f39c12;
+            margin: 0 0 1rem 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .demo-btn {
+            background: transparent;
+            border: 1px solid #f39c12;
+            color: #f39c12;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .demo-btn:hover {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin: 0.8rem 0;
+        }
+
+        .form-footer a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #e67e22;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .form-section {
+                padding: 5rem 1rem 2rem;
+                min-height: calc(100vh - 100px);
+            }
+
+            .form-container {
+                padding: 2.5rem 2rem;
+                margin: 1rem;
+                border-radius: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .form-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .submit-btn {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Vivify">
+    <meta name="theme-color" content="#f39c12">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" class="active">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav">Start Training</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-container fade-in-up">
+            <div class="login-header">
+                <div class="login-badge">Performance Training</div>
+                <h1>Welcome Back</h1>
+                <p>Continue building your competitive edge</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #f39c12;"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="Enter your email" 
+                        aria-label="Email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock" style="margin-right: 0.5rem; color: #f39c12;"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="Enter your password" 
+                        aria-label="Password">
+                </div>
+
+                <button type="submit" id="loginBtn" class="submit-btn">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
+                    Continue Training
+                </button>
+            </form>
+
+            <div id="message" style="display:none;"></div>
+            
+            <div class="demo-section">
+                <p><i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Try the Demo</p>
+                <button type="button" class="demo-btn" onclick="loginAsDemo()">
+                    Experience Performance Training
+                </button>
+            </div>
+            
+            <div class="form-footer">
+                <p>Don't have an account? <a href="signup.html">Start your training journey</a></p>
+                <p><a href="reset-password.html" id="forgotPassword">Forgot your password?</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'https://vivify-backend.onrender.com/api';
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function loginAsDemo() {
+            const demoBtn = document.querySelector('.demo-btn');
+            demoBtn.textContent = 'Creating demo account...';
+            demoBtn.disabled = true;
+            
+            // Simulate demo login
+            setTimeout(() => {
+                // Create demo user data
+                const demoUser = {
+                    id: 'demo_' + Date.now(),
+                    name: 'Demo Student',
+                    email: 'demo@vivify.com',
+                    school: 'Knox Grammar School',
+                    yearLevel: '10',
+                    username: 'Demo Student'
+                };
+                
+                // Set demo authentication
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('authToken', 'demo_token_' + Date.now());
+                localStorage.setItem('username', demoUser.name);
+                localStorage.setItem('userProfile', JSON.stringify(demoUser));
+                
+                // Set demo baseline assessment as needed
+                localStorage.setItem('needsBaselineAssessment', 'true');
+                
+                showMessage('Demo account created! Starting your performance assessment...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'performance-baseline-assessment.html';
+                }, 1500);
+            }, 1500);
+        }
+
+        // Add to your login form submission
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            // Get form values and clean them
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value.trim();
+            
+            console.log('Login attempt:', { email, password: '*'.repeat(password.length) });
+            
+            // Your existing login logic here...
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Check if already logged in
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                const hasPerformanceData = localStorage.getItem('performanceData');
+                if (hasPerformanceData) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'performance-baseline-assessment.html';
+                }
+                return;
+            }
+            
+            // Check for URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('message')) {
+                const message = urlParams.get('message');
+                
+                if (message === 'signup-success') {
+                    showMessage('Account created successfully! You can now log in.', 'success');
+                } else if (message === 'verified') {
+                    showMessage('Email verified successfully! You can now log in.', 'success');
+                } else if (message === 'password-reset') {
+                    showMessage('Password reset successfully! You can now log in with your new password.', 'success');
+                } else if (message === 'logout') {
+                    showMessage('You have been logged out successfully.', 'success');
+                }
+            }
+
+            // Login form handler
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+
+                if (!email || !password) {
+                    showMessage('Please enter both email and password.');
+                    return;
+                }
+
+                // Show loading state
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Signing In...';
+                loginBtn.disabled = true;
+                loginForm.classList.add('loading');
+
+                try {
+                    // Make API call to your backend with correct URL
+                    const response = await fetch(`${API_BASE_URL}/auth/login`, { 
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify({ 
+                            email: email, 
+                            password: password 
+                        })
+                    });
+
+                    const data = await response.json();
+                    console.log('Login response data:', data);
+                    console.log('data.user.hasCompletedBaseline:', data.user.hasCompletedBaseline);
+                    console.log('typeof data.user.hasCompletedBaseline:', typeof data.user.hasCompletedBaseline);
+                    console.log('data.success:', data.success);
+                    console.log('data.token:', data.token);
+                    console.log('About to check hasCompletedBaseline...');
+                    console.log('Backend performanceData:', data.user.performanceData);
+                    console.log('Backend performanceData type:', typeof data.user.performanceData);
+
+                    // Update your login success handler in login.html:
+                    if (data.success && data.token) {
+                        // Store authentication data
+                        localStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('authToken', data.token);
+                        localStorage.setItem('username', data.user.username);
+                        localStorage.setItem('vivifyUserId', data.user.id);
+                        
+                        // Format userProfile for the platform
+                        const userProfile = {
+                            id: data.user.id,
+                            name: data.user.username,
+                            email: data.user.email,
+                            school: data.user.school || 'Unknown School',
+                            yearLevel: data.user.yearLevel || '',
+                            username: data.user.username
+                        };
+                        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                        
+                        // Check if user has completed baseline assessment
+                        const hasCompletedBaseline = data.user.hasCompletedBaseline || false;
+                        console.log('Final hasCompletedBaseline value:', hasCompletedBaseline);
+
+                        if (!hasCompletedBaseline) {
+                            console.log('Taking ASSESSMENT path because hasCompletedBaseline is false');
+                            localStorage.setItem('needsBaselineAssessment', 'true');
+                            showMessage('Welcome back! Let\'s complete your performance baseline...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'performance-baseline-assessment.html';
+                            }, 1500);
+                        } else {
+                            console.log('Taking DASHBOARD path because hasCompletedBaseline is true');
+                            
+                            // Convert backend format to frontend format
+                            if (data.user.performanceData) {
+                                const backendData = data.user.performanceData;
+                                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                                
+                                const frontendPerformanceData = {
+                                    user: {
+                                        name: userProfile.username || userProfile.name || 'Student',
+                                        username: userProfile.username || userProfile.name || 'Student',
+                                        school: userProfile.school || 'Unknown School',
+                                        yearLevel: userProfile.yearLevel || '',
+                                        userId: userProfile.id,
+                                        joinDate: new Date().toISOString(),
+                                        lastActive: new Date().toISOString()
+                                    },
+                                    scores: {
+                                        physical: backendData.scores?.physical || 70,
+                                        mental: backendData.scores?.mental || 70,
+                                        nutrition: backendData.scores?.academic || 70, // Map academic to nutrition
+                                        lifeSkills: backendData.scores?.overall || 70,
+                                        overall: backendData.scores?.overall || 70
+                                    },
+                                    activities: [{
+                                        id: Date.now(),
+                                        type: 'baseline_assessment',
+                                        category: 'general',
+                                        description: 'Completed performance baseline assessment',
+                                        points: 50,
+                                        timestamp: backendData.baselineCompletedAt || new Date().toISOString()
+                                    }],
+                                    customGoals: [],
+                                    achievements: {
+                                        first_login: true,
+                                        assessment_complete: true
+                                    },
+                                    baselineCompleted: true,
+                                    lastUpdated: new Date().toISOString(),
+                                    totalXP: backendData.totalXP || 50,
+                                    streaks: {
+                                        currentStreak: backendData.streaks?.current || 1,
+                                        longestStreak: backendData.streaks?.longest || 1,
+                                        lastActiveDate: new Date().toDateString()
+                                    }
+                                };
+                                
+                                localStorage.setItem('performanceData', JSON.stringify(frontendPerformanceData));
+                                console.log('Converted backend data to frontend format:', frontendPerformanceData);
+                            }
+                            
+                            localStorage.removeItem('needsBaselineAssessment');
+                            
+                            showMessage('Welcome back! Redirecting to your dashboard...', 'success');
+                            window.location.href = 'dashboard.html';
+                        }
+                    }
+                    else {
+                        const errorMsg = data.message || 'Login failed. Please check your credentials and try again.';
+                        showMessage(errorMsg);
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    
+                    // Improved error handling
+                    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                        showMessage('Cannot connect to server. Please ensure the backend is running on localhost:3001');
+                    } else {
+                        showMessage('Login failed. Please check your credentials and try again.');
+                    }
+                    
+                } finally {
+                    // Reset button state
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Continue Training';
+                    loginBtn.disabled = false;
+                    loginForm.classList.remove('loading');
+                }
+            });
+            
+            // Add smooth scrolling and animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Demo login function (keep this for testing purposes)
+        function loginAsDemo() {
+            const demoBtn = document.querySelector('.demo-btn');
+            demoBtn.textContent = 'Creating demo account...';
+            demoBtn.disabled = true;
+            
+            // Simulate demo login
+            setTimeout(() => {
+                // Create demo user data
+                const demoUser = {
+                    id: 'demo_' + Date.now(),
+                    name: 'Demo Student',
+                    email: 'demo@vivify.com',
+                    school: 'Knox Grammar School',
+                    yearLevel: '10',
+                    username: 'Demo Student'
+                };
+                
+                // Set demo authentication
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('authToken', 'demo_token_' + Date.now());
+                localStorage.setItem('username', demoUser.name);
+                localStorage.setItem('userProfile', JSON.stringify(demoUser));
+                localStorage.setItem('vivifyUserId', demoUser.id);
+                
+                // Set demo baseline assessment as needed
+                localStorage.setItem('needsBaselineAssessment', 'true');
+                
+                showMessage('Demo account created! Starting your performance assessment...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'performance-baseline-assessment.html';
+                }, 1500);
+            }, 1500);
+        }
+
+        // Message display function (keep existing)
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

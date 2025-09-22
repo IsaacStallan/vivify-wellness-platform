@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macro Calculator - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Macro Calculator Specific Styles */
+        .calculator-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1580086319619-3ed498161c77?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .calculator-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .calculator-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .calculator-form {
+            flex: 1;
+            min-width: 300px;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .calculator-form h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            color: #ddd;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #f39c12;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #e67e22;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .calculate-btn {
+            margin-top: 1rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .results-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #333;
+            border-radius: 50%;
+            border-top-color: #f39c12;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .macros-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .macro-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .macro-card h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .macro-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .protein-value {
+            color: #e74c3c;
+        }
+
+        .carbs-value {
+            color: #2ecc71;
+        }
+
+        .fat-value {
+            color: #3498db;
+        }
+
+        .macro-unit {
+            font-size: 1rem;
+            color: #aaa;
+            display: block;
+        }
+
+        .macro-percent {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-top: 0.5rem;
+        }
+
+        .macros-chart {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            height: 300px;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #222;
+            border-radius: 5px;
+        }
+
+        .chart-placeholder svg {
+            width: 80%;
+            height: 80%;
+        }
+
+        .meal-distribution {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meal-distribution h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .meal-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ddd;
+        }
+
+        .meal-table th, 
+        .meal-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+
+        .meal-table th {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .info-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .info-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .macro-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .macro-info-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .macro-info-card h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .macro-info-card h4 i {
+            margin-right: 0.5rem;
+        }
+
+        .macro-info-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .macro-info-card ul {
+            color: #ddd;
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .macro-info-card li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .student-tips {
+            margin-top: 4rem;
+        }
+
+        .student-tips h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tip-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .tip-card i {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            margin-top: 4rem;
+        }
+
+        .faq-section h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .faq-item {
+            background-color: #222;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            color: #f39c12;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active:after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: #ddd;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .macros-summary {
+                flex-direction: column;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" class="active" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="calculator-hero">
+            <h1>Macronutrient Calculator</h1>
+            <p>Calculate your optimal protein, carbohydrate, and fat intake to support your performance goals, academic performance, and overall health.</p>
+        </section>
+
+        <!-- Calculator Section -->
+        <section class="container">
+            <h2 class="section-title">Calculate Your Macros</h2>
+            
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <h3>Enter Your Information</h3>
+                    <form id="macro-form">
+                        <div class="form-group">
+                            <label for="calories">Daily Calorie Target</label>
+                            <input type="number" id="calories" name="calories" min="1200" max="5000" placeholder="e.g., 2000" required>
+                            <p style="margin-top: 0.5rem; color: #aaa; font-size: 0.9rem;">Not sure? <a href="tdee-calculator.html" style="color: #f39c12;">Calculate your TDEE first</a></p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="male" checked> Male
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="female"> Female
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" name="weight" min="30" max="200" placeholder="e.g., 70" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" name="height" min="140" max="220" placeholder="e.g., 175" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="15" max="90" placeholder="e.g., 20" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activity">Activity Level</label>
+                            <select id="activity" name="activity" required>
+                                <option value="">Select Your Activity Level</option>
+                                <option value="1.2">Sedentary (Little to no exercise)</option>
+                                <option value="1.375">Lightly Active (Light exercise 1-3 days/week)</option>
+                                <option value="1.55">Moderately Active (Moderate exercise 3-5 days/week)</option>
+                                <option value="1.725">Very Active (Hard exercise 6-7 days/week)</option>
+                                <option value="1.9">Extremely Active (Very hard exercise & physical job)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goal">Primary Goal</label>
+                            <select id="goal" name="goal" required>
+                                <option value="">Select Your Primary Goal</option>
+                                <option value="fat-loss">Fat Loss</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="muscle-gain">Muscle Gain</option>
+                                <option value="athletic">Athletic Performance</option>
+                                <option value="academic">Academic Performance Focus</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="preference">Dietary Preference</label>
+                            <select id="preference" name="preference">
+                                <option value="">Select Your Preference (Optional)</option>
+                                <option value="standard">Standard (Balanced)</option>
+                                <option value="high-protein">Higher Protein</option>
+                                <option value="high-carb">Higher Carbohydrate</option>
+                                <option value="high-fat">Higher Fat</option>
+                                <option value="plant-based">Plant-Based</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block calculate-btn">Calculate My Macros</button>
+                    </form>
+                </div>
+                
+                <div class="results-container">
+                    <!-- Loading Spinner -->
+                    <div class="loading" id="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Calculating your optimal macronutrients...</p>
+                    </div>
+                    
+                    <!-- Results Display -->
+                    <div class="results" id="macro-results">
+                        <h3>Your Personalized Macronutrient Plan</h3>
+                        
+                        <div class="macros-summary">
+                            <div class="macro-card">
+                                <h4>Protein</h4>
+                                <div class="macro-value protein-value" id="protein-grams">140</div>
+                                <span class="macro-unit">grams per day</span>
+                                <div class="macro-percent" id="protein-percent">25%</div>
+                            </div>
+                            
+                            <div class="macro-card">
+                                <h4>Carbohydrates</h4>
+                                <div class="macro-value carbs-value" id="carbs-grams">280</div>
+                                <span class="macro-unit">grams per day</span>
+                                <div class="macro-percent" id="carbs-percent">50%</div>
+                            </div>
+                            
+                            <div class="macro-card">
+                                <h4>Fats</h4>
+                                <div class="macro-value fat-value" id="fat-grams">62</div>
+                                <span class="macro-unit">grams per day</span>
+                                <div class="macro-percent" id="fat-percent">25%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="macros-chart">
+                            <div class="chart-placeholder">
+                                <!-- SVG Pie Chart Placeholder -->
+                                <svg viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="#222" />
+                                    <!-- Protein Slice (25%) -->
+                                    <path d="M50,50 L95,50 A45,45 0 0,1 76.22,86.6 z" fill="#e74c3c" />
+                                    <!-- Fat Slice (25%) -->
+                                    <path d="M50,50 L76.22,86.6 A45,45 0 0,1 23.78,86.6 z" fill="#3498db" />
+                                    <!-- Carbs Slice (50%) -->
+                                    <path d="M50,50 L23.78,86.6 A45,45 0 0,1 5,50 A45,45 0 0,1 95,50 z" fill="#2ecc71" />
+                                    <circle cx="50" cy="50" r="25" fill="#222" />
+                                    <text x="50" y="45" text-anchor="middle" fill="#f39c12" font-size="6">Macronutrient</text>
+                                    <text x="50" y="55" text-anchor="middle" fill="#f39c12" font-size="6">Distribution</text>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="meal-distribution">
+                            <h4>Sample Daily Meal Distribution</h4>
+                            <table class="meal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Meal</th>
+                                        <th>Calories</th>
+                                        <th>Protein (g)</th>
+                                        <th>Carbs (g)</th>
+                                        <th>Fats (g)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Breakfast (25%)</td>
+                                        <td id="breakfast-calories">625</td>
+                                        <td id="breakfast-protein">35</td>
+                                        <td id="breakfast-carbs">70</td>
+                                        <td id="breakfast-fat">16</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lunch (30%)</td>
+                                        <td id="lunch-calories">750</td>
+                                        <td id="lunch-protein">42</td>
+                                        <td id="lunch-carbs">84</td>
+                                        <td id="lunch-fat">19</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dinner (30%)</td>
+                                        <td id="dinner-calories">750</td>
+                                        <td id="dinner-protein">42</td>
+                                        <td id="dinner-carbs">84</td>
+                                        <td id="dinner-fat">19</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Snacks (15%)</td>
+                                        <td id="snack-calories">375</td>
+                                        <td id="snack-protein">21</td>
+                                        <td id="snack-carbs">42</td>
+                                        <td id="snack-fat">9</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn" id="save-results">
+                                <i class="fas fa-save"></i> Save Results
+                            </button>
+                            <button class="btn" id="print-results">
+                                <i class="fas fa-print"></i> Print Results
+                            </button>
+                            <button class="btn" id="recalculate">
+                                <i class="fas fa-redo"></i> Recalculate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Section -->
+            <div class="info-card">
+                <h3>Understanding Macronutrients</h3>
+                <p>Macronutrients are the three main categories of nutrients that provide energy (calories) to your body: protein, carbohydrates, and fats. Each macronutrient plays a unique and essential role in supporting your overall health, academic performance, and fitness goals.</p>
+                
+                <div class="macro-info-grid">
+                    <div class="macro-info-card">
+                        <h4><i class="fas fa-drumstick-bite"></i> Protein</h4>
+                        <p>Protein is essential for building and repairing tissues, supporting immune function, and producing enzymes and hormones. For students, adequate protein intake can support:</p>
+                        <ul>
+                            <li>Cognitive function and neurotransmitter production</li>
+                            <li>Muscle recovery after exercise</li>
+                            <li>Sustained energy and satiety between meals</li>
+                            <li>Growth and development (especially for younger students)</li>
+                        </ul>
+                        <p><strong>Primary sources:</strong> Lean meats, poultry, fish, eggs, dairy, legumes, tofu, tempeh, seitan, and protein supplements.</p>
+                    </div>
+                    
+                    <div class="macro-info-card">
+                        <h4><i class="fas fa-bread-slice"></i> Carbohydrates</h4>
+                        <p>Carbohydrates are your body's preferred energy source, especially for your brain and during high-intensity physical activity. For students, quality carbohydrates support:</p>
+                        <ul>
+                            <li>Brain function and concentration during classes and study sessions</li>
+                            <li>Energy for physical activities and athletics</li>
+                            <li>Recovery after workouts</li>
+                            <li>Fiber intake for digestive health</li>
+                        </ul>
+                        <p><strong>Primary sources:</strong> Whole grains, fruits, vegetables, legumes, potatoes, and other starchy vegetables.</p>
+                    </div>
+                    
+                    <div class="macro-info-card">
+                        <h4><i class="fas fa-oil-can"></i> Fats</h4>
+                        <p>Dietary fats are crucial for hormone production, brain health, vitamin absorption, and cellular function. For students, healthy fats contribute to:</p>
+                        <ul>
+                            <li>Brain development and cognitive function</li>
+                            <li>Hormone balance and mood regulation</li>
+                            <li>Absorption of fat-soluble vitamins (A, D, E, K)</li>
+                            <li>Sustained energy and satiety</li>
+                        </ul>
+                        <p><strong>Primary sources:</strong> Avocados, nuts, seeds, olive oil, fatty fish, eggs, and moderate amounts of full-fat dairy.</p>
+                    </div>
+                </div>
+                
+                <p>The optimal balance of these macronutrients depends on many factors including your goals, activity level, age, gender, and personal preferences. This calculator provides a starting point based on scientific recommendations, which you can adjust based on your individual response and specific needs.</p>
+            </div>
+        </section>
+        
+        <!-- Student Tips Section -->
+        <section class="container student-tips">
+            <h2>Macro Tips for Student Life</h2>
+            
+            <div class="tips-list">
+                <div class="tip-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Academic Performance Optimization</h3>
+                    <p>For exam periods and intense study sessions, prioritize steady energy with balanced meals. Include complex carbohydrates (whole grains, oatmeal) paired with protein and healthy fats to maintain mental clarity and focus. Consider a higher carbohydrate intake (50-60% of calories) during academically demanding periods to fuel your brain optimally.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Dining Hall Navigation</h3>
+                    <p>Apply your macro targets in the dining hall by using the "plate method." Fill half your plate with vegetables and fruits (carbs and micronutrients), a quarter with lean protein sources (chicken, fish, beans, tofu), and a quarter with whole grains or starchy vegetables. Add healthy fats through dressings, toppings, or sides. Use meal swipes strategically to meet your macro goals.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Meal Prep for Busy Schedules</h3>
+                    <p>Set aside 2-3 hours on weekends to prep protein sources and complex carbs for the week. Portion meals into containers with proper macro ratios to grab between classes. Use a slow cooker or instant pot to minimize active cooking time. Having pre-portioned meals ready helps you maintain your macros even during busy exam periods.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>Budget-Friendly Macro Sources</h3>
+                    <p>Maximize your nutrition without breaking your budget by focusing on affordable macro sources. For protein, consider eggs, chicken thighs, canned tuna, beans, and lentils. Carb sources like rice, oats, potatoes, and seasonal fruits are cost-effective. For healthy fats, peanut butter, sunflower seeds, and vegetable oils provide good value.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Section -->
+        <section class="container faq-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate is the macronutrient calculator?</div>
+                <div class="faq-answer">
+                    <p>The calculator provides a scientifically-based starting point, but individual needs can vary based on factors like metabolism, specific health conditions, and training status. Use these recommendations as a baseline and adjust based on your results over 2-3 weeks. Track your energy levels, performance, and progress to fine-tune your macro intake for optimal results.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Should I track macros every day?</div>
+                <div class="faq-answer">
+                    <p>For students, precise daily tracking might be overwhelming with a busy schedule. Instead, consider these approaches:</p>
+                    <ul>
+                        <li><strong>Initial learning period:</strong> Track closely for 2-3 weeks to understand portion sizes and macro composition of common foods</li>
+                        <li><strong>Meal template approach:</strong> Create a few go-to meals with known macro profiles</li>
+                        <li><strong>Weekly averaging:</strong> Focus on hitting your targets as a weekly average rather than daily</li>
+                        <li><strong>Flexible approach:</strong> Track only when your routine changes significantly</li>
+                    </ul>
+                    <p>Consistency over time matters more than perfect daily adherence.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How do macros differ for male and female students?</div>
+                <div class="faq-answer">
+                    <p>While the percentage breakdown of macros may be similar, absolute amounts often differ due to physiological differences:</p>
+                    <ul>
+                        <li><strong>Protein:</strong> Both benefit from similar protein intake relative to body weight (1.6-2.2g/kg), though absolute amounts differ due to typical body composition differences</li>
+                        <li><strong>Carbohydrates:</strong> Requirements are primarily based on activity level rather than gender</li>
+                        <li><strong>Fats:</strong> Female students may benefit from slightly higher fat intake (25-35% vs. 20-30% for males) to support hormone production</li>
+                    </ul>
+                    <p>Individual factors like training status, body composition goals, and hormonal considerations are more important than gender alone.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I build muscle while maintaining my current weight?</div>
+                <div class="faq-answer">
+                    <p>Yes, body recomposition (building muscle while losing fat) is possible, especially for:</p>
+                    <ul>
+                        <li>Beginners to strength training</li>
+                        <li>Those returning after a training break</li>
+                        <li>Individuals with higher body fat percentages</li>
+                    </ul>
+                    <p>To support this goal, maintain calories at or slightly below maintenance while keeping protein intake high (1.8-2.2g/kg of bodyweight). Follow a progressive strength training program and ensure adequate recovery. This process is slower than dedicated bulking/cutting cycles but can be effective, especially for students balancing multiple priorities.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How should I adjust macros during exam periods?</div>
+                <div class="faq-answer">
+                    <p>During academically demanding periods, consider these adjustments:</p>
+                    <ul>
+                        <li><strong>Slight increase in carbohydrates:</strong> 50-60% of calories to support optimal brain function</li>
+                        <li><strong>Focus on complex carbs:</strong> Whole grains and low-glycemic options for sustained energy</li>
+                        <li><strong>Maintain protein:</strong> Keep protein intake consistent to support neurotransmitter production</li>
+                        <li><strong>Strategic caffeine:</strong> Moderate caffeine can enhance focus, but consider timing to avoid sleep disruption</li>
+                        <li><strong>Meal timing:</strong> Smaller, more frequent meals to maintain steady blood glucose</li>
+                    </ul>
+                    <p>Also ensure adequate hydration, as even mild dehydration can impair cognitive performance.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'index.html';
+            });
+            
+            // Calculator functionality
+            const calculatorForm = document.getElementById('macro-form');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const resultsSection = document.getElementById('macro-results');
+            
+            calculatorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading spinner
+                loadingSpinner.classList.add('active');
+                resultsSection.style.display = 'none';
+                
+                // Simulate calculation delay (would be instant in real use)
+                setTimeout(function() {
+                    calculateMacros();
+                    
+                    // Hide loading spinner and show results
+                    loadingSpinner.classList.remove('active');
+                    resultsSection.style.display = 'block';
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }, 1500);
+            });
+            
+            // Function to calculate macros based on form inputs
+            function calculateMacros() {
+                // Get form values
+                const calories = parseInt(document.getElementById('calories').value);
+                const weight = parseFloat(document.getElementById('weight').value);
+                const goal = document.getElementById('goal').value;
+                const preference = document.getElementById('preference').value;
+                
+                // Determine macro ratios based on goal and preference
+                let proteinPercent, carbsPercent, fatPercent;
+                
+                // Default balanced ratio
+                proteinPercent = 0.25; // 25%
+                carbsPercent = 0.50;   // 50%
+                fatPercent = 0.25;     // 25%
+                
+                // Adjust based on goal
+                if (goal === 'fat-loss') {
+                    proteinPercent = 0.30;
+                    carbsPercent = 0.40;
+                    fatPercent = 0.30;
+                } else if (goal === 'muscle-gain') {
+                    proteinPercent = 0.30;
+                    carbsPercent = 0.50;
+                    fatPercent = 0.20;
+                } else if (goal === 'athletic') {
+                    proteinPercent = 0.25;
+                    carbsPercent = 0.55;
+                    fatPercent = 0.20;
+                } else if (goal === 'academic') {
+                    proteinPercent = 0.20;
+                    carbsPercent = 0.60;
+                    fatPercent = 0.20;
+                }
+                
+                // Further adjust based on dietary preference
+                if (preference === 'high-protein') {
+                    proteinPercent += 0.05;
+                    carbsPercent -= 0.05;
+                } else if (preference === 'high-carb') {
+                    carbsPercent += 0.05;
+                    fatPercent -= 0.05;
+                } else if (preference === 'high-fat') {
+                    fatPercent += 0.05;
+                    carbsPercent -= 0.05;
+                } else if (preference === 'plant-based') {
+                    carbsPercent += 0.05;
+                    proteinPercent -= 0.05;
+                }
+                
+                // Calculate grams of each macronutrient
+                // Protein and carbs have 4 calories per gram, fat has 9 calories per gram
+                const proteinCalories = calories * proteinPercent;
+                const carbsCalories = calories * carbsPercent;
+                const fatCalories = calories * fatPercent;
+                
+                const proteinGrams = Math.round(proteinCalories / 4);
+                const carbsGrams = Math.round(carbsCalories / 4);
+                const fatGrams = Math.round(fatCalories / 9);
+                
+                // Update results in the UI
+                document.getElementById('protein-grams').textContent = proteinGrams;
+                document.getElementById('carbs-grams').textContent = carbsGrams;
+                document.getElementById('fat-grams').textContent = fatGrams;
+                
+                document.getElementById('protein-percent').textContent = Math.round(proteinPercent * 100) + '%';
+                document.getElementById('carbs-percent').textContent = Math.round(carbsPercent * 100) + '%';
+                document.getElementById('fat-percent').textContent = Math.round(fatPercent * 100) + '%';
+                
+                // Update meal distribution
+                const breakfastCalories = Math.round(calories * 0.25);
+                const lunchCalories = Math.round(calories * 0.30);
+                const dinnerCalories = Math.round(calories * 0.30);
+                const snackCalories = Math.round(calories * 0.15);
+                
+                document.getElementById('breakfast-calories').textContent = breakfastCalories;
+                document.getElementById('lunch-calories').textContent = lunchCalories;
+                document.getElementById('dinner-calories').textContent = dinnerCalories;
+                document.getElementById('snack-calories').textContent = snackCalories;
+                
+                document.getElementById('breakfast-protein').textContent = Math.round(proteinGrams * 0.25);
+                document.getElementById('lunch-protein').textContent = Math.round(proteinGrams * 0.30);
+                document.getElementById('dinner-protein').textContent = Math.round(proteinGrams * 0.30);
+                document.getElementById('snack-protein').textContent = Math.round(proteinGrams * 0.15);
+                
+                document.getElementById('breakfast-carbs').textContent = Math.round(carbsGrams * 0.25);
+                document.getElementById('lunch-carbs').textContent = Math.round(carbsGrams * 0.30);
+                document.getElementById('dinner-carbs').textContent = Math.round(carbsGrams * 0.30);
+                document.getElementById('snack-carbs').textContent = Math.round(carbsGrams * 0.15);
+                
+                document.getElementById('breakfast-fat').textContent = Math.round(fatGrams * 0.25);
+                document.getElementById('lunch-fat').textContent = Math.round(fatGrams * 0.30);
+                document.getElementById('dinner-fat').textContent = Math.round(fatGrams * 0.30);
+                document.getElementById('snack-fat').textContent = Math.round(fatGrams * 0.15);
+            }
+            
+            // Handle action buttons
+            document.getElementById('save-results').addEventListener('click', function() {
+                // In a real app, this would save to user's profile
+                alert('Results saved to your profile! You can access them from your dashboard.');
+            });
+            
+            document.getElementById('print-results').addEventListener('click', function() {
+                window.print();
+            });
+            
+            document.getElementById('recalculate').addEventListener('click', function() {
+                resultsSection.style.display = 'none';
+                window.scrollTo({
+                    top: document.querySelector('.calculator-form').offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // FAQ Toggle functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    // Toggle active class on question
+                    this.classList.toggle('active');
+                    
+                    // Toggle display of answer
+                    const answer = this.nextElementSibling;
+                    if (answer.style.display === 'block') {
+                        answer.style.display = 'none';
+                    } else {
+                        answer.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> <script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

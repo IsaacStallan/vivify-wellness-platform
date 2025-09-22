@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Fat Calculator - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    
+    <style>
+
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Body Fat Calculator Specific Styles */
+        .calculator-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .calculator-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .calculator-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .calculator-form {
+            flex: 1;
+            min-width: 300px;
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .calculator-form h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ddd;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #444;
+        }
+
+        .form-tab {
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: #ddd;
+            background-color: #333;
+            border: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .form-tab.active {
+            color: #f39c12;
+            border-bottom: 3px solid #f39c12;
+            background-color: #222;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            color: #ddd;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .measurement-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #f39c12;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #e67e22;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .calculate-btn {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .results-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #333;
+            border-radius: 50%;
+            border-top-color: #f39c12;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .result-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .result-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            color: #ddd;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-category {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .category-athletic {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .category-fitness {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .category-average {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+        }
+
+        .category-overweight {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .bodyfat-range {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .bodyfat-range h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .range-slider {
+            position: relative;
+            height: 8px;
+            background-color: #444;
+            border-radius: 4px;
+            margin: 2rem 0;
+        }
+
+        .range-marker {
+            position: absolute;
+            top: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #f39c12;
+            transform: translateX(-50%);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+        }
+
+        .range-label {
+            text-align: center;
+            color: #ddd;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .range-label::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 8px;
+            background-color: #444;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .bodyfat-info {
+            margin-top: 4rem;
+        }
+
+        .info-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .info-card h3 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .category-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .category-table th,
+        .category-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .category-table th {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .category-table td {
+            color: #ddd;
+        }
+
+        .method-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .method-card {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .method-card h4 {
+            color: #f39c12;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .method-card h4 i {
+            margin-right: 0.5rem;
+        }
+
+        .method-card p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .method-card .accuracy {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .accuracy-high {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .accuracy-medium {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+        }
+
+        .accuracy-low {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .student-tips {
+            margin-top: 4rem;
+        }
+
+        .student-tips h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tip-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .tip-card i {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            margin-top: 4rem;
+        }
+
+        .faq-section h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .faq-item {
+            background-color: #222;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            color: #f39c12;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active:after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: #ddd;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" class="active" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="calculator-hero">
+            <h1>Body Fat Percentage Calculator</h1>
+            <p>Understand your body composition with multiple assessment methods and learn what body fat percentage means for your health and fitness goals.</p>
+        </section>
+
+        <!-- Calculator Section -->
+        <section class="container">
+            <h2 class="section-title">Calculate Your Body Fat Percentage</h2>
+            
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <h3>Enter Your Information</h3>
+                    
+                    <div class="form-tabs">
+                        <button class="form-tab active" data-tab="navy-method">Navy Method</button>
+                        <button class="form-tab" data-tab="bmi-method">BMI Method</button>
+                        <button class="form-tab" data-tab="skinfold-method">Skinfold Method</button>
+                    </div>
+                    
+                    <form id="bodyfat-form">
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="male" checked> Male
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="female"> Female
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="15" max="90" placeholder="e.g., 20" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" name="weight" min="30" max="200" step="0.1" placeholder="e.g., 70" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" name="height" min="140" max="220" placeholder="e.g., 175" required>
+                        </div>
+                        
+                        <!-- Navy Method Fields (visible by default) -->
+                        <div class="tab-content active" id="navy-method">
+                            <div class="form-group">
+                                <label>Measurement Units</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="units" value="cm" checked> Centimeters
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="units" value="inches"> Inches
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" id="male-measurements">
+                                <label>Body Measurements</label>
+                                <div class="measurement-fields">
+                                    <div>
+                                        <label for="neck">Neck</label>
+                                        <input type="number" id="neck" name="neck" min="20" max="60" step="0.1" placeholder="cm">
+                                    </div>
+                                    <div>
+                                        <label for="waist">Waist</label>
+                                        <input type="number" id="waist" name="waist" min="50" max="150" step="0.1" placeholder="cm">
+                                    </div>
+                                    <div id="hip-field" style="display: none;">
+                                        <label for="hip">Hip</label>
+                                        <input type="number" id="hip" name="hip" min="50" max="150" step="0.1" placeholder="cm">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- BMI Method Fields (hidden initially) -->
+                        <div class="tab-content" id="bmi-method">
+                            <p style="color: #ddd; margin-bottom: 1rem;">This method requires only your height and weight, which you've already entered. While less accurate than other methods, it provides a quick estimate based on population averages.</p>
+                        </div>
+                        
+                        <!-- Skinfold Method Fields (hidden initially) -->
+                        <div class="tab-content" id="skinfold-method">
+                            <div class="form-group">
+                                <label>Measurement Units</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="skinfold-units" value="mm" checked> Millimeters
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Skinfold Measurements (Male)</label>
+                                <div class="measurement-fields" id="male-skinfolds">
+                                    <div>
+                                        <label for="chest-skinfold">Chest</label>
+                                        <input type="number" id="chest-skinfold" name="chest-skinfold" min="1" max="50" step="0.5" placeholder="mm">
+                                    </div>
+                                    <div>
+                                        <label for="abdominal-skinfold">Abdominal</label>
+                                        <input type="number" id="abdominal-skinfold" name="abdominal-skinfold" min="1" max="50" step="0.5" placeholder="mm">
+                                    </div>
+                                    <div>
+                                        <label for="thigh-skinfold">Thigh</label>
+                                        <input type="number" id="thigh-skinfold" name="thigh-skinfold" min="1" max="50" step="0.5" placeholder="mm">
+                                    </div>
+                                </div>
+                                
+                                <div class="measurement-fields" id="female-skinfolds" style="display: none;">
+                                    <div>
+                                        <label for="tricep-skinfold">Tricep</label>
+                                        <input type="number" id="tricep-skinfold" name="tricep-skinfold" min="1" max="50" step="0.5" placeholder="mm">
+                                    </div>
+                                    <div>
+                                        <label for="suprailiac-skinfold">Suprailiac</label>
+                                        <input type="number" id="suprailiac-skinfold" name="suprailiac-skinfold" min="1" max="50" step="0.5" placeholder="mm">
+                                    </div>
+                                    <div>
+                                        <label for="thigh-skinfold-female">Thigh</label>
+                                        <input type="number" id="thigh-skinfold-female" name="thigh-skinfold-female" min="1" max="50" step="0.5" placeholder="mm">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block calculate-btn">Calculate Body Fat Percentage</button>
+                    </form>
+                </div>
+                
+                <div class="results-container">
+                    <!-- Loading Spinner -->
+                    <div class="loading" id="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Analyzing your measurements...</p>
+                    </div>
+                    
+                    <!-- Results Display -->
+                    <div class="results" id="bodyfat-results">
+                        <h3>Your Body Fat Analysis</h3>
+                        
+                        <div class="result-card">
+                            <div class="result-value" id="bodyfat-percentage">16.2%</div>
+                            <div class="result-label">Estimated Body Fat Percentage</div>
+                            <div class="result-category category-fitness" id="bodyfat-category">Fitness Range</div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <div class="result-value" id="fat-mass">11.3 kg</div>
+                            <div class="result-label">Fat Mass</div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <div class="result-value" id="lean-mass">58.7 kg</div>
+                            <div class="result-label">Lean Body Mass</div>
+                        </div>
+                        
+                        <div class="bodyfat-range">
+                            <h4>Where You Fall on the Body Fat Spectrum</h4>
+                            
+                            <div class="range-slider">
+                                <div class="range-marker" id="bodyfat-marker" style="left: 35%;"></div>
+                            </div>
+                            
+                            <div class="range-labels">
+                                <div class="range-label">Essential<br>3-5%</div>
+                                <div class="range-label">Athletic<br>6-13%</div>
+                                <div class="range-label">Fitness<br>14-17%</div>
+                                <div class="range-label">Average<br>18-24%</div>
+                                <div class="range-label">Overweight<br>25%+</div>
+                            </div>
+                            
+                            <p style="text-align: center; margin-top: 1.5rem; color: #ddd;">Note: Ranges shown are for men. Women typically have 6-9% higher body fat percentages in each category.</p>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn" id="save-results">
+                                <i class="fas fa-save"></i> Save Results
+                            </button>
+                            <button class="btn" id="print-results">
+                                <i class="fas fa-print"></i> Print Results
+                            </button>
+                            <button class="btn" id="recalculate">
+                                <i class="fas fa-redo"></i> Recalculate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Section -->
+            <div class="bodyfat-info">
+                <div class="info-card">
+                    <h3>Understanding Body Fat Percentage</h3>
+                    <p>Body fat percentage is the proportion of your total weight that is made up of fat. It's a more meaningful measure than weight alone because it tells you about your body composition - the ratio between fat and lean tissue (muscle, bone, organs, etc.).</p>
+                    
+                    <p>For students, understanding your body fat percentage can help you:</p>
+                    <ul style="color: #ddd; line-height: 1.6; margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                        <li>Set more specific and meaningful fitness goals</li>
+                        <li>Track changes in body composition rather than just weight</li>
+                        <li>Better understand your nutritional needs</li>
+                        <li>Assess health risks more accurately than BMI alone</li>
+                    </ul>
+                    
+                    <h4 style="color: #f39c12; margin-bottom: 1rem;">Body Fat Categories</h4>
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Men</th>
+                                <th>Women</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Essential Fat</td>
+                                <td>3-5%</td>
+                                <td>10-13%</td>
+                                <td>Minimum needed for basic bodily functions and health.</td>
+                            </tr>
+                            <tr>
+                                <td>Athletic</td>
+                                <td>6-13%</td>
+                                <td>14-20%</td>
+                                <td>Common among competitive athletes; visible muscle definition.</td>
+                            </tr>
+                            <tr>
+                                <td>Fitness</td>
+                                <td>14-17%</td>
+                                <td>21-24%</td>
+                                <td>Lean appearance with some muscle definition; healthy and attainable range.</td>
+                            </tr>
+                            <tr>
+                                <td>Average</td>
+                                <td>18-24%</td>
+                                <td>25-31%</td>
+                                <td>Typical for many college students; less muscle definition but still healthy.</td>
+                            </tr>
+                            <tr>
+                                <td>Overweight</td>
+                                <td>25%+</td>
+                                <td>32%+</td>
+                                <td>Higher risk for health issues; less visible muscle definition.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <p>It's important to note that body fat percentage is just one measure of health and fitness. Factors like overall activity level, cardiovascular fitness, strength, flexibility, and mental well-being are equally important components of a healthy lifestyle.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Body Fat Measurement Methods</h3>
+                    <p>There are several ways to measure or estimate body fat percentage, each with different levels of accuracy, convenience, and cost.</p>
+                    
+                    <div class="method-cards">
+                        <div class="method-card">
+                            <h4><i class="fas fa-ruler-combined"></i> Navy Method</h4>
+                            <div class="accuracy accuracy-medium">Medium Accuracy</div>
+                            <p>Uses measurements of height, weight, neck, waist, and (for women) hip to estimate body fat using a formula developed by the US Navy. This method is reasonably accurate, convenient, and free.</p>
+                            <p>Typical margin of error: ±3-4%</p>
+                        </div>
+                        
+                        <div class="method-card">
+                            <h4><i class="fas fa-weight"></i> BMI Method</h4>
+                            <div class="accuracy accuracy-low">Low Accuracy</div>
+                            <p>Uses height and weight to estimate body fat based on population averages. While convenient, it can be misleading for athletic individuals or those with unusual body compositions.</p>
+                            <p>Typical margin of error: ±5-7%</p>
+                        </div>
+                        
+                        <div class="method-card">
+                            <h4><i class="fas fa-hand-point-up"></i> Skinfold Method</h4>
+                            <div class="accuracy accuracy-medium">Medium-High Accuracy</div>
+                            <p>Uses calipers to measure the thickness of fat folds at specific body sites. When done correctly, this method can be quite accurate but requires proper technique and equipment.</p>
+                            <p>Typical margin of error: ±3%</p>
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: #f39c12; margin: 2rem 0 1rem;">Other Methods (Not Available in this Calculator)</h4>
+                    <div class="method-cards">
+                        <div class="method-card">
+                            <h4><i class="fas fa-tint"></i> Hydrostatic Weighing</h4>
+                            <div class="accuracy accuracy-high">High Accuracy</div>
+                            <p>Involves being weighed underwater to determine body density. Very accurate but requires specialized equipment usually found in research facilities or high-end fitness centers.</p>
+                            <p>Typical margin of error: ±1.5-2%</p>
+                        </div>
+                        
+                        <div class="method-card">
+                            <h4><i class="fas fa-bolt"></i> BIA (Bioelectrical Impedance)</h4>
+                            <div class="accuracy accuracy-medium">Medium Accuracy</div>
+                            <p>Sends a small electrical current through the body to measure impedance. Available in many scales and handheld devices but can be affected by hydration, meal timing, and exercise.</p>
+                            <p>Typical margin of error: ±3-5%</p>
+                        </div>
+                        
+                        <div class="method-card">
+                            <h4><i class="fas fa-x-ray"></i> DEXA Scan</h4>
+                            <div class="accuracy accuracy-high">Highest Accuracy</div>
+                            <p>Uses X-ray technology to precisely measure body composition. Considered the "gold standard" but expensive and requires specialized equipment in clinical settings.</p>
+                            <p>Typical margin of error: ±1-2%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Student Tips Section -->
+        <section class="container student-tips">
+            <h2>Body Composition Tips for Students</h2>
+            
+            <div class="tips-list">
+                <div class="tip-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Academic Performance & Body Composition</h3>
+                    <p>Research suggests a link between moderate fitness levels and improved cognitive function. A balanced approach to body composition—not too low or too high in body fat—may support brain health through better blood flow, stress reduction, and hormone balance. Focus on overall health rather than appearance to support both physical and academic goals.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Dining Hall Strategies</h3>
+                    <p>To support healthy body composition in college dining halls, prioritize lean proteins (chicken, fish, beans), complex carbs (whole grains, sweet potatoes), and plenty of vegetables. Fill half your plate with vegetables, a quarter with protein, and a quarter with complex carbs. Limit fried foods, sugary desserts, and high-calorie beverages without cutting them out entirely.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Balancing Fitness with Academics</h3>
+                    <p>Rather than long workouts, aim for efficient 20-30 minute sessions focusing on compound exercises (squats, push-ups, rows) that work multiple muscle groups. Schedule workouts during study breaks to refresh your mind. Remember that even brief activity like walking to class can support healthy body composition when combined with good nutrition.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Tracking Progress Appropriately</h3>
+                    <p>Assess body composition changes no more than once every 4-6 weeks, as meaningful changes take time. Look beyond numbers to how clothes fit, energy levels, and strength gains. Set performance-based goals (doing more push-ups, running faster) rather than focusing solely on body fat percentage. Keep a balanced perspective that prioritizes overall health and academic success.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Section -->
+        <section class="container faq-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate is this body fat calculator?</div>
+                <div class="faq-answer">
+                    <p>The accuracy depends on the method used:</p>
+                    <ul>
+                        <li><strong>Navy Method:</strong> Typically accurate within ±3-4% of laboratory methods when measurements are taken correctly.</li>
+                        <li><strong>BMI Method:</strong> The least accurate, with errors of ±5-7% or more, especially for athletic individuals.</li>
+                        <li><strong>Skinfold Method:</strong> Can be accurate within ±3% when performed correctly, but requires proper technique.</li>
+                    </ul>
+                    <p>For most students, these methods provide sufficient accuracy to track trends over time, though the absolute values should be considered estimates. For the most accurate assessment, professional testing using DEXA scans or hydrostatic weighing would be recommended.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How often should I measure my body fat?</div>
+                <div class="faq-answer">
+                    <p>Body composition changes slowly, so measuring every 4-6 weeks is sufficient for most students. More frequent measurements can lead to frustration since day-to-day fluctuations in water retention and other factors can mask actual changes in body fat.</p>
+                    <p>When tracking over time, try to standardize your measurement conditions:</p>
+                    <ul>
+                        <li>Measure at the same time of day (preferably morning)</li>
+                        <li>Use the same method and technique each time</li>
+                        <li>Have the same person take measurements if using the Navy or skinfold methods</li>
+                        <li>Consider the impact of hydration, recent exercise, and menstrual cycles on measurements</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What's a healthy body fat percentage goal for students?</div>
+                <div class="faq-answer">
+                    <p>Healthy body fat percentage ranges for college-aged students are typically:</p>
+                    <ul>
+                        <li><strong>Men:</strong> 14-24% (Fitness to Average range)</li>
+                        <li><strong>Women:</strong> 21-31% (Fitness to Average range)</li>
+                    </ul>
+                    <p>Rather than focusing on achieving the lowest possible percentage, aim for a level that supports your overall health, energy, academic performance, and athletic goals. Very low body fat percentages (below 10% for men or 18% for women) require significant dedication and can be difficult to maintain during academically demanding periods.</p>
+                    <p>Remember that genetics, body type, and individual health factors play important roles in determining what's optimal for you personally.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How does body fat percentage relate to BMI?</div>
+                <div class="faq-answer">
+                    <p>Body Mass Index (BMI) and body fat percentage are related but distinct measures:</p>
+                    <ul>
+                        <li><strong>BMI</strong> is calculated solely from height and weight, providing a general population screening tool that doesn't distinguish between fat and lean mass.</li>
+                        <li><strong>Body fat percentage</strong> specifically measures the proportion of your weight that comes from fat tissue, providing more detailed information about body composition.</li>
+                    </ul>
+                    <p>The limitations of BMI are particularly relevant for students who are athletic or engage in regular strength training. A muscular student might have a "overweight" BMI while having a healthy body fat percentage. Conversely, someone with a "normal" BMI might have an unhealthy body fat percentage if they have low muscle mass (sometimes called "skinny fat").</p>
+                    <p>When available, body fat percentage provides more meaningful information about health and fitness than BMI alone.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I target fat loss from specific areas?</div>
+                <div class="faq-answer">
+                    <p>Despite popular misconceptions, "spot reduction" (losing fat from specific areas through targeted exercises) is not physiologically possible. When you lose body fat, it reduces across your entire body according to your genetic predispositions, though not necessarily evenly.</p>
+                    <p>For students looking to improve body composition:</p>
+                    <ul>
+                        <li>Focus on overall fat loss through a combination of nutrition, strength training, and cardio</li>
+                        <li>Build muscle in specific areas to improve their appearance, even if you can't selectively reduce fat from those areas</li>
+                        <li>Be patient with areas where your body naturally stores more fat - these will often be the last places to lean out</li>
+                        <li>Recognize that healthy fat distribution differs between men and women, with women naturally carrying more fat in the hips and thighs</li>
+                    </ul>
+                    <p>A comprehensive approach to fitness, rather than targeted exercises for "problem areas," will yield the best results.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'index.html';
+            });
+            
+            // Tab switching
+            const tabs = document.querySelectorAll('.form-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Handle gender selection for showing/hiding relevant fields
+            const genderRadios = document.querySelectorAll('input[name="gender"]');
+            genderRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'male') {
+                        document.getElementById('hip-field').style.display = 'none';
+                        document.getElementById('male-skinfolds').style.display = 'grid';
+                        document.getElementById('female-skinfolds').style.display = 'none';
+                    } else {
+                        document.getElementById('hip-field').style.display = 'block';
+                        document.getElementById('male-skinfolds').style.display = 'none';
+                        document.getElementById('female-skinfolds').style.display = 'grid';
+                    }
+                });
+            });
+            
+            // Handle form submission
+            const bodyfatForm = document.getElementById('bodyfat-form');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const resultsSection = document.getElementById('bodyfat-results');
+            
+            bodyfatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading spinner
+                loadingSpinner.classList.add('active');
+                resultsSection.style.display = 'none';
+                
+                // Simulate calculation delay
+                setTimeout(function() {
+                    calculateBodyFat();
+                    
+                    // Hide loading spinner and show results
+                    loadingSpinner.classList.remove('active');
+                    resultsSection.style.display = 'block';
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }, 1500);
+            });
+            
+            // Body fat calculation function
+            function calculateBodyFat() {
+                // Get form values
+                const gender = document.querySelector('input[name="gender"]:checked').value;
+                const weight = parseFloat(document.getElementById('weight').value);
+                const height = parseFloat(document.getElementById('height').value);
+                
+                // Determine which method is active
+                const activeTab = document.querySelector('.form-tab.active').getAttribute('data-tab');
+                
+                let bodyFatPercentage;
+                
+                if (activeTab === 'navy-method') {
+                    // Navy method calculation
+                    const neck = parseFloat(document.getElementById('neck').value);
+                    const waist = parseFloat(document.getElementById('waist').value);
+                    
+                    if (gender === 'male') {
+                        // Male Navy formula
+                        bodyFatPercentage = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+                    } else {
+                        // Female Navy formula (requires hip measurement)
+                        const hip = parseFloat(document.getElementById('hip').value);
+                        bodyFatPercentage = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+                    }
+                }
+                else if (activeTab === 'bmi-method') {
+                    // BMI-based estimation
+                    const bmi = weight / ((height / 100) * (height / 100));
+                    
+                    if (gender === 'male') {
+                        // Male BMI to body fat formula
+                        bodyFatPercentage = (1.20 * bmi) + (0.23 * parseFloat(document.getElementById('age').value)) - 16.2;
+                    } else {
+                        // Female BMI to body fat formula
+                        bodyFatPercentage = (1.20 * bmi) + (0.23 * parseFloat(document.getElementById('age').value)) - 5.4;
+                    }
+                }
+                else if (activeTab === 'skinfold-method') {
+                    // Skinfold method calculation
+                    if (gender === 'male') {
+                        const chest = parseFloat(document.getElementById('chest-skinfold').value);
+                        const abdomen = parseFloat(document.getElementById('abdominal-skinfold').value);
+                        const thigh = parseFloat(document.getElementById('thigh-skinfold').value);
+                        
+                        // Jackson-Pollock 3-site formula for men
+                        const sum = chest + abdomen + thigh;
+                        const bodyDensity = 1.10938 - (0.0008267 * sum) + (0.0000016 * sum * sum) - (0.0002574 * parseFloat(document.getElementById('age').value));
+                        bodyFatPercentage = (4.95 / bodyDensity - 4.5) * 100;
+                    } else {
+                        const tricep = parseFloat(document.getElementById('tricep-skinfold').value);
+                        const suprailiac = parseFloat(document.getElementById('suprailiac-skinfold').value);
+                        const thigh = parseFloat(document.getElementById('thigh-skinfold-female').value);
+                        
+                        // Jackson-Pollock 3-site formula for women
+                        const sum = tricep + suprailiac + thigh;
+                        const bodyDensity = 1.0994921 - (0.0009929 * sum) + (0.0000023 * sum * sum) - (0.0001392 * parseFloat(document.getElementById('age').value));
+                        bodyFatPercentage = (4.95 / bodyDensity - 4.5) * 100;
+                    }
+                }
+                
+                // Ensure reasonable bounds
+                bodyFatPercentage = Math.max(3, Math.min(50, bodyFatPercentage));
+                
+                // Round to 1 decimal place
+                bodyFatPercentage = Math.round(bodyFatPercentage * 10) / 10;
+                
+                // Update results in the UI
+                document.getElementById('bodyfat-percentage').textContent = bodyFatPercentage + '%';
+                
+                // Calculate fat mass and lean mass
+                const fatMass = (weight * bodyFatPercentage / 100).toFixed(1);
+                const leanMass = (weight - fatMass).toFixed(1);
+                
+                document.getElementById('fat-mass').textContent = fatMass + ' kg';
+                document.getElementById('lean-mass').textContent = leanMass + ' kg';
+                
+                // Update body fat category
+                const categoryElement = document.getElementById('bodyfat-category');
+                let category;
+                
+                if (gender === 'male') {
+                    if (bodyFatPercentage < 6) category = 'Essential Fat Range';
+                    else if (bodyFatPercentage < 14) category = 'Athletic Range';
+                    else if (bodyFatPercentage < 18) category = 'Fitness Range';
+                    else if (bodyFatPercentage < 25) category = 'Average Range';
+                    else category = 'Overweight Range';
+                } else {
+                    if (bodyFatPercentage < 14) category = 'Essential Fat Range';
+                    else if (bodyFatPercentage < 21) category = 'Athletic Range';
+                    else if (bodyFatPercentage < 25) category = 'Fitness Range';
+                    else if (bodyFatPercentage < 32) category = 'Average Range';
+                    else category = 'Overweight Range';
+                }
+                
+                categoryElement.textContent = category;
+                
+                // Update category class
+                categoryElement.className = 'result-category';
+                if (category.includes('Athletic')) categoryElement.classList.add('category-athletic');
+                else if (category.includes('Fitness')) categoryElement.classList.add('category-fitness');
+                else if (category.includes('Average')) categoryElement.classList.add('category-average');
+                else if (category.includes('Overweight')) categoryElement.classList.add('category-overweight');
+                
+                // Update marker position on the range slider
+                const marker = document.getElementById('bodyfat-marker');
+                let position;
+                
+                if (gender === 'male') {
+                    if (bodyFatPercentage <= 5) position = 10;
+                    else if (bodyFatPercentage <= 13) position = 10 + (bodyFatPercentage - 5) * 2.5;
+                    else if (bodyFatPercentage <= 17) position = 30 + (bodyFatPercentage - 13) * 5;
+                    else if (bodyFatPercentage <= 25) position = 50 + (bodyFatPercentage - 17) * 3.75;
+                    else position = 80 + Math.min((bodyFatPercentage - 25) * 1, 15);
+                } else {
+                    // Adjust for women's ranges
+                    const adjustedBF = Math.max(3, bodyFatPercentage - 8); // Adjust female BF% to match male scale
+                    if (adjustedBF <= 5) position = 10;
+                    else if (adjustedBF <= 13) position = 10 + (adjustedBF - 5) * 2.5;
+                    else if (adjustedBF <= 17) position = 30 + (adjustedBF - 13) * 5;
+                    else if (adjustedBF <= 25) position = 50 + (adjustedBF - 17) * 3.75;
+                    else position = 80 + Math.min((adjustedBF - 25) * 1, 15);
+                }
+                
+                marker.style.left = position + '%';
+            }
+            
+            // Handle action buttons
+            document.getElementById('save-results').addEventListener('click', function() {
+                // In a real app, this would save to user's profile
+                alert('Results saved to your profile! You can access them from your dashboard.');
+            });
+            
+            document.getElementById('print-results').addEventListener('click', function() {
+                window.print();
+            });
+            
+            document.getElementById('recalculate').addEventListener('click', function() {
+                resultsSection.style.display = 'none';
+                window.scrollTo({
+                    top: document.querySelector('.calculator-form').offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // FAQ Toggle functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    // Toggle active class on question
+                    this.classList.toggle('active');
+                    
+                    // Toggle display of answer
+                    const answer = this.nextElementSibling;
+                    if (answer.classList.contains('active')) {
+                        answer.classList.remove('active');
+                    } else {
+                        // Close other answers first
+                        document.querySelectorAll('.faq-answer').forEach(a => {
+                            a.classList.remove('active');
+                        });
+                        answer.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> <script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

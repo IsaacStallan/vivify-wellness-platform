@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Tracker - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        /* Sleep Tracker Specific Styles */
+        .sleep-hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .sleep-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .sleep-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(45deg, #f39c12, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sleep-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sleep-main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .sleep-card {
+            background: #1a1a1a;
+            border-radius: 16px;
+            border: 1px solid #333;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sleep-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f39c12, #e74c3c);
+        }
+
+        .card-title {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #f39c12;
+        }
+
+        /* Sleep Entry Form */
+        .sleep-entry-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #ccc;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f39c12;
+        }
+
+        .quality-rating {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+
+        .quality-btn {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .quality-btn:hover {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .quality-btn.active {
+            background: #f39c12;
+            color: #000;
+            border-color: #f39c12;
+        }
+
+        .btn-primary {
+            background: #f39c12;
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: #e67e22;
+        }
+
+        /* Sleep Statistics */
+        .sleep-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* Sleep Progress Circle */
+        .sleep-progress {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+        }
+
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#f39c12 0deg, #2a2a2a 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: #1a1a1a;
+            border-radius: 50%;
+        }
+
+        .progress-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .progress-hours {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f39c12;
+            display: block;
+        }
+
+        .progress-label {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        /* Sleep History */
+        .sleep-history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #f39c12;
+        }
+
+        .history-date {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .history-details {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .history-quality {
+            display: flex;
+            gap: 2px;
+        }
+
+        .quality-star {
+            color: #f39c12;
+            font-size: 0.8rem;
+        }
+
+        .quality-star.empty {
+            color: #444;
+        }
+
+        /* Sleep Tips */
+        .sleep-tips {
+            grid-column: 1 / -1;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tip-item {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #f39c12;
+        }
+
+        .tip-icon {
+            color: #f39c12;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tip-title {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-description {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Weekly Chart */
+        .weekly-chart {
+            height: 200px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: #f39c12;
+            border-radius: 4px 4px 0 0;
+            min-height: 20px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            padding-bottom: 0.5rem;
+            color: #000;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .chart-bar:hover {
+            opacity: 1;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .chart-label {
+            color: #ccc;
+            font-size: 0.8rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sleep-main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .sleep-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .sleep-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .quality-rating {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .success-message.show {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- iOS PWA Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="performance Hub">
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#f39c12">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#f39c12">
+
+<!-- Viewport for PWA -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- Preload PWA installer script -->
+<link rel="preload" href="/pwa-install.js" as="script">
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Navigation -->
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="sleep-hero">
+            <h1><i class="fas fa-moon"></i> Sleep Tracker</h1>
+            <p>Monitor your sleep patterns and improve your rest for better academic performance and overall wellbeing</p>
+        </section>
+
+        <!-- Main Content -->
+        <main class="sleep-main-container">
+            <!-- Sleep Entry Card -->
+            <div class="sleep-card">
+                <h2 class="card-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Log Your Sleep
+                </h2>
+                
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    Sleep entry saved successfully!
+                </div>
+
+                <form class="sleep-entry-form" id="sleepEntryForm">
+                    <div class="form-group">
+                        <label for="sleepDate">Date</label>
+                        <input type="date" id="sleepDate" name="sleepDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bedTime">Bedtime</label>
+                        <input type="time" id="bedTime" name="bedTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wakeTime">Wake Time</label>
+                        <input type="time" id="wakeTime" name="wakeTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sleep Quality (1-5 stars)</label>
+                        <div class="quality-rating" id="qualityRating">
+                            <button type="button" class="quality-btn" data-rating="1">1 ⭐</button>
+                            <button type="button" class="quality-btn" data-rating="2">2 ⭐</button>
+                            <button type="button" class="quality-btn" data-rating="3">3 ⭐</button>
+                            <button type="button" class="quality-btn" data-rating="4">4 ⭐</button>
+                            <button type="button" class="quality-btn" data-rating="5">5 ⭐</button>
+                        </div>
+                        <input type="hidden" id="sleepQuality" name="sleepQuality" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sleepNotes">Notes (optional)</label>
+                        <textarea id="sleepNotes" name="sleepNotes" rows="3" placeholder="How did you feel? Any factors affecting your sleep?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Sleep Entry
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sleep Statistics Card -->
+            <div class="sleep-card">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    Your Sleep Stats
+                </h2>
+
+                <div class="sleep-progress">
+                    <div class="progress-circle" id="sleepProgressCircle">
+                        <div class="progress-content">
+                            <span class="progress-hours" id="avgSleepHours">0h</span>
+                            <span class="progress-label">Average Sleep</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sleep-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalEntries">0</span>
+                        <span class="stat-label">Entries Logged</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="avgQuality">0</span>
+                        <span class="stat-label">Avg Quality</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="bestNight">0h</span>
+                        <span class="stat-label">Best Night</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="consistency">0%</span>
+                        <span class="stat-label">Consistency</span>
+                    </div>
+                </div>
+
+                <!-- Weekly Chart -->
+                <h3 style="color: #fff; margin: 1.5rem 0 0.5rem 0;">This Week's Sleep</h3>
+                <div class="weekly-chart" id="weeklyChart">
+                    <!-- Chart bars will be generated by JavaScript -->
+                </div>
+                <div class="chart-labels">
+                    <span class="chart-label">Mon</span>
+                    <span class="chart-label">Tue</span>
+                    <span class="chart-label">Wed</span>
+                    <span class="chart-label">Thu</span>
+                    <span class="chart-label">Fri</span>
+                    <span class="chart-label">Sat</span>
+                    <span class="chart-label">Sun</span>
+                </div>
+            </div>
+
+            <!-- Sleep History Card -->
+            <div class="sleep-card">
+                <h2 class="card-title">
+                    <i class="fas fa-history"></i>
+                    Recent Sleep History
+                </h2>
+                <div class="sleep-history" id="sleepHistory">
+                    <div style="text-align: center; color: #666; padding: 2rem;">
+                        No sleep entries yet. Start tracking your sleep above!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Tips Card -->
+            <div class="sleep-card sleep-tips">
+                <h2 class="card-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Sleep Tips for Students
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="tip-title">Consistent Schedule</div>
+                        <div class="tip-description">Try to go to bed and wake up at the same time every day, even on weekends. This helps regulate your body's internal clock.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="tip-title">Screen Time Limits</div>
+                        <div class="tip-description">Avoid screens for at least 1 hour before bedtime. Blue light can interfere with your natural sleep cycle.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="tip-title">Caffeine Cutoff</div>
+                        <div class="tip-description">Avoid caffeine after 2 PM. It can stay in your system for 6-8 hours and disrupt your ability to fall asleep.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="tip-title">Sleep Environment</div>
+                        <div class="tip-description">Keep your room cool, dark, and quiet. Consider blackout curtains or a sleep mask for better sleep quality.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="tip-title">Exercise Regularly</div>
+                        <div class="tip-description">Regular physical activity can help you fall asleep faster and enjoy deeper sleep, but avoid vigorous exercise close to bedtime.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="tip-title">Manage Stress</div>
+                        <div class="tip-description">Practice relaxation techniques like deep breathing, meditation, or journaling before bed to help calm your mind.</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        // Sleep Tracker Application
+        class SleepTracker {
+            constructor() {
+                this.sleepData = this.loadSleepData();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setDefaultDate();
+                this.updateDisplay();
+                this.checkUserAuthentication();
+            }
+
+            loadSleepData() {
+                const stored = localStorage.getItem('sleepData');
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveSleepData() {
+                localStorage.setItem('sleepData', JSON.stringify(this.sleepData));
+            }
+
+            setupEventListeners() {
+                // Quality rating buttons
+                document.querySelectorAll('.quality-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.setQualityRating(parseInt(btn.dataset.rating));
+                    });
+                });
+
+                // Form submission
+                document.getElementById('sleepEntryForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addSleepEntry();
+                });
+
+                // Authentication check
+                this.checkUserAuthentication();
+            }
+
+            checkUserAuthentication() {
+                const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+                
+                // Update navigation
+                document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+                document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+                document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+                document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+                document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            }
+
+            setDefaultDate() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('sleepDate').value = today;
+            }
+
+            setQualityRating(rating) {
+                // Remove active class from all buttons
+                document.querySelectorAll('.quality-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Add active class to selected rating and all lower ratings
+                for (let i = 1; i <= rating; i++) {
+                    document.querySelector(`[data-rating="${i}"]`).classList.add('active');
+                }
+
+                document.getElementById('sleepQuality').value = rating;
+            }
+
+            calculateSleepDuration(bedTime, wakeTime, sleepDate) {
+                const bed = new Date(`${sleepDate}T${bedTime}`);
+                let wake = new Date(`${sleepDate}T${wakeTime}`);
+
+                // If wake time is earlier than bed time, it's the next day
+                if (wake <= bed) {
+                    wake.setDate(wake.getDate() + 1);
+                }
+
+                const diffMs = wake - bed;
+                const hours = diffMs / (1000 * 60 * 60);
+                return Math.round(hours * 100) / 100; // Round to 2 decimal places
+            }
+
+            addSleepEntry() {
+                const formData = new FormData(document.getElementById('sleepEntryForm'));
+                const entry = {
+                    id: Date.now(),
+                    date: formData.get('sleepDate'),
+                    bedTime: formData.get('bedTime'),
+                    wakeTime: formData.get('wakeTime'),
+                    quality: parseInt(document.getElementById('sleepQuality').value),
+                    notes: formData.get('sleepNotes'),
+                    duration: this.calculateSleepDuration(
+                        formData.get('bedTime'),
+                        formData.get('wakeTime'),
+                        formData.get('sleepDate')
+                    ),
+                    timestamp: new Date().toISOString()
+                };
+
+                // Validate entry
+                if (!entry.date || !entry.bedTime || !entry.wakeTime || !entry.quality) {
+                    alert('Please fill in all required fields and select a sleep quality rating.');
+                    return;
+                }
+
+                // Check for duplicate date entries
+                const existingEntry = this.sleepData.find(e => e.date === entry.date);
+                if (existingEntry) {
+                    if (confirm('You already have a sleep entry for this date. Do you want to update it?')) {
+                        const index = this.sleepData.indexOf(existingEntry);
+                        this.sleepData[index] = entry;
+                    } else {
+                        return;
+                    }
+                } else {
+                    this.sleepData.push(entry);
+                }
+
+                this.saveSleepData();
+                this.updateDisplay();
+                this.showSuccessMessage();
+                this.resetForm();
+
+                // Track activity for performance system
+                this.trackSleepActivity(entry);
+            }
+
+            trackSleepActivity(entry) {
+                // Integration with existing performance tracking system
+                if (window.vivifyTracker && typeof window.vivifyTracker.trackActivity === 'function') {
+                    let points = 10; // Base points for logging sleep
+                    
+                    // Bonus points for good sleep habits
+                    if (entry.duration >= 7 && entry.duration <= 9) {
+                        points += 5; // Optimal sleep duration
+                    }
+                    if (entry.quality >= 4) {
+                        points += 5; // Good quality sleep
+                    }
+
+                    window.vivifyTracker.trackActivity(
+                        'sleep_logged',
+                        'physical',
+                        `Logged ${entry.duration}h sleep with ${entry.quality}⭐ quality`,
+                        points
+                    );
+                }
+            }
+
+            showSuccessMessage() {
+                const message = document.getElementById('successMessage');
+                message.classList.add('show');
+                setTimeout(() => {
+                    message.classList.remove('show');
+                }, 3000);
+            }
+
+            resetForm() {
+                document.getElementById('sleepEntryForm').reset();
+                document.querySelectorAll('.quality-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById('sleepQuality').value = '';
+                this.setDefaultDate();
+            }
+
+            updateDisplay() {
+                this.updateStatistics();
+                this.updateSleepHistory();
+                this.updateWeeklyChart();
+            }
+
+            updateStatistics() {
+                if (this.sleepData.length === 0) {
+                    document.getElementById('avgSleepHours').textContent = '0h';
+                    document.getElementById('totalEntries').textContent = '0';
+                    document.getElementById('avgQuality').textContent = '0';
+                    document.getElementById('bestNight').textContent = '0h';
+                    document.getElementById('consistency').textContent = '0%';
+                    return;
+                }
+
+                // Calculate average sleep duration
+                const avgDuration = this.sleepData.reduce((sum, entry) => sum + entry.duration, 0) / this.sleepData.length;
+                document.getElementById('avgSleepHours').textContent = `${avgDuration.toFixed(1)}h`;
+
+                // Update progress circle
+                const progressCircle = document.getElementById('sleepProgressCircle');
+                const percentage = Math.min((avgDuration / 8) * 360, 360); // 8 hours = 100%
+                progressCircle.style.background = `conic-gradient(#f39c12 ${percentage}deg, #2a2a2a ${percentage}deg)`;
+
+                // Total entries
+                document.getElementById('totalEntries').textContent = this.sleepData.length;
+
+                // Average quality
+                const avgQuality = this.sleepData.reduce((sum, entry) => sum + entry.quality, 0) / this.sleepData.length;
+                document.getElementById('avgQuality').textContent = avgQuality.toFixed(1);
+
+                // Best night (longest sleep)
+                const bestNight = Math.max(...this.sleepData.map(entry => entry.duration));
+                document.getElementById('bestNight').textContent = `${bestNight.toFixed(1)}h`;
+
+                // Sleep consistency (how often they sleep 7-9 hours)
+                const optimalSleepCount = this.sleepData.filter(entry => entry.duration >= 7 && entry.duration <= 9).length;
+                const consistency = (optimalSleepCount / this.sleepData.length) * 100;
+                document.getElementById('consistency').textContent = `${consistency.toFixed(0)}%`;
+            }
+
+            updateSleepHistory() {
+                const historyContainer = document.getElementById('sleepHistory');
+                
+                if (this.sleepData.length === 0) {
+                    historyContainer.innerHTML = `
+                        <div style="text-align: center; color: #666; padding: 2rem;">
+                            No sleep entries yet. Start tracking your sleep above!
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Sort by date (most recent first)
+                const sortedData = [...this.sleepData].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                historyContainer.innerHTML = sortedData.slice(0, 10).map(entry => {
+                    const date = new Date(entry.date);
+                    const formattedDate = date.toLocaleDateString('en-AU', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short'
+                    });
+
+                    const qualityStars = Array.from({length: 5}, (_, i) => {
+                        return i < entry.quality 
+                            ? '<span class="quality-star">⭐</span>'
+                            : '<span class="quality-star empty">⭐</span>';
+                    }).join('');
+
+                    return `
+                        <div class="history-item">
+                            <div>
+                                <div class="history-date">${formattedDate}</div>
+                                <div class="history-details">
+                                    ${entry.bedTime} - ${entry.wakeTime} (${entry.duration.toFixed(1)}h)
+                                    ${entry.notes ? `<br><em>"${entry.notes}"</em>` : ''}
+                                </div>
+                            </div>
+                            <div class="history-quality">${qualityStars}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            updateWeeklyChart() {
+                const weeklyChart = document.getElementById('weeklyChart');
+                const today = new Date();
+                const currentWeek = [];
+
+                // Get current week's data (Monday to Sunday)
+                const startOfWeek = new Date(today);
+                const day = startOfWeek.getDay();
+                const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
+                startOfWeek.setDate(diff);
+
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(startOfWeek);
+                    date.setDate(startOfWeek.getDate() + i);
+                    const dateString = date.toISOString().split('T')[0];
+                    
+                    const entry = this.sleepData.find(e => e.date === dateString);
+                    currentWeek.push({
+                        date: dateString,
+                        duration: entry ? entry.duration : 0,
+                        quality: entry ? entry.quality : 0
+                    });
+                }
+
+                const maxHours = 10; // Scale chart to 10 hours max
+                weeklyChart.innerHTML = currentWeek.map(day => {
+                    const height = (day.duration / maxHours) * 100;
+                    const opacity = day.duration > 0 ? 1 : 0.3;
+                    
+                    return `
+                        <div class="chart-bar" 
+                             style="height: ${Math.max(height, 15)}%; opacity: ${opacity};"
+                             title="${day.duration > 0 ? `${day.duration.toFixed(1)}h sleep` : 'No data'}">
+                            ${day.duration > 0 ? `${day.duration.toFixed(1)}h` : ''}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Method to export sleep data (useful for sharing with healthcare providers)
+            exportSleepData() {
+                const dataStr = JSON.stringify(this.sleepData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `vivify-sleep-data-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+            }
+
+            // Method to get sleep insights
+            getSleepInsights() {
+                if (this.sleepData.length < 7) {
+                    return "Track your sleep for at least a week to get personalized insights!";
+                }
+
+                const recentData = this.sleepData.slice(-7);
+                const avgDuration = recentData.reduce((sum, entry) => sum + entry.duration, 0) / recentData.length;
+                const avgQuality = recentData.reduce((sum, entry) => sum + entry.quality, 0) / recentData.length;
+                
+                let insights = [];
+
+                if (avgDuration < 7) {
+                    insights.push("💡 You're averaging less than 7 hours of sleep. Try going to bed 30 minutes earlier.");
+                }
+
+                if (avgDuration > 9) {
+                    insights.push("💡 You might be oversleeping. Consider gradually reducing your sleep time.");
+                }
+
+                if (avgQuality < 3) {
+                    insights.push("💡 Your sleep quality could improve. Try the sleep hygiene tips below.");
+                }
+
+                const consistentBedtime = this.checkBedtimeConsistency(recentData);
+                if (!consistentBedtime) {
+                    insights.push("💡 Try maintaining a consistent bedtime to improve your sleep quality.");
+                }
+
+                return insights.length > 0 ? insights.join(' ') : "Great job! Your sleep habits look healthy. Keep it up! 🌟";
+            }
+
+            checkBedtimeConsistency(data) {
+                if (data.length < 2) return true;
+                
+                const bedtimes = data.map(entry => {
+                    const time = entry.bedTime.split(':');
+                    return parseInt(time[0]) * 60 + parseInt(time[1]);
+                });
+
+                const maxVariation = Math.max(...bedtimes) - Math.min(...bedtimes);
+                return maxVariation <= 60; // Within 1 hour is considered consistent
+            }
+        }
+
+        // Initialize the sleep tracker when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            window.sleepTracker = new SleepTracker();
+
+            // Add logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+
+            // Add export functionality (could be added as a button later)
+            window.exportSleepData = () => window.sleepTracker.exportSleepData();
+            
+            // Add insights functionality (could be displayed in a modal or alert)
+            window.showSleepInsights = () => {
+                const insights = window.sleepTracker.getSleepInsights();
+                alert(insights);
+            };
+
+            // Integration with existing performance tracking
+            if (typeof window.vivifyTracker === 'undefined') {
+                // Create a minimal tracker if the main one isn't loaded
+                window.vivifyTracker = {
+                    trackActivity: function(activityType, category, description, points) {
+                        console.log(`Activity tracked: ${activityType} (+${points} points)`);
+                        
+                        // Try to update performance data if it exists
+                        const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+                        if (performanceData.activities) {
+                            performanceData.activities.push({
+                                type: activityType,
+                                category: category,
+                                description: description,
+                                points: points,
+                                timestamp: new Date().toISOString()
+                            });
+                            
+                            // Update scores
+                            if (performanceData.scores && performanceData.scores[category] !== undefined) {
+                                performanceData.scores[category] = Math.min(100, performanceData.scores[category] + points);
+                                
+                                // Recalculate overall score
+                                const scores = performanceData.scores;
+                                performanceData.scores.overall = Math.round(
+                                    (scores.physical + scores.mental + scores.nutrition + scores.lifeSkills) / 4
+                                );
+                            }
+                            
+                            localStorage.setItem('performanceData', JSON.stringify(performanceData));
+                        }
+                    }
+                };
+            }
+        });
+
+        // Add some helper functions for Australian time zones and formats
+        function formatTimeForAustralia(time) {
+            return new Date(`2000-01-01T${time}`).toLocaleTimeString('en-AU', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        function getAustralianDate() {
+            return new Date().toLocaleDateString('en-AU');
+        }
+
+        // Sleep achievement system (integrates with main performance system)
+        function checkSleepAchievements(sleepData) {
+            const achievements = [];
+            
+            if (sleepData.length >= 7) {
+                achievements.push({
+                    id: 'sleep_week_tracker',
+                    title: 'Sleep Week Warrior',
+                    description: 'Tracked sleep for 7 consecutive days',
+                    icon: '🏆'
+                });
+            }
+            
+            if (sleepData.length >= 30) {
+                achievements.push({
+                    id: 'sleep_month_tracker',
+                    title: 'Sleep Month Champion',
+                    description: 'Tracked sleep for 30 days',
+                    icon: '🥇'
+                });
+            }
+            
+            const recentGoodSleep = sleepData.slice(-7).filter(entry => 
+                entry.duration >= 7 && entry.duration <= 9 && entry.quality >= 4
+            );
+            
+            if (recentGoodSleep.length >= 5) {
+                achievements.push({
+                    id: 'sleep_quality_master',
+                    title: 'Sleep Quality Master',
+                    description: 'Had 5 great nights of sleep this week',
+                    icon: '⭐'
+                });
+            }
+            
+            return achievements;
+        }
+    </script>
+
+<!-- PWA Scripts -->
+
+
+<script>
+// Additional PWA features for each page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add PWA-specific styles
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.body.classList.add('pwa-mode');
+        
+        // Hide address bar on mobile when in PWA mode
+        window.scrollTo(0, 1);
+    }
+    
+    // Handle network status
+    function updateOnlineStatus() {
+        const statusElement = document.getElementById('network-status');
+        if (statusElement) {
+            if (navigator.onLine) {
+                statusElement.textContent = 'Online';
+                statusElement.className = 'online';
+            } else {
+                statusElement.textContent = 'Offline';
+                statusElement.className = 'offline';
+            }
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // Add network status indicator if it doesn't exist
+    if (!document.getElementById('network-status')) {
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'network-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(statusDiv);
+        updateOnlineStatus();
+    }
+});
+</script>
+<script src="class-management.js"></script> <script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

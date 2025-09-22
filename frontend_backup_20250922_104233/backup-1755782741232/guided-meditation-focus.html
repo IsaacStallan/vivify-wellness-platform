@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus & Concentration Meditation - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .meditation-hero {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9)), 
+                        url('https://images.unsplash.com/photo-1551847812-b166209b2c34?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .meditation-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .meditation-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .meditation-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .meditation-player {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meditation-player::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #27ae60, #2ecc71, #58d68d, #82e0aa);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .player-title {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .duration-display {
+            color: #27ae60;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .focus-visualization {
+            width: 180px;
+            height: 180px;
+            border: 2px solid #27ae60;
+            border-radius: 50%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.1), transparent);
+            transition: all 2s ease-in-out;
+        }
+
+        .focus-visualization.active {
+            border-color: #f39c12;
+            box-shadow: 
+                0 0 20px rgba(243, 156, 18, 0.3),
+                inset 0 0 20px rgba(243, 156, 18, 0.1);
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.15), transparent);
+        }
+
+        .focus-visualization.concentrated {
+            transform: scale(0.9);
+            border-width: 4px;
+            border-color: #e74c3c;
+            box-shadow: 
+                0 0 30px rgba(231, 76, 60, 0.4),
+                inset 0 0 30px rgba(231, 76, 60, 0.2);
+            background: radial-gradient(circle, rgba(231, 76, 60, 0.2), transparent);
+        }
+
+        .focus-dot {
+            width: 12px;
+            height: 12px;
+            background: #27ae60;
+            border-radius: 50%;
+            transition: all 2s ease-in-out;
+        }
+
+        .focus-visualization.active .focus-dot {
+            background: #f39c12;
+            width: 16px;
+            height: 16px;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+        }
+
+        .focus-visualization.concentrated .focus-dot {
+            background: #e74c3c;
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+        }
+
+        .focus-instruction {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 1rem;
+            transition: color 0.5s ease;
+        }
+
+        .meditation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .control-btn.play {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .control-btn.pause {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .control-btn.reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .meditation-script {
+            background: #222;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border-left: 4px solid #27ae60;
+        }
+
+        .script-section {
+            margin-bottom: 2rem;
+            opacity: 0.6;
+            transition: opacity 0.5s ease;
+        }
+
+        .script-section.active {
+            opacity: 1;
+            color: #f39c12;
+        }
+
+        .script-section h4 {
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: #333;
+            height: 6px;
+            border-radius: 3px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .focus-benefits {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-item h4 {
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .study-techniques {
+            background: #222;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .technique-card {
+            background: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .technique-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .technique-card ul {
+            padding-left: 1.5rem;
+        }
+
+        .technique-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .related-resources {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #333;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-card i {
+            font-size: 2rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .back-link {
+            background: transparent;
+            color: #27ae60;
+            border: 2px solid #27ae60;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 2rem 0;
+        }
+
+        .back-link:hover {
+            background: #27ae60;
+            color: white;
+        }
+
+        .meditation-instructions {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid #27ae60;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .meditation-instructions h3 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .meditation-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .meditation-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 200px;
+                justify-content: center;
+            }
+            
+            .focus-visualization {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .content-section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Concentration rings animation */
+        .concentration-rings {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .ring {
+            position: absolute;
+            border: 2px solid rgba(39, 174, 96, 0.3);
+            border-radius: 50%;
+            animation: ripple 3s ease-out infinite;
+        }
+
+        .ring:nth-child(2) { animation-delay: 1s; }
+        .ring:nth-child(3) { animation-delay: 2s; }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="meditation-hero">
+            <div class="hero-content">
+                <div class="meditation-badge">
+                    <i class="fas fa-eye"></i> Focus & Concentration
+                </div>
+                <h1>Focus & Concentration Meditation</h1>
+                <p>Sharpen your mental clarity and attention span with this 8-minute guided meditation. Perfect for before study sessions, exams, or any time you need laser-like focus.</p>
+            </div>
+        </section>
+
+        <div class="content-section">
+            <!-- Back Link -->
+            <a href="mindfulness.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Mindfulness
+            </a>
+
+            <!-- Instructions -->
+            <div class="meditation-instructions">
+                <h3><i class="fas fa-info-circle"></i> How to Use This Focus Meditation</h3>
+                <ul>
+                    <li>Find a quiet space where you can sit comfortably for 8 minutes</li>
+                    <li>Use this meditation before study sessions for maximum effectiveness</li>
+                    <li>Focus on the central dot and follow the visual cues</li>
+                    <li>If your mind wanders, gently return attention to your breath and the meditation</li>
+                    <li>Practice regularly to build your concentration muscle</li>
+                </ul>
+            </div>
+
+            <!-- Meditation Player -->
+            <div class="meditation-player">
+                <h2 class="player-title">8-Minute Focus & Concentration</h2>
+                <div class="duration-display">Duration: 8:00 minutes</div>
+                
+                <div class="focus-visualization" id="focusVisualization">
+                    <div class="concentration-rings">
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                    </div>
+                    <div class="focus-dot" id="focusDot"></div>
+                </div>
+                
+                <div class="focus-instruction" id="focusInstruction">Prepare to Focus</div>
+
+                <div class="meditation-controls">
+                    <button class="control-btn play" id="playBtn">
+                        <i class="fas fa-play"></i> Start Meditation
+                    </button>
+                    <button class="control-btn pause" id="pauseBtn" style="display: none;">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="control-btn reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span>8:00</span>
+                </div>
+            </div>
+
+            <!-- Meditation Script -->
+            <div class="meditation-script" id="meditationScript">
+                <h3 style="color: #f39c12; text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-scroll"></i> Meditation Script
+                </h3>
+                
+                <div class="script-section active" data-time="0">
+                    <h4>Preparation (0:00 - 1:00)</h4>
+                    <p>Welcome to this focus and concentration meditation. Find a comfortable seated position with your back straight but not rigid. Close your eyes or soften your gaze on the central dot.</p>
+                    <p>This practice will help train your mind to stay focused and present, skills that are essential for effective studying and academic success.</p>
+                </div>
+
+                <div class="script-section" data-time="60">
+                    <h4>Breath Awareness (1:00 - 2:30)</h4>
+                    <p>Begin by taking three deep, conscious breaths. Breathe in slowly through your nose... and exhale completely through your mouth. Feel your body settling with each exhale.</p>
+                    <p>Now, let your breathing return to its natural rhythm. Simply observe each breath without trying to control it. Notice the sensation of air entering and leaving your nostrils.</p>
+                </div>
+
+                <div class="script-section" data-time="150">
+                    <h4>Attention Training (2:30 - 4:00)</h4>
+                    <p>Focus your attention entirely on your breath. When thoughts arise, acknowledge them without judgment and gently guide your attention back to breathing.</p>
+                    <p>Think of your attention like a muscle that becomes stronger with practice. Each time you notice your mind wandering and bring it back, you're strengthening your focus.</p>
+                </div>
+
+                <div class="script-section" data-time="240">
+                    <h4>Mental Clarity (4:00 - 5:30)</h4>
+                    <p>Imagine your mind becoming clearer with each breath. Visualize mental fog lifting, leaving behind a crystal-clear state of awareness.</p>
+                    <p>Feel your concentration deepening. Your mind is sharp, alert, and ready to absorb information. You have the ability to focus deeply on whatever task you choose.</p>
+                </div>
+
+                <div class="script-section" data-time="330">
+                    <h4>Sustained Focus (5:30 - 7:00)</h4>
+                    <p>Now, concentrate solely on the tip of your nose where breath enters and exits. This single point of focus will anchor your attention.</p>
+                    <p>If you're following the visual guide, keep your gaze soft on the central dot. Let it represent your focused mind - steady, centered, and unwavering.</p>
+                </div>
+
+                <div class="script-section" data-time="420">
+                    <h4>Integration and Closing (7:00 - 8:00)</h4>
+                    <p>Take a moment to appreciate the focused state you've cultivated. This clarity and concentration is always available to you.</p>
+                    <p>When you're ready to study or work, remember this feeling of centered focus. Take three final deep breaths, wiggle your fingers and toes, and gently open your eyes.</p>
+                    <p>Carry this sharp, clear awareness with you into your studies.</p>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="focus-benefits">
+                <h2 class="section-title">Benefits of Focus Meditation</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <i class="fas fa-bullseye"></i>
+                        <h4>Enhanced Concentration</h4>
+                        <p>Builds your ability to sustain attention on a single task for extended periods.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-brain"></i>
+                        <h4>Improved Memory</h4>
+                        <p>Better focus leads to better encoding and retention of information.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h4>Increased Productivity</h4>
+                        <p>Complete tasks more efficiently with sustained attention and less distraction.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Reduced Mind-Wandering</h4>
+                        <p>Train your mind to stay present and resist distracting thoughts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Techniques -->
+            <div class="study-techniques">
+                <h2 class="section-title">Focus-Enhancing Study Techniques</h2>
+                <div class="techniques-grid">
+                    <div class="technique-card">
+                        <h4><i class="fas fa-clock"></i> Pomodoro Technique</h4>
+                        <ul>
+                            <li>Study for 25 minutes with complete focus</li>
+                            <li>Take a 5-minute break</li>
+                            <li>Repeat for 4 cycles, then take a longer break</li>
+                            <li>Use meditation during breaks to reset focus</li>
+                            <li>Track your productive sessions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="technique-card">
+                        <h4><i class="fas fa-mobile-alt"></i> Digital Minimalism</h4>
+                        <ul>
+                            <li>Turn off phone notifications during study</li>
+                            <li>Use website blockers for social media</li>
+                            <li>Create a distraction-free study environment</li>
+                            <li>Practice single-tasking instead of multitasking</li>
+                            <li>Set specific times for checking messages</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="technique-card">
+                        <h4><i class="fas fa-eye"></i> Visual Focus Anchors</h4>
+                        <ul>
+                            <li>Use a physical object to represent focus</li>
+                            <li>Practice gazing meditation for 2-3 minutes</li>
+                            <li>Focus on one point while reading</li>
+                            <li>Use highlighting to maintain visual attention</li>
+                            <li>Practice peripheral vision awareness</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="technique-card">
+                        <h4><i class="fas fa-leaf"></i> Pre-Study Routine</h4>
+                        <ul>
+                            <li>Do this 8-minute meditation before studying</li>
+                            <li>Set clear intentions for your study session</li>
+                            <li>Organize your study space mindfully</li>
+                            <li>Take 3 conscious breaths before starting</li>
+                            <li>Review goals and priorities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Resources -->
+            <div class="related-resources">
+                <h2 class="section-title">Related Resources</h2>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Exam Anxiety Relief</h4>
+                        <p>12-minute meditation to calm nerves and boost confidence before exams.</p>
+                        <a href="guided-meditation-exam.html" class="cta-button">Try It</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-leaf"></i>
+                        <h4>Stress Management</h4>
+                        <p>Comprehensive guide to managing academic stress and pressure.</p>
+                        <a href="stress-management.html" class="cta-button">Learn More</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-bed"></i>
+                        <h4>Sleep Meditation</h4>
+                        <p>15-minute practice for better sleep and mental recovery.</p>
+                        <a href="guided-meditation-sleep.html" class="cta-button">Listen</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-heart"></i>
+                        <h4>Self-Compassion</h4>
+                        <p>Build a kinder relationship with yourself during challenging times.</p>
+                        <a href="guided-meditation-compassion.html" class="cta-button">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+
+            // Focus Meditation functionality
+            let meditationTimer = null;
+            let currentTime = 0;
+            let isPlaying = false;
+            let focusTimer = null;
+            const totalDuration = 480; // 8 minutes in seconds
+
+            const playBtn = document.getElementById('playBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressFill = document.getElementById('progressFill');
+            const currentTimeDisplay = document.getElementById('currentTime');
+            const focusVisualization = document.getElementById('focusVisualization');
+            const focusInstruction = document.getElementById('focusInstruction');
+            const scriptSections = document.querySelectorAll('.script-section');
+
+            // Focus phases and instructions
+            const focusPhases = [
+                { time: 0, instruction: "Prepare to Focus", visualClass: "" },
+                { time: 60, instruction: "Focus on Your Breath", visualClass: "active" },
+                { time: 150, instruction: "Train Your Attention", visualClass: "active" },
+                { time: 240, instruction: "Deepen Your Focus", visualClass: "concentrated" },
+                { time: 330, instruction: "Sustained Concentration", visualClass: "concentrated" },
+                { time: 420, instruction: "Integration & Awareness", visualClass: "active" }
+            ];
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function updateProgress() {
+                const progressPercent = (currentTime / totalDuration) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+                currentTimeDisplay.textContent = formatTime(currentTime);
+            }
+
+            function updateActiveScript() {
+                scriptSections.forEach(section => {
+                    const sectionTime = parseInt(section.dataset.time);
+                    if (currentTime >= sectionTime) {
+                        scriptSections.forEach(s => s.classList.remove('active'));
+                        section.classList.add('active');
+                        
+                        // Auto-scroll to active section
+                        section.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                });
+            }
+
+            function updateFocusVisualization() {
+                // Find current focus phase
+                let currentPhase = focusPhases[0];
+                for (let i = focusPhases.length - 1; i >= 0; i--) {
+                    if (currentTime >= focusPhases[i].time) {
+                        currentPhase = focusPhases[i];
+                        break;
+                    }
+                }
+
+                // Update instruction text
+                focusInstruction.textContent = currentPhase.instruction;
+
+                // Update visual state
+                focusVisualization.className = `focus-visualization ${currentPhase.visualClass}`;
+
+                // Add breathing rhythm for active phases
+                if (currentPhase.visualClass === "active" || currentPhase.visualClass === "concentrated") {
+                    if (!focusVisualization.querySelector('.breathing-pulse')) {
+                        startFocusBreathing();
+                    }
+                } else {
+                    stopFocusBreathing();
+                }
+            }
+
+            function startFocusBreathing() {
+                // Add subtle breathing animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    .focus-visualization.active .focus-dot,
+                    .focus-visualization.concentrated .focus-dot {
+                        animation: focusBreath 4s ease-in-out infinite;
+                    }
+                    @keyframes focusBreath {
+                        0%, 100% { transform: scale(1); }
+                        50% { transform: scale(1.2); }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // Mark as breathing
+                focusVisualization.classList.add('breathing-pulse');
+            }
+
+            function stopFocusBreathing() {
+                focusVisualization.classList.remove('breathing-pulse');
+                // Remove breathing animation
+                const breathingStyles = document.querySelectorAll('style');
+                breathingStyles.forEach(style => {
+                    if (style.textContent.includes('focusBreath')) {
+                        style.remove();
+                    }
+                });
+            }
+
+            function startMeditation() {
+                isPlaying = true;
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline-flex';
+                
+                meditationTimer = setInterval(() => {
+                    currentTime++;
+                    updateProgress();
+                    updateActiveScript();
+                    updateFocusVisualization();
+                    
+                    if (currentTime >= totalDuration) {
+                        completeMeditation();
+                    }
+                }, 1000);
+                
+                // Track meditation start
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('meditation_start', 'mental', 'Focus meditation started', 5);
+                }
+            }
+
+            function pauseMeditation() {
+                isPlaying = false;
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                clearInterval(meditationTimer);
+                
+                focusInstruction.textContent = 'Paused';
+                focusVisualization.className = 'focus-visualization';
+                stopFocusBreathing();
+            }
+
+            function resetMeditation() {
+                isPlaying = false;
+                currentTime = 0;
+                
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                clearInterval(meditationTimer);
+                
+                updateProgress();
+                focusInstruction.textContent = 'Prepare to Focus';
+                focusVisualization.className = 'focus-visualization';
+                stopFocusBreathing();
+                
+                // Reset script to first section
+                scriptSections.forEach(section => section.classList.remove('active'));
+                scriptSections[0].classList.add('active');
+                scriptSections[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            function completeMeditation() {
+                isPlaying = false;
+                clearInterval(meditationTimer);
+                
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                focusInstruction.textContent = 'Focus Complete ✨';
+                focusVisualization.className = 'focus-visualization concentrated';
+                
+                // Add completion glow effect
+                focusVisualization.style.borderColor = '#f39c12';
+                focusVisualization.style.boxShadow = '0 0 40px rgba(243, 156, 18, 0.6)';
+                
+                stopFocusBreathing();
+                
+                // Track meditation completion
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('meditation_complete', 'mental', 'Focus meditation completed', 12);
+                }
+                
+                // Show completion message
+                setTimeout(() => {
+                    showCompletionModal();
+                }, 1000);
+            }
+
+            function showCompletionModal() {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                `;
+                
+                const content = document.createElement('div');
+                content.style.cssText = `
+                    background: linear-gradient(135deg, #2c3e50, #34495e);
+                    padding: 3rem;
+                    border-radius: 20px;
+                    text-align: center;
+                    max-width: 500px;
+                    margin: 2rem;
+                    border: 2px solid #27ae60;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                `;
+                
+                const encouragements = [
+                    "Brilliant! Your mind is now sharp and ready for focused study! 🎯",
+                    "Excellent! You've strengthened your concentration muscle - use it wisely! 🧠",
+                    "Well done! Your ability to focus deeply will serve you well in your studies! ⭐",
+                    "Outstanding! You're building mental fitness that lasts a lifetime! 💪"
+                ];
+                
+                const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                
+                content.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎯✨</div>
+                    <h2 style="color: #27ae60; margin-bottom: 1rem;">Focus Meditation Complete!</h2>
+                    <p style="color: #fff; margin-bottom: 2rem; font-size: 1.1rem;">${randomEncouragement}</p>
+                    <div style="margin-bottom: 2rem;">
+                        <p style="color: #aaa; font-size: 0.9rem;">Your mind is now primed for:</p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 1rem;">
+                            <span style="color: #27ae60;">📚 Focused Study</span>
+                            <span style="color: #27ae60;">🎯 Deep Work</span>
+                            <span style="color: #27ae60;">✍️ Exam Prep</span>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: linear-gradient(135deg, #27ae60, #2ecc71);
+                        color: #fff;
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                        margin-right: 1rem;
+                    ">Start Studying</button>
+                    <button onclick="resetMeditation(); this.parentElement.parentElement.remove();" style="
+                        background: transparent;
+                        color: #27ae60;
+                        border: 2px solid #27ae60;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Meditate Again</button>
+                `;
+                
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+            }
+
+            // Track meditation completion for dashboard
+            function trackMeditationCompletion() {
+                const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+                
+                if (!performanceData.activities) performanceData.activities = [];
+                
+                const activity = {
+                    id: Date.now(),
+                    type: 'meditation_complete',
+                    category: 'mental',
+                    description: 'Completed focus & concentration meditation',
+                    points: 12,
+                    timestamp: new Date().toISOString()
+                };
+                
+                performanceData.activities.unshift(activity);
+                
+                // Update Focus & Resilience score
+                if (!performanceData.scores) performanceData.scores = { mental: 0, physical: 0, nutrition: 0, lifeSkills: 0, overall: 0 };
+                performanceData.scores.mental = Math.min(100, performanceData.scores.mental + 1.5);
+                
+                // Recalculate overall score
+                const scores = [
+                    performanceData.scores.physical,
+                    performanceData.scores.mental,
+                    performanceData.scores.nutrition,
+                    performanceData.scores.lifeSkills
+                ];
+                performanceData.scores.overall = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+                
+                localStorage.setItem('performanceData', JSON.stringify(performanceData));
+            }
+
+            // Event listeners
+            playBtn.addEventListener('click', startMeditation);
+            pauseBtn.addEventListener('click', pauseMeditation);
+            resetBtn.addEventListener('click', resetMeditation);
+
+            // Keyboard controls
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (isPlaying) {
+                        pauseMeditation();
+                    } else {
+                        startMeditation();
+                    }
+                } else if (e.code === 'Escape') {
+                    resetMeditation();
+                }
+            });
+
+            // Prevent page unload during meditation
+            window.addEventListener('beforeunload', function(e) {
+                if (isPlaying) {
+                    e.preventDefault();
+                    e.returnValue = 'Are you sure you want to leave? Your meditation session will be lost.';
+                }
+            });
+
+            // Add focus training tips
+            function showFocusTip() {
+                const tips = [
+                    "💡 Tip: Practice this meditation before study sessions for maximum effectiveness!",
+                    "🎯 Tip: The ability to focus is like a muscle - it gets stronger with regular practice!",
+                    "📚 Tip: Use the Pomodoro Technique after meditation for sustained concentration!",
+                    "🧠 Tip: Single-tasking is more effective than multitasking for deep learning!"
+                ];
+                
+                if (Math.random() < 0.3) { // 30% chance
+                    const tip = tips[Math.floor(Math.random() * tips.length)];
+                    console.log(tip); // Could be displayed as a notification
+                }
+            }
+
+            // Initialize
+            updateProgress();
+            showFocusTip();
+
+            // Override completion function to include tracking
+            const originalComplete = completeMeditation;
+            completeMeditation = function() {
+                originalComplete();
+                trackMeditationCompletion();
+            };
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

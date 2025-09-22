@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Accommodations - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- iOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="performance Hub">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#f39c12">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#f39c12">
+
+    <!-- Viewport for PWA -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- Preload PWA installer script -->
+    <link rel="preload" href="/pwa-install.js" as="script">
+    <style>
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        .accommodations-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .accommodations-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .accommodations-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .section-subtitle {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .rights-box {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .rights-box h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .rights-box h3 i {
+            margin-right: 10px;
+        }
+
+        .accommodations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .accommodation-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .accommodation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .accommodation-header {
+            padding: 1.5rem;
+            background-color: #333;
+            border-bottom: 1px solid #444;
+        }
+
+        .accommodation-header h3 {
+            color: #f39c12;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .accommodation-header h3 i {
+            margin-right: 10px;
+        }
+
+        .accommodation-content {
+            padding: 1.5rem;
+        }
+
+        .accommodation-content h4 {
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .accommodation-content ul {
+            padding-left: 1.5rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .accommodation-content li {
+            margin-bottom: 0.3rem;
+        }
+
+        .process-steps {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .steps-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .steps-timeline::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #f39c12;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .step-number {
+            background: #f39c12;
+            color: black;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .step-content {
+            background-color: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+            flex: 1;
+        }
+
+        .step-content h3 {
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .documentation-section {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .documentation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .doc-card {
+            background-color: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .doc-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .doc-card h4 i {
+            margin-right: 10px;
+        }
+
+        .tips-section {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tip-card {
+            background-color: rgba(0,0,0,0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .tip-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .tip-card h4 i {
+            margin-right: 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22;
+            transform: scale(1.05);
+        }
+
+        .contact-info {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .contact-info h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .accommodations-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .accommodations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .documentation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps-timeline::before {
+                left: 1rem;
+            }
+            
+            .step-number {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1rem;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="accommodations-hero">
+            <h1>Accommodations for Focus & Resilience</h1>
+            <p>Learn about your rights and available academic accommodations for Focus & Resilience conditions in Australian schools. Get the support you need to succeed at school while managing your Focus & Resilience.</p>
+            <a href="#accommodations-info" class="cta-button">Learn Your Rights</a>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="content-section">
+            <h2 class="section-title">Understanding School Accommodations</h2>
+            <p class="intro-text">
+                School accommodations are adjustments made to your learning environment, assessment methods, or school routine to help you succeed academically while managing Focus & Resilience challenges. These accommodations are your legal right and are designed to give you equal opportunities to learn and demonstrate your knowledge.
+            </p>
+
+            <div class="rights-box">
+                <h3><i class="fas fa-balance-scale"></i> Your Rights</h3>
+                <p>Under the Disability Discrimination Act 1992 (DDA) and the Disability Standards for Education 2005, Australian schools must provide reasonable adjustments for students with disabilities, including Focus & Resilience conditions. You have the right to:</p>
+                <ul>
+                    <li>Equal access to all educational opportunities</li>
+                    <li>Reasonable adjustments that help you learn and participate</li>
+                    <li>Privacy about your Focus & Resilience condition</li>
+                    <li>Protection from discrimination or bullying</li>
+                    <li>Support that addresses how your condition affects your learning</li>
+                    <li>Appeal processes if accommodations are denied</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Types of Accommodations -->
+        <section id="accommodations-info" class="content-section">
+            <h2 class="section-title">Types of School Accommodations</h2>
+            <p>Accommodations are personalised based on your specific needs and how your Focus & Resilience condition impacts your school experience.</p>
+            
+            <div class="accommodations-grid">
+                <div class="accommodation-card">
+                    <div class="accommodation-header">
+                        <h3><i class="fas fa-clock"></i> Assessment & Test Accommodations</h3>
+                    </div>
+                    <div class="accommodation-content">
+                        <h4>Common Assessment Support:</h4>
+                        <ul>
+                            <li>Extra time for tests and exams (usually 25-50% more time)</li>
+                            <li>Separate, quiet room for testing</li>
+                            <li>Breaks during long tests or exams</li>
+                            <li>Alternative assessment formats (oral instead of written)</li>
+                            <li>Use of assistive technology during tests</li>
+                            <li>Rescheduling tests during Focus & Resilience episodes</li>
+                            <li>Permission to sit tests at a different time of day</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accommodation-card">
+                    <div class="accommodation-header">
+                        <h3><i class="fas fa-calendar-alt"></i> Assignment & Deadline Support</h3>
+                    </div>
+                    <div class="accommodation-content">
+                        <h4>Assignment Accommodations:</h4>
+                        <ul>
+                            <li>Extensions for assignment due dates</li>
+                            <li>Flexibility with attendance requirements</li>
+                            <li>Modified homework expectations</li>
+                            <li>Alternative ways to present assignments</li>
+                            <li>Advance notice of major assignments and tests</li>
+                            <li>Permission to leave class if anxiety or symptoms arise</li>
+                            <li>Reduced penalties for late work due to Focus & Resilience</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accommodation-card">
+                    <div class="accommodation-header">
+                        <h3><i class="fas fa-chalkboard-teacher"></i> Classroom Environment</h3>
+                    </div>
+                    <div class="accommodation-content">
+                        <h4>Learning Environment Support:</h4>
+                        <ul>
+                            <li>Preferential seating (near exit, away from distractions)</li>
+                            <li>Permission to use fidget tools or stress balls</li>
+                            <li>Access to a quiet space when overwhelmed</li>
+                            <li>Modified participation requirements</li>
+                            <li>Advance warning of loud noises or fire drills</li>
+                            <li>Permission to wear headphones during independent work</li>
+                            <li>Access to class notes or recordings</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accommodation-card">
+                    <div class="accommodation-header">
+                        <h3><i class="fas fa-users"></i> Social & Behavioural Support</h3>
+                    </div>
+                    <div class="accommodation-content">
+                        <h4>Social and Emotional Support:</h4>
+                        <ul>
+                            <li>Access to school counsellor or wellbeing staff</li>
+                            <li>Modified group work arrangements</li>
+                            <li>Safe space to go when feeling overwhelmed</li>
+                            <li>Peer support or buddy systems</li>
+                            <li>Modified consequences for behaviour related to Focus & Resilience</li>
+                            <li>Social skills support and training</li>
+                            <li>Anti-bullying protection and monitoring</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accommodation-card">
+                    <div class="accommodation-header">
+                        <h3><i class="fas fa-graduation-cap"></i> Academic Support Services</h3>
+                    </div>
+                    <div class="accommodation-content">
+                        <h4>Learning Support:</h4>
+                        <ul>
+                            <li>Access to learning support teachers</li>
+                            <li>Study skills training and support</li>
+                            <li>Organisational and time management help</li>
+                            <li>Regular check-ins with support staff</li>
+                            <li>Modified curriculum or subject load when appropriate</li>
+                            <li>Career guidance and planning support</li>
+                            <li>Transition planning for post-school pathways</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accommodation-card">
+                    <div class="accommodation-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Crisis & Emergency Support</h3>
+                    </div>
+                    <div class="accommodation-content">
+                        <h4>Crisis Support:</h4>
+                        <ul>
+                            <li>Crisis intervention procedures and plans</li>
+                            <li>Access to school nurse or first aid</li>
+                            <li>Emergency contact procedures</li>
+                            <li>Safe spaces for de-escalation</li>
+                            <li>Modified attendance during Focus & Resilience crises</li>
+                            <li>Coordinated support with external Focus & Resilience services</li>
+                            <li>Re-entry support after absence for Focus & Resilience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Application Process -->
+        <section class="content-section">
+            <div class="process-steps">
+                <h2 class="section-subtitle">How to Get School Accommodations</h2>
+                <p>Here's how to request accommodations at your school. Your parents or carers can help with this process.</p>
+                
+                <div class="steps-timeline">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Talk to School Staff</h3>
+                            <p>Start by talking to your classroom teacher, year coordinator, or school counsellor about your Focus & Resilience challenges and how they affect your learning. They can guide you through your school's process.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Get Medical Documentation</h3>
+                            <p>You'll need a letter or report from a doctor, psychologist, or Focus & Resilience professional that explains your condition and how it impacts your school performance.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Meet with School Team</h3>
+                            <p>The school will arrange a meeting with you, your parents/carers, and relevant school staff to discuss your needs and develop an accommodation plan.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Create Your Plan</h3>
+                            <p>Together, you'll create an Individual Education Plan (IEP), Individual Learning Plan (ILP), or similar document that outlines your specific accommodations and support strategies.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>Share with Teachers</h3>
+                            <p>Your plan will be shared with all your teachers so they understand your needs and can provide appropriate support in their classes.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3>Regular Reviews</h3>
+                            <p>Your accommodation plan will be reviewed regularly (usually each term or semester) to make sure it's still meeting your needs and make any necessary changes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Requirements -->
+        <section class="content-section">
+            <div class="documentation-section">
+                <h2 class="section-subtitle">What Documentation You Need</h2>
+                <p>To get accommodations, you'll need proper documentation that explains your Focus & Resilience condition and how it affects your learning.</p>
+                
+                <div class="documentation-grid">
+                    <div class="doc-card">
+                        <h4><i class="fas fa-user-md"></i> Healthcare Provider</h4>
+                        <p>A letter from a GP, psychiatrist, psychologist, or Focus & Resilience social worker who has diagnosed or is treating your condition.</p>
+                    </div>
+                    
+                    <div class="doc-card">
+                        <h4><i class="fas fa-calendar"></i> Current Information</h4>
+                        <p>The documentation should be recent (usually within 12 months) and reflect your current Focus & Resilience status and needs.</p>
+                    </div>
+                    
+                    <div class="doc-card">
+                        <h4><i class="fas fa-clipboard-list"></i> Detailed Assessment</h4>
+                        <p>Should include your diagnosis, main symptoms, how the condition affects your daily life and learning, and recommended accommodations.</p>
+                    </div>
+                    
+                    <div class="doc-card">
+                        <h4><i class="fas fa-prescription"></i> Treatment Information</h4>
+                        <p>Information about current treatment, medications (if any), and how these might impact your school performance or needs.</p>
+                    </div>
+                    
+                    <div class="doc-card">
+                        <h4><i class="fas fa-chart-line"></i> School Impact</h4>
+                        <p>Clear explanation of how your condition affects your ability to learn, concentrate, complete work, interact socially, or manage stress.</p>
+                    </div>
+                    
+                    <div class="doc-card">
+                        <h4><i class="fas fa-lightbulb"></i> Recommendations</h4>
+                        <p>Specific suggestions from your healthcare provider about what accommodations or support would help you succeed at school.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tips for Success -->
+        <section class="content-section">
+            <div class="tips-section">
+                <h2><i class="fas fa-star"></i> Tips for Making Accommodations Work</h2>
+                <p>Getting accommodations approved is just the beginning. Here's how to make the most of your support.</p>
+                
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4><i class="fas fa-comments"></i> Communicate Openly</h4>
+                        <p>Talk to your teachers about your needs. Let them know what's working and what isn't so they can adjust their support.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-calendar-check"></i> Plan Ahead</h4>
+                        <p>Request accommodations like extensions or alternative test arrangements as early as possible, not at the last minute.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-clipboard"></i> Keep Records</h4>
+                        <p>Keep copies of your accommodation plan, medical documentation, and any communication about your support needs.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-user-friends"></i> Build Relationships</h4>
+                        <p>Get to know your teachers, year coordinator, and school counsellor. They're there to help you succeed.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-sync-alt"></i> Speak Up for Changes</h4>
+                        <p>If your needs change or your current accommodations aren't working, ask for your plan to be reviewed and updated.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h4><i class="fas fa-shield-alt"></i> Know Your Rights</h4>
+                        <p>Understand what support you're entitled to and don't be afraid to advocate for yourself if accommodations aren't being provided.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAPLAN and External Exams -->
+        <section class="content-section">
+            <div class="rights-box">
+                <h3><i class="fas fa-pencil-alt"></i> NAPLAN and External Exam Support</h3>
+                <p>Students with Focus & Resilience conditions can also receive accommodations for:</p>
+                <ul>
+                    <li><strong>NAPLAN:</strong> Extra time, rest breaks, separate room, or alternative arrangements</li>
+                    <li><strong>Year 12 External Exams (HSC, VCE, QCE, etc.):</strong> Special provisions including extra time, rest breaks, separate supervision</li>
+                    <li><strong>Alternative Assessment:</strong> In some cases, alternative ways to demonstrate knowledge and skills</li>
+                    <li><strong>Illness and Misadventure:</strong> Special consideration if Focus & Resilience impacts performance on the day</li>
+                </ul>
+                <p>Your school will help you apply for these accommodations through the relevant state education authority.</p>
+            </div>
+        </section>
+
+        <!-- Contact Information -->
+        <section class="content-section">
+            <div class="contact-info">
+                <h3><i class="fas fa-phone"></i> Getting Help with School Accommodations</h3>
+                <p>If you need help understanding or getting school accommodations:</p>
+                <div style="margin: 2rem 0;">
+                    <p><strong>Start with your school:</strong> Talk to your classroom teacher, year coordinator, deputy principal, or school counsellor</p>
+                    <p><strong>School Student Support Services:</strong> Most schools have dedicated staff for student wellbeing and learning support</p>
+                    <p><strong>If you need more help:</strong> Contact your state education department's student support services</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Resources -->
+        <section class="content-section">
+            <div class="rights-box">
+                <h3><i class="fas fa-external-link-alt"></i> Additional Australian Resources</h3>
+                <ul>
+                    <li><strong>Beyond Blue:</strong> Focus & Resilience resources specifically for young people and schools</li>
+                    <li><strong>headspace:</strong> Focus & Resilience services and support for young people aged 12-25</li>
+                    <li><strong>ReachOut:</strong> Online Focus & Resilience resources and support for teenagers</li>
+                    <li><strong>Kids Helpline:</strong> 1800 55 1800 - Free counselling for young people aged 5-25</li>
+                    <li><strong>State Education Departments:</strong> Each state has specific policies and procedures for student support</li>
+                    <li><strong>Australian Human Rights Commission:</strong> Information about disability discrimination in education</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="content-section" style="text-align: center; margin: 3rem 10;">
+            <a href="focus-resilience.html" class="cta-button">Back to Focus & Resilience Resources</a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

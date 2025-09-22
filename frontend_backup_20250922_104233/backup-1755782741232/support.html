@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Center - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    
+    <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        /* Support page specific styles */
+        .support-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .support-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .support-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .support-search {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.9);
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.5);
+        }
+
+        .search-btn {
+            background-color: #f39c12;
+            border: none;
+            color: #000;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .support-container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .support-card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .support-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .support-icon {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+        }
+
+        .support-card h3 {
+            font-size: 1.5rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .support-card p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .support-btn {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background-color: #f39c12;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .support-btn:hover {
+            background-color: #e67e22;
+        }
+
+        .faq-container {
+            margin-bottom: 4rem;
+        }
+
+        .faq-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .faq-header h2 {
+            font-size: 2rem;
+            color: #f39c12;
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .category-filter {
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .category-filter:hover, .category-filter.active {
+            background-color: #f39c12;
+            color: black;
+        }
+
+        .faq-item {
+            background-color: #222;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background-color: #2a2a2a;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .faq-toggle {
+            color: #f39c12;
+            font-size: 1.2rem;
+        }
+
+        .contact-support {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .contact-support h2 {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-support p {
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-option {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 220px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .contact-option:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-option-icon {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .contact-option h3 {
+            font-size: 1.3rem;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-option p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-system {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 3rem 2rem;
+        }
+
+        .ticket-system h2 {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .ticket-form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #f39c12;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: #f39c12;
+            color: black;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            background-color: #e67e22;
+            transform: translateY(-3px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .required {
+            color: #f39c12;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            font-size: 100px;
+            top: 0;
+            right: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #444;
+        }
+
+        .file-name {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            .support-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .contact-options {
+                gap: 1rem;
+            }
+            
+            .contact-option {
+                width: 100%;
+                max-width: 220px;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html">Fitness</a>
+                                <a href="nutrition.html">Nutrition</a>
+                                <a href="focus-resilience.html">Focus & Resilience</a>
+                                <a href="life-mastery.html">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboard-link" style="display: none;">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink">Profile</a></li>
+                        <li><a href="#" id="logoutLink">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section with Search -->
+        <section class="support-hero">
+            <h1>Support Center</h1>
+            <p>Find answers to common questions, browse our knowledge base, or reach out directly for personalized assistance.</p>
+            <div class="support-search">
+                <input type="text" class="search-input" placeholder="Search for help topics..." aria-label="Search support topics">
+                <button class="search-btn" aria-label="Search">Search <i class="fas fa-search"></i></button>
+            </div>
+        </section>
+
+        <main>
+            <div class="support-container">
+                <!-- Support Categories -->
+                <section>
+                    <h2 style="font-size: 2rem; color: #f39c12; margin-bottom: 2rem; text-align: center;">How Can We Help You?</h2>
+                    <div class="support-grid">
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <h3>Account & Profile</h3>
+                            <p>Get help with account creation, login issues, password reset, and profile management.</p>
+                            <a href="#account-faq" class="support-btn">View Solutions</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <h3>Technical Issues</h3>
+                            <p>Troubleshoot problems with the platform, mobile compatibility, and feature functionality.</p>
+                            <a href="#technical-faq" class="support-btn">View Solutions</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <h3>Performance Hub & Tools</h3>
+                            <p>Learn how to use and customize your performance dashboard, trackers, and assessment tools.</p>
+                            <a href="#dashboard-faq" class="support-btn">View Solutions</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3>Content Access</h3>
+                            <p>Find information about accessing different content categories and resources on Vivify.</p>
+                            <a href="#content-faq" class="support-btn">View Solutions</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <h3>Privacy & Security</h3>
+                            <p>Understand how we protect your data and manage your privacy preferences.</p>
+                            <a href="#privacy-faq" class="support-btn">View Solutions</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Institutional Access</h3>
+                            <p>Information for schools and universities looking to provide Vivify to their students.</p>
+                            <a href="#institutional-faq" class="support-btn">View Solutions</a>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- FAQ Section -->
+                <section class="faq-container">
+                    <div class="faq-header">
+                        <h2>Frequently Asked Questions</h2>
+                        <div class="category-filters">
+                            <div class="category-filter active" data-category="all">All</div>
+                            <div class="category-filter" data-category="account">Account</div>
+                            <div class="category-filter" data-category="technical">Technical</div>
+                            <div class="category-filter" data-category="content">Content</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account & Profile FAQs -->
+                    <div id="account-faq">
+                        <div class="faq-item" data-category="account">
+                            <div class="faq-question">
+                                <span>How do I create an account?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>To create an account, click the "Sign Up" button in the top right corner of any page. Fill out the registration form with your email address, create a username and password, and accept the terms of service. You'll receive a verification email to confirm your account. Click the verification link, and you're all set!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="account">
+                            <div class="faq-question">
+                                <span>I forgot my password. How do I reset it?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>Click on the "Login" button, then select "Forgot Password?" You'll be prompted to enter the email address associated with your account. We'll send you an email with a secure link to reset your password. If you don't receive the email within a few minutes, check your spam folder or contact support for assistance.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="account">
+                            <div class="faq-question">
+                                <span>How do I update my profile information?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>Once logged in, click on your profile icon in the top right corner, then select "Profile" from the dropdown menu. On your profile page, click the "Edit Profile" button to update your personal information, change your profile picture, adjust privacy settings, or update your performance goals.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="account">
+                            <div class="faq-question">
+                                <span>How do I delete my account?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>To delete your account, go to your Profile settings, scroll to the bottom, and click "Account Management." Select "Delete Account" and follow the confirmation process. Please note that account deletion is permanent and will remove all your data from our system. If you have any concerns before deleting your account, please contact our support team.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Technical FAQs -->
+                    <div id="technical-faq">
+                        <div class="faq-item" data-category="technical">
+                            <div class="faq-question">
+                                <span>Does Vivify work on mobile devices?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>Yes, Vivify is fully responsive and works on all modern mobile devices. Our web application automatically adjusts to your screen size, whether you're using a smartphone, tablet, or desktop computer. For the best experience, we recommend using the latest version of Chrome, Firefox, Safari, or Edge.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="technical">
+                            <div class="faq-question">
+                                <span>Why won't the website load properly?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>If you're experiencing loading issues, try these troubleshooting steps:<br>
+                                1. Clear your browser cache and cookies<br>
+                                2. Ensure you're using a supported browser (Chrome, Firefox, Safari, Edge)<br>
+                                3. Check your internet connection<br>
+                                4. Disable browser extensions that might interfere with the site<br>
+                                5. Try accessing the site in incognito/private browsing mode<br><br>
+                                If problems persist, please contact our technical support with details about your device and browser.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="technical">
+                            <div class="faq-question">
+                                <span>How do I enable notifications?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>To enable browser notifications for Vivify:<br>
+                                1. Go to your Profile settings<br>
+                                2. Select "Notifications"<br>
+                                3. Toggle on the notifications you'd like to receive<br>
+                                4. When prompted by your browser to allow notifications, click "Allow"<br><br>
+                                You can customize which types of notifications you receive, including performance reminders, new content alerts, and community updates.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="technical">
+                            <div class="faq-question">
+                                <span>Why can't I upload a profile picture?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>If you're having trouble uploading a profile picture, please ensure:<br>
+                                1. The file is in JPG, PNG, or GIF format<br>
+                                2. The file size is under 5MB<br>
+                                3. You have a stable internet connection during upload<br><br>
+                                If you continue to experience issues, try using a different browser or device, or contact our support team for assistance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content FAQs -->
+                    <div id="content-faq">
+                        <div class="faq-item" data-category="content">
+                            <div class="faq-question">
+                                <span>How often is new content added?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>We add new content weekly across all four performance pillars: Fitness, Nutrition, Focus & Resilience, and Life Skills. Major content updates typically happen at the beginning of each semester to align with the academic calendar. You can subscribe to content update notifications in your profile settings to be alerted when new resources relevant to your interests are added.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="content">
+                            <div class="faq-question">
+                                <span>Can I suggest new content topics?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>Absolutely! We welcome content suggestions from our community. You can submit your ideas through:<br>
+                                1. The "Suggest Content" form in the feedback section of your dashboard<br>
+                                2. Our contact page (select "Content Suggestion" from the subject dropdown)<br>
+                                3. Directly emailing content@vivify.edu with your ideas<br><br>
+                                Our content team reviews all suggestions and prioritizes topics based on student demand and relevance.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="content">
+                            <div class="faq-question">
+                                <span>Are there advanced fitness programs available?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>Yes, we offer fitness programs for all levels, including advanced options. After completing your fitness assessment, you'll receive recommendations tailored to your experience level. Advanced programs include progressive overload strength training, high-intensity interval training (HIIT), specialized sport-specific training, and more. You can find these in the Fitness section under "Advanced Programs."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" data-category="content">
+                            <div class="faq-question">
+                                <span>How do I save or bookmark content for later?</span>
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                <p>To save content for later, look for the bookmark icon (🔖) in the top right corner of any article, video, or resource page. Clicking this icon will add the item to your "Saved Content" collection, which you can access from your dashboard or profile. You can organize saved content into custom collections (e.g., "Exam Prep Stress Relief," "Quick Workouts") for easier access later.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Contact Support Options -->
+                <section class="contact-support">
+                    <h2>Need More Help?</h2>
+                    <p>If you couldn't find the answer you're looking for, our support team is ready to help. Choose the option that works best for you:</p>
+                    
+                    <div class="contact-options">
+                        <div class="contact-option">
+                            <div class="contact-option-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email Support</h3>
+                            <p>Get a response within 24-48 hours</p>
+                            <a href="mailto:support@vivify.edu" class="support-btn">Email Us</a>
+                        </div>
+                        
+                        <div class="contact-option">
+                            <div class="contact-option-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3>Live Chat</h3>
+                            <p>Available weekdays 9am-5pm PT</p>
+                            <button id="liveChatBtn" class="support-btn">Start Chat</button>
+                        </div>
+                        
+                        <div class="contact-option">
+                            <div class="contact-option-icon">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <h3>Support Ticket</h3>
+                            <p>Detailed assistance for complex issues</p>
+                            <a href="#ticket-system" class="support-btn">Submit Ticket</a>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Support Ticket System -->
+                <section id="ticket-system" class="ticket-system">
+                    <h2>Submit a Support Ticket</h2>
+                    <form class="ticket-form" id="ticketForm">
+                        <div class="form-group">
+                            <label for="name">Your Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="issue-type">Issue Type <span class="required">*</span></label>
+                            <select id="issue-type" name="issue-type" required>
+                                <option value="">Please select an issue type</option>
+                                <option value="account">Account & Login</option>
+                                <option value="technical">Technical Problem</option>
+                                <option value="billing">Billing & Subscription</option>
+                                <option value="content">Content Issue</option>
+                                <option value="feature">Feature Request</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject <span class="required">*</span></label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Detailed Description <span class="required">*</span></label>
+                            <textarea id="description" name="description" required placeholder="Please include as much detail as possible, including the steps to reproduce the issue if applicable."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="screenshot">Attachments (Optional)</label>
+                            <div class="file-upload">
+                                <button type="button" class="upload-btn">Choose File</button>
+                                <span class="file-name">No file chosen</span>
+                                <input type="file" id="screenshot" name="screenshot" accept="image/*,.pdf,.doc,.docx">
+                            </div>
+                            <small>Max file size: 10MB. Accepted formats: JPG, PNG, PDF, DOC</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="urgency">Urgency Level</label>
+                            <select id="urgency" name="urgency">
+                                <option value="low">Low - General question or feedback</option>
+                                <option value="medium" selected>Medium - Issue affecting my experience</option>
+                                <option value="high">High - Cannot access important features</option>
+                                <option value="critical">Critical - Complete system unavailability</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Submit Ticket</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboard-link').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+            
+            // FAQ Accordion
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const toggle = this.querySelector('.faq-toggle');
+                    
+                    if (answer.style.display === 'none' || !answer.style.display) {
+                        answer.style.display = 'block';
+                        toggle.textContent = '-';
+                    } else {
+                        answer.style.display = 'none';
+                        toggle.textContent = '+';
+                    }
+                });
+            });
+            
+            // Category filters for FAQs
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all filters
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    
+                    // Add active class to clicked filter
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Show/hide FAQ items based on category
+                    faqItems.forEach(item => {
+                        if (category === 'all' || item.getAttribute('data-category') === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Support ticket form
+            const ticketForm = document.getElementById('ticketForm');
+            
+            if (ticketForm) {
+                ticketForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const issueType = document.getElementById('issue-type').value;
+                    const subject = document.getElementById('subject').value;
+                    
+                    // Here you would typically send the data to your server
+                    // For now, just show a confirmation message
+                    alert(`Thank you, ${name}! Your support ticket has been submitted.\n\nTicket #: VIV-${Date.now().toString().slice(-6)}\n\nWe'll review your issue and respond to ${email} as soon as possible.`);
+                    
+                    // Clear form
+                    ticketForm.reset();
+                    document.querySelector('.file-name').textContent = 'No file chosen';
+                });
+            }
+            
+            // File upload handling
+            const fileInput = document.getElementById('screenshot');
+            const fileNameDisplay = document.querySelector('.file-name');
+            const uploadBtn = document.querySelector('.upload-btn');
+            
+            if (fileInput && fileNameDisplay && uploadBtn) {
+                uploadBtn.addEventListener('click', function() {
+                    fileInput.click();
+                });
+                
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        fileNameDisplay.textContent = this.files[0].name;
+                    } else {
+                        fileNameDisplay.textContent = 'No file chosen';
+                    }
+                });
+            }
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            const searchBtn = document.querySelector('.search-btn');
+            
+            if (searchInput && searchBtn) {
+                const performSearch = function() {
+                    const searchTerm = searchInput.value.toLowerCase().trim();
+                    
+                    if (searchTerm.length < 2) {
+                        alert('Please enter at least 2 characters to search.');
+                        return;
+                    }
+                    
+                    // Get all faq questions and answers
+                    const questions = document.querySelectorAll('.faq-question');
+                    let matchCount = 0;
+                    
+                    // Reset display of all FAQ items
+                    faqItems.forEach(item => {
+                        item.style.display = 'none';
+                    });
+                    
+                    // Search through questions and answers
+                    questions.forEach(question => {
+                        const questionText = question.textContent.toLowerCase();
+                        const answer = question.nextElementSibling;
+                        const answerText = answer.textContent.toLowerCase();
+                        const faqItem = question.parentElement;
+                        
+                        if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                            faqItem.style.display = 'block';
+                            answer.style.display = 'block';
+                            question.querySelector('.faq-toggle').textContent = '-';
+                            matchCount++;
+                        }
+                    });
+                    
+                    // Update category filters to show "all" as active
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    document.querySelector('[data-category="all"]').classList.add('active');
+                    
+                    // Scroll to FAQs section
+                    document.querySelector('.faq-container').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Show search results message
+                    if (matchCount === 0) {
+                        alert(`No results found for "${searchTerm}". Please try different keywords or submit a support ticket for assistance.`);
+                    }
+                };
+                
+                searchBtn.addEventListener('click', performSearch);
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+            
+            // Live chat button
+            const liveChatBtn = document.getElementById('liveChatBtn');
+            
+            if (liveChatBtn) {
+                liveChatBtn.addEventListener('click', function() {
+                    alert('Our live chat feature will be available in the next update. Please use email support or submit a ticket for now.');
+                });
+            }
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

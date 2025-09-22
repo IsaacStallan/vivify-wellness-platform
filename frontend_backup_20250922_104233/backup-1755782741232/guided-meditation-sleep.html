@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Better Sleep Meditation - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .meditation-hero {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            background-position: center;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .meditation-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .meditation-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .meditation-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .meditation-player {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid #0f3460;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meditation-player::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2c3e50, #34495e, #5d6d7e, #85929e);
+            animation: nightShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes nightShimmer {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .player-title {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .duration-display {
+            color: #85929e;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .sleep-visualization {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .moon-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #f4f6f7, #d5dbdb);
+            position: relative;
+            transition: all 3s ease-in-out;
+            box-shadow: 0 0 20px rgba(244, 246, 247, 0.3);
+        }
+
+        .moon-container.setting {
+            background: linear-gradient(145deg, #fdeaa7, #f39c12);
+            box-shadow: 0 0 30px rgba(243, 156, 18, 0.4);
+        }
+
+        .moon-container.sleeping {
+            background: linear-gradient(145deg, #85929e, #5d6d7e);
+            box-shadow: 0 0 40px rgba(133, 146, 158, 0.2);
+            transform: scale(0.9);
+        }
+
+        .moon-face {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            transition: all 2s ease-in-out;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            color: #f4f6f7;
+            font-size: 0.8rem;
+            animation: twinkle 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .star:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .star:nth-child(2) { top: 30%; right: 20%; animation-delay: 1s; }
+        .star:nth-child(3) { bottom: 25%; left: 25%; animation-delay: 2s; }
+        .star:nth-child(4) { bottom: 35%; right: 15%; animation-delay: 1.5s; }
+        .star:nth-child(5) { top: 15%; right: 35%; animation-delay: 0.5s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .sleep-instruction {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #85929e;
+            margin-top: 1.5rem;
+            transition: color 0.5s ease;
+        }
+
+        .meditation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #5d6d7e, #85929e);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(93, 109, 126, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(93, 109, 126, 0.4);
+        }
+
+        .control-btn.play {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+
+        .control-btn.pause {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .control-btn.reset {
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+        }
+
+        .meditation-script {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            max-height: 350px;
+            overflow-y: auto;
+            border-left: 4px solid #5d6d7e;
+        }
+
+        .script-section {
+            margin-bottom: 2rem;
+            opacity: 0.5;
+            transition: opacity 0.5s ease;
+        }
+
+        .script-section.active {
+            opacity: 1;
+            color: #f4f6f7;
+        }
+
+        .script-section h4 {
+            color: #85929e;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: #2c3e50;
+            height: 6px;
+            border-radius: 3px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #5d6d7e, #85929e);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #85929e;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .sleep-benefits {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: #85929e;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-item h4 {
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .sleep-hygiene {
+            background: #222;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .hygiene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .hygiene-card {
+            background: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #5d6d7e;
+        }
+
+        .hygiene-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hygiene-card ul {
+            padding-left: 1.5rem;
+        }
+
+        .hygiene-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .student-sleep-tips {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #5d6d7e;
+        }
+
+        .tips-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tip-category {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tip-category h4 {
+            color: #85929e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-resources {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #333;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-card i {
+            font-size: 2rem;
+            color: #5d6d7e;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .back-link {
+            background: transparent;
+            color: #85929e;
+            border: 2px solid #85929e;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 2rem 0;
+        }
+
+        .back-link:hover {
+            background: #85929e;
+            color: white;
+        }
+
+        .meditation-instructions {
+            background: rgba(93, 109, 126, 0.1);
+            border: 1px solid #5d6d7e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .meditation-instructions h3 {
+            color: #85929e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sleep-statistics {
+            background: linear-gradient(135deg, #16213e, #1a1a2e);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f39c12;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #85929e;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .meditation-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .meditation-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 200px;
+                justify-content: center;
+            }
+            
+            .sleep-visualization {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .moon-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .content-section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Floating clouds animation */
+        .clouds {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 2rem;
+            animation: float 20s linear infinite;
+        }
+
+        .cloud:nth-child(1) { top: 20%; animation-delay: 0s; }
+        .cloud:nth-child(2) { top: 60%; animation-delay: 7s; }
+        .cloud:nth-child(3) { top: 40%; animation-delay: 14s; }
+
+        @keyframes float {
+            0% { transform: translateX(-100px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateX(calc(100vw + 100px)); opacity: 0; }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="meditation-hero">
+            <div class="hero-content">
+                <div class="meditation-badge">
+                    <i class="fas fa-bed"></i> Better Sleep
+                </div>
+                <h1>Sleep Meditation for Students</h1>
+                <p>Wind down from busy study days and prepare your mind and body for restorative sleep. This 15-minute guided meditation helps Australian students get the quality rest they need for academic success.</p>
+            </div>
+        </section>
+
+        <div class="content-section">
+            <!-- Back Link -->
+            <a href="mindfulness.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Mindfulness
+            </a>
+
+            <!-- Instructions -->
+            <div class="meditation-instructions">
+                <h3><i class="fas fa-info-circle"></i> How to Use This Sleep Meditation</h3>
+                <ul>
+                    <li>Use this meditation 30-60 minutes before your desired sleep time</li>
+                    <li>Lie down comfortably in your bed with dim lighting</li>
+                    <li>Use headphones or play softly through speakers</li>
+                    <li>Don't worry if you fall asleep during the meditation - that's the goal!</li>
+                    <li>Practice consistently for better sleep patterns</li>
+                </ul>
+            </div>
+
+            <!-- Sleep Statistics for Students -->
+            <div class="sleep-statistics">
+                <h2 class="section-title">Why Sleep Matters for Students</h2>
+                <p style="color: #85929e; margin-bottom: 2rem;">Quality sleep is crucial for academic performance, Focus & Resilience, and overall wellbeing.</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">8-9</span>
+                        <div class="stat-label">Hours Recommended for Teens</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">40%</span>
+                        <div class="stat-label">Better Memory Consolidation</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">25%</span>
+                        <div class="stat-label">Improved Academic Performance</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50%</span>
+                        <div class="stat-label">Reduction in Stress Hormones</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meditation Player -->
+            <div class="meditation-player">
+                <div class="clouds">
+                    <div class="cloud">☁️</div>
+                    <div class="cloud">☁️</div>
+                    <div class="cloud">☁️</div>
+                </div>
+                
+                <h2 class="player-title">15-Minute Sleep Meditation</h2>
+                <div class="duration-display">Duration: 15:00 minutes</div>
+                
+                <div class="sleep-visualization" id="sleepVisualization">
+                    <div class="stars">
+                        <div class="star">✨</div>
+                        <div class="star">⭐</div>
+                        <div class="star">✨</div>
+                        <div class="star">⭐</div>
+                        <div class="star">✨</div>
+                    </div>
+                    <div class="moon-container" id="moonContainer">
+                        <div class="moon-face" id="moonFace">🌙</div>
+                    </div>
+                </div>
+                
+                <div class="sleep-instruction" id="sleepInstruction">Prepare for Rest</div>
+
+                <div class="meditation-controls">
+                    <button class="control-btn play" id="playBtn">
+                        <i class="fas fa-play"></i> Start Meditation
+                    </button>
+                    <button class="control-btn pause" id="pauseBtn" style="display: none;">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="control-btn reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span>15:00</span>
+                </div>
+            </div>
+
+            <!-- Meditation Script -->
+            <div class="meditation-script" id="meditationScript">
+                <h3 style="color: #f39c12; text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-scroll"></i> Sleep Meditation Script
+                </h3>
+                
+                <div class="script-section active" data-time="0">
+                    <h4>Settling In (0:00 - 2:00)</h4>
+                    <p>Welcome to this sleep meditation. You've worked hard today, and now it's time to let your mind and body rest. Lie down comfortably, adjusting your pillows and blankets until you feel completely supported.</p>
+                    <p>Close your eyes and take a deep breath in... and slowly breathe out, letting go of the day. Your study time is over, your assignments can wait until tomorrow. This is your time to rest.</p>
+                </div>
+
+                <div class="script-section" data-time="120">
+                    <h4>Body Relaxation (2:00 - 5:00)</h4>
+                    <p>Let's release any tension you're holding from today. Starting with your feet, feel them becoming heavy and relaxed. Your calves, your thighs, letting go completely.</p>
+                    <p>Feel your lower back sinking into the mattress. Your stomach rises and falls with each gentle breath. Let your shoulders drop away from your ears, releasing any stress from studying or sitting at a desk.</p>
+                    <p>Relax your arms, your hands, your fingers. Feel your neck lengthening, your jaw unclenching. Let your forehead smooth out, releasing any worry lines. Your whole body is now heavy, relaxed, and ready for sleep.</p>
+                </div>
+
+                <div class="script-section" data-time="300">
+                    <h4>Mind Clearing (5:00 - 8:00)</h4>
+                    <p>Now let's quiet your busy student mind. You might have thoughts about tomorrow's classes, assignments, or exams. Acknowledge these thoughts without judgment, then imagine placing them in a box beside your bed.</p>
+                    <p>Tomorrow you can pick up that box and deal with everything inside it. But right now, your mind is clear and peaceful. Like a still lake at night, reflecting the moon and stars.</p>
+                    <p>If thoughts arise, simply return to your breath. Each exhale releases you deeper into rest. You are safe, you are supported, and everything you need to remember will be there tomorrow.</p>
+                </div>
+
+                <div class="script-section" data-time="480">
+                    <h4>Peaceful Visualization (8:00 - 12:00)</h4>
+                    <p>Imagine yourself in the most peaceful place you can think of. Perhaps it's a quiet beach under a starry sky, or a cozy cabin in the Australian bush. Maybe it's your childhood bedroom, feeling completely safe and loved.</p>
+                    <p>In this peaceful place, you can hear gentle, soothing sounds. Maybe it's the soft lapping of waves, the gentle rustling of leaves, or the distant sound of rain on a roof. These sounds wrap around you like a soft blanket.</p>
+                    <p>Feel yourself sinking deeper into this peaceful place. Your body is perfectly comfortable, your mind is calm and quiet. You have nowhere to be, nothing to do except rest. You deserve this peaceful sleep.</p>
+                    <p>With each breath, you're drifting deeper into tranquility. Like a leaf floating gently down to rest on still water, you're settling into the most peaceful, restorative sleep.</p>
+                </div>
+
+                <div class="script-section" data-time="720">
+                    <h4>Deep Rest Invitation (12:00 - 15:00)</h4>
+                    <p>Your body knows how to sleep, how to restore and heal itself while you rest. Trust in this natural process. Your mind knows how to organize and consolidate everything you learned today.</p>
+                    <p>As you sleep, your brain will strengthen important memories and clear away what you don't need. You'll wake tomorrow refreshed, alert, and ready to learn and grow.</p>
+                    <p>Let go now. Let sleep come naturally. There's nothing you need to do, nowhere you need to be. Just rest... rest... rest... Allow yourself to drift into the deep, peaceful sleep your body and mind need.</p>
+                    <p>Sleep well, and sweet dreams...</p>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="sleep-benefits">
+                <h2 class="section-title">Benefits of Quality Sleep for Students</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <i class="fas fa-brain"></i>
+                        <h4>Memory Consolidation</h4>
+                        <p>Sleep helps transfer information from short-term to long-term memory, improving recall for exams.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <h4>Enhanced Creativity</h4>
+                        <p>Quality sleep promotes creative problem-solving and innovative thinking for assignments.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Stronger Immune System</h4>
+                        <p>Adequate sleep boosts immunity, helping you stay healthy during busy academic periods.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-smile"></i>
+                        <h4>Better Mood</h4>
+                        <p>Regular sleep improves emotional regulation and reduces stress, anxiety, and irritability.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-eye"></i>
+                        <h4>Improved Focus</h4>
+                        <p>Well-rested students show better concentration and attention span during classes and study.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-heartbeat"></i>
+                        <h4>Physical Health</h4>
+                        <p>Sleep supports physical recovery, hormone regulation, and overall health maintenance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Hygiene Tips -->
+            <div class="sleep-hygiene">
+                <h2 class="section-title">Sleep Hygiene for Students</h2>
+                <div class="hygiene-grid">
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-clock"></i> Sleep Schedule</h4>
+                        <ul>
+                            <li>Go to bed and wake up at the same time daily, even on weekends</li>
+                            <li>Aim for 8-9 hours of sleep per night</li>
+                            <li>Avoid "sleep debt" - you can't fully catch up on lost sleep</li>
+                            <li>Use weekend mornings for study, not staying up late</li>
+                            <li>Consider your natural chronotype (night owl vs early bird)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-mobile-alt"></i> Technology Boundaries</h4>
+                        <ul>
+                            <li>No screens 1 hour before bedtime (blue light disrupts melatonin)</li>
+                            <li>Use night mode or blue light filters after sunset</li>
+                            <li>Keep phones out of the bedroom or on airplane mode</li>
+                            <li>Use a traditional alarm clock instead of your phone</li>
+                            <li>Avoid social media scrolling before bed</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-bed"></i> Sleep Environment</h4>
+                        <ul>
+                            <li>Keep bedroom cool (16-19°C), dark, and quiet</li>
+                            <li>Invest in blackout curtains or an eye mask</li>
+                            <li>Use earplugs or white noise if needed</li>
+                            <li>Reserve your bed for sleep only (not studying)</li>
+                            <li>Keep the space clean and clutter-free</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-coffee"></i> Evening Routine</h4>
+                        <ul>
+                            <li>No caffeine after 2 PM (it stays in your system 6-8 hours)</li>
+                            <li>Avoid large meals 3 hours before bedtime</li>
+                            <li>Try herbal tea like chamomile or passionflower</li>
+                            <li>Do relaxing activities: reading, gentle stretching, meditation</li>
+                            <li>Dim lights 1-2 hours before sleep</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student-Specific Sleep Tips -->
+            <div class="student-sleep-tips">
+                <h2 class="section-title">Sleep Tips for Australian Students</h2>
+                <div class="tips-container">
+                    <div class="tip-category">
+                        <h4><i class="fas fa-graduation-cap"></i> During Exam Periods</h4>
+                        <ul>
+                            <li>Don't sacrifice sleep for extra study time - it's counterproductive</li>
+                            <li>Use power naps (20-30 minutes) if needed, but not after 3 PM</li>
+                            <li>Prioritize sleep the night before exams</li>
+                            <li>Practice this meditation daily during ATAR/HSC/VCE season</li>
+                            <li>Remember: cramming won't help if you're too tired to think clearly</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-category">
+                        <h4><i class="fas fa-home"></i> Living Away from Home</h4>
+                        <ul>
+                            <li>Communicate with housemates about quiet hours</li>
+                            <li>Use earplugs or noise-cancelling headphones</li>
+                            <li>Create a consistent bedtime routine for familiarity</li>
+                            <li>Keep your space comfortable with items from home</li>
+                            <li>Consider a small fan or air purifier for white noise</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-category">
+                        <h4><i class="fas fa-briefcase"></i> Part-Time Work Balance</h4>
+                        <ul>
+                            <li>Schedule work shifts to protect sleep time</li>
+                            <li>Avoid closing shifts on school nights if possible</li>
+                            <li>Use the 2-hour rule: finish work at least 2 hours before bedtime</li>
+                            <li>Negotiate with employers about student schedules</li>
+                            <li>Prioritize sleep over extra shifts during exam periods</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-category">
+                        <h4><i class="fas fa-users"></i> Social Life Balance</h4>
+                        <ul>
+                            <li>Plan social activities for earlier in the evening</li>
+                            <li>Be honest with friends about your sleep priorities</li>
+                            <li>Suggest study groups instead of late-night hangouts</li>
+                            <li>Use weekends for socializing, weeknights for rest</li>
+                            <li>Remember: good friends will support your health goals</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What to Do If You Can't Sleep -->
+            <div class="sleep-hygiene">
+                <h2 class="section-title">If You Can't Fall Asleep</h2>
+                <div class="hygiene-grid">
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-clock"></i> The 20-Minute Rule</h4>
+                        <ul>
+                            <li>If you're not asleep within 20 minutes, get out of bed</li>
+                            <li>Do a quiet, non-stimulating activity (reading, gentle stretching)</li>
+                            <li>Return to bed when you feel sleepy</li>
+                            <li>Repeat as needed - this trains your brain that bed = sleep</li>
+                            <li>Avoid checking the time repeatedly</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-brain"></i> Racing Thoughts</h4>
+                        <ul>
+                            <li>Keep a notepad by your bed for writing down worries</li>
+                            <li>Practice the "worry time" technique - schedule worry for earlier in the day</li>
+                            <li>Use the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8</li>
+                            <li>Try progressive muscle relaxation</li>
+                            <li>Use this guided meditation to redirect your mind</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-sun"></i> Morning Strategies</h4>
+                        <ul>
+                            <li>Get sunlight exposure within 30 minutes of waking</li>
+                            <li>Avoid sleeping in, even after a bad night</li>
+                            <li>Do light exercise or stretching in the morning</li>
+                            <li>Eat a healthy breakfast to support your circadian rhythm</li>
+                            <li>Start planning for better sleep the next night</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hygiene-card">
+                        <h4><i class="fas fa-user-md"></i> When to Seek Help</h4>
+                        <ul>
+                            <li>Persistent insomnia lasting more than 2 weeks</li>
+                            <li>Loud snoring or breathing interruptions during sleep</li>
+                            <li>Excessive daytime fatigue despite adequate sleep time</li>
+                            <li>Sleep issues affecting academic performance</li>
+                            <li>Contact your GP or school counsellor for support</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Resources -->
+            <div class="related-resources">
+                <h2 class="section-title">Related Resources</h2>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <i class="fas fa-leaf"></i>
+                        <h4>Stress Management</h4>
+                        <p>Learn techniques to manage academic stress that might be keeping you awake.</p>
+                        <a href="stress-management.html" class="cta-button">Learn More</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Exam Anxiety Relief</h4>
+                        <p>12-minute meditation to calm pre-exam nerves and boost confidence.</p>
+                        <a href="guided-meditation-exam.html" class="cta-button">Try It</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-eye"></i>
+                        <h4>Focus Meditation</h4>
+                        <p>8-minute practice to sharpen concentration for better study sessions.</p>
+                        <a href="guided-meditation-focus.html" class="cta-button">Focus Now</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <i class="fas fa-heart"></i>
+                        <h4>Self-Compassion</h4>
+                        <p>Be kinder to yourself during challenging academic periods.</p>
+                        <a href="guided-meditation-compassion.html" class="cta-button">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+
+            // Sleep Meditation functionality
+            let meditationTimer = null;
+            let currentTime = 0;
+            let isPlaying = false;
+            const totalDuration = 900; // 15 minutes in seconds
+
+            const playBtn = document.getElementById('playBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressFill = document.getElementById('progressFill');
+            const currentTimeDisplay = document.getElementById('currentTime');
+            const moonContainer = document.getElementById('moonContainer');
+            const moonFace = document.getElementById('moonFace');
+            const sleepInstruction = document.getElementById('sleepInstruction');
+            const scriptSections = document.querySelectorAll('.script-section');
+
+            // Sleep phases and visuals
+            const sleepPhases = [
+                { time: 0, instruction: "Prepare for Rest", moonClass: "", moonEmoji: "🌙" },
+                { time: 120, instruction: "Release the Day", moonClass: "setting", moonEmoji: "🌆" },
+                { time: 300, instruction: "Clear Your Mind", moonClass: "setting", moonEmoji: "😌" },
+                { time: 480, instruction: "Deep Relaxation", moonClass: "sleeping", moonEmoji: "😴" },
+                { time: 720, instruction: "Drift Into Sleep", moonClass: "sleeping", moonEmoji: "💤" }
+            ];
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function updateProgress() {
+                const progressPercent = (currentTime / totalDuration) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+                currentTimeDisplay.textContent = formatTime(currentTime);
+            }
+
+            function updateActiveScript() {
+                scriptSections.forEach(section => {
+                    const sectionTime = parseInt(section.dataset.time);
+                    if (currentTime >= sectionTime) {
+                        scriptSections.forEach(s => s.classList.remove('active'));
+                        section.classList.add('active');
+                        
+                        // Auto-scroll to active section
+                        section.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                });
+            }
+
+            function updateSleepVisualization() {
+                // Find current sleep phase
+                let currentPhase = sleepPhases[0];
+                for (let i = sleepPhases.length - 1; i >= 0; i--) {
+                    if (currentTime >= sleepPhases[i].time) {
+                        currentPhase = sleepPhases[i];
+                        break;
+                    }
+                }
+
+                // Update instruction text
+                sleepInstruction.textContent = currentPhase.instruction;
+                sleepInstruction.style.color = currentPhase.moonClass === 'sleeping' ? '#5d6d7e' : '#85929e';
+
+                // Update moon visual
+                moonContainer.className = `moon-container ${currentPhase.moonClass}`;
+                moonFace.textContent = currentPhase.moonEmoji;
+
+                // Activate stars during sleeping phase
+                if (currentPhase.moonClass === 'sleeping') {
+                    activateStars();
+                }
+            }
+
+            function activateStars() {
+                const stars = document.querySelectorAll('.star');
+                stars.forEach(star => {
+                    star.style.animationPlayState = 'running';
+                });
+            }
+
+            function startMeditation() {
+                isPlaying = true;
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline-flex';
+                
+                meditationTimer = setInterval(() => {
+                    currentTime++;
+                    updateProgress();
+                    updateActiveScript();
+                    updateSleepVisualization();
+                    
+                    if (currentTime >= totalDuration) {
+                        completeMeditation();
+                    }
+                }, 1000);
+                
+                // Start cloud animation
+                const clouds = document.querySelectorAll('.cloud');
+                clouds.forEach(cloud => {
+                    cloud.style.animationPlayState = 'running';
+                });
+                
+                // Track meditation start
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('meditation_start', 'mental', 'Sleep meditation started', 5);
+                }
+            }
+
+            function pauseMeditation() {
+                isPlaying = false;
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                clearInterval(meditationTimer);
+                
+                sleepInstruction.textContent = 'Paused';
+                sleepInstruction.style.color = '#f39c12';
+                
+                // Pause animations
+                const clouds = document.querySelectorAll('.cloud');
+                const stars = document.querySelectorAll('.star');
+                clouds.forEach(cloud => cloud.style.animationPlayState = 'paused');
+                stars.forEach(star => star.style.animationPlayState = 'paused');
+            }
+
+            function resetMeditation() {
+                isPlaying = false;
+                currentTime = 0;
+                
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                clearInterval(meditationTimer);
+                
+                updateProgress();
+                sleepInstruction.textContent = 'Prepare for Rest';
+                sleepInstruction.style.color = '#85929e';
+                moonContainer.className = 'moon-container';
+                moonFace.textContent = '🌙';
+                
+                // Reset animations
+                const clouds = document.querySelectorAll('.cloud');
+                const stars = document.querySelectorAll('.star');
+                clouds.forEach(cloud => cloud.style.animationPlayState = 'paused');
+                stars.forEach(star => star.style.animationPlayState = 'paused');
+                
+                // Reset script to first section
+                scriptSections.forEach(section => section.classList.remove('active'));
+                scriptSections[0].classList.add('active');
+                scriptSections[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            function completeMeditation() {
+                isPlaying = false;
+                clearInterval(meditationTimer);
+                
+                playBtn.style.display = 'inline-flex';
+                pauseBtn.style.display = 'none';
+                
+                sleepInstruction.textContent = 'Sweet Dreams 💤';
+                sleepInstruction.style.color = '#f39c12';
+                moonContainer.className = 'moon-container sleeping';
+                moonFace.textContent = '💤';
+                
+                // Track meditation completion
+                if (window.vivifyTracker) {
+                    window.vivifyTracker.trackActivity('meditation_complete', 'mental', 'Sleep meditation completed', 18);
+                }
+                
+                // Show gentle completion message
+                setTimeout(() => {
+                    showSleepCompletionModal();
+                }, 2000);
+            }
+
+            function showSleepCompletionModal() {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.9);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                `;
+                
+                const content = document.createElement('div');
+                content.style.cssText = `
+                    background: linear-gradient(135deg, #1a1a2e, #16213e);
+                    padding: 3rem;
+                    border-radius: 20px;
+                    text-align: center;
+                    max-width: 500px;
+                    margin: 2rem;
+                    border: 2px solid #5d6d7e;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+                `;
+                
+                const sleepMessages = [
+                    "Well done! Your mind and body are now prepared for restorative sleep. Sweet dreams! 🌙",
+                    "Excellent! You've created the perfect conditions for quality rest. Sleep well! ✨",
+                    "Beautiful! Your nervous system is now calm and ready for deep sleep. Good night! 💤",
+                    "Perfect! You've given yourself the gift of peaceful rest. Dream sweetly! 🌟"
+                ];
+                
+                const randomMessage = sleepMessages[Math.floor(Math.random() * sleepMessages.length)];
+                
+                content.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌙💤</div>
+                    <h2 style="color: #85929e; margin-bottom: 1rem;">Sleep Meditation Complete</h2>
+                    <p style="color: #f4f6f7; margin-bottom: 2rem; font-size: 1.1rem;">${randomMessage}</p>
+                    <div style="margin-bottom: 2rem; color: #85929e; font-size: 0.9rem;">
+                        <p>Remember to:</p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 1rem;">
+                            <span>📱 Keep devices away</span>
+                            <span>🌡️ Stay cool & dark</span>
+                            <span>🧘‍♀️ Breathe deeply</span>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: linear-gradient(135deg, #5d6d7e, #85929e);
+                        color: #fff;
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                        margin-right: 1rem;
+                    ">Rest Well</button>
+                    <button onclick="resetMeditation(); this.parentElement.parentElement.remove();" style="
+                        background: transparent;
+                        color: #85929e;
+                        border: 2px solid #85929e;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Practice Again</button>
+                `;
+                
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+            }
+
+            // Track meditation completion for dashboard
+            function trackSleepMeditationCompletion() {
+                const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+                
+                if (!performanceData.activities) performanceData.activities = [];
+                
+                const activity = {
+                    id: Date.now(),
+                    type: 'meditation_complete',
+                    category: 'mental',
+                    description: 'Completed sleep meditation',
+                    points: 18,
+                    timestamp: new Date().toISOString()
+                };
+                
+                performanceData.activities.unshift(activity);
+                
+                // Update Focus & Resilience score (sleep is important for Focus & Resilience)
+                if (!performanceData.scores) performanceData.scores = { mental: 0, physical: 0, nutrition: 0, lifeSkills: 0, overall: 0 };
+                performanceData.scores.mental = Math.min(100, performanceData.scores.mental + 2.5);
+                
+                // Also boost physical score (sleep affects physical health)
+                performanceData.scores.physical = Math.min(100, performanceData.scores.physical + 1);
+                
+                // Recalculate overall score
+                const scores = [
+                    performanceData.scores.physical,
+                    performanceData.scores.mental,
+                    performanceData.scores.nutrition,
+                    performanceData.scores.lifeSkills
+                ];
+                performanceData.scores.overall = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+                
+                localStorage.setItem('performanceData', JSON.stringify(performanceData));
+            }
+
+            // Event listeners
+            playBtn.addEventListener('click', startMeditation);
+            pauseBtn.addEventListener('click', pauseMeditation);
+            resetBtn.addEventListener('click', resetMeditation);
+
+            // Keyboard controls
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (isPlaying) {
+                        pauseMeditation();
+                    } else {
+                        startMeditation();
+                    }
+                } else if (e.code === 'Escape') {
+                    resetMeditation();
+                }
+            });
+
+            // Gentle warning for page unload during meditation
+            window.addEventListener('beforeunload', function(e) {
+                if (isPlaying) {
+                    e.preventDefault();
+                    e.returnValue = 'Are you sure you want to leave? Your sleep meditation will be interrupted.';
+                }
+            });
+
+            // Override completion to include tracking
+            const originalComplete = completeMeditation;
+            completeMeditation = function() {
+                originalComplete();
+                trackSleepMeditationCompletion();
+            };
+
+            // Add sleep tips for time of day
+            function showTimeBasedTip() {
+                const now = new Date();
+                const hour = now.getHours();
+                
+                let tip = "";
+                if (hour >= 22 || hour <= 5) {
+                    tip = "💡 Perfect timing! Late evening is ideal for sleep meditation.";
+                } else if (hour >= 18 && hour < 22) {
+                    tip = "🌅 Good choice! Evening meditation helps prepare for better sleep later.";
+                } else {
+                    tip = "📚 Great for relaxation! While designed for bedtime, this can help with stress anytime.";
+                }
+                
+                console.log(tip);
+            }
+
+            // Initialize
+            updateProgress();
+            showTimeBasedTip();
+            
+            // Pause animations initially
+            const clouds = document.querySelectorAll('.cloud');
+            const stars = document.querySelectorAll('.star');
+            clouds.forEach(cloud => cloud.style.animationPlayState = 'paused');
+            stars.forEach(star => star.style.animationPlayState = 'paused');
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

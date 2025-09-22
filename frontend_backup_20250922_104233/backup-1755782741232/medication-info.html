@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychiatric Medication Information - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+        .medication-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .medication-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .medication-hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .section-title {
+            color: #f39c12;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .section-subtitle {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .disclaimer-box {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .disclaimer-box h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .disclaimer-box h3 i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .medication-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .medication-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .medication-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .medication-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .medication-header h3 {
+            color: #f39c12;
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .medication-header h3 i {
+            margin-right: 10px;
+        }
+
+        .medication-subtitle {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .medication-content {
+            padding: 1.5rem;
+        }
+
+        .medication-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .medication-details h4 {
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .medication-details ul {
+            padding-left: 1.5rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .medication-details li {
+            margin-bottom: 0.3rem;
+        }
+
+        .side-effects {
+            background-color: #333;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .side-effects h5 {
+            color: #f39c12;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .side-effects p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .getting-started {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .getting-started h2 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .step-card {
+            background-color: rgba(0,0,0,0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .step-number {
+            background: #f39c12;
+            color: black;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 auto 1rem auto;
+        }
+
+        .step-card h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .myths-facts {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .myths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .myth-card {
+            background-color: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .fact-card {
+            background-color: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .myth-card h4 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .fact-card h4 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .myth-card h4 i, .fact-card h4 i {
+            margin-right: 10px;
+        }
+
+        .questions-section {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .question-card {
+            background-color: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .question-card h4 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #f39c12;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .medication-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .medication-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .myths-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .questions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="dropdown" id="categoryDropdown">
+                            <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                            <div class="dropdown-content">
+                                <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                                <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                                <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                                <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                        <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="medication-hero">
+            <h1>Psychiatric Medication Information</h1>
+            <p>Understanding medication options for Focus & Resilience conditions. Learn about different types, what to expect, and how to work effectively with healthcare providers.</p>
+            <a href="#medication-types" class="cta-button">Learn About Medications</a>
+        </section>
+
+        <!-- Important Disclaimer -->
+        <section class="content-section">
+            <div class="disclaimer-box">
+                <h3><i class="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h3>
+                <p><strong>This information is for educational purposes only and is not medical advice.</strong></p>
+                <p>Always consult with qualified healthcare providers about your specific situation. Never start, stop, or change medications without professional guidance. Only licensed medical professionals can prescribe and monitor psychiatric medications.</p>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="content-section">
+            <h2 class="section-title">Understanding Psychiatric Medications</h2>
+            <p class="intro-text">
+                Psychiatric medications can be an effective part of Focus & Resilience treatment for many people. While not everyone needs medication, for those who do, it can significantly improve quality of life and help manage symptoms. Understanding how these medications work, their benefits, and potential side effects can help you have informed discussions with your healthcare provider.
+            </p>
+        </section>
+
+        <!-- Medication Types -->
+        <section id="medication-types" class="content-section">
+            <h2 class="section-title">Types of Psychiatric Medications</h2>
+            <p>Different classes of medications work in various ways to help manage Focus & Resilience conditions.</p>
+            
+            <div class="medication-types">
+                <div class="medication-card">
+                    <div class="medication-header">
+                        <h3><i class="fas fa-brain"></i> Antidepressants</h3>
+                        <p class="medication-subtitle">For depression, anxiety, and other mood disorders</p>
+                    </div>
+                    <div class="medication-content">
+                        <p class="medication-description">Antidepressants work by balancing neurotransmitters in the brain, particularly serotonin, norepinephrine, and dopamine. They're commonly prescribed for depression but also effective for anxiety disorders.</p>
+                        
+                        <div class="medication-details">
+                            <h4>Common Types:</h4>
+                            <ul>
+                                <li>SSRIs (Selective Serotonin Reuptake Inhibitors)</li>
+                                <li>SNRIs (Serotonin-Norepinephrine Reuptake Inhibitors)</li>
+                                <li>Tricyclic antidepressants</li>
+                                <li>MAOIs (Monoamine Oxidase Inhibitors)</li>
+                                <li>Atypical antidepressants</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="side-effects">
+                            <h5>Common Side Effects:</h5>
+                            <p>Nausea, drowsiness, dry mouth, changes in appetite or weight, sexual side effects. Most side effects are temporary and improve over time.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="medication-card">
+                    <div class="medication-header">
+                        <h3><i class="fas fa-heart-pulse"></i> Anti-Anxiety Medications</h3>
+                        <p class="medication-subtitle">For anxiety disorders and panic attacks</p>
+                    </div>
+                    <div class="medication-content">
+                        <p class="medication-description">These medications help reduce anxiety symptoms and can be used for short-term relief or longer-term management of anxiety disorders.</p>
+                        
+                        <div class="medication-details">
+                            <h4>Common Types:</h4>
+                            <ul>
+                                <li>Benzodiazepines (short-term use)</li>
+                                <li>Buspirone (long-term use)</li>
+                                <li>Beta-blockers (for physical symptoms)</li>
+                                <li>SSRIs/SNRIs (also used for anxiety)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="side-effects">
+                            <h5>Common Side Effects:</h5>
+                            <p>Drowsiness, dizziness, memory problems (with benzodiazepines), dependency risk with some medications.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="medication-card">
+                    <div class="medication-header">
+                        <h3><i class="fas fa-balance-scale"></i> Mood Stabilizers</h3>
+                        <p class="medication-subtitle">For bipolar disorder and mood regulation</p>
+                    </div>
+                    <div class="medication-content">
+                        <p class="medication-description">Mood stabilizers help prevent extreme mood swings and are primarily used to treat bipolar disorder, but may also be used for other conditions.</p>
+                        
+                        <div class="medication-details">
+                            <h4>Common Types:</h4>
+                            <ul>
+                                <li>Lithium</li>
+                                <li>Anticonvulsants (Valproate, Lamotrigine)</li>
+                                <li>Atypical antipsychotics</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="side-effects">
+                            <h5>Common Side Effects:</h5>
+                            <p>Weight changes, tremor, increased thirst, kidney function changes (with lithium). Regular blood monitoring required.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="medication-card">
+                    <div class="medication-header">
+                        <h3><i class="fas fa-eye"></i> Antipsychotics</h3>
+                        <p class="medication-subtitle">For psychotic symptoms and severe mood disorders</p>
+                    </div>
+                    <div class="medication-content">
+                        <p class="medication-description">Antipsychotics are used to treat conditions involving psychotic symptoms like schizophrenia, but are also used in lower doses for bipolar disorder and treatment-resistant depression.</p>
+                        
+                        <div class="medication-details">
+                            <h4>Common Types:</h4>
+                            <ul>
+                                <li>Typical (first-generation) antipsychotics</li>
+                                <li>Atypical (second-generation) antipsychotics</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="side-effects">
+                            <h5>Common Side Effects:</h5>
+                            <p>Weight gain, drowsiness, movement side effects (more common with typical antipsychotics), metabolic changes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="medication-card">
+                    <div class="medication-header">
+                        <h3><i class="fas fa-focus"></i> ADHD Medications</h3>
+                        <p class="medication-subtitle">For attention deficit hyperactivity disorder</p>
+                    </div>
+                    <div class="medication-content">
+                        <p class="medication-description">ADHD medications help improve focus, attention, and impulse control. They're commonly used by college students with ADHD to help with academic performance.</p>
+                        
+                        <div class="medication-details">
+                            <h4>Common Types:</h4>
+                            <ul>
+                                <li>Stimulants (Methylphenidate, Amphetamines)</li>
+                                <li>Non-stimulants (Strattera, Wellbutrin)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="side-effects">
+                            <h5>Common Side Effects:</h5>
+                            <p>Decreased appetite, sleep problems, increased heart rate, mood changes, potential for abuse with stimulants.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="medication-card">
+                    <div class="medication-header">
+                        <h3><i class="fas fa-bed"></i> Sleep Medications</h3>
+                        <p class="medication-subtitle">For insomnia and sleep disorders</p>
+                    </div>
+                    <div class="medication-content">
+                        <p class="medication-description">Sleep medications can help with falling asleep, staying asleep, or both. They're typically recommended for short-term use alongside sleep hygiene improvements.</p>
+                        
+                        <div class="medication-details">
+                            <h4>Common Types:</h4>
+                            <ul>
+                                <li>Non-benzodiazepine hypnotics (Z-drugs)</li>
+                                <li>Melatonin and melatonin receptor agonists</li>
+                                <li>Sedating antidepressants</li>
+                                <li>Antihistamines (over-the-counter)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="side-effects">
+                            <h5>Common Side Effects:</h5>
+                            <p>Morning drowsiness, memory problems, dependency risk, unusual sleep behaviors with some medications.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Working with Healthcare Providers -->
+        <section class="content-section">
+            <div class="getting-started">
+                <h2><i class="fas fa-user-md"></i> Working with Healthcare Providers</h2>
+                <p>Effective communication with your healthcare provider is essential for safe and effective medication management.</p>
+                
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Be Honest & Complete</h3>
+                        <p>Share all symptoms, medical history, current medications, supplements, and substance use. Honesty helps ensure safe prescribing.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Ask Questions</h3>
+                        <p>Understand why a medication is recommended, how it works, potential side effects, and what to expect during treatment.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Follow Instructions</h3>
+                        <p>Take medications exactly as prescribed. Don't stop, start, or change doses without consulting your provider first.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>Track Effects</h3>
+                        <p>Keep a journal of symptoms, side effects, and mood changes to share with your provider at follow-up appointments.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">5</div>
+                        <h3>Regular Check-ins</h3>
+                        <p>Attend all follow-up appointments and lab tests. Medication management requires ongoing monitoring and adjustment.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">6</div>
+                        <h3>Communicate Changes</h3>
+                        <p>Report any concerning side effects, lack of improvement, or life changes that might affect your medication needs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Myths and Facts -->
+        <section class="content-section">
+            <div class="myths-facts">
+                <h2 class="section-subtitle">Common Myths and Facts About Psychiatric Medications</h2>
+                <p>Addressing misconceptions can help you make informed decisions about Focus & Resilience treatment.</p>
+                
+                <div class="myths-grid">
+                    <div class="myth-card">
+                        <h4><i class="fas fa-times-circle"></i> Myth</h4>
+                        <p>"Psychiatric medications change your personality and make you a different person."</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <h4><i class="fas fa-check-circle"></i> Fact</h4>
+                        <p>Well-managed medications should help you feel more like yourself by reducing symptoms that interfere with your natural personality and functioning.</p>
+                    </div>
+                    
+                    <div class="myth-card">
+                        <h4><i class="fas fa-times-circle"></i> Myth</h4>
+                        <p>"You have to take psychiatric medications for the rest of your life."</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <h4><i class="fas fa-check-circle"></i> Fact</h4>
+                        <p>Treatment duration varies by individual and condition. Some people benefit from short-term use, while others find long-term treatment helpful. This is decided collaboratively with your provider.</p>
+                    </div>
+                    
+                    <div class="myth-card">
+                        <h4><i class="fas fa-times-circle"></i> Myth</h4>
+                        <p>"Taking medication means you're weak or have failed."</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <h4><i class="fas fa-check-circle"></i> Fact</h4>
+                        <p>Taking medication for Focus & Resilience is no different from taking medication for diabetes, high blood pressure, or any other medical condition. It's a healthcare decision, not a character judgment.</p>
+                    </div>
+                    
+                    <div class="myth-card">
+                        <h4><i class="fas fa-times-circle"></i> Myth</h4>
+                        <p>"Psychiatric medications are addictive."</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <h4><i class="fas fa-check-circle"></i> Fact</h4>
+                        <p>Most psychiatric medications are not addictive. Some (like certain anti-anxiety medications) can cause physical dependence, but this is different from addiction and is managed medically.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Questions to Ask -->
+        <section class="content-section">
+            <div class="questions-section">
+                <h2 class="section-subtitle">Important Questions to Ask Your Provider</h2>
+                <p>Being prepared with questions helps ensure you get the information you need to make informed decisions.</p>
+                
+                <div class="questions-grid">
+                    <div class="question-card">
+                        <h4>About the Medication</h4>
+                        <ul>
+                            <li>Why is this medication recommended for me?</li>
+                            <li>How does it work?</li>
+                            <li>How long before I see improvement?</li>
+                            <li>What if it doesn't work?</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="question-card">
+                        <h4>Side Effects & Safety</h4>
+                        <ul>
+                            <li>What side effects should I expect?</li>
+                            <li>Which side effects require immediate attention?</li>
+                            <li>Are there any dangerous interactions?</li>
+                            <li>Is it safe with alcohol or other substances?</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="question-card">
+                        <h4>Practical Considerations</h4>
+                        <ul>
+                            <li>When and how should I take it?</li>
+                            <li>What if I miss a dose?</li>
+                            <li>How much does it cost?</li>
+                            <li>Are there generic alternatives?</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="question-card">
+                        <h4>Monitoring & Follow-up</h4>
+                        <ul>
+                            <li>How often will we check in?</li>
+                            <li>Do I need lab tests?</li>
+                            <li>How long might I need to take it?</li>
+                            <li>What's the plan for stopping it eventually?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Student-Specific Considerations -->
+        <section class="content-section">
+            <div class="getting-started">
+                <h2><i class="fas fa-graduation-cap"></i> Special Considerations for Students</h2>
+                
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number"><i class="fas fa-calendar"></i></div>
+                        <h3>Academic Timing</h3>
+                        <p>Consider starting new medications during less stressful periods, not right before exams or major projects.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number"><i class="fas fa-wine-glass"></i></div>
+                        <h3>Alcohol & Substances</h3>
+                        <p>Be honest about substance use. Many medications can have dangerous interactions with alcohol or drugs.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number"><i class="fas fa-user-friends"></i></div>
+                        <h3>Support System</h3>
+                        <p>Consider telling trusted friends or family about your medication so they can support you and watch for concerning changes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="content-section" style="text-align: center; margin: 3rem 10;">
+            <a href="focus-resilience.html" class="cta-button">Back to Focus & Resilience Resources</a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+                <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

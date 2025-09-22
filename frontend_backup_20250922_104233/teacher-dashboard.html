@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-info h1 {
+            color: #f39c12;
+            font-size: 2rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 700;
+        }
+
+        .header-info p {
+            color: #a0a0a0;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #f39c12;
+        }
+
+        .view-all-btn {
+            background: transparent;
+            border: 1px solid #f39c12;
+            color: #f39c12;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .view-all-btn:hover {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: linear-gradient(145deg, #2a2a2a 0%, #333 100%);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            border-color: #f39c12;
+        }
+
+        .student-card.alert {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .student-card.warning {
+            border-left: 4px solid #f39c12;
+        }
+
+        .student-card.good {
+            border-left: 4px solid #27ae60;
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .student-info h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.3rem 0;
+        }
+
+        .student-details {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+        }
+
+        .performance-score {
+            text-align: right;
+        }
+
+        .score-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: conic-gradient(#f39c12 0deg, #f39c12 var(--score-deg), #333 var(--score-deg), #333 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            background: #2a2a2a;
+            border-radius: 50%;
+        }
+
+        .score-text {
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .last-active {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .student-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: #444;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .metric-fill.physical { background: #3498db; }
+        .metric-fill.mental { background: #9b59b6; }
+        .metric-fill.nutrition { background: #27ae60; }
+        .metric-fill.skills { background: #e67e22; }
+
+        .metric-labels {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .metric-label {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #a0a0a0;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #555;
+            color: #ccc;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .action-btn.primary {
+            background: #f39c12;
+            border-color: #f39c12;
+            color: #000;
+        }
+
+        .action-btn.primary:hover {
+            background: #e67e22;
+            border-color: #e67e22;
+        }
+
+        .class-overview {
+            background: linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-stat {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            border-radius: 8px;
+        }
+
+        .overview-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f39c12;
+            display: block;
+        }
+
+        .overview-stat-label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .trends-chart {
+            height: 200px;
+            background: #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%);
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid #333;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            color: #f39c12;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #f39c12;
+        }
+
+        .class-item {
+            background: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #f39c12;
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .class-info h4 {
+            color: #f39c12;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .class-details {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .class-code-display {
+            text-align: right;
+        }
+
+        .class-code {
+            background: #f39c12;
+            color: black;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-hint {
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        .class-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+            }
+
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .class-header {
+                flex-direction: column;
+                text-align: left;
+            }
+
+            .class-code-display {
+                text-align: left;
+                margin-top: 1rem;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Navigation -->
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                        <li class="teacher-nav" style="display: block;">
+                            <a href="teacher-dashboard.html" class="active" aria-label="Teacher Dashboard">Performance Hub</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                        <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="dashboard-container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="header-info">
+                    <h1>Welcome, <span id="teacherName">Teacher</span></h1>
+                    <p id="schoolInfo">Loading school information...</p>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalStudents">0</span>
+                        <span class="stat-label">Students</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="activeToday">0</span>
+                        <span class="stat-label">Active Today</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="alertsCount">0</span>
+                        <span class="stat-label">Alerts</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Class Management -->
+            <div class="dashboard-card" style="grid-column: 1 / -1; margin-bottom: 2rem;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chalkboard"></i>
+                        My Classes
+                    </h3>
+                    <div>
+                        <button onclick="createNewClass()" class="view-all-btn">
+                            <i class="fas fa-plus"></i> Create New Class
+                        </button>
+                        <button onclick="refreshDashboard()" class="view-all-btn" style="margin-left: 0.5rem;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button onclick="debugAndFix()" class="view-all-btn" style="margin-left: 0.5rem; background: #e74c3c;">
+                            <i class="fas fa-bug"></i> Debug & Fix
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="teacherClasses">
+                    <!-- Classes will load here -->
+                </div>
+            </div>
+
+            <!-- Class Overview -->
+            <div class="class-overview">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Class performance Overview
+                    </h2>
+                </div>
+                
+                <div class="overview-stats">
+                    <div class="overview-stat">
+                        <span class="overview-stat-value" id="avgperformance">0%</span>
+                        <div class="overview-stat-label">Average performance</div>
+                    </div>
+                    <div class="overview-stat">
+                        <span class="overview-stat-value" id="improvingStudents">0</span>
+                        <div class="overview-stat-label">Improving</div>
+                    </div>
+                    <div class="overview-stat">
+                        <span class="overview-stat-value" id="stableStudents">0</span>
+                        <div class="overview-stat-label">Stable</div>
+                    </div>
+                    <div class="overview-stat">
+                        <span class="overview-stat-value" id="needsAttention">0</span>
+                        <div class="overview-stat-label">Needs Attention</div>
+                    </div>
+                </div>
+
+                <div class="trends-chart">
+                    <p>performance trends chart would appear here<br>
+                    <small>(Integration with charting library like Chart.js)</small></p>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Recent Alerts -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Recent Alerts
+                        </h3>
+                        <a href="#" class="view-all-btn" onclick="viewAllAlerts()">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div id="recentAlerts">
+                        <p style="color: #888; text-align: center; margin: 2rem 0;">
+                            Loading alerts...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-tools"></i>
+                            Quick Actions
+                        </h3>
+                    </div>
+                    <div class="quick-actions" style="flex-direction: column; gap: 1rem;">
+                        <button class="action-btn primary" onclick="recordIntervention()">
+                            <i class="fas fa-plus"></i> Record Intervention
+                        </button>
+                        <button class="action-btn" onclick="exportReport()">
+                            <i class="fas fa-download"></i> Export Class Report
+                        </button>
+                        <button class="action-btn" onclick="scheduleCheckIn()">
+                            <i class="fas fa-calendar-plus"></i> Schedule Check-in
+                        </button>
+                        <button class="action-btn" onclick="viewAnalytics()">
+                            <i class="fas fa-chart-bar"></i> View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Overview -->
+            <div class="dashboard-card" style="grid-column: 1 / -1;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-users"></i>
+                        My Students
+                    </h3>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <select id="classFilter" style="background: #333; color: white; border: 1px solid #555; padding: 0.5rem; border-radius: 4px;">
+                            <option value="all">All Classes</option>
+                        </select>
+                        <a href="#" class="view-all-btn" onclick="viewAllStudents()">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="students-grid" id="studentsGrid">
+                    <!-- Students will be loaded here -->
+                    <p style="color: #888; text-align: center; margin: 2rem 0; grid-column: 1 / -1;">
+                        Loading students...
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Student Details Modal -->
+        <div id="studentModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalStudentName">Student Details</h2>
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
+                <div id="modalStudentContent">
+                    <!-- Student details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Class Management Functions
+        // Replace the entire ClassManager object in your teacher dashboard with this production version:
+
+        const ClassManager = {
+            generateClassCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 6; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            },
+
+            // Production method - calls backend API instead of localStorage
+            async createClass(teacherId, classData) {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const response = await fetch('https://vivify-wellness-platform.onrender.com/api/teacher/create-class', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            name: classData.name,
+                            subject: classData.subject,
+                            yearLevel: classData.yearLevel
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        console.log('Class created in database:', result.class);
+                        return result.class;
+                    } else {
+                        throw new Error(result.message || 'Failed to create class');
+                    }
+                } catch (error) {
+                    console.error('Error creating class:', error);
+                    throw error;
+                }
+            },
+
+            // Production method - loads classes from database instead of localStorage
+            async loadTeacherClasses() {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const response = await fetch('https://vivify-wellness-platform.onrender.com/api/teacher/classes', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load classes');
+                    }
+                    
+                    const result = await response.json();
+                    const teacherClasses = result.classes || [];
+                    
+                    console.log('Classes loaded from database:', teacherClasses);
+                    
+                    const container = document.getElementById('teacherClasses');
+                    if (!container) return;
+                    
+                    if (teacherClasses.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 3rem; color: #888;">
+                                <i class="fas fa-chalkboard" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                <h3 style="color: #ccc; margin-bottom: 1rem;">No Classes Created Yet</h3>
+                                <p>Create your first class to start monitoring student performance!</p>
+                                <button onclick="createNewClass()" style="background: #f39c12; color: black; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; margin-top: 1rem; cursor: pointer;">
+                                    <i class="fas fa-plus"></i> Create Your First Class
+                                </button>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    container.innerHTML = teacherClasses.map(cls => {
+                        const actualStudentCount = cls.students ? cls.students.length : 0;
+                        
+                        return `
+                            <div class="class-item">
+                                <div class="class-header">
+                                    <div class="class-info">
+                                        <h4>${cls.name}</h4>
+                                        <div class="class-details">
+                                            <strong>${actualStudentCount}</strong> students enrolled • ${cls.subject} • Year ${cls.yearLevel}
+                                            ${actualStudentCount === 0 ? '<br><em style="color: #f39c12;">Share class code to get students</em>' : ''}
+                                        </div>
+                                    </div>
+                                    <div class="class-code-display">
+                                        <div class="class-code">${cls.code}</div>
+                                        <div class="code-hint">Share this code</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="class-actions">
+                                    <button onclick="copyClassCode('${cls.code}')" class="action-btn primary">
+                                        <i class="fas fa-copy"></i> Copy Code
+                                    </button>
+                                    <button onclick="viewClassStudents('${cls.id}')" class="action-btn">
+                                        <i class="fas fa-users"></i> ${actualStudentCount} Students
+                                    </button>
+                                    ${actualStudentCount > 0 ? `
+                                        <button onclick="messageClass('${cls.id}')" class="action-btn">
+                                            <i class="fas fa-envelope"></i> Message Class
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    // Update class filter
+                    this.updateClassFilter(teacherClasses);
+                    
+                } catch (error) {
+                    console.error('Error loading classes:', error);
+                    const container = document.getElementById('teacherClasses');
+                    if (container) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: #e74c3c;">
+                                <p>Error loading classes from database</p>
+                                <button onclick="ClassManager.loadTeacherClasses()" class="action-btn">Retry</button>
+                            </div>
+                        `;
+                    }
+                }
+            },
+
+            updateClassFilter(teacherClasses) {
+                const classFilter = document.getElementById('classFilter');
+                if (!classFilter) return;
+                
+                classFilter.innerHTML = '<option value="all">All Classes</option>';
+                
+                teacherClasses.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls.id;
+                    option.textContent = cls.name;
+                    classFilter.appendChild(option);
+                });
+                
+                classFilter.onchange = function() {
+                    filterStudentsByClass(this.value);
+                };
+            }
+        };
+
+        // Update the createNewClass global function to use the production API:
+        window.createNewClass = async function() {
+            const className = prompt('Enter class name (e.g., "Year 10A Mathematics"):');
+            if (!className) return;
+            
+            const subject = prompt('Enter subject (e.g., "Mathematics", "English"):');
+            if (!subject) return;
+            
+            const yearLevel = parseInt(prompt('Enter year level (7-12):'));
+            if (!yearLevel || yearLevel < 7 || yearLevel > 12) {
+                alert('Please enter a valid year level (7-12)');
+                return;
+            }
+            
+            try {
+                const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                
+                // Use production API to create class
+                const newClass = await ClassManager.createClass(teacherProfile.id, {
+                    name: className,
+                    subject: subject,
+                    yearLevel: yearLevel
+                });
+                
+                alert(`Class created successfully!\n\nClass Code: ${newClass.code}\n\nShare this code with your students so they can join your class.`);
+                
+                // Reload classes from database
+                await ClassManager.loadTeacherClasses();
+                loadStudents();
+                loadClassOverview();
+                
+            } catch (error) {
+                console.error('Failed to create class:', error);
+                alert('Failed to create class. Please check your connection and try again.');
+            }
+        };
+
+        // Update the dashboard initialization to use async loading:
+        // Replace the existing DOMContentLoaded event listener with this:
+        document.addEventListener('DOMContentLoaded', async function() {
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const userRole = localStorage.getItem('userRole');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            
+            console.log('Auth check:', { userLoggedIn, userRole, userProfile });
+            
+            if (userLoggedIn !== 'true' || !userProfile.id) {
+                console.log('Not authenticated, redirecting to login');
+                window.location.href = 'login.html?redirect=teacher-dashboard';
+                return;
+            }
+            
+            if (userRole !== 'teacher' && userRole !== 'admin') {
+                console.log('Wrong role, redirecting based on role:', userRole);
+                switch (userRole) {
+                    case 'student':
+                        window.location.href = 'dashboard.html';
+                        break;
+                    default:
+                        window.location.href = 'login.html';
+                }
+                return;
+            }
+            
+            console.log('Authentication successful for:', userProfile.name);
+            
+            // Load data from production APIs
+            loadTeacherData();
+            await ClassManager.loadTeacherClasses(); // Use async loading
+            loadStudents();
+            loadClassOverview();
+            loadRecentAlerts();
+        });
+
+        function loadTeacherData() {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            document.getElementById('teacherName').textContent = userProfile.name || 'Teacher';
+            
+            let schoolInfo = '';
+            if (userProfile.department) {
+                schoolInfo = userProfile.department;
+            }
+            if (userProfile.schoolCode) {
+                schoolInfo += (schoolInfo ? ' • ' : '') + `School Code: ${userProfile.schoolCode}`;
+            }
+            if (!schoolInfo) {
+                schoolInfo = 'Knox Grammar School • Mathematics Department';
+            }
+            
+            document.getElementById('schoolInfo').textContent = schoolInfo;
+        }
+
+        // FIXED: Improved loadStudents function with better debugging
+        function loadStudents() {
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            console.log('Debug - Loading students for teacher:', teacherProfile.id);
+            console.log('Debug - All classes:', classes);
+            console.log('Debug - All users:', allUsers);
+            
+            const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+            console.log('Debug - Teacher classes:', teacherClasses);
+            
+            // Get ALL student IDs from teacher's classes
+            const allStudentIds = new Set(); // Use Set to avoid duplicates
+            teacherClasses.forEach(cls => {
+                console.log(`Debug - Class "${cls.name}" has students:`, cls.students);
+                if (cls.students && Array.isArray(cls.students)) {
+                    cls.students.forEach(id => allStudentIds.add(String(id))); // Convert to string for consistency
+                }
+            });
+            
+            console.log('Debug - All student IDs from classes:', Array.from(allStudentIds));
+            
+            // Find actual student user objects
+            const students = allUsers.filter(user => {
+                const isStudent = user.role === 'student';
+                const isInClass = allStudentIds.has(String(user.id)); // Convert to string for comparison
+                console.log(`Debug - User ${user.name} (${user.id}): student=${isStudent}, inClass=${isInClass}`);
+                return isStudent && isInClass;
+            });
+            
+            console.log('Debug - Found students:', students);
+            
+            // Update header stats
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('activeToday').textContent = calculateActiveToday(students);
+            document.getElementById('alertsCount').textContent = calculateAlerts(students);
+            
+            const studentsGrid = document.getElementById('studentsGrid');
+            if (!studentsGrid) return;
+            
+            if (students.length === 0) {
+                studentsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #888;">
+                        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <h3 style="color: #ccc; margin-bottom: 1rem;">No Students Found</h3>
+                        <p>Debug: Found ${allStudentIds.size} student IDs but no matching user profiles.</p>
+                        <p>Student IDs: ${Array.from(allStudentIds).join(', ')}</p>
+                        <button onclick="debugStudentData()" class="action-btn" style="margin-top: 1rem;">Debug Data</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Clear and populate grid
+            studentsGrid.innerHTML = '';
+            students.forEach(student => {
+                const studentCard = createRealStudentCard(student);
+                studentsGrid.appendChild(studentCard);
+            });
+            
+            console.log(`Debug - Displayed ${students.length} students in grid`);
+        }
+
+        function createRealStudentCard(student) {
+            const card = document.createElement('div');
+            
+            const performanceData = getStudentperformanceData(student.id);
+            const overallScore = performanceData?.scores?.overall || 0;
+            const lastActive = getLastActiveTime(student);
+            
+            let cardStatus = 'good';
+            if (overallScore < 40) cardStatus = 'alert';
+            else if (overallScore < 70) cardStatus = 'warning';
+            
+            card.className = `student-card ${cardStatus}`;
+            card.onclick = () => openStudentDetails(student);
+            
+            card.innerHTML = `
+                <div class="student-header">
+                    <div class="student-info">
+                        <h4>${student.name}</h4>
+                        <div class="student-details">Year ${student.yearLevel || 'N/A'} • ${student.school || 'Unknown School'}</div>
+                    </div>
+                    <div class="performance-score">
+                        <div class="score-circle" style="--score-deg: ${(overallScore / 100) * 360}deg">
+                            <span class="score-text">${overallScore}%</span>
+                        </div>
+                        <div class="last-active">${lastActive}</div>
+                    </div>
+                </div>
+                
+                <div class="student-metrics">
+                    <div class="metric-bar">
+                        <div class="metric-fill physical" style="width: ${performanceData?.scores?.physical || 0}%"></div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-fill mental" style="width: ${performanceData?.scores?.mental || 0}%"></div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-fill nutrition" style="width: ${performanceData?.scores?.nutrition || 0}%"></div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-fill skills" style="width: ${performanceData?.scores?.lifeSkills || 0}%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-labels">
+                    <div class="metric-label">Physical</div>
+                    <div class="metric-label">Mental</div>
+                    <div class="metric-label">Nutrition</div>
+                    <div class="metric-label">Skills</div>
+                </div>
+                
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="event.stopPropagation(); viewProgress('${student.id}')">
+                        <i class="fas fa-chart-line"></i> Progress
+                    </button>
+                    <button class="action-btn" onclick="event.stopPropagation(); recordIntervention('${student.id}')">
+                        <i class="fas fa-comment-dots"></i> Note
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function getStudentperformanceData(studentId) {
+            const performanceData = JSON.parse(localStorage.getItem(`performance_${studentId}`) || '{}');
+            const assessmentResults = JSON.parse(localStorage.getItem(`assessment_${studentId}`) || '{}');
+            
+            const scores = {
+                physical: assessmentResults.physical || performanceData.physical || Math.floor(Math.random() * 100),
+                mental: assessmentResults.mental || performanceData.mental || Math.floor(Math.random() * 100),
+                nutrition: assessmentResults.nutrition || performanceData.nutrition || Math.floor(Math.random() * 100),
+                lifeSkills: assessmentResults.lifeSkills || performanceData.lifeSkills || Math.floor(Math.random() * 100)
+            };
+            
+            const overall = Math.round(
+                (scores.physical + scores.mental + scores.nutrition + scores.lifeSkills) / 4
+            );
+            
+            return {
+                scores: {
+                    ...scores,
+                    overall
+                }
+            };
+        }
+
+        function getLastActiveTime(student) {
+            if (student.lastLogin) {
+                const lastLogin = new Date(student.lastLogin);
+                const now = new Date();
+                const diffMs = now - lastLogin;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                
+                if (diffHours < 1) return 'Just now';
+                if (diffHours < 24) return `${diffHours} hours ago`;
+                if (diffDays === 1) return '1 day ago';
+                if (diffDays < 7) return `${diffDays} days ago`;
+                return 'Over a week ago';
+            }
+            
+            return 'Never logged in';
+        }
+
+        function calculateActiveToday(students) {
+            const today = new Date().toDateString();
+            return students.filter(student => {
+                if (!student.lastLogin) return false;
+                const lastLogin = new Date(student.lastLogin);
+                return lastLogin.toDateString() === today;
+            }).length;
+        }
+
+        function calculateAlerts(students) {
+            return students.filter(student => {
+                const performanceData = getStudentperformanceData(student.id);
+                return performanceData.scores.overall < 50;
+            }).length;
+        }
+
+        function loadClassOverview() {
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+            
+            const allStudentIds = [];
+            teacherClasses.forEach(cls => {
+                if (cls.students) {
+                    allStudentIds.push(...cls.students.map(id => String(id)));
+                }
+            });
+            
+            const students = allUsers.filter(user => 
+                user.role === 'student' && allStudentIds.includes(String(user.id))
+            );
+            
+            if (students.length === 0) {
+                document.getElementById('avgperformance').textContent = '0%';
+                document.getElementById('improvingStudents').textContent = '0';
+                document.getElementById('stableStudents').textContent = '0';
+                document.getElementById('needsAttention').textContent = '0';
+                return;
+            }
+            
+            let totalperformance = 0;
+            let improving = 0;
+            let stable = 0;
+            let needsAttention = 0;
+            
+            students.forEach(student => {
+                const performanceData = getStudentperformanceData(student.id);
+                const score = performanceData.scores.overall;
+                totalperformance += score;
+                
+                if (score < 50) needsAttention++;
+                else if (score > 80) improving++;
+                else stable++;
+            });
+            
+            const avgperformance = Math.round(totalperformance / students.length);
+            
+            document.getElementById('avgperformance').textContent = avgperformance + '%';
+            document.getElementById('improvingStudents').textContent = improving.toString();
+            document.getElementById('stableStudents').textContent = stable.toString();
+            document.getElementById('needsAttention').textContent = needsAttention.toString();
+        }
+
+        function loadRecentAlerts() {
+            const alertsContainer = document.getElementById('recentAlerts');
+            if (!alertsContainer) return;
+            
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+            const allStudentIds = [];
+            teacherClasses.forEach(cls => {
+                if (cls.students) {
+                    allStudentIds.push(...cls.students.map(id => String(id)));
+                }
+            });
+            
+            const students = allUsers.filter(user => 
+                user.role === 'student' && allStudentIds.includes(String(user.id))
+            );
+            
+            const alertStudents = students.filter(student => {
+                const performanceData = getStudentperformanceData(student.id);
+                return performanceData.scores.overall < 50;
+            });
+            
+            if (alertStudents.length === 0) {
+                alertsContainer.innerHTML = `
+                    <div style="text-align: center; color: #27ae60; padding: 2rem;">
+                        <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>No alerts - all students are doing well!</p>
+                        <small style="color: #888;">Alerts will appear here when students need attention</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            alertsContainer.innerHTML = alertStudents.slice(0, 3).map(student => {
+                const performanceData = getStudentperformanceData(student.id);
+                return `
+                    <div style="background: #441111; border: 1px solid #e74c3c; border-radius: 8px; padding: 1rem; margin-bottom: 0.5rem; cursor: pointer;" onclick="openStudentDetails(${JSON.stringify(student).replace(/"/g, '&quot;')})">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #e74c3c;">${student.name}</strong>
+                                <div style="color: #ccc; font-size: 0.8rem;">performance: ${performanceData.scores.overall}% - Needs attention</div>
+                            </div>
+                            <i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            if (alertStudents.length > 3) {
+                alertsContainer.innerHTML += `
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button class="action-btn" onclick="viewAllAlerts()">
+                            +${alertStudents.length - 3} more alerts
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function filterStudentsByClass(classId) {
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            let studentIds = [];
+            
+            if (classId === 'all') {
+                const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+                teacherClasses.forEach(cls => {
+                    if (cls.students) {
+                        studentIds.push(...cls.students.map(id => String(id)));
+                    }
+                });
+            } else {
+                const targetClass = classes.find(c => c.id == classId);
+                if (targetClass && targetClass.students) {
+                    studentIds = targetClass.students.map(id => String(id));
+                }
+            }
+            
+            const students = allUsers.filter(user => 
+                user.role === 'student' && studentIds.includes(String(user.id))
+            );
+            
+            const studentsGrid = document.getElementById('studentsGrid');
+            if (students.length === 0) {
+                studentsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #888;">
+                        <p>No students in selected class yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            studentsGrid.innerHTML = '';
+            students.forEach(student => {
+                const studentCard = createRealStudentCard(student);
+                studentsGrid.appendChild(studentCard);
+            });
+        }
+
+        function openStudentDetails(student) {
+            const modal = document.getElementById('studentModal');
+            const modalTitle = document.getElementById('modalStudentName');
+            const modalContent = document.getElementById('modalStudentContent');
+            
+            modalTitle.textContent = student.name + ' - Detailed View';
+            
+            const performanceData = getStudentperformanceData(student.id);
+            
+            modalContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h4 style="color: #f39c12; margin-bottom: 1rem;">Student Information</h4>
+                        <p><strong>School:</strong> ${student.school || 'Not specified'}</p>
+                        <p><strong>Year Level:</strong> Year ${student.yearLevel || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${student.email}</p>
+                        <p><strong>Overall performance:</strong> ${performanceData.scores.overall}%</p>
+                        <p><strong>Last Active:</strong> ${getLastActiveTime(student)}</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #f39c12; margin-bottom: 1rem;">performance Breakdown</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Physical Health</span>
+                                <span>${performanceData.scores.physical}%</span>
+                            </div>
+                            <div style="height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; background: #3498db; width: ${performanceData.scores.physical}%; border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Focus & Resilience</span>
+                                <span>${performanceData.scores.mental}%</span>
+                            </div>
+                            <div style="height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; background: #9b59b6; width: ${performanceData.scores.mental}%; border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Nutrition</span>
+                                <span>${performanceData.scores.nutrition}%</span>
+                            </div>
+                            <div style="height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; background: #27ae60; width: ${performanceData.scores.nutrition}%; border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Life Skills</span>
+                                <span>${performanceData.scores.lifeSkills}%</span>
+                            </div>
+                            <div style="height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; background: #e67e22; width: ${performanceData.scores.lifeSkills}%; border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #333; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                    <h4 style="color: #3498db; margin-bottom: 1rem;">Recent Activity</h4>
+                    ${student.lastLogin ? `
+                        <p style="color: #ccc; margin: 0;">Last login: ${new Date(student.lastLogin).toLocaleString()}</p>
+                    ` : `
+                        <p style="color: #ccc; margin: 0;">Student has not logged in yet.</p>
+                    `}
+                    <small style="color: #888;">Detailed activity tracking will expand as the platform develops.</small>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button class="action-btn" onclick="viewProgress('${student.id}')">
+                        <i class="fas fa-chart-line"></i> View Full Progress
+                    </button>
+                    <button class="action-btn primary" onclick="recordIntervention('${student.id}')">
+                        <i class="fas fa-comment-dots"></i> Record Intervention
+                    </button>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        // FIXED: Debug function to help troubleshoot student data
+        window.debugStudentData = function() {
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            console.log('=== DEBUG STUDENT DATA ===');
+            console.log('Teacher Profile:', teacherProfile);
+            console.log('All Classes:', classes);
+            console.log('All Users:', allUsers);
+            
+            const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+            console.log('Teacher Classes:', teacherClasses);
+            
+            teacherClasses.forEach(cls => {
+                console.log(`Class "${cls.name}" (${cls.code}):`);
+                console.log('- Students array:', cls.students);
+                if (cls.students) {
+                    cls.students.forEach(studentId => {
+                        const studentUser = allUsers.find(u => String(u.id) === String(studentId));
+                        console.log(`  - Student ID ${studentId}:`, studentUser);
+                    });
+                }
+            });
+            
+            alert('Debug info logged to console. Check browser developer tools (F12).');
+        };
+
+        // FIXED: Force refresh function
+        window.forceRefreshData = function() {
+            console.log('=== FORCE REFRESH ===');
+            
+            const keysToRefresh = ['vivifyClasses', 'vivifyUsers'];
+            keysToRefresh.forEach(key => {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    try {
+                        const parsed = JSON.parse(data);
+                        localStorage.setItem(key, JSON.stringify(parsed));
+                        console.log(`Refreshed ${key}:`, parsed);
+                    } catch (e) {
+                        console.error(`Error refreshing ${key}:`, e);
+                    }
+                }
+            });
+            
+            ClassManager.loadTeacherClasses();
+            loadStudents();
+            loadClassOverview();
+            loadRecentAlerts();
+            
+            alert('Force refresh completed! Check console for debug info.');
+        };
+
+        // Global functions for UI interactions
+        window.createNewClass = async function() {
+            const className = prompt('Enter class name (e.g., "Year 10A Mathematics"):');
+            if (!className) return;
+            
+            const subject = prompt('Enter subject (e.g., "Mathematics", "English"):');
+            if (!subject) return;
+            
+            const yearLevel = parseInt(prompt('Enter year level (7-12):'));
+            if (!yearLevel || yearLevel < 7 || yearLevel > 12) {
+                alert('Please enter a valid year level (7-12)');
+                return;
+            }
+            
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            
+            const newClass = await ClassManager.createClass(teacherProfile.id, {
+                name: className,
+                subject: subject,
+                yearLevel: yearLevel
+            });
+            
+            alert(`Class created successfully!  Class Code: ${newClass.code}  Share this code with your students so they can join your class.`);
+            
+            ClassManager.loadTeacherClasses();
+            loadStudents();
+            loadClassOverview();
+        };
+
+        window.copyClassCode = function(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert(`Class code ${code} copied to clipboard! Share this with your students.`);
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert(`Class code ${code} copied! Share this with your students.`);
+            });
+        };
+
+        // FIXED: viewClassStudents function with better debugging
+        window.viewClassStudents = function(classId) {
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            const targetClass = classes.find(c => c.id == classId);
+            
+            console.log('Debug - viewClassStudents called for class:', classId);
+            console.log('Debug - Found class:', targetClass);
+            
+            if (!targetClass) {
+                alert('Class not found');
+                return;
+            }
+            
+            if (!targetClass.students || targetClass.students.length === 0) {
+                alert(`No students have joined "${targetClass.name}" yet.  Share the class code: ${targetClass.code}`);
+                return;
+            }
+            
+            // Find actual student user objects with string conversion for ID matching
+            const studentsInClass = allUsers.filter(user => {
+                const isMatch = user.role === 'student' && targetClass.students.includes(String(user.id));
+                console.log(`Debug - Checking user ${user.name} (${user.id}): isStudent=${user.role === 'student'}, inClass=${targetClass.students.includes(String(user.id))}`);
+                return isMatch;
+            });
+            
+            console.log('Debug - Students found in class:', studentsInClass);
+            
+            if (studentsInClass.length === 0) {
+                alert(`Class "${targetClass.name}" shows ${targetClass.students.length} students enrolled, but no matching user profiles found.  Student IDs in class: ${targetClass.students.join(', ')}  This might be a data sync issue. Try the Debug button to investigate.`);
+                return;
+            }
+            
+            const studentList = studentsInClass.map(s => `${s.name} (${s.email})`).join(' ');
+            alert(`Class: ${targetClass.name} Students (${studentsInClass.length}):  ${studentList}`);
+        };
+
+        window.messageClass = function(classId) {
+            alert('Message class functionality would open a communication interface here.');
+        };
+
+        window.refreshDashboard = function() {
+            ClassManager.loadTeacherClasses();
+            loadStudents();
+            loadClassOverview();
+            loadRecentAlerts();
+            alert('Dashboard refreshed!');
+        };
+
+        // Quick Action Functions
+        function recordIntervention(studentId = null) {
+            const message = studentId ? 
+                `Record intervention for student ID: ${studentId}` : 
+                'Record intervention - select student';
+            alert(message + '  This would open an intervention recording form.');
+        }
+
+        function exportReport() {
+            alert('Export class report functionality would be implemented here.');
+        }
+
+        function scheduleCheckIn() {
+            alert('Schedule check-in functionality would be implemented here.');
+        }
+
+        function viewAnalytics() {
+            alert('View detailed analytics functionality would be implemented here.');
+        }
+
+        function viewProgress(studentId) {
+            alert(`View detailed progress for student ID: ${studentId}  This would show historical performance data and trends.`);
+        }
+
+        function viewAllAlerts() {
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+            const allStudentIds = [];
+            teacherClasses.forEach(cls => {
+                if (cls.students) {
+                    allStudentIds.push(...cls.students.map(id => String(id)));
+                }
+            });
+            
+            const alertStudents = allUsers.filter(user => {
+                if (user.role !== 'student' || !allStudentIds.includes(String(user.id))) return false;
+                const performanceData = getStudentperformanceData(user.id);
+                return performanceData.scores.overall < 50;
+            });
+            
+            if (alertStudents.length === 0) {
+                alert('No students currently need attention. All are doing well!');
+            } else {
+                const alertList = alertStudents.map(s => {
+                    const performance = getStudentperformanceData(s.id);
+                    return `${s.name} (${performance.scores.overall}%)`;
+                }).join(' ');
+                alert(`Students needing attention (${alertStudents.length}):  ${alertList}`);
+            }
+        }
+
+        function viewAllStudents() {
+            alert('View all students (pagination) functionality would be implemented here.');
+        }
+
+        // Logout functionality
+        document.getElementById('logoutLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userProfile');
+            localStorage.removeItem('performanceData');
+            localStorage.removeItem('assessmentResults');
+            localStorage.removeItem('userPreferences');
+            
+            sessionStorage.clear();
+            
+            console.log('Teacher logged out and cache cleared');
+            window.location.href = 'index.html';
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('studentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Make ClassManager available globally for student joining
+        window.ClassManager = ClassManager;
+
+        // Auto-refresh functionality
+        function refreshTeacherDashboard() {
+            ClassManager.loadTeacherClasses();
+            loadStudents();
+            loadClassOverview();
+            loadRecentAlerts();
+        }
+
+        // Auto-refresh every 10 seconds to catch new student enrollments
+        setInterval(refreshTeacherDashboard, 10000);
+
+        // Refresh when page regains focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                refreshTeacherDashboard();
+            }
+        });
+
+        // Test function for development
+        window.simulateStudentJoining = function() {
+            const teacherProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const teacherClasses = classes.filter(c => c.teacherId === teacherProfile.id);
+            
+            if (teacherClasses.length === 0) {
+                alert('Create a class first!');
+                return;
+            }
+            
+            const testStudent = {
+                id: Date.now(),
+                name: 'Test Student',
+                email: 'test.student@school.edu.au',
+                role: 'student',
+                school: 'Knox Grammar School',
+                yearLevel: 10,
+                classes: [teacherClasses[0].id],
+                lastLogin: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            allUsers.push(testStudent);
+            localStorage.setItem('vivifyUsers', JSON.stringify(allUsers));
+            
+            // Add student to class with string conversion
+            teacherClasses[0].students.push(String(testStudent.id));
+            const updatedClasses = classes.map(c => 
+                c.id === teacherClasses[0].id ? teacherClasses[0] : c
+            );
+            localStorage.setItem('vivifyClasses', JSON.stringify(updatedClasses));
+            
+            const testperformanceData = {
+                physical: Math.floor(Math.random() * 40) + 60,
+                mental: Math.floor(Math.random() * 40) + 50,
+                nutrition: Math.floor(Math.random() * 50) + 50,
+                lifeSkills: Math.floor(Math.random() * 30) + 70
+            };
+            localStorage.setItem(`assessment_${testStudent.id}`, JSON.stringify(testperformanceData));
+            
+            alert(`Test student "${testStudent.name}" added to class "${teacherClasses[0].name}"!`);
+            
+            refreshTeacherDashboard();
+        };
+
+        // Add this function to fix orphaned student IDs
+        window.fixOrphanedStudents = function() {
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            let fixed = 0;
+            
+            classes.forEach(cls => {
+                if (cls.students && cls.students.length > 0) {
+                    const originalCount = cls.students.length;
+                    
+                    // Remove student IDs that don't have corresponding user profiles
+                    cls.students = cls.students.filter(studentId => {
+                        const userExists = allUsers.find(u => String(u.id) === String(studentId));
+                        if (!userExists) {
+                            console.log(`Removing orphaned student ID ${studentId} from class ${cls.name}`);
+                            fixed++;
+                        }
+                        return userExists;
+                    });
+                    
+                    if (cls.students.length !== originalCount) {
+                        console.log(`Class "${cls.name}" cleaned: ${originalCount} -> ${cls.students.length} students`);
+                    }
+                }
+            });
+            
+            localStorage.setItem('vivifyClasses', JSON.stringify(classes));
+            
+            alert(`Fixed ${fixed} orphaned student records. Dashboard will refresh.`);
+            refreshTeacherDashboard();
+        };
+
+        // Add this button to your debug section
+        window.debugAndFix = function() {
+            console.log('=== DETAILED DEBUG ===');
+            
+            const classes = JSON.parse(localStorage.getItem('vivifyClasses') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+            
+            console.log('All user IDs:', allUsers.map(u => `${u.name}: ${u.id} (${typeof u.id})`));
+            
+            classes.forEach(cls => {
+                if (cls.students) {
+                    console.log(` Class "${cls.name}" students:`);
+                    cls.students.forEach(id => {
+                        const user = allUsers.find(u => String(u.id) === String(id));
+                        console.log(`  ID ${id} (${typeof id}) -> User: ${user ? user.name : 'NOT FOUND'}`);
+                    });
+                }
+            });
+            
+            const orphanCount = classes.reduce((count, cls) => {
+                if (!cls.students) return count;
+                return count + cls.students.filter(id => !allUsers.find(u => String(u.id) === String(id))).length;
+            }, 0);
+            
+            if (orphanCount > 0) {
+                if (confirm(`Found ${orphanCount} orphaned student records. Fix them now?`)) {
+                    fixOrphanedStudents();
+                }
+            } else {
+                alert('No orphaned records found. Data looks clean!');
+            }
+        };
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

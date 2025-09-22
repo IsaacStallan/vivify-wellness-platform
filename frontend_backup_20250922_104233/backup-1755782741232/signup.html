@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Vivify</title>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .form-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 6rem 1rem 2rem 1rem; /* Added top padding for header */
+        }
+
+        .form-container {
+            background: linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%);
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-container h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
+        .form-container > p {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 0.9rem 1rem;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: #383838;
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #888;
+            font-weight: 400;
+        }
+
+        .year-selector {
+            margin: 1.25rem 0;
+        }
+
+        .year-selector label {
+            display: block;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .year-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+        }
+
+        .year-option {
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ccc;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .year-option:hover {
+            border-color: #f39c12;
+            background: #383838;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .year-option.selected {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #000;
+            font-weight: 600;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .password-requirements {
+            background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin: 0.6rem 0;
+            color: #ccc;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .requirement.valid {
+            color: #27ae60;
+        }
+
+        .requirement .icon {
+            margin-right: 0.6rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .requirement.valid .icon {
+            background: #27ae60;
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1.25rem 0;
+            letter-spacing: 0.01em;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #2ecc71;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #e74c3c;
+            font-size: 0.9rem;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333;
+        }
+
+        .form-footer p {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .form-footer a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #e67e22;
+        }
+
+        .other-school-group {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 5rem 1rem 2rem 1rem;
+                min-height: calc(100vh - 100px);
+            }
+
+            .form-container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+                border-radius: 16px;
+                max-height: 85vh;
+            }
+
+            .form-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .year-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .submit-btn {
+                padding: 0.9rem 1.25rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-section {
+                padding: 4rem 0.5rem 1rem 0.5rem;
+            }
+
+            .form-container {
+                padding: 1.5rem 1rem;
+                border-radius: 12px;
+            }
+
+            .year-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container h1 {
+                font-size: 1.6rem;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="left-nav">
+                    <div class="logo">
+                        <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                    </div>
+                    <ul>
+                        <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li><a href="login.html" aria-label="Login Page">Login</a></li>
+                        <li><a href="signup.html" aria-label="Sign Up Page" class="active">Sign Up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="form-section">
+            <div class="form-container">
+                <h1>Join Vivify</h1>
+                <p>Start your performance journey as a high school student</p>
+                
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="username">Full Name</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="year-selector">
+                        <label>Year Level</label>
+                        <div class="year-grid">
+                            <div class="year-option" data-year="7">Year 7</div>
+                            <div class="year-option" data-year="8">Year 8</div>
+                            <div class="year-option" data-year="9">Year 9</div>
+                            <div class="year-option" data-year="10">Year 10</div>
+                            <div class="year-option" data-year="11">Year 11</div>
+                            <div class="year-option" data-year="12">Year 12</div>
+                        </div>
+                        <input type="hidden" id="yearLevel" name="yearLevel" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="school">School</label>
+                        <select id="school" name="school" required>
+                            <option value="">Select your school</option>
+                            
+                            <!-- NSW Schools -->
+                            <optgroup label="New South Wales">
+                                <option value="Knox Grammar School">Knox Grammar School</option>
+                                <option value="Pymble Ladies' College">Pymble Ladies' College</option>
+                                <option value="Sydney Grammar School">Sydney Grammar School</option>
+                                <option value="SCEGGS Darlinghurst">SCEGGS Darlinghurst</option>
+                                <option value="Newington College">Newington College</option>
+                                <option value="The King's School">The King's School</option>
+                                <option value="Abbotsleigh">Abbotsleigh</option>
+                                <option value="Barker College">Barker College</option>
+                                <option value="Cranbrook School">Cranbrook School</option>
+                                <option value="Kambala">Kambala</option>
+                                <option value="MLC School">MLC School</option>
+                                <option value="North Sydney Boys High School">North Sydney Boys High School</option>
+                                <option value="North Sydney Girls High School">North Sydney Girls High School</option>
+                                <option value="Sydney Boys High School">Sydney Boys High School</option>
+                                <option value="Sydney Girls High School">Sydney Girls High School</option>
+                                <option value="Fort Street High School">Fort Street High School</option>
+                                <option value="James Ruse Agricultural High School">James Ruse Agricultural High School</option>
+                            </optgroup>
+                            
+                            <!-- VIC Schools -->
+                            <optgroup label="Victoria">
+                                <option value="Melbourne Grammar School">Melbourne Grammar School</option>
+                                <option value="Scotch College Melbourne">Scotch College Melbourne</option>
+                                <option value="Wesley College">Wesley College</option>
+                                <option value="Geelong Grammar School">Geelong Grammar School</option>
+                                <option value="Methodist Ladies' College">Methodist Ladies' College</option>
+                                <option value="Lauriston Girls' School">Lauriston Girls' School</option>
+                                <option value="Presbyterian Ladies' College">Presbyterian Ladies' College</option>
+                                <option value="St Kevin's College">St Kevin's College</option>
+                                <option value="Haileybury College">Haileybury College</option>
+                                <option value="Camberwell Grammar School">Camberwell Grammar School</option>
+                                <option value="MacRobertson Girls' High School">MacRobertson Girls' High School</option>
+                                <option value="Melbourne High School">Melbourne High School</option>
+                            </optgroup>
+                            
+                            <!-- QLD Schools -->
+                            <optgroup label="Queensland">
+                                <option value="Brisbane Grammar School">Brisbane Grammar School</option>
+                                <option value="Brisbane Girls Grammar School">Brisbane Girls Grammar School</option>
+                                <option value="Somerville House">Somerville House</option>
+                                <option value="St Joseph's Nudgee College">St Joseph's Nudgee College</option>
+                                <option value="The Southport School">The Southport School</option>
+                                <option value="Anglican Church Grammar School">Anglican Church Grammar School</option>
+                                <option value="St Aidan's Anglican Girls' School">St Aidan's Anglican Girls' School</option>
+                                <option value="Ipswich Grammar School">Ipswich Grammar School</option>
+                            </optgroup>
+                            
+                            <!-- SA Schools -->
+                            <optgroup label="South Australia">
+                                <option value="St Peter's College">St Peter's College</option>
+                                <option value="Scotch College Adelaide">Scotch College Adelaide</option>
+                                <option value="Wilderness School">Wilderness School</option>
+                                <option value="Pembroke School">Pembroke School</option>
+                                <option value="Adelaide High School">Adelaide High School</option>
+                            </optgroup>
+                            
+                            <!-- WA Schools -->
+                            <optgroup label="Western Australia">
+                                <option value="Hale School">Hale School</option>
+                                <option value="Perth Modern School">Perth Modern School</option>
+                                <option value="Christ Church Grammar School">Christ Church Grammar School</option>
+                                <option value="Methodist Ladies' College Perth">Methodist Ladies' College Perth</option>
+                                <option value="Scotch College Perth">Scotch College Perth</option>
+                            </optgroup>
+                            
+                            <!-- TAS Schools -->
+                            <optgroup label="Tasmania">
+                                <option value="The Hutchins School">The Hutchins School</option>
+                                <option value="Collegiate School">Collegiate School</option>
+                                <option value="St Michael's Collegiate School">St Michael's Collegiate School</option>
+                            </optgroup>
+                            
+                            <!-- ACT Schools -->
+                            <optgroup label="Australian Capital Territory">
+                                <option value="Canberra Grammar School">Canberra Grammar School</option>
+                                <option value="Canberra Girls Grammar School">Canberra Girls Grammar School</option>
+                                <option value="Radford College">Radford College</option>
+                            </optgroup>
+                            
+                            <!-- NT Schools -->
+                            <optgroup label="Northern Territory">
+                                <option value="Darwin High School">Darwin High School</option>
+                                <option value="St Philip's College">St Philip's College</option>
+                            </optgroup>
+                            
+                            <option value="Other">Other/Not Listed</option>
+                        </select>
+                    </div>
+                    
+                    <div id="otherSchoolGroup" class="other-school-group" style="display: none;">
+                        <label for="otherSchool">Specify School</label>
+                        <input type="text" id="otherSchool" name="otherSchool" placeholder="Enter your school name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                    </div>
+                    
+                    <div class="password-requirements">
+                        <div class="requirement" id="req-length">
+                            <span class="icon">✗</span>
+                            At least 8 characters
+                        </div>
+                        <div class="requirement" id="req-uppercase">
+                            <span class="icon">✗</span>
+                            One uppercase letter
+                        </div>
+                        <div class="requirement" id="req-number">
+                            <span class="icon">✗</span>
+                            One number
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <div class="requirement" id="req-match">
+                        <span class="icon">✗</span>
+                        Passwords match
+                    </div>
+                    
+                    <button type="submit" id="signupBtn" class="submit-btn">Create Account</button>
+                </form>
+                
+                <div id="message" style="display:none;"></div>
+                
+                <div class="form-footer">
+                    <p>Already have an account? <a href="login.html">Login here</a></p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Vivify. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const messageElement = document.getElementById('message');
+            const signupBtn = document.getElementById('signupBtn');
+            const schoolSelect = document.getElementById('school');
+            const otherSchoolGroup = document.getElementById('otherSchoolGroup');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const yearOptions = document.querySelectorAll('.year-option');
+            const yearLevelInput = document.getElementById('yearLevel');
+            
+            // Handle year level selection
+            yearOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    yearOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    yearLevelInput.value = this.dataset.year;
+                });
+            });
+            
+            // Handle school selection
+            schoolSelect.addEventListener('change', function() {
+                if (this.value === 'Other') {
+                    otherSchoolGroup.style.display = 'block';
+                    document.getElementById('otherSchool').required = true;
+                } else {
+                    otherSchoolGroup.style.display = 'none';
+                    document.getElementById('otherSchool').required = false;
+                }
+            });
+            
+            // Real-time password validation
+            passwordInput.addEventListener('input', validatePassword);
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+            
+            function validatePassword() {
+                const password = passwordInput.value;
+                
+                const lengthReq = document.getElementById('req-length');
+                if (password.length >= 8) {
+                    lengthReq.classList.add('valid');
+                    lengthReq.querySelector('.icon').textContent = '✓';
+                } else {
+                    lengthReq.classList.remove('valid');
+                    lengthReq.querySelector('.icon').textContent = '✗';
+                }
+                
+                const uppercaseReq = document.getElementById('req-uppercase');
+                if (/[A-Z]/.test(password)) {
+                    uppercaseReq.classList.add('valid');
+                    uppercaseReq.querySelector('.icon').textContent = '✓';
+                } else {
+                    uppercaseReq.classList.remove('valid');
+                    uppercaseReq.querySelector('.icon').textContent = '✗';
+                }
+                
+                const numberReq = document.getElementById('req-number');
+                if (/\d/.test(password)) {
+                    numberReq.classList.add('valid');
+                    numberReq.querySelector('.icon').textContent = '✓';
+                } else {
+                    numberReq.classList.remove('valid');
+                    numberReq.querySelector('.icon').textContent = '✗';
+                }
+                
+                validatePasswordMatch();
+            }
+            
+            function validatePasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const matchReq = document.getElementById('req-match');
+                
+                if (confirmPassword && password === confirmPassword) {
+                    matchReq.classList.add('valid');
+                    matchReq.querySelector('.icon').textContent = '✓';
+                } else {
+                    matchReq.classList.remove('valid');
+                    matchReq.querySelector('.icon').textContent = '✗';
+                }
+            }
+            
+            function showMessage(message, type = 'error') {
+                messageElement.textContent = message;
+                messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+                messageElement.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 5000);
+            }
+            
+            signupForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const confirmPassword = document.getElementById('confirmPassword').value.trim();
+                const yearLevel = document.getElementById('yearLevel').value;
+                let school = document.getElementById('school').value;
+                
+                if (school === 'Other') {
+                    school = document.getElementById('otherSchool').value.trim();
+                    if (!school) {
+                        showMessage('Please specify your school name.');
+                        return;
+                    }
+                }
+                
+                if (!username || !email || !password || !school || !yearLevel) {
+                    showMessage('Please fill in all required fields including your year level.');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showMessage('Passwords do not match.');
+                    return;
+                }
+                
+                if (password.length < 8 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+                    showMessage('Password must meet all requirements listed above.');
+                    return;
+                }
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showMessage('Please enter a valid email address.');
+                    return;
+                }
+                
+                signupBtn.textContent = 'Creating Account...';
+                signupBtn.disabled = true;
+                signupForm.classList.add('loading');
+                
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    const existingUsers = JSON.parse(localStorage.getItem('vivifyUsers') || '[]');
+                    const userExists = existingUsers.some(user => user.email === email);
+                    
+                    if (userExists) {
+                        throw new Error('An account with this email already exists.');
+                    }
+                    
+                    const userProfile = {
+                        id: Date.now(),
+                        name: username,
+                        email: email,
+                        school: school,
+                        yearLevel: parseInt(yearLevel),
+                        joinDate: new Date().toISOString(),
+                        verified: true
+                    };
+                    
+                    existingUsers.push(userProfile);
+                    localStorage.setItem('vivifyUsers', JSON.stringify(existingUsers));
+                    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('authToken', 'demo_token_' + Date.now());
+                    
+                    showMessage('Account created successfully! Redirecting to Home Page...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'Index.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    showMessage(error.message || 'An error occurred during signup. Please try again.');
+                } finally {
+                    signupBtn.textContent = 'Create Account';
+                    signupBtn.disabled = false;
+                    signupForm.classList.remove('loading');
+                }
+            });
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

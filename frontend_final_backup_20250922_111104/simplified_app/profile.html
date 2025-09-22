@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .right-nav a.active {
+            color: #f39c12;
+        }
+
+        /* Profile Container */
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #f39c12;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #f39c12;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #f39c12;
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+        }
+
+        .profile-picture-upload:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-picture-input {
+            display: none;
+        }
+
+        .profile-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-tagline {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .performance-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #f39c12;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Profile Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #f39c12;
+        }
+
+        .edit-btn {
+            background: transparent;
+            border: 1px solid #f39c12;
+            color: #f39c12;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .edit-btn:hover {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Edit Fields */
+        .editable-field {
+            display: none;
+        }
+
+        .editable-field.active {
+            display: block;
+        }
+
+        .editable-field input,
+        .editable-field select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .editable-field input:focus,
+        .editable-field select:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .field-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .save-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cancel-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Habits & Goals Section */
+        .habits-goals {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .habit-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .habit-item:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .habit-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .habit-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(243, 156, 18, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f39c12;
+            font-size: 1.2rem;
+        }
+
+        .habit-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .habit-streak {
+            color: #f39c12;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Achievements */
+        .achievements-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .achievement-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-badge.earned {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.2), rgba(230, 126, 34, 0.2));
+            border-color: rgba(243, 156, 18, 0.5);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .achievement-badge.earned .achievement-icon {
+            color: #f39c12;
+        }
+
+        .achievement-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .achievement-badge.earned .achievement-name {
+            color: #ffffff;
+        }
+
+        /* Preferences */
+        .preferences-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+
+        .preference-info {
+            flex: 1;
+        }
+
+        .preference-title {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .preference-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #f39c12;
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(30px);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background: #f39c12;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: #000;
+            font-size: 1.5rem;
+        }
+
+        .action-label {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Data Controls */
+        .data-controls {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #f39c12;
+            border: 1px solid #f39c12;
+        }
+
+        .btn-secondary:hover {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .profile-container {
+                padding: 5rem 1rem 2rem;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-stats {
+                gap: 1.5rem;
+            }
+
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="dashboard.html">Performance Hub</a></li>
+                    <li><a href="profile.html" class="active">Profile</a></li>
+                    <li><a href="#" id="logoutLink">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <main class="profile-container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-picture-container">
+                    <div class="profile-picture" id="profilePicture">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="profile-picture-upload" onclick="document.getElementById('profilePictureInput').click()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <input type="file" id="profilePictureInput" class="profile-picture-input" accept="image/*">
+                </div>
+                <h1 class="profile-name" id="profileName">Elite Performer</h1>
+                <div class="profile-tagline" id="profileTagline">Building championship habits • Unlocking peak potential</div>
+                
+                <div class="performance-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="streakCount">0</span>
+                        <span class="stat-label">Day Streak</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="performanceScore">0</span>
+                        <span class="stat-label">Performance Score</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="habitsCompleted">0</span>
+                        <span class="stat-label">Habits Mastered</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="challengesWon">0</span>
+                        <span class="stat-label">Challenges Won</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Information Grid -->
+            <div class="profile-grid">
+                <!-- Personal Information -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user"></i>
+                            Personal Information
+                        </h3>
+                        <button class="edit-btn" onclick="toggleEdit('personal')">Edit</button>
+                    </div>
+                    <div id="personalInfo">
+                        <div class="info-item">
+                            <span class="info-label">Display Name</span>
+                            <span class="info-value" id="displayName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value" id="displayEmail">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Year Level</span>
+                            <span class="info-value" id="displayYearLevel">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value" id="displayLocation">Australia</span>
+                        </div>
+                    </div>
+                    <div class="editable-field" id="personalEdit">
+                        <input type="text" id="editName" placeholder="Display Name">
+                        <input type="email" id="editEmail" placeholder="Email Address">
+                        <select id="editYearLevel">
+                            <option value="">Select Year Level</option>
+                            <option value="7">Year 7</option>
+                            <option value="8">Year 8</option>
+                            <option value="9">Year 9</option>
+                            <option value="10">Year 10</option>
+                            <option value="11">Year 11</option>
+                            <option value="12">Year 12</option>
+                            <option value="uni">University</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="text" id="editLocation" placeholder="City, State">
+                        <div class="field-actions">
+                            <button class="save-btn" onclick="savePersonalInfo()">Save</button>
+                            <button class="cancel-btn" onclick="cancelEdit('personal')">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Information -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-trophy"></i>
+                            Performance Level
+                        </h3>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Member Since</span>
+                        <span class="info-value" id="memberSince">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Performance Tier</span>
+                        <span class="info-value" id="performanceTier" style="color: #f39c12;">Developing Champion</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Training Focus</span>
+                        <span class="info-value" id="trainingFocus">All-Round Performance</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Community Rank</span>
+                        <span class="info-value" id="communityRank">#-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Habits & Goals -->
+            <div class="habits-goals">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-target"></i>
+                        Active Training Habits
+                    </h3>
+                </div>
+                <div class="habits-grid" id="activeHabits">
+                    <!-- Habits will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="achievements-section">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-medal"></i>
+                        Achievement Showcase
+                    </h3>
+                </div>
+                <div class="achievements-grid" id="achievementsList">
+                    <!-- Achievements will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Preferences -->
+            <div class="preferences-section">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-sliders-h"></i>
+                        Training Preferences
+                    </h3>
+                </div>
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-title">Daily Challenges</div>
+                        <div class="preference-description">Receive daily performance challenges</div>
+                    </div>
+                    <div class="toggle-switch active" id="dailyChallenges" onclick="togglePreference('dailyChallenges')"></div>
+                </div>
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-title">Progress Notifications</div>
+                        <div class="preference-description">Get notified about streak milestones and achievements</div>
+                    </div>
+                    <div class="toggle-switch active" id="progressNotifications" onclick="togglePreference('progressNotifications')"></div>
+                </div>
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-title">Community Leaderboard</div>
+                        <div class="preference-description">Show your progress on community leaderboards</div>
+                    </div>
+                    <div class="toggle-switch" id="communityLeaderboard" onclick="togglePreference('communityLeaderboard')"></div>
+                </div>
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-title">Training Reminders</div>
+                        <div class="preference-description">Gentle reminders to complete daily training</div>
+                    </div>
+                    <div class="toggle-switch active" id="trainingReminders" onclick="togglePreference('trainingReminders')"></div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </h3>
+                </div>
+                <div class="actions-grid">
+                    <a href="dashboard.html" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="action-label">View Performance Hub</div>
+                    </a>
+                    <a href="fitness.html" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="action-label">Physical Training</div>
+                    </a>
+                    <a href="nutrition.html" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <div class="action-label">Smart Nutrition</div>
+                    </a>
+                    <a href="mental-health.html" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="action-label">Focus & Resilience</div>
+                    </a>
+                    <a href="life-mastery.html" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="action-label">Life Mastery</div>
+                    </a>
+                    <div class="action-card" onclick="shareProgress()">
+                        <div class="action-icon">
+                            <i class="fas fa-share"></i>
+                        </div>
+                        <div class="action-label">Share Progress</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data & Privacy Controls -->
+            <div class="data-controls">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Data & Privacy
+                    </h3>
+                </div>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">
+                    Your performance data stays with you. Export, backup, or manage your information.
+                </p>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export My Data
+                    </button>
+                    <button class="btn btn-secondary" onclick="backupProgress()">
+                        <i class="fas fa-cloud-upload-alt"></i> Backup Progress
+                    </button>
+                    <button class="btn btn-danger" onclick="resetProgress()">
+                        <i class="fas fa-refresh"></i> Reset Progress
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="copyright">
+                &copy; 2025 Vivify. Building elite habits, one day at a time.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Profile management for the new performance-focused approach
+        let userProfile = {};
+        let userPreferences = {
+            dailyChallenges: true,
+            progressNotifications: true,
+            communityLeaderboard: false,
+            trainingReminders: true
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                window.location.href = 'login.html?redirect=profile';
+                return;
+            }
+
+            loadProfileData();
+            loadPreferences();
+            loadPerformanceStats();
+            loadActiveHabits();
+            loadAchievements();
+
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                }
+            });
+
+            // Profile picture upload
+            document.getElementById('profilePictureInput').addEventListener('change', handleProfilePictureUpload);
+        });
+
+        function loadProfileData() {
+            userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            
+            if (userProfile.name) {
+                document.getElementById('profileName').textContent = userProfile.name;
+                document.getElementById('displayName').textContent = userProfile.name;
+                document.getElementById('displayEmail').textContent = userProfile.email || '-';
+                
+                // Update year level display
+                const yearLevel = userProfile.yearLevel;
+                if (yearLevel && yearLevel !== 'other') {
+                    document.getElementById('displayYearLevel').textContent = yearLevel === 'uni' ? 'University' : `Year ${yearLevel}`;
+                } else {
+                    document.getElementById('displayYearLevel').textContent = userProfile.customYearLevel || '-';
+                }
+                
+                document.getElementById('displayLocation').textContent = userProfile.location || 'Australia';
+                document.getElementById('memberSince').textContent = userProfile.createdAt ? 
+                    new Date(userProfile.createdAt).toLocaleDateString() : 'Recently';
+
+                // Load saved profile picture
+                const savedProfilePicture = localStorage.getItem('profilePicture');
+                if (savedProfilePicture) {
+                    const profilePictureElement = document.getElementById('profilePicture');
+                    profilePictureElement.innerHTML = `<img src="${savedProfilePicture}" alt="Profile Picture">`;
+                }
+
+                // Update tagline based on progress
+                updateProfileTagline();
+            }
+        }
+
+        function updateProfileTagline() {
+            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+            const overallScore = performanceData.scores?.overall || 0;
+            const streak = performanceData.streaks?.currentStreak || 0;
+            
+            let tagline = 'Building championship habits • Unlocking peak potential';
+            
+            if (overallScore >= 80) {
+                tagline = 'Elite performer • Inspiring others to greatness';
+            } else if (overallScore >= 60) {
+                tagline = 'Rising champion • Mastering daily excellence';
+            } else if (streak >= 7) {
+                tagline = 'Consistent performer • Building momentum daily';
+            }
+            
+            document.getElementById('profileTagline').textContent = tagline;
+        }
+
+        function loadPerformanceStats() {
+            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+            
+            // Update performance stats
+            document.getElementById('streakCount').textContent = performanceData.streaks?.currentStreak || 0;
+            document.getElementById('performanceScore').textContent = performanceData.scores?.overall || 0;
+            
+            // Calculate habits completed (activities in last 30 days)
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const recentActivities = (performanceData.activities || []).filter(activity => {
+                return new Date(activity.timestamp) >= thirtyDaysAgo;
+            });
+            
+            document.getElementById('habitsCompleted').textContent = recentActivities.length;
+            
+            // Challenges won (placeholder - could be calculated from achievements)
+            const achievements = performanceData.achievements || {};
+            const challengesWon = Object.keys(achievements).filter(key => 
+                key.includes('challenge') || key.includes('streak')
+            ).length;
+            document.getElementById('challengesWon').textContent = challengesWon;
+
+            // Update performance tier
+            updatePerformanceTier(performanceData.scores?.overall || 0);
+            
+            // Update community rank (simulated)
+            const rank = Math.max(1, Math.floor(Math.random() * 1000) + 1);
+            document.getElementById('communityRank').textContent = `#${rank}`;
+        }
+
+        function updatePerformanceTier(score) {
+            let tier = 'Getting Started';
+            let color = '#6c757d';
+            
+            if (score >= 90) {
+                tier = 'Elite Champion';
+                color = '#FFD700';
+            } else if (score >= 80) {
+                tier = 'Peak Performer';
+                color = '#f39c12';
+            } else if (score >= 70) {
+                tier = 'Rising Star';
+                color = '#e67e22';
+            } else if (score >= 60) {
+                tier = 'Developing Champion';
+                color = '#f39c12';
+            } else if (score >= 40) {
+                tier = 'Building Momentum';
+                color = '#95a5a6';
+            }
+            
+            const tierElement = document.getElementById('performanceTier');
+            tierElement.textContent = tier;
+            tierElement.style.color = color;
+        }
+
+        function loadActiveHabits() {
+            // Load current daily habits from dashboard
+            const dailyHabits = [
+                { name: 'Physical Training', icon: 'fas fa-dumbbell', streak: 5, category: 'physical' },
+                { name: 'Focus Sessions', icon: 'fas fa-brain', streak: 3, category: 'mental' },
+                { name: 'Nutrition Goals', icon: 'fas fa-apple-alt', streak: 7, category: 'nutrition' },
+                { name: 'Life Skills', icon: 'fas fa-graduation-cap', streak: 2, category: 'life' }
+            ];
+
+            const container = document.getElementById('activeHabits');
+            container.innerHTML = dailyHabits.map(habit => `
+                <div class="habit-item">
+                    <div class="habit-header">
+                        <div class="habit-icon">
+                            <i class="${habit.icon}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="habit-name">${habit.name}</div>
+                            <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Daily practice</div>
+                        </div>
+                        <div class="habit-streak">${habit.streak} days</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadAchievements() {
+            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+            const achievements = performanceData.achievements || {};
+            
+            const achievementsList = [
+                { id: 'first_week', name: 'First Week', icon: 'fas fa-calendar-week', description: 'Complete 7 days of training' },
+                { id: 'fitness_streak', name: 'Fitness Focus', icon: 'fas fa-dumbbell', description: '10 workouts completed' },
+                { id: 'brain_power', name: 'Brain Power', icon: 'fas fa-brain', description: '5 focus sessions' },
+                { id: 'nutrition_master', name: 'Fuel Master', icon: 'fas fa-apple-alt', description: 'Track nutrition for 7 days' },
+                { id: 'life_skills', name: 'Life Skills', icon: 'fas fa-graduation-cap', description: 'Complete 3 life lessons' },
+                { id: 'challenge_winner', name: 'Challenge Winner', icon: 'fas fa-trophy', description: 'Win community challenge' },
+                { id: 'consistency_king', name: 'Consistency', icon: 'fas fa-fire', description: '21 day streak' },
+                { id: 'elite_performer', name: 'Elite Status', icon: 'fas fa-crown', description: '90% performance score' }
+            ];
+
+            const container = document.getElementById('achievementsList');
+            container.innerHTML = achievementsList.map(achievement => {
+                const earned = achievements[achievement.id] || Math.random() > 0.6; // Some random achievements for demo
+                return `
+                    <div class="achievement-badge ${earned ? 'earned' : ''}" title="${achievement.description}">
+                        <i class="${achievement.icon} achievement-icon"></i>
+                        <div class="achievement-name">${achievement.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadPreferences() {
+            const savedPreferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            userPreferences = { ...userPreferences, ...savedPreferences };
+            
+            // Update toggle switches
+            Object.keys(userPreferences).forEach(key => {
+                const toggle = document.getElementById(key);
+                if (toggle) {
+                    if (userPreferences[key]) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        function toggleEdit(section) {
+            const info = document.getElementById(`${section}Info`);
+            const edit = document.getElementById(`${section}Edit`);
+            
+            if (edit.classList.contains('active')) {
+                cancelEdit(section);
+            } else {
+                info.style.display = 'none';
+                edit.classList.add('active');
+                
+                // Pre-fill form with current data
+                if (section === 'personal') {
+                    document.getElementById('editName').value = userProfile.name || '';
+                    document.getElementById('editEmail').value = userProfile.email || '';
+                    document.getElementById('editYearLevel').value = userProfile.yearLevel || '';
+                    document.getElementById('editLocation').value = userProfile.location || '';
+                }
+            }
+        }
+
+        function cancelEdit(section) {
+            const info = document.getElementById(`${section}Info`);
+            const edit = document.getElementById(`${section}Edit`);
+            
+            info.style.display = 'block';
+            edit.classList.remove('active');
+        }
+
+        function savePersonalInfo() {
+            const name = document.getElementById('editName').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const yearLevel = document.getElementById('editYearLevel').value;
+            const location = document.getElementById('editLocation').value.trim();
+            
+            if (!name) {
+                alert('Display name is required');
+                return;
+            }
+            
+            // Update user profile
+            userProfile.name = name;
+            userProfile.email = email;
+            userProfile.yearLevel = yearLevel;
+            userProfile.location = location;
+            
+            // Save to localStorage
+            localStorage.setItem('userProfile', JSON.stringify(userProfile));
+            
+            // Update display
+            loadProfileData();
+            cancelEdit('personal');
+            
+            showNotification('Profile updated successfully!');
+        }
+
+        function togglePreference(preferenceId) {
+            const toggle = document.getElementById(preferenceId);
+            const isActive = toggle.classList.contains('active');
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                userPreferences[preferenceId] = false;
+            } else {
+                toggle.classList.add('active');
+                userPreferences[preferenceId] = true;
+            }
+            
+            // Save preferences
+            localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+        }
+
+        function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image must be smaller than 5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                
+                // Update profile picture display
+                const profilePictureElement = document.getElementById('profilePicture');
+                profilePictureElement.innerHTML = `<img src="${imageData}" alt="Profile Picture">`;
+                
+                // Save to localStorage
+                localStorage.setItem('profilePicture', imageData);
+                
+                showNotification('Profile picture updated!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function shareProgress() {
+            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+            const stats = {
+                name: userProfile.name || 'Anonymous Performer',
+                streak: performanceData.streaks?.currentStreak || 0,
+                score: performanceData.scores?.overall || 0,
+                habits: (performanceData.activities || []).length
+            };
+            
+            const shareText = `I'm building elite habits with Vivify! 🚀\n` +
+                            `📊 Performance Score: ${stats.score}%\n` +
+                            `🔥 Current Streak: ${stats.streak} days\n` +
+                            `✅ Habits Tracked: ${stats.habits}\n\n` +
+                            `Join me in building championship habits! #VivifyPerformance`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Vivify Performance Progress',
+                    text: shareText
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showNotification('Progress copied to clipboard! Share it with friends.');
+                }).catch(() => {
+                    alert('Share text: ' + shareText);
+                });
+            }
+        }
+
+        function exportData() {
+            const allData = {
+                profile: userProfile,
+                performanceData: JSON.parse(localStorage.getItem('performanceData') || '{}'),
+                preferences: userPreferences,
+                exportDate: new Date().toISOString(),
+                version: '2.0'
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `vivify-performance-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('Performance data exported successfully!');
+        }
+
+        function backupProgress() {
+            // In a real app, this would sync to cloud storage
+            const backup = {
+                profile: userProfile,
+                performanceData: JSON.parse(localStorage.getItem('performanceData') || '{}'),
+                preferences: userPreferences,
+                backupDate: new Date().toISOString()
+            };
+            
+            localStorage.setItem('vivifyBackup', JSON.stringify(backup));
+            showNotification('Progress backed up locally! Cloud sync coming soon.');
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all your performance progress? This cannot be undone.')) {
+                if (confirm('This will delete all your habits, streaks, and achievements. Are you absolutely sure?')) {
+                    // Keep profile but reset performance data
+                    localStorage.removeItem('performanceData');
+                    
+                    // Reset stats display
+                    document.getElementById('streakCount').textContent = '0';
+                    document.getElementById('performanceScore').textContent = '0';
+                    document.getElementById('habitsCompleted').textContent = '0';
+                    document.getElementById('challengesWon').textContent = '0';
+                    
+                    // Reload achievements
+                    loadAchievements();
+                    
+                    showNotification('Progress reset complete. Time to start your new journey!');
+                }
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#27ae60' : '#e74c3c'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 1000;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 4000);
+        }
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

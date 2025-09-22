@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Resilience - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .stress-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stress-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .stress-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .stress-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Live Stress Stats */
+        .stress-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stress-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .stress-stat::before {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        .stress-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .stress-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Stress Level Monitor */
+        .stress-monitor {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .monitor-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .monitor-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stress-gauge {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+        }
+
+        .gauge-background {
+            width: 100%;
+            height: 100%;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .gauge-fill {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: 200px;
+            height: 200px;
+            border: 8px solid transparent;
+            border-radius: 50%;
+            transition: all 0.5s ease;
+        }
+
+        .gauge-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stress-level {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .stress-status {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stress-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stress-input {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .stress-input:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .stress-input.selected {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: rgba(243, 156, 18, 0.5);
+        }
+
+        .input-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-description {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Coping Strategies */
+        .coping-strategies {
+            padding: 6rem 2rem;
+        }
+
+        .strategies-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .strategies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .strategy-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .strategy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .strategy-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .strategy-icon {
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .strategy-icon i {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .strategy-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .strategy-description {
+            padding: 0 2rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .strategy-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .strategy-stat {
+            text-align: center;
+        }
+
+        .strategy-stat .number {
+            display: block;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .strategy-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .strategy-actions {
+            padding: 1.5rem 2rem 2rem;
+            text-align: center;
+        }
+
+        /* Stress Challenge */
+        .stress-challenge {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .challenge-timer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .challenge-participants {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .participant-stat {
+            text-align: center;
+        }
+
+        .participant-stat .number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .participant-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Stress Relief Toolkit */
+        .relief-toolkit {
+            padding: 6rem 2rem;
+        }
+
+        .toolkit-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .toolkit-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .toolkit-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toolkit-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .toolkit-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .toolkit-content.active {
+            display: block;
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .technique-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .technique-item:hover {
+            background: rgba(243, 156, 18, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .technique-icon {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .technique-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .technique-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .technique-duration {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Progress Tracking */
+        .stress-progress {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .progress-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .progress-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .progress-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .progress-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .progress-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .progress-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .stress-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .stress-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stress-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .strategies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stress-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .technique-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .toolkit-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .challenge-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .challenge-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes stressWave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .stress-wave {
+            animation: stressWave 3s ease-in-out infinite;
+        }
+
+        @keyframes reliefGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(39, 174, 96, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(39, 174, 96, 0.6); }
+        }
+
+        .relief-glow {
+            animation: reliefGlow 2s ease-in-out infinite;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Live Stress Stats -->
+        <section class="stress-hero fade-in-up">
+            <div class="hero-content">
+                <div class="stress-badge">💪 Elite Stress Resilience</div>
+                <h1>Master Stress Resilience</h1>
+                <p>Join 621 students building unshakeable mental toughness through stress management techniques, resilience challenges, and peer support. Transform pressure into power.</p>
+                
+                <div class="stress-stats">
+                    <div class="stress-stat">
+                        <span class="stat-number" id="live-stress-warriors">621</span>
+                        <span class="stat-label">Stress Warriors</span>
+                    </div>
+                    <div class="stress-stat">
+                        <span class="stat-number" id="techniques-practiced">28</span>
+                        <span class="stat-label">Techniques Practiced</span>
+                    </div>
+                    <div class="stress-stat">
+                        <span class="stat-number" id="stress-reduced">73%</span>
+                        <span class="stat-label">Avg Stress Reduction</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#stress-monitor" class="btn btn-primary">Check Stress Level</a>
+                    <a href="#challenge" class="btn btn-secondary">Join Challenge</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Stress Level Monitor -->
+        <section class="stress-monitor fade-in-up">
+            <div class="monitor-container" id="stress-monitor">
+                <h2 class="section-heading">🎯 Stress Level Monitor</h2>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Identify your current stress level and get personalized coping strategies. Track your progress and build resilience over time!</p>
+                
+                <div class="stress-gauge">
+                    <div class="gauge-background">
+                        <div class="gauge-fill" id="gauge-fill"></div>
+                        <div class="gauge-center">
+                            <div class="stress-level" id="stress-level">0</div>
+                            <div class="stress-status" id="stress-status">Checking...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stress-inputs">
+                    <div class="stress-input" onclick="selectStressInput('sleep')" data-input="sleep">
+                        <div class="input-icon">😴</div>
+                        <div class="input-label">Sleep Quality</div>
+                        <div class="input-description">How well did you sleep last night?</div>
+                    </div>
+                    <div class="stress-input" onclick="selectStressInput('workload')" data-input="workload">
+                        <div class="input-icon">📚</div>
+                        <div class="input-label">Academic Workload</div>
+                        <div class="input-description">How overwhelming is your study load?</div>
+                    </div>
+                    <div class="stress-input" onclick="selectStressInput('social')" data-input="social">
+                        <div class="input-icon">👥</div>
+                        <div class="input-label">Social Pressure</div>
+                        <div class="input-description">How stressed are social situations?</div>
+                    </div>
+                    <div class="stress-input" onclick="selectStressInput('future')" data-input="future">
+                        <div class="input-icon">🎯</div>
+                        <div class="input-label">Future Anxiety</div>
+                        <div class="input-description">How worried are you about the future?</div>
+                    </div>
+                    <div class="stress-input" onclick="selectStressInput('health')" data-input="health">
+                        <div class="input-icon">❤️</div>
+                        <div class="input-label">Physical Health</div>
+                        <div class="input-description">How is your physical well-being?</div>
+                    </div>
+                    <div class="stress-input" onclick="selectStressInput('energy')" data-input="energy">
+                        <div class="input-icon">⚡</div>
+                        <div class="input-label">Energy Levels</div>
+                        <div class="input-description">How energized do you feel today?</div>
+                    </div>
+                </div>
+ 
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button class="btn btn-primary" onclick="calculateStressLevel()" id="calculate-stress">Calculate My Stress Level</button>
+                    <button class="btn btn-secondary" onclick="getRecommendations()" id="get-recommendations" style="display: none;">Get Personalized Strategies</button>
+                </div>
+ 
+                <div id="stress-recommendations" style="display: none; margin-top: 2rem; padding: 2rem; background: rgba(243, 156, 18, 0.1); border-radius: 16px; border: 1px solid rgba(243, 156, 18, 0.2);">
+                    <h4 style="color: #f39c12; margin-bottom: 1rem; text-align: center;">Your Personalized Action Plan</h4>
+                    <div id="recommendation-content"></div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Coping Strategies Library -->
+        <section class="coping-strategies fade-in-up">
+            <div class="strategies-container">
+                <h2 class="section-heading">🛡️ Stress Resilience Arsenal</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Master evidence-based techniques used by elite performers to thrive under pressure. Each strategy is designed for quick implementation during stressful moments.</p>
+                
+                <div class="strategies-grid">
+                    <div class="strategy-card" onclick="useStrategy('breathing')">
+                        <div class="strategy-icon">
+                            <i class="fas fa-wind"></i>
+                        </div>
+                        <h3>Power Breathing</h3>
+                        <div class="strategy-description">
+                            Master the 4-7-8 breathing technique used by Navy SEALs to instantly calm your nervous system and regain control under pressure.
+                        </div>
+                        <div class="strategy-stats">
+                            <div class="strategy-stat">
+                                <span class="number">1,234</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">2 min</span>
+                                <span class="label">Duration</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">89%</span>
+                                <span class="label">Success Rate</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-primary">Start Technique</button>
+                        </div>
+                    </div>
+ 
+                    <div class="strategy-card" onclick="useStrategy('grounding')">
+                        <div class="strategy-icon">
+                            <i class="fas fa-anchor"></i>
+                        </div>
+                        <h3>5-4-3-2-1 Grounding</h3>
+                        <div class="strategy-description">
+                            Use your senses to anchor yourself in the present moment. Identify 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste.
+                        </div>
+                        <div class="strategy-stats">
+                            <div class="strategy-stat">
+                                <span class="number">987</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">3 min</span>
+                                <span class="label">Duration</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">92%</span>
+                                <span class="label">Success Rate</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-primary">Start Grounding</button>
+                        </div>
+                    </div>
+ 
+                    <div class="strategy-card" onclick="useStrategy('reframe')">
+                        <div class="strategy-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3>Stress Reframing</h3>
+                        <div class="strategy-description">
+                            Transform stress into fuel for performance. Learn to view challenges as opportunities and pressure as a sign you're growing.
+                        </div>
+                        <div class="strategy-stats">
+                            <div class="strategy-stat">
+                                <span class="number">756</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">5 min</span>
+                                <span class="label">Duration</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">85%</span>
+                                <span class="label">Success Rate</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-primary">Learn Reframing</button>
+                        </div>
+                    </div>
+ 
+                    <div class="strategy-card" onclick="useStrategy('movement')">
+                        <div class="strategy-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <h3>Stress Release Movement</h3>
+                        <div class="strategy-description">
+                            Quick physical exercises to burn off stress hormones and reset your nervous system. Perfect for study breaks and exam prep.
+                        </div>
+                        <div class="strategy-stats">
+                            <div class="strategy-stat">
+                                <span class="number">1,456</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">5 min</span>
+                                <span class="label">Duration</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">94%</span>
+                                <span class="label">Success Rate</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-primary">Start Moving</button>
+                        </div>
+                    </div>
+ 
+                    <div class="strategy-card" onclick="useStrategy('visualization')">
+                        <div class="strategy-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Success Visualization</h3>
+                        <div class="strategy-description">
+                            Mental rehearsal techniques used by Olympic athletes. Visualize yourself succeeding to build confidence and reduce performance anxiety.
+                        </div>
+                        <div class="strategy-stats">
+                            <div class="strategy-stat">
+                                <span class="number">643</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">8 min</span>
+                                <span class="label">Duration</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">88%</span>
+                                <span class="label">Success Rate</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-primary">Visualize Success</button>
+                        </div>
+                    </div>
+ 
+                    <div class="strategy-card" onclick="useStrategy('progressive')">
+                        <div class="strategy-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3>Progressive Muscle Relaxation</h3>
+                        <div class="strategy-description">
+                            Systematically tense and release muscle groups to achieve deep physical and mental relaxation. Perfect for bedtime or before big events.
+                        </div>
+                        <div class="strategy-stats">
+                            <div class="strategy-stat">
+                                <span class="number">523</span>
+                                <span class="label">Students</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">15 min</span>
+                                <span class="label">Duration</span>
+                            </div>
+                            <div class="strategy-stat">
+                                <span class="number">91%</span>
+                                <span class="label">Success Rate</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-primary">Start Relaxation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Daily Stress Challenge -->
+        <section class="stress-challenge fade-in-up">
+            <div class="challenge-widget" id="challenge">
+                <div class="challenge-header">
+                    <h3 class="challenge-title">💪 Resilience Builder Challenge</h3>
+                    <div class="challenge-timer" id="challenge-timer">Ends in 7:34:12</div>
+                </div>
+                
+                <p class="challenge-description">Practice 3 stress management techniques today and join 345 students building unbreakable resilience! Use any coping strategy, track your stress levels, and support each other through challenges.</p>
+                
+                <div class="challenge-participants">
+                    <div class="participant-stat">
+                        <span class="number" id="challenge-completed">167</span>
+                        <span class="label">Completed</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number" id="challenge-average">2.1</span>
+                        <span class="label">Avg Techniques</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number" id="your-resilience-rank">#34</span>
+                        <span class="label">Your Rank</span>
+                    </div>
+                </div>
+                
+                <div class="challenge-actions">
+                    <button class="btn btn-primary" onclick="acceptResilienceChallenge()">Accept Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewResilienceLeaderboard()">View Leaderboard</button>
+                    <button class="btn btn-secondary" onclick="shareStressProgress()">Share Progress</button>
+                </div>
+ 
+                <div class="challenge-progress" id="resilience-challenge-progress" style="display: none;">
+                    <div style="margin-top: 2rem;">
+                        <div class="progress-bar" style="width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin-bottom: 1rem;">
+                            <div class="progress-fill" id="resilience-progress-fill" style="height: 100%; background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 6px; transition: width 0.5s ease; width: 0%;"></div>
+                        </div>
+                        <div class="progress-text" id="resilience-progress-text" style="text-align: center; color: rgba(255,255,255,0.8); font-size: 0.9rem;">0/3 techniques practiced</div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <button class="btn btn-primary" onclick="logTechniquePractice()">+ Log Technique</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Stress Relief Toolkit -->
+        <section class="relief-toolkit fade-in-up">
+            <div class="toolkit-container">
+                <h2 class="section-heading">🧰 Quick Relief Toolkit</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Instant stress relief techniques organized by time and situation. Perfect for between classes, before exams, or during overwhelming moments.</p>
+                
+                <div class="toolkit-tabs">
+                    <div class="toolkit-tab active" onclick="switchToolkitTab('quick')">Quick Relief (1-3 min)</div>
+                    <div class="toolkit-tab" onclick="switchToolkitTab('medium')">Deep Relief (5-10 min)</div>
+                    <div class="toolkit-tab" onclick="switchToolkitTab('emergency')">Emergency SOS</div>
+                    <div class="toolkit-tab" onclick="switchToolkitTab('prevention')">Prevention</div>
+                </div>
+ 
+                <div id="quick" class="toolkit-content active">
+                    <div class="technique-grid">
+                        <div class="technique-item" onclick="startQuickTechnique('box-breathing')">
+                            <div class="technique-icon">🔲</div>
+                            <div class="technique-name">Box Breathing</div>
+                            <div class="technique-description">4-4-4-4 breath pattern for instant calm</div>
+                            <div class="technique-duration">2 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startQuickTechnique('body-scan')">
+                            <div class="technique-icon">🎯</div>
+                            <div class="technique-name">Quick Body Scan</div>
+                            <div class="technique-description">Rapid tension release check-in</div>
+                            <div class="technique-duration">1 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startQuickTechnique('power-pose')">
+                            <div class="technique-icon">💪</div>
+                            <div class="technique-name">Power Pose</div>
+                            <div class="technique-description">Confidence-boosting body position</div>
+                            <div class="technique-duration">2 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startQuickTechnique('cold-water')">
+                            <div class="technique-icon">💧</div>
+                            <div class="technique-name">Cold Water Reset</div>
+                            <div class="technique-description">Splash cold water to activate calm</div>
+                            <div class="technique-duration">30 sec</div>
+                        </div>
+                        <div class="technique-item" onclick="startQuickTechnique('gratitude')">
+                            <div class="technique-icon">🙏</div>
+                            <div class="technique-name">3 Gratitudes</div>
+                            <div class="technique-description">Quick perspective shift exercise</div>
+                            <div class="technique-duration">1 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startQuickTechnique('affirmation')">
+                            <div class="technique-icon">💬</div>
+                            <div class="technique-name">Power Affirmation</div>
+                            <div class="technique-description">Repeat confidence-building statements</div>
+                            <div class="technique-duration">2 min</div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <div id="medium" class="toolkit-content">
+                    <div class="technique-grid">
+                        <div class="technique-item" onclick="startMediumTechnique('guided-meditation')">
+                            <div class="technique-icon">🧘‍♀️</div>
+                            <div class="technique-name">Guided Meditation</div>
+                            <div class="technique-description">Audio-guided stress relief session</div>
+                            <div class="technique-duration">10 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startMediumTechnique('journaling')">
+                            <div class="technique-icon">📝</div>
+                            <div class="technique-name">Stress Journaling</div>
+                            <div class="technique-description">Write out worries and solutions</div>
+                            <div class="technique-duration">8 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startMediumTechnique('progressive-relax')">
+                            <div class="technique-icon">🔄</div>
+                            <div class="technique-name">Progressive Relaxation</div>
+                            <div class="technique-description">Full body tension and release</div>
+                            <div class="technique-duration">15 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startMediumTechnique('nature-sounds')">
+                            <div class="technique-icon">🌊</div>
+                            <div class="technique-name">Nature Immersion</div>
+                            <div class="technique-description">Calming nature sounds meditation</div>
+                            <div class="technique-duration">12 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startMediumTechnique('stretching')">
+                            <div class="technique-icon">🤸‍♀️</div>
+                            <div class="technique-name">Stress Relief Stretches</div>
+                            <div class="technique-description">Gentle yoga poses for tension</div>
+                            <div class="technique-duration">10 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startMediumTechnique('visualization')">
+                            <div class="technique-icon">👁️</div>
+                            <div class="technique-name">Calm Place Visualization</div>
+                            <div class="technique-description">Mental escape to peaceful location</div>
+                            <div class="technique-duration">7 min</div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <div id="emergency" class="toolkit-content">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <h3 style="color: #e74c3c; margin-bottom: 1rem;">🚨 Emergency Stress Relief</h3>
+                        <p style="color: rgba(255,255,255,0.8);">For overwhelming moments when stress feels unmanageable</p>
+                    </div>
+                    <div class="technique-grid">
+                        <div class="technique-item" onclick="startEmergencyTechnique('physiological-sigh')">
+                            <div class="technique-icon">😤</div>
+                            <div class="technique-name">Physiological Sigh</div>
+                            <div class="technique-description">Double inhale + long exhale for instant calm</div>
+                            <div class="technique-duration">30 sec</div>
+                        </div>
+                        <div class="technique-item" onclick="startEmergencyTechnique('ice-cube')">
+                            <div class="technique-icon">🧊</div>
+                            <div class="technique-name">Ice Cube Technique</div>
+                            <div class="technique-description">Hold ice to interrupt panic response</div>
+                            <div class="technique-duration">1 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startEmergencyTechnique('grounding-54321')">
+                            <div class="technique-icon">⚓</div>
+                            <div class="technique-name">Emergency Grounding</div>
+                            <div class="technique-description">5-4-3-2-1 sensory anchor technique</div>
+                            <div class="technique-duration">3 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startEmergencyTechnique('support-hotline')">
+                            <div class="technique-icon">📞</div>
+                            <div class="technique-name">Crisis Support</div>
+                            <div class="technique-description">Connect with mental health resources</div>
+                            <div class="technique-duration">Available 24/7</div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <div id="prevention" class="toolkit-content">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <h3 style="color: #27ae60; margin-bottom: 1rem;">🛡️ Stress Prevention</h3>
+                        <p style="color: rgba(255,255,255,0.8);">Build resilience before stress hits</p>
+                    </div>
+                    <div class="technique-grid">
+                        <div class="technique-item" onclick="startPreventionTechnique('morning-routine')">
+                            <div class="technique-icon">🌅</div>
+                            <div class="technique-name">Morning Routine</div>
+                            <div class="technique-description">Start day with resilience practices</div>
+                            <div class="technique-duration">10 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startPreventionTechnique('planning')">
+                            <div class="technique-icon">📅</div>
+                            <div class="technique-name">Stress-Proof Planning</div>
+                            <div class="technique-description">Organize to prevent overwhelm</div>
+                            <div class="technique-duration">15 min</div>
+                        </div>
+                        <div class="technique-item" onclick="startPreventionTechnique('boundaries')">
+                            <div class="technique-icon">🚧</div>
+                            <div class="technique-name">Healthy Boundaries</div>
+                            <div class="technique-description">Learn to say no and protect energy</div>
+                            <div class="technique-duration">Ongoing</div>
+                        </div>
+                        <div class="technique-item" onclick="startPreventionTechnique('sleep-hygiene')">
+                            <div class="technique-icon">😴</div>
+                            <div class="technique-name">Sleep Optimization</div>
+                            <div class="technique-description">Better sleep for stress resilience</div>
+                            <div class="technique-duration">Nightly</div>
+                        </div>
+                        <div class="technique-item" onclick="startPreventionTechnique('exercise')">
+                            <div class="technique-icon">🏃‍♀️</div>
+                            <div class="technique-name">Regular Exercise</div>
+                            <div class="technique-description">Physical activity for mental strength</div>
+                            <div class="technique-duration">Daily</div>
+                        </div>
+                        <div class="technique-item" onclick="startPreventionTechnique('nutrition')">
+                            <div class="technique-icon">🥗</div>
+                            <div class="technique-name">Stress-Fighting Nutrition</div>
+                            <div class="technique-description">Foods that support calm energy</div>
+                            <div class="technique-duration">Daily</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Progress Tracking -->
+        <section class="stress-progress fade-in-up">
+            <div class="progress-container">
+                <h2 class="section-heading">📊 Your Resilience Journey</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track your growth in building unshakeable mental strength and stress management mastery.</p>
+                
+                <div class="progress-cards">
+                    <div class="progress-card">
+                        <div class="progress-value" id="resilience-score">7.2</div>
+                        <div class="progress-label">Resilience Score</div>
+                        <div class="progress-description">Out of 10.0 - Excellent progress!</div>
+                    </div>
+                    
+                    <div class="progress-card">
+                        <div class="progress-value" id="techniques-mastered">12</div>
+                        <div class="progress-label">Techniques Mastered</div>
+                        <div class="progress-description">Different coping strategies learned</div>
+                    </div>
+                    
+                    <div class="progress-card">
+                        <div class="progress-value" id="stress-streak">9</div>
+                        <div class="progress-label">Day Management Streak</div>
+                        <div class="progress-description">Consecutive days of stress practice</div>
+                    </div>
+                    
+                    <div class="progress-card">
+                        <div class="progress-value" id="calm-points">847</div>
+                        <div class="progress-label">Resilience Points</div>
+                        <div class="progress-description">Earned through consistent practice</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Initialize stress stats
+            updateStressStats();
+            
+            // Start challenge timer
+            startResilienceChallenge();
+            
+            // Load user progress
+            loadStressProgress();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+ 
+        // Stress Stats Simulation
+        function updateStressStats() {
+            const baseStats = {
+                stressWarriors: 621,
+                techniquesPracticed: 28,
+                stressReduced: 73,
+                challengeCompleted: 167,
+                challengeAverage: 2.1
+            };
+            
+            setInterval(() => {
+                // Simulate live updates
+                const variation = () => Math.floor(Math.random() * 5) - 2;
+                
+                document.getElementById('live-stress-warriors').textContent = baseStats.stressWarriors + variation();
+                document.getElementById('techniques-practiced').textContent = Math.max(0, baseStats.techniquesPracticed + variation());
+                document.getElementById('challenge-completed').textContent = baseStats.challengeCompleted + Math.abs(variation());
+            }, 30000); // Update every 30 seconds
+        }
+ 
+        // Stress Level Monitor Functions
+        let selectedInputs = new Set();
+        let currentStressLevel = 0;
+ 
+        function selectStressInput(inputType) {
+           const element = document.querySelector(`[data-input="${inputType}"]`);
+           
+           if (selectedInputs.has(inputType)) {
+               selectedInputs.delete(inputType);
+               element.classList.remove('selected');
+           } else {
+               selectedInputs.add(inputType);
+               element.classList.add('selected');
+           }
+           
+           // Show calculate button when at least 3 inputs selected
+           const calculateBtn = document.getElementById('calculate-stress');
+           if (selectedInputs.size >= 3) {
+               calculateBtn.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+               calculateBtn.textContent = `Calculate Stress Level (${selectedInputs.size} factors)`;
+           } else {
+               calculateBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+               calculateBtn.textContent = `Select ${3 - selectedInputs.size} more factors`;
+           }
+       }
+
+       function calculateStressLevel() {
+           if (selectedInputs.size < 3) {
+               alert('Please select at least 3 stress factors for an accurate assessment.');
+               return;
+           }
+           
+           // Calculate stress level based on selected inputs
+           const stressWeights = {
+               sleep: 15, workload: 20, social: 10, future: 18, health: 12, energy: 10
+           };
+           
+           let totalStress = 0;
+           selectedInputs.forEach(input => {
+               totalStress += stressWeights[input] || 15;
+           });
+           
+           // Normalize to 0-10 scale
+           currentStressLevel = Math.min(Math.round((totalStress / 20) * 10) / 10, 10);
+           
+           updateStressGauge(currentStressLevel);
+           
+           // Show recommendations button
+           document.getElementById('get-recommendations').style.display = 'inline-block';
+           
+           // Track the assessment
+           const currentScore = parseInt(document.getElementById('calm-points').textContent);
+           document.getElementById('calm-points').textContent = currentScore + 10; // +10 points for assessment
+       }
+
+       function updateStressGauge(level) {
+           const gauge = document.getElementById('gauge-fill');
+           const levelEl = document.getElementById('stress-level');
+           const statusEl = document.getElementById('stress-status');
+           
+           levelEl.textContent = level;
+           
+           // Update gauge color and status based on level
+           let color, status;
+           if (level <= 3) {
+               color = '#27ae60';
+               status = 'Low Stress';
+               gauge.style.borderTop = `8px solid ${color}`;
+           } else if (level <= 6) {
+               color = '#f39c12';
+               status = 'Moderate Stress';
+               gauge.style.borderTop = `8px solid ${color}`;
+               gauge.style.borderRight = `8px solid ${color}`;
+           } else {
+               color = '#e74c3c';
+               status = 'High Stress';
+               gauge.style.border = `8px solid ${color}`;
+           }
+           
+           statusEl.textContent = status;
+           
+           // Add animation
+           gauge.classList.add('stress-wave');
+           setTimeout(() => gauge.classList.remove('stress-wave'), 3000);
+       }
+
+       function getRecommendations() {
+           const recommendationsEl = document.getElementById('stress-recommendations');
+           const contentEl = document.getElementById('recommendation-content');
+           
+           let recommendations = '';
+           
+           if (currentStressLevel <= 3) {
+               recommendations = `
+                   <div style="text-align: center; color: #27ae60; margin-bottom: 1rem;">
+                       <i class="fas fa-check-circle" style="font-size: 2rem;"></i>
+                       <h3>Great Job! Your stress is well-managed.</h3>
+                   </div>
+                   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                       <div style="background: rgba(39,174,96,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>🔄 Maintenance:</strong><br>Keep using prevention techniques daily
+                       </div>
+                       <div style="background: rgba(39,174,96,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>📈 Build Resilience:</strong><br>Try advanced visualization techniques
+                       </div>
+                   </div>
+               `;
+           } else if (currentStressLevel <= 6) {
+               recommendations = `
+                   <div style="text-align: center; color: #f39c12; margin-bottom: 1rem;">
+                       <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i>
+                       <h3>Moderate Stress - Time for Action</h3>
+                   </div>
+                   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                       <div style="background: rgba(243,156,18,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>🌬️ Immediate:</strong><br>Try 4-7-8 breathing for 5 minutes
+                       </div>
+                       <div style="background: rgba(243,156,18,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>🎯 Today:</strong><br>Practice grounding technique
+                       </div>
+                       <div style="background: rgba(243,156,18,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>🏃‍♀️ This Week:</strong><br>Add stress-relief movement
+                       </div>
+                   </div>
+               `;
+           } else {
+               recommendations = `
+                   <div style="text-align: center; color: #e74c3c; margin-bottom: 1rem;">
+                       <i class="fas fa-heart" style="font-size: 2rem;"></i>
+                       <h3>High Stress - You Need Support</h3>
+                   </div>
+                   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                       <div style="background: rgba(231,76,60,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>🚨 Right Now:</strong><br>Use Emergency SOS techniques
+                       </div>
+                       <div style="background: rgba(231,76,60,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>💬 Connect:</strong><br>Reach out to friends or counselor
+                       </div>
+                       <div style="background: rgba(231,76,60,0.1); padding: 1rem; border-radius: 12px;">
+                           <strong>📞 Support:</strong><br>Consider professional help if needed
+                       </div>
+                   </div>
+               `;
+           }
+           
+           contentEl.innerHTML = recommendations;
+           recommendationsEl.style.display = 'block';
+           
+           // Scroll to recommendations
+           recommendationsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+       }
+
+       // Challenge Timer
+       let challengeTimeRemaining = 7 * 3600 + 34 * 60 + 12; // 7:34:12 in seconds
+
+       function startResilienceChallenge() {
+           const timer = document.getElementById('challenge-timer');
+           
+           setInterval(() => {
+               challengeTimeRemaining--;
+               const hours = Math.floor(challengeTimeRemaining / 3600);
+               const minutes = Math.floor((challengeTimeRemaining % 3600) / 60);
+               const seconds = challengeTimeRemaining % 60;
+               
+               timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+               
+               if (challengeTimeRemaining <= 0) {
+                   timer.textContent = 'Challenge Ended';
+               }
+           }, 1000);
+       }
+
+       // Challenge Functions
+       let userTechniquesPracticed = 0;
+       let resilienceChallengeAccepted = false;
+
+       function acceptResilienceChallenge() {
+           resilienceChallengeAccepted = true;
+           document.getElementById('resilience-challenge-progress').style.display = 'block';
+           document.querySelector('.challenge-widget').scrollIntoView({ behavior: 'smooth', block: 'center' });
+           
+           // Update button text
+           event.target.textContent = 'Challenge Accepted! 💪';
+           event.target.style.background = 'rgba(39, 174, 96, 0.8)';
+       }
+
+       function logTechniquePractice() {
+           if (!resilienceChallengeAccepted) {
+               alert('Accept the challenge first!');
+               return;
+           }
+           
+           userTechniquesPracticed = Math.min(userTechniquesPracticed + 1, 3);
+           
+           const progressFill = document.getElementById('resilience-progress-fill');
+           const progressText = document.getElementById('resilience-progress-text');
+           
+           const percentage = (userTechniquesPracticed / 3) * 100;
+           progressFill.style.width = percentage + '%';
+           progressText.textContent = `${userTechniquesPracticed}/3 techniques practiced`;
+           
+           if (userTechniquesPracticed >= 3) {
+               progressText.innerHTML = `💪 Resilience Challenge Complete! Unbreakable strength achieved! 💪<br><small>+100 Resilience Points earned • Streak maintained</small>`;
+               progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+               
+               // Celebration animation
+               document.querySelector('.challenge-widget').classList.add('bounce-in');
+               setTimeout(() => {
+                   document.querySelector('.challenge-widget').classList.remove('bounce-in');
+               }, 600);
+           }
+           
+           // Save progress
+           localStorage.setItem('todayTechniquesPracticed', userTechniquesPracticed);
+       }
+
+       function viewResilienceLeaderboard() {
+           alert('Opening resilience leaderboard... See how your mental strength ranks among warriors! 💪');
+       }
+
+       function shareStressProgress() {
+           const shareText = `Just practiced ${userTechniquesPracticed} stress management techniques on Vivify! 💪 Building unshakeable resilience and mental strength. Join me: ${window.location.origin}`;
+           
+           if (navigator.share) {
+               navigator.share({
+                   title: 'Resilience Progress Update!',
+                   text: shareText,
+                   url: window.location.origin
+               });
+           } else {
+               navigator.clipboard.writeText(shareText).then(() => {
+                   alert('Resilience progress copied to clipboard! Share your warrior journey 💪');
+               });
+           }
+       }
+
+       // Strategy Functions
+       function useStrategy(strategyType) {
+           const strategyNames = {
+               'breathing': 'Power Breathing',
+               'grounding': '5-4-3-2-1 Grounding',
+               'reframe': 'Stress Reframing',
+               'movement': 'Stress Release Movement',
+               'visualization': 'Success Visualization',
+               'progressive': 'Progressive Muscle Relaxation'
+           };
+           
+           alert(`Starting ${strategyNames[strategyType]}! 💪\n\nThis would launch the guided stress management technique with audio instructions and real-time feedback. Build your resilience arsenal!`);
+           
+           // In a real app, this would start the technique
+           // For demo, we'll simulate completion
+           setTimeout(() => {
+               completeStrategy(strategyType);
+           }, 2000);
+       }
+
+       function completeStrategy(strategyType) {
+           const durations = {
+               'breathing': 2, 'grounding': 3, 'reframe': 5,
+               'movement': 5, 'visualization': 8, 'progressive': 15
+           };
+           
+           const duration = durations[strategyType];
+           const points = duration * 10; // 10 points per minute
+           
+           const completionMessage = `💪 Stress Technique Complete! 💪\n\n` +
+               `${duration} minutes of resilience training\n` +
+               `+${points} resilience points earned\n` +
+               `Mental strength increased! 🧠\n\n` +
+               `Share your achievement?`;
+               
+           if (confirm(completionMessage)) {
+               shareStrategyAchievement(strategyType, duration, points);
+           }
+           
+           // Update stats
+           const currentScore = parseInt(document.getElementById('calm-points').textContent);
+           document.getElementById('calm-points').textContent = currentScore + points;
+           
+           const techniquesMastered = parseInt(document.getElementById('techniques-mastered').textContent);
+           document.getElementById('techniques-mastered').textContent = techniquesMastered + 1;
+           
+           // Auto-log for challenge
+           if (resilienceChallengeAccepted && userTechniquesPracticed < 3) {
+               logTechniquePractice();
+           }
+       }
+
+       function shareStrategyAchievement(strategyType, duration, points) {
+           const shareText = `Just completed ${duration}-minute ${strategyType} stress management on Vivify! 💪 +${points} resilience points earned. Building mental strength: ${window.location.origin}`;
+           
+           if (navigator.share) {
+               navigator.share({
+                   title: 'Stress Management Achievement!',
+                   text: shareText,
+                   url: window.location.origin
+               });
+           } else {
+               navigator.clipboard.writeText(shareText).then(() => {
+                   alert('Achievement copied to clipboard! Share your resilience journey 💪');
+               });
+           }
+       }
+
+       // Toolkit Functions
+       function switchToolkitTab(tabName) {
+           // Update tab buttons
+           document.querySelectorAll('.toolkit-tab').forEach(tab => tab.classList.remove('active'));
+           event.target.classList.add('active');
+           
+           // Update content
+           document.querySelectorAll('.toolkit-content').forEach(content => content.classList.remove('active'));
+           document.getElementById(tabName).classList.add('active');
+       }
+
+       function startQuickTechnique(technique) {
+           const techniques = {
+               'box-breathing': 'Box Breathing - 4-4-4-4 pattern',
+               'body-scan': 'Quick Body Scan - tension check',
+               'power-pose': 'Power Pose - confidence stance',
+               'cold-water': 'Cold Water Reset - nervous system reset',
+               'gratitude': '3 Gratitudes - perspective shift',
+               'affirmation': 'Power Affirmation - confidence boost'
+           };
+           
+           alert(`Starting ${techniques[technique]}! 💪\n\nQuick relief technique activated. Follow the guided instructions for instant stress relief.`);
+           completeQuickTechnique(technique);
+       }
+
+       function startMediumTechnique(technique) {
+           alert(`Starting deep relief technique: ${technique}! 🧘‍♀️\n\nThis longer session will provide comprehensive stress relief and build resilience.`);
+           completeMediumTechnique(technique);
+       }
+
+       function startEmergencyTechnique(technique) {
+           if (technique === 'support-hotline') {
+               alert('🆘 Crisis Support Resources:\n\n• Lifeline: 13 11 14\n• Beyond Blue: 1300 22 4636\n• Kids Helpline: 1800 55 1800\n\nYou are not alone. Help is available 24/7.');
+               return;
+           }
+           
+           alert(`🚨 Emergency technique activated: ${technique}!\n\nImmediate relief protocol starting. Follow instructions carefully for rapid stress reduction.`);
+           completeEmergencyTechnique(technique);
+       }
+
+       function startPreventionTechnique(technique) {
+           alert(`🛡️ Prevention strategy: ${technique}!\n\nBuilding long-term resilience. This practice will strengthen your stress immunity over time.`);
+           completePreventionTechnique(technique);
+       }
+
+       function completeQuickTechnique(technique) {
+           setTimeout(() => {
+               const points = 20;
+               alert(`✅ Quick technique complete! +${points} points earned.`);
+               updateResilienceStats(points);
+           }, 1000);
+       }
+
+       function completeMediumTechnique(technique) {
+           setTimeout(() => {
+               const points = 50;
+               alert(`🧘‍♀️ Deep relief session complete! +${points} points earned.`);
+               updateResilienceStats(points);
+           }, 2000);
+       }
+
+       function completeEmergencyTechnique(technique) {
+           setTimeout(() => {
+               const points = 30;
+               alert(`🚨 Emergency relief complete! You handled this crisis with strength. +${points} points earned.`);
+               updateResilienceStats(points);
+           }, 1000);
+       }
+
+       function completePreventionTechnique(technique) {
+           setTimeout(() => {
+               const points = 40;
+               alert(`🛡️ Prevention practice complete! Long-term resilience building activated. +${points} points earned.`);
+               updateResilienceStats(points);
+           }, 1500);
+       }
+
+       function updateResilienceStats(points) {
+           const currentScore = parseInt(document.getElementById('calm-points').textContent);
+           document.getElementById('calm-points').textContent = currentScore + points;
+           
+           // Update resilience score
+           const currentResilienceScore = parseFloat(document.getElementById('resilience-score').textContent);
+           const newScore = Math.min(currentResilienceScore + 0.1, 10.0);
+           document.getElementById('resilience-score').textContent = newScore.toFixed(1);
+       }
+
+       // Progress Saving and Loading
+       function loadStressProgress() {
+           const saved = localStorage.getItem('stressProgress');
+           if (saved) {
+               const progress = JSON.parse(saved);
+               
+               // Check if it's the same day
+               const today = new Date().toDateString();
+               const savedDate = new Date(progress.lastSaved || Date.now()).toDateString();
+               
+               if (today === savedDate) {
+                   // Load challenge progress
+                   const savedTechniques = localStorage.getItem('todayTechniquesPracticed');
+                   if (savedTechniques) {
+                       userTechniquesPracticed = parseInt(savedTechniques);
+                       if (userTechniquesPracticed > 0) {
+                           resilienceChallengeAccepted = true;
+                           document.getElementById('resilience-challenge-progress').style.display = 'block';
+                           
+                           const progressFill = document.getElementById('resilience-progress-fill');
+                           const progressText = document.getElementById('resilience-progress-text');
+                           
+                           const percentage = (userTechniquesPracticed / 3) * 100;
+                           progressFill.style.width = percentage + '%';
+                           progressText.textContent = `${userTechniquesPracticed}/3 techniques practiced`;
+                           
+                           if (userTechniquesPracticed >= 3) {
+                               progressText.innerHTML = `💪 Resilience Challenge Complete! Unbreakable strength achieved! 💪<br><small>+100 Resilience Points earned • Streak maintained</small>`;
+                               progressFill.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                           }
+                       }
+                   }
+               }
+           }
+       }
+
+       function saveStressProgress() {
+           const progress = {
+               resilienceScore: document.getElementById('resilience-score').textContent,
+               techniquesMastered: document.getElementById('techniques-mastered').textContent,
+               stressStreak: document.getElementById('stress-streak').textContent,
+               calmPoints: document.getElementById('calm-points').textContent,
+               challengeTechniques: userTechniquesPracticed,
+               lastSaved: Date.now()
+           };
+           
+           localStorage.setItem('stressProgress', JSON.stringify(progress));
+       }
+
+       // Auto-save progress every 30 seconds
+       setInterval(saveStressProgress, 30000);
+  </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Nutrition - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section with Engagement */
+        .nutrition-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .nutrition-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .nutrition-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .nutrition-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Community Stats in Hero */
+        .community-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .community-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .community-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .community-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Interactive Brain Fuel Calculator */
+        .brain-calculator {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .calculator-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .calculate-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .results-container {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .results-container h4 {
+            color: #f39c12;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .nutrition-plan {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .nutrition-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .nutrition-item .amount {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        .nutrition-item .nutrient {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Daily Challenge Widget */
+        .daily-challenge {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .challenge-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            width: 65%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Community Success Stories */
+        .success-stories {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .story-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .story-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .story-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .story-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .story-results {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            border-left: 4px solid #f39c12;
+        }
+
+        .story-results .result-label {
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Interactive Nutrition Tracker */
+        .nutrition-tracker {
+            padding: 6rem 2rem;
+        }
+
+        .tracker-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .tracker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .nutrient-tracker {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nutrient-tracker:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .nutrient-tracker.checked {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .nutrient-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(243, 156, 18, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: #f39c12;
+            transition: all 0.3s ease;
+        }
+
+        .nutrient-tracker.checked .nutrient-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .nutrient-name {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .nutrient-status {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .tracker-score {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        /* CTA Section */
+        .nutrition-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .nutrition-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .nutrition-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .community-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .calculator-form {
+                grid-template-columns: 1fr;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tracker-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .challenge-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Community Stats -->
+        <section class="nutrition-hero fade-in-up">
+            <div class="hero-content">
+                <div class="nutrition-badge">Cognitive Fuel</div>
+                <h1>Brain Nutrition</h1>
+                <p>Join thousands of students optimizing cognitive performance with evidence-based nutrition strategies. Track your brain fuel, compete in challenges, and unlock your mental potential.</p>
+                
+                <div class="community-stats">
+                    <div class="community-stat">
+                        <span class="stat-number">2,847</span>
+                        <span class="stat-label">Active Students</span>
+                    </div>
+                    <div class="community-stat">
+                        <span class="stat-number">156</span>
+                        <span class="stat-label">7-Day Streaks Today</span>
+                    </div>
+                    <div class="community-stat">
+                        <span class="stat-number">89%</span>
+                        <span class="stat-label">Report Better Focus</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#calculator" class="btn btn-primary">Calculate My Brain Fuel</a>
+                    <a href="#challenge" class="btn btn-secondary">Join Today's Challenge</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Brain Fuel Calculator -->
+        <section class="brain-calculator fade-in-up">
+            <div class="calculator-container" id="calculator">
+                <h2 class="section-heading">Your Personal Brain Fuel Calculator</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Get personalized nutrition recommendations based on your study schedule and cognitive goals.</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label>Study Hours Daily</label>
+                        <select id="study-hours">
+                            <option value="2">2-3 hours</option>
+                            <option value="4">4-5 hours</option>
+                            <option value="6">6-7 hours</option>
+                            <option value="8">8+ hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Primary Goal</label>
+                        <select id="primary-goal">
+                            <option value="focus">Improve Focus</option>
+                            <option value="memory">Enhance Memory</option>
+                            <option value="energy">Sustained Energy</option>
+                            <option value="exam">Exam Performance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Current Energy Level</label>
+                        <select id="energy-level">
+                            <option value="low">Often tired</option>
+                            <option value="moderate">Sometimes tired</option>
+                            <option value="good">Generally good</option>
+                            <option value="high">High energy</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Sleep Quality</label>
+                        <select id="sleep-quality">
+                            <option value="poor">Poor (5-6 hours)</option>
+                            <option value="fair">Fair (6-7 hours)</option>
+                            <option value="good">Good (7-8 hours)</option>
+                            <option value="excellent">Excellent (8+ hours)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="calculate-btn" onclick="calculateBrainFuel()">Generate My Brain Fuel Plan</button>
+                </div>
+                
+                <div class="results-container" id="results">
+                    <h4>Your Personalized Brain Fuel Plan</h4>
+                    <div class="nutrition-plan" id="nutrition-recommendations">
+                        <!-- Results will be populated here -->
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="signup.html" class="btn btn-primary">Start Tracking My Plan</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Challenge Widget -->
+        <section class="daily-challenge fade-in-up">
+            <div class="challenge-widget" id="challenge">
+                <h3 class="challenge-title">Today's Brain Fuel Challenge</h3>
+                <p class="challenge-description">Join 1,247 students completing today's Omega-3 Focus Challenge! Eat one serving of brain-healthy omega-3s and track your afternoon focus levels.</p>
+                
+                <div class="challenge-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="progress-text">847 students completed • 65% participation rate</p>
+                </div>
+                
+                <div class="challenge-actions">
+                    <button class="btn btn-primary" onclick="joinChallenge()">Accept Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewLeaderboard()">View Leaderboard</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Nutrition Tracker -->
+        <section class="nutrition-tracker fade-in-up">
+            <div class="tracker-container">
+                <h2 class="section-heading">Today's Brain Nutrition Tracker</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track your daily brain fuel intake and build a streak! Click each nutrient as you consume it.</p>
+                
+                <div class="tracker-grid">
+                    <div class="nutrient-tracker" onclick="toggleNutrient(this, 'omega3')">
+                        <div class="nutrient-icon">
+                            <i class="fas fa-fish"></i>
+                        </div>
+                        <div class="nutrient-name">Omega-3</div>
+                        <div class="nutrient-status">Click when consumed</div>
+                    </div>
+                    
+                    <div class="nutrient-tracker" onclick="toggleNutrient(this, 'protein')">
+                        <div class="nutrient-icon">
+                            <i class="fas fa-egg"></i>
+                        </div>
+                        <div class="nutrient-name">Quality Protein</div>
+                        <div class="nutrient-status">Click when consumed</div>
+                    </div>
+                    
+                    <div class="nutrient-tracker" onclick="toggleNutrient(this, 'antioxidants')">
+                        <div class="nutrient-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="nutrient-name">Antioxidants</div>
+                        <div class="nutrient-status">Click when consumed</div>
+                    </div>
+                    
+                    <div class="nutrient-tracker" onclick="toggleNutrient(this, 'complex-carbs')">
+                        <div class="nutrient-icon">
+                            <i class="fas fa-bread-slice"></i>
+                        </div>
+                        <div class="nutrient-name">Complex Carbs</div>
+                        <div class="nutrient-status">Click when consumed</div>
+                    </div>
+                    
+                    <div class="nutrient-tracker" onclick="toggleNutrient(this, 'b-vitamins')">
+                        <div class="nutrient-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="nutrient-name">B Vitamins</div>
+                        <div class="nutrient-status">Click when consumed</div>
+                    </div>
+                    
+                    <div class="nutrient-tracker" onclick="toggleNutrient(this, 'hydration')">
+                        <div class="nutrient-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="nutrient-name">Hydration</div>
+                        <div class="nutrient-status">8+ glasses today</div>
+                    </div>
+                </div>
+                
+                <div class="tracker-score">
+                    <div class="score-number" id="daily-score">0/6</div>
+                    <div class="score-label">Brain Nutrients Today</div>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="saveProgress()" id="save-btn" style="display: none;">Save Progress & Build Streak</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Success Stories -->
+        <section class="success-stories fade-in-up">
+            <div class="stories-container">
+                <h2 class="section-heading">Student Success Stories</h2>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">MK</div>
+                            <div class="story-info">
+                                <h4>Maya K.</h4>
+                                <p>Computer Science, Year 2</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Started tracking my omega-3 intake and noticed a huge difference in my ability to focus during long coding sessions. My 47-day streak is my longest yet!"
+                        </div>
+                        <div class="story-results">
+                            <div class="result-label">Results: 47-day streak • +40% focus duration</div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">AJ</div>
+                            <div class="story-info">
+                                <h4>Alex J.</h4>
+                                <p>Pre-Med, Year 3</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The brain fuel calculator helped me optimize my nutrition for MCAT prep. Consistent energy throughout 8-hour study days changed everything."
+                        </div>
+                        <div class="story-results">
+                            <div class="result-label">Results: 89-day streak • MCAT score +12 points</div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">SL</div>
+                            <div class="story-info">
+                                <h4>Sam L.</h4>
+                                <p>Engineering, Year 4</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Competing in the weekly challenges keeps me motivated. Our study group all uses Vivify now and we're all performing better."
+                        </div>
+                        <div class="story-results">
+                            <div class="result-label">Results: 156-day streak • Top 5% leaderboard</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary">Share Your Success Story</button>
+                    <button class="btn btn-secondary">View All Stories</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="nutrition-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Start Your Brain Optimization Journey</h2>
+                <p class="cta-subtitle">Join 2,847 students building consistent brain nutrition habits through tracking, challenges, and community support. Your cognitive edge starts today.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="signup.html" class="btn btn-primary">Start Free Trial</a>
+                    <button class="btn btn-secondary" onclick="viewDemo()">Watch Demo</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Load saved nutrition progress
+            loadNutritionProgress();
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+
+        // Brain Fuel Calculator
+        function calculateBrainFuel() {
+            const studyHours = document.getElementById('study-hours').value;
+            const goal = document.getElementById('primary-goal').value;
+            const energyLevel = document.getElementById('energy-level').value;
+            const sleepQuality = document.getElementById('sleep-quality').value;
+            
+            // Generate recommendations based on inputs
+            const recommendations = generateRecommendations(studyHours, goal, energyLevel, sleepQuality);
+            
+            // Display results
+            const resultsContainer = document.getElementById('results');
+            const recommendationsDiv = document.getElementById('nutrition-recommendations');
+            
+            recommendationsDiv.innerHTML = recommendations.map(rec => `
+                <div class="nutrition-item">
+                    <span class="amount">${rec.amount}</span>
+                    <span class="nutrient">${rec.nutrient}</span>
+                </div>
+            `).join('');
+            
+            resultsContainer.classList.add('active');
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function generateRecommendations(studyHours, goal, energyLevel, sleepQuality) {
+            const baseRecommendations = [
+                { amount: '2-3g', nutrient: 'Omega-3 Daily' },
+                { amount: '25-30g', nutrient: 'Protein per Meal' },
+                { amount: '2L+', nutrient: 'Water Daily' },
+                { amount: '5-7', nutrient: 'Servings Vegetables' }
+            ];
+            
+            // Customize based on inputs
+            if (parseInt(studyHours) >= 6) {
+                baseRecommendations.push({ amount: '400mg', nutrient: 'Magnesium Daily' });
+                baseRecommendations.push({ amount: '3-4', nutrient: 'Balanced Meals' });
+            }
+            
+            if (goal === 'focus') {
+                baseRecommendations.push({ amount: '200mg', nutrient: 'Caffeine (Morning)' });
+            }
+            
+            if (energyLevel === 'low') {
+                baseRecommendations.push({ amount: '1-2', nutrient: 'Complex Carb Snacks' });
+            }
+            
+            return baseRecommendations.slice(0, 6); // Limit to 6 items
+        }
+
+        // Nutrition Tracker Functions
+        let trackedNutrients = new Set();
+
+        function toggleNutrient(element, nutrient) {
+            if (trackedNutrients.has(nutrient)) {
+                trackedNutrients.delete(nutrient);
+                element.classList.remove('checked');
+                element.querySelector('.nutrient-status').textContent = 'Click when consumed';
+            } else {
+                trackedNutrients.add(nutrient);
+                element.classList.add('checked');
+                element.querySelector('.nutrient-status').textContent = 'Completed ✓';
+                
+                // Add animation
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 1000);
+            }
+            
+            updateScore();
+        }
+
+        function updateScore() {
+            const score = trackedNutrients.size;
+            document.getElementById('daily-score').textContent = `${score}/6`;
+            
+            const saveBtn = document.getElementById('save-btn');
+            if (score > 0) {
+                saveBtn.style.display = 'inline-block';
+            } else {
+                saveBtn.style.display = 'none';
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('nutritionProgress', JSON.stringify(Array.from(trackedNutrients)));
+        }
+
+        function loadNutritionProgress() {
+            const saved = localStorage.getItem('nutritionProgress');
+            if (saved) {
+                const nutrients = JSON.parse(saved);
+                nutrients.forEach(nutrient => {
+                    trackedNutrients.add(nutrient);
+                    const element = document.querySelector(`[onclick*="${nutrient}"]`);
+                    if (element) {
+                        element.classList.add('checked');
+                        element.querySelector('.nutrient-status').textContent = 'Completed ✓';
+                    }
+                });
+                updateScore();
+            }
+        }
+
+        function saveProgress() {
+            const score = trackedNutrients.size;
+            if (score === 0) return;
+            
+            // Simulate saving progress
+            const btn = document.getElementById('save-btn');
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = `Saved! Streak Day ${Math.floor(Math.random() * 30) + 1}`;
+                setTimeout(() => {
+                    btn.textContent = 'Save Progress & Build Streak';
+                    btn.disabled = false;
+                }, 2000);
+            }, 1000);
+        }
+
+        // Challenge Functions
+        function joinChallenge() {
+            alert('Challenge accepted! Track your omega-3 intake today and check back for your results.');
+            // In a real app, this would navigate to the challenge tracking page
+        }
+
+        function viewLeaderboard() {
+            alert('Opening leaderboard... See how you rank against other students!');
+            // In a real app, this would show the leaderboard modal or page
+        }
+
+        function viewDemo() {
+            alert('Demo video would play here showing how to use the brain nutrition tracking features.');
+            // In a real app, this would open a demo video modal
+        }
+   </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Australian Bank Comparison - Vivify</title>
+   
+    
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+
+       .comparison-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .comparison-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .comparison-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2.5rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+           padding-bottom: 0.5rem;
+           border-bottom: 2px solid #333;
+       }
+
+       .content-section {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .filter-section {
+           background-color: #2c3e50;
+           padding: 2rem;
+           border-radius: 10px;
+           margin-bottom: 3rem;
+       }
+
+       .filter-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 1.5rem;
+           margin-bottom: 2rem;
+       }
+
+       .filter-group {
+           display: flex;
+           flex-direction: column;
+       }
+
+       .filter-group label {
+           color: #f39c12;
+           font-weight: 600;
+           margin-bottom: 0.5rem;
+       }
+
+       .filter-group select,
+       .filter-group input {
+           padding: 0.8rem;
+           border: 2px solid #444;
+           border-radius: 5px;
+           background-color: #34495e;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .filter-group select:focus,
+       .filter-group input:focus {
+           outline: none;
+           border-color: #f39c12;
+       }
+
+       .apply-filters-btn {
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           padding: 1rem 2rem;
+           border-radius: 5px;
+           font-size: 1.1rem;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .apply-filters-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .bank-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+           gap: 2rem;
+           margin: 3rem 0;
+       }
+
+       .bank-card {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+           transition: transform 0.3s, box-shadow 0.3s;
+           box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+           position: relative;
+       }
+
+       .bank-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 12px 16px rgba(0,0,0,0.3);
+       }
+
+       .bank-card.recommended {
+           border: 2px solid #f39c12;
+       }
+
+       .recommended-badge {
+           position: absolute;
+           top: -10px;
+           right: 20px;
+           background-color: #f39c12;
+           color: black;
+           padding: 0.5rem 1rem;
+           border-radius: 15px;
+           font-size: 0.9rem;
+           font-weight: bold;
+       }
+
+       .bank-header {
+           display: flex;
+           align-items: center;
+           margin-bottom: 1.5rem;
+       }
+
+       .bank-logo {
+           width: 60px;
+           height: 60px;
+           background-color: #333;
+           border-radius: 50%;
+           margin-right: 1rem;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 1.5rem;
+           color: #f39c12;
+           font-weight: bold;
+       }
+
+       .bank-name {
+           color: #f39c12;
+           font-size: 1.5rem;
+           font-weight: bold;
+           margin-bottom: 0.3rem;
+       }
+
+       .bank-type {
+           color: #ccc;
+           font-size: 0.9rem;
+       }
+
+       .account-info {
+           margin-bottom: 1.5rem;
+       }
+
+       .account-name {
+           color: white;
+           font-weight: bold;
+           margin-bottom: 0.5rem;
+       }
+
+       .account-details {
+           color: #ddd;
+           font-size: 0.9rem;
+           margin-bottom: 1rem;
+       }
+
+       .features-list {
+           list-style: none;
+           padding: 0;
+           margin: 1.5rem 0;
+       }
+
+       .features-list li {
+           color: #ddd;
+           padding: 0.3rem 0;
+           display: flex;
+           align-items: center;
+       }
+
+       .features-list li i {
+           color: #27ae60;
+           margin-right: 0.5rem;
+           width: 16px;
+       }
+
+       .features-list li.unavailable {
+           color: #999;
+       }
+
+       .features-list li.unavailable i {
+           color: #e74c3c;
+       }
+
+       .fees-section {
+           background-color: #333;
+           padding: 1rem;
+           border-radius: 5px;
+           margin: 1rem 0;
+       }
+
+       .fee-item {
+           display: flex;
+           justify-content: space-between;
+           margin-bottom: 0.5rem;
+           color: #ddd;
+       }
+
+       .fee-amount {
+           font-weight: bold;
+           color: #f39c12;
+       }
+
+       .fee-amount.free {
+           color: #27ae60;
+       }
+
+       .pros-cons {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 1rem;
+           margin: 1rem 0;
+       }
+
+       .pros, .cons {
+           padding: 1rem;
+           border-radius: 5px;
+           font-size: 0.9rem;
+       }
+
+       .pros {
+           background-color: rgba(39, 174, 96, 0.2);
+           border-left: 4px solid #27ae60;
+       }
+
+       .cons {
+           background-color: rgba(231, 76, 60, 0.2);
+           border-left: 4px solid #e74c3c;
+       }
+
+       .pros h4, .cons h4 {
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-size: 1rem;
+       }
+
+       .pros ul, .cons ul {
+           margin: 0;
+           padding-left: 1.5rem;
+           color: #ddd;
+       }
+
+       .pros li, .cons li {
+           margin-bottom: 0.3rem;
+       }
+
+       .rating-section {
+           display: flex;
+           align-items: center;
+           margin: 1rem 0;
+       }
+
+       .rating-label {
+           color: #f39c12;
+           font-weight: bold;
+           margin-right: 1rem;
+       }
+
+       .stars {
+           color: #f39c12;
+           font-size: 1.2rem;
+       }
+
+       .rating-score {
+           color: #ddd;
+           margin-left: 0.5rem;
+       }
+
+       .cta-button {
+           display: inline-block;
+           padding: 1rem 2rem;
+           background-color: #f39c12;
+           color: #000;
+           text-decoration: none;
+           border-radius: 5px;
+           font-weight: 700;
+           font-size: 1rem;
+           transition: background-color 0.3s;
+           text-align: center;
+           width: 100%;
+           margin-top: 1rem;
+       }
+
+       .cta-button:hover {
+           background-color: #e67e22;
+       }
+
+       .comparison-table {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 3rem 0;
+           overflow-x: auto;
+       }
+
+       .table-container {
+           min-width: 800px;
+       }
+
+       .comparison-table table {
+           width: 100%;
+           border-collapse: collapse;
+           margin: 2rem 0;
+       }
+
+       .comparison-table th,
+       .comparison-table td {
+           border: 1px solid #333;
+           padding: 1rem;
+           text-align: left;
+       }
+
+       .comparison-table th {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+           font-size: 0.9rem;
+       }
+
+       .comparison-table td {
+           background-color: #222;
+           color: white;
+           font-size: 0.9rem;
+       }
+
+       .comparison-table tr:nth-child(even) td {
+           background-color: #333;
+       }
+
+       .feature-yes {
+           color: #27ae60;
+           font-weight: bold;
+       }
+
+       .feature-no {
+           color: #e74c3c;
+           font-weight: bold;
+       }
+
+       .feature-partial {
+           color: #f39c12;
+           font-weight: bold;
+       }
+
+       .tips-section {
+           background-color: #2c3e50;
+           padding: 3rem 2rem;
+           border-radius: 10px;
+           margin: 3rem 0;
+       }
+
+       .tips-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 2rem;
+           margin: 2rem 0;
+       }
+
+       .tip-card {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           border-left: 4px solid #f39c12;
+       }
+
+       .tip-card h3 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .tip-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+       }
+
+       .warning-box {
+           background-color: #e67e22;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           text-align: center;
+       }
+
+       .info-box {
+           background-color: #3498db;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           text-align: center;
+       }
+
+       .hidden {
+           display: none;
+       }
+
+       @media (max-width: 768px) {
+           .comparison-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .bank-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .pros-cons {
+               grid-template-columns: 1fr;
+           }
+           
+           .filter-grid {
+               grid-template-columns: 1fr;
+           }
+       }
+   @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                               <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="comparison-hero">
+           <h1>Australian Bank Comparison</h1>
+           <p>Compare Australian banks side-by-side to find the best account for your student needs. We've analyzed fees, features, and benefits to help you make an informed decision.</p>
+       </section>
+
+       <!-- Filter Section -->
+       <section class="content-section">
+           <div class="filter-section">
+               <h2 class="section-title" style="color: #f39c12; border-bottom: 2px solid #f39c12; margin-bottom: 2rem;">Find Your Perfect Bank</h2>
+               <div class="filter-grid">
+                   <div class="filter-group">
+                       <label for="accountType">Account Type</label>
+                       <select id="accountType">
+                           <option value="all">All Account Types</option>
+                           <option value="student">Student Accounts</option>
+                           <option value="everyday">Everyday Transaction</option>
+                           <option value="savings">High Interest Savings</option>
+                       </select>
+                   </div>
+                   
+                   <div class="filter-group">
+                       <label for="monthlyFee">Monthly Fee</label>
+                       <select id="monthlyFee">
+                           <option value="all">Any Fee</option>
+                           <option value="free">No Monthly Fee</option>
+                           <option value="low">Under $10/month</option>
+                       </select>
+                   </div>
+                   
+                   <div class="filter-group">
+                       <label for="atmAccess">ATM Access</label>
+                       <select id="atmAccess">
+                           <option value="all">Any ATM Access</option>
+                           <option value="extensive">1000+ ATMs</option>
+                           <option value="fee-free">Fee-free ATMs</option>
+                       </select>
+                   </div>
+                   
+                   <div class="filter-group">
+                       <label for="minBalance">Minimum Balance</label>
+                       <select id="minBalance">
+                           <option value="all">Any Balance</option>
+                           <option value="none">No Minimum</option>
+                           <option value="low">Under $500</option>
+                       </select>
+                   </div>
+               </div>
+               <button class="apply-filters-btn" onclick="applyFilters()">Apply Filters</button>
+           </div>
+       </section>
+
+       <!-- Bank Comparison Cards -->
+       <section class="content-section">
+           <h2 class="section-title">Student-Friendly Australian Banks</h2>
+           
+           <div class="bank-grid" id="bankGrid">
+               <!-- Commonwealth Bank -->
+               <div class="bank-card recommended" data-type="student" data-fee="free" data-atm="extensive" data-balance="none">
+                   <div class="recommended-badge">Most Popular</div>
+                   <div class="bank-header">
+                       <div class="bank-logo">CBA</div>
+                       <div>
+                           <div class="bank-name">Commonwealth Bank</div>
+                           <div class="bank-type">Major Bank • Australia's Largest</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Smart Access Student Account</div>
+                       <div class="account-details">Perfect for students with no monthly fees and comprehensive digital banking</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 with Student ID</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free at CBA ATMs</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount">3% + $2.50</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> 3,000+ ATMs nationwide</li>
+                       <li><i class="fas fa-check"></i> Award-winning NetBank app</li>
+                       <li><i class="fas fa-check"></i> Cardless cash withdrawals</li>
+                       <li><i class="fas fa-check"></i> Apple Pay & Google Pay</li>
+                       <li><i class="fas fa-check"></i> 24/7 customer support</li>
+                       <li><i class="fas fa-check"></i> Student concessions available</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>Largest ATM network in Australia</li>
+                               <li>Excellent mobile app</li>
+                               <li>Strong brand recognition</li>
+                               <li>Comprehensive student support</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>Higher international fees</li>
+                               <li>Can be busy in branches</li>
+                               <li>Limited savings account interest</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★★</span>
+                       <span class="rating-score">4.7/5</span>
+                   </div>
+                   
+                   <a href="https://www.commbank.com.au/banking/bank-accounts/transaction-accounts/smart-access.html" class="cta-button" target="_blank">Learn More</a>
+               </div>
+
+               <!-- ANZ -->
+               <div class="bank-card" data-type="student" data-fee="free" data-atm="extensive" data-balance="none">
+                   <div class="bank-header">
+                       <div class="bank-logo">ANZ</div>
+                       <div>
+                           <div class="bank-name">ANZ Australia</div>
+                           <div class="bank-type">Major Bank • Strong Digital Focus</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Access Advantage Account</div>
+                       <div class="account-details">Modern banking with excellent digital features and student benefits</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 for students</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free at ANZ ATMs</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount">3% + $2.50</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> 800+ ANZ ATMs + partner network</li>
+                       <li><i class="fas fa-check"></i> Award-winning mobile app</li>
+                       <li><i class="fas fa-check"></i> Apple Pay & Google Pay</li>
+                       <li><i class="fas fa-check"></i> Real-time spending notifications</li>
+                       <li><i class="fas fa-check"></i> PayID instant payments</li>
+                       <li><i class="fas fa-check"></i> Student financial education</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>Innovative digital banking</li>
+                               <li>Great mobile experience</li>
+                               <li>Strong fraud protection</li>
+                               <li>Good customer service</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>Smaller ATM network than CBA</li>
+                               <li>Limited physical branches</li>
+                               <li>International fees similar to competitors</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★☆</span>
+                       <span class="rating-score">4.5/5</span>
+                   </div>
+                   
+                   <a href="https://www.anz.com.au/personal/bank-accounts/transaction-accounts/access-advantage/" class="cta-button" target="_blank">Learn More</a>
+               </div>
+
+               <!-- ING -->
+               <div class="bank-card recommended" data-type="everyday" data-fee="free" data-atm="fee-free" data-balance="none">
+                   <div class="recommended-badge">Best Value</div>
+                   <div class="bank-header">
+                       <div class="bank-logo">ING</div>
+                       <div>
+                           <div class="bank-name">ING Australia</div>
+                           <div class="bank-type">Digital Bank • No ATM Fees</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Orange Everyday Account</div>
+                       <div class="account-details">100% digital banking with no fees and excellent features</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 Always</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free at ALL ATMs</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount free">No fee on purchases</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> ALL ATMs fee-free nationwide</li>
+                       <li><i class="fas fa-check"></i> No international purchase fees</li>
+                       <li><i class="fas fa-check"></i> High interest savings available</li>
+                       <li><i class="fas fa-check"></i> Excellent mobile app</li>
+                       <li><i class="fas fa-check"></i> 24/7 phone support</li>
+                       <li class="unavailable"><i class="fas fa-times"></i> No physical branches</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>No ATM fees anywhere in Australia</li>
+                               <li>No international purchase fees</li>
+                               <li>High interest savings rates</li>
+                               <li>Simple fee structure</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>No physical branches</li>
+                               <li>Digital-only banking</li>
+                               <li>Limited cash deposit options</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★★</span>
+                       <span class="rating-score">4.8/5</span>
+                   </div>
+                   
+                   <a href="https://www.ing.com.au/everyday-banking/orange-everyday/" class="cta-button" target="_blank">Learn More</a>
+               </div>
+
+               <!-- Westpac -->
+               <div class="bank-card" data-type="student" data-fee="free" data-atm="extensive" data-balance="none">
+                   <div class="bank-header">
+                       <div class="bank-logo">WBC</div>
+                       <div>
+                           <div class="bank-name">Westpac</div>
+                           <div class="bank-type">Major Bank • Strong Student Support</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Choice Student Account</div>
+                       <div class="account-details">Tailored for students with budgeting tools and financial education</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 for students</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free at Westpac ATMs</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount">3% + $2.50</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> 1,000+ Westpac ATMs</li>
+                       <li><i class="fas fa-check"></i> Westpac Live chat support</li>
+                       <li><i class="fas fa-check"></i> Built-in budgeting tools</li>
+                       <li><i class="fas fa-check"></i> Student financial workshops</li>
+                       <li><i class="fas fa-check"></i> Apple Pay & Google Pay</li>
+                       <li><i class="fas fa-check"></i> Spending insights dashboard</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>Excellent student education programs</li>
+                               <li>Strong budgeting tools</li>
+                               <li>Good branch network</li>
+                               <li>Dedicated student support</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>Smaller ATM network than CBA</li>
+                               <li>Standard international fees</li>
+                               <li>App not as intuitive as competitors</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★☆</span>
+                       <span class="rating-score">4.3/5</span>
+                   </div>
+                   
+                   <a href="https://www.westpac.com.au/personal-banking/bank-accounts/transaction/choice/" class="cta-button" target="_blank">Learn More</a>
+               </div>
+
+               <!-- NAB -->
+               <div class="bank-card" data-type="student" data-fee="free" data-atm="extensive" data-balance="none">
+                   <div class="bank-header">
+                       <div class="bank-logo">NAB</div>
+                       <div>
+                           <div class="bank-name">National Australia Bank</div>
+                           <div class="bank-type">Major Bank • Business Focus</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Classic Banking Account</div>
+                       <div class="account-details">Straightforward banking with rewards program and solid features</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 for students</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free at NAB ATMs</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount">3% + $2.50</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> 900+ NAB ATMs nationwide</li>
+                       <li><i class="fas fa-check"></i> NAB Rewards points program</li>
+                       <li><i class="fas fa-check"></i> Strong fraud protection</li>
+                       <li><i class="fas fa-check"></i> Apple Pay & Google Pay</li>
+                       <li><i class="fas fa-check"></i> Good business banking transition</li>
+                       <li><i class="fas fa-check"></i> Solid mobile app</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>Rewards program available</li>
+                               <li>Strong business banking (future)</li>
+                               <li>Good security features</li>
+                               <li>Reliable service</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>Smaller ATM network</li>
+                               <li>Less student-focused features</li>
+                               <li>Standard fee structure</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★☆</span>
+                       <span class="rating-score">4.2/5</span>
+                   </div>
+                   
+                   <a href="https://www.nab.com.au/personal/banking/transaction-accounts/classic-banking" class="cta-button" target="_blank">Learn More</a>
+               </div>
+
+               <!-- Teachers Mutual Bank -->
+               <div class="bank-card recommended" data-type="student" data-fee="free" data-atm="extensive" data-balance="none">
+                   <div class="recommended-badge">Higher Interest</div>
+                   <div class="bank-header">
+                       <div class="bank-logo">TMB</div>
+                       <div>
+                           <div class="bank-name">Teachers Mutual Bank</div>
+                           <div class="bank-type">Mutual Bank • Member-Owned</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Student Everyday Account</div>
+                       <div class="account-details">Member-owned bank with higher interest rates and personal service</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 Always</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free via rediATM network</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount">2.5% + $2.00</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> 3,000+ rediATM network access</li>
+                       <li><i class="fas fa-check"></i> Higher interest rates on savings</li>
+                       <li><i class="fas fa-check"></i> Member benefits & dividends</li>
+                       <li><i class="fas fa-check"></i> Personal customer service</li>
+                       <li><i class="fas fa-check"></i> Apple Pay & Google Pay</li>
+                       <li><i class="fas fa-check"></i> Education sector focus</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>Higher savings interest rates</li>
+                               <li>Member-owned (profits shared)</li>
+                               <li>Excellent customer service</li>
+                               <li>Lower international fees</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>Smaller physical presence</li>
+                               <li>Less well-known brand</li>
+                               <li>Primarily education sector focused</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★★</span>
+                       <span class="rating-score">4.6/5</span>
+                   </div>
+                   
+                   <a href="https://www.tmbank.com.au/everyday-banking/transaction-accounts" class="cta-button" target="_blank">Learn More</a>
+               </div>
+
+               <!-- Bendigo Bank -->
+               <div class="bank-card" data-type="student" data-fee="free" data-atm="extensive" data-balance="none">
+                   <div class="bank-header">
+                       <div class="bank-logo">BB</div>
+                       <div>
+                           <div class="bank-name">Bendigo Bank</div>
+                           <div class="bank-type">Regional Bank • Community Focus</div>
+                       </div>
+                   </div>
+                   
+                   <div class="account-info">
+                       <div class="account-name">Student Account</div>
+                       <div class="account-details">Community-focused banking with local support and competitive features</div>
+                   </div>
+                   
+                   <div class="fees-section">
+                       <div class="fee-item">
+                           <span>Monthly Fee</span>
+                           <span class="fee-amount free">$0 for students</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>ATM Withdrawals</span>
+                           <span class="fee-amount free">Free at Bendigo ATMs</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>Minimum Balance</span>
+                           <span class="fee-amount free">None</span>
+                       </div>
+                       <div class="fee-item">
+                           <span>International Transaction</span>
+                           <span class="fee-amount">3% + $2.50</span>
+                       </div>
+                   </div>
+                   
+                   <ul class="features-list">
+                       <li><i class="fas fa-check"></i> Strong regional presence</li>
+                       <li><i class="fas fa-check"></i> Community banking model</li>
+                       <li><i class="fas fa-check"></i> Personal service focus</li>
+                       <li><i class="fas fa-check"></i> Local branch support</li>
+                       <li><i class="fas fa-check"></i> Mobile banking app</li>
+                       <li class="unavailable"><i class="fas fa-times"></i> Limited in major cities</li>
+                   </ul>
+                   
+                   <div class="pros-cons">
+                       <div class="pros">
+                           <h4>Pros</h4>
+                           <ul>
+                               <li>Strong community connection</li>
+                               <li>Personal customer service</li>
+                               <li>Local decision making</li>
+                               <li>Good regional coverage</li>
+                           </ul>
+                       </div>
+                       <div class="cons">
+                           <h4>Cons</h4>
+                           <ul>
+                               <li>Limited presence in major cities</li>
+                               <li>Smaller ATM network</li>
+                               <li>Technology less advanced</li>
+                           </ul>
+                       </div>
+                   </div>
+                   
+                   <div class="rating-section">
+                       <span class="rating-label">Student Rating:</span>
+                       <span class="stars">★★★★☆</span>
+                       <span class="rating-score">4.1/5</span>
+                   </div>
+                   
+                   <a href="https://www.bendigobank.com.au/" class="cta-button" target="_blank">Learn More</a>
+               </div>
+           </div>
+       </section>
+
+       <!-- Detailed Comparison Table -->
+       <section class="comparison-table">
+           <h2 class="section-title">Detailed Feature Comparison</h2>
+           <div class="table-container">
+               <table>
+                   <thead>
+                       <tr>
+                           <th>Feature</th>
+                           <th>CBA</th>
+                           <th>ANZ</th>
+                           <th>ING</th>
+                           <th>Westpac</th>
+                           <th>NAB</th>
+                           <th>Teachers Mutual</th>
+                           <th>Bendigo</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <td><strong>Monthly Fee (Student)</strong></td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-yes">$0</td>
+                       </tr>
+                       <tr>
+                           <td><strong>ATM Network Size</strong></td>
+                           <td class="feature-yes">3,000+</td>
+                           <td class="feature-partial">800+</td>
+                           <td class="feature-yes">All ATMs</td>
+                           <td class="feature-partial">1,000+</td>
+                           <td class="feature-partial">900+</td>
+                           <td class="feature-yes">3,000+</td>
+                           <td class="feature-no">Regional</td>
+                       </tr>
+                       <tr>
+                           <td><strong>International Purchase Fees</strong></td>
+                           <td class="feature-no">3% + $2.50</td>
+                           <td class="feature-no">3% + $2.50</td>
+                           <td class="feature-yes">$0</td>
+                           <td class="feature-no">3% + $2.50</td>
+                           <td class="feature-no">3% + $2.50</td>
+                           <td class="feature-partial">2.5% + $2</td>
+                           <td class="feature-no">3% + $2.50</td>
+                       </tr>
+                       <tr>
+                           <td><strong>Mobile App Rating</strong></td>
+                           <td class="feature-yes">★★★★★</td>
+                           <td class="feature-yes">★★★★★</td>
+                           <td class="feature-yes">★★★★★</td>
+                           <td class="feature-partial">★★★★☆</td>
+                           <td class="feature-partial">★★★★☆</td>
+                           <td class="feature-partial">★★★★☆</td>
+                           <td class="feature-partial">★★★☆☆</td>
+                       </tr>
+                       <tr>
+                           <td><strong>Digital Features</strong></td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-no">Basic</td>
+                       </tr>
+                       <tr>
+                           <td><strong>Student Support</strong></td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-no">Limited</td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-partial">Good</td>
+                       </tr>
+                       <tr>
+                           <td><strong>Physical Branches</strong></td>
+                           <td class="feature-yes">Extensive</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-no">None</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-no">Limited</td>
+                           <td class="feature-partial">Regional</td>
+                       </tr>
+                       <tr>
+                           <td><strong>Savings Interest Rate</strong></td>
+                           <td class="feature-no">Low</td>
+                           <td class="feature-no">Low</td>
+                           <td class="feature-yes">High</td>
+                           <td class="feature-no">Low</td>
+                           <td class="feature-no">Low</td>
+                           <td class="feature-yes">High</td>
+                           <td class="feature-partial">Medium</td>
+                       </tr>
+                       <tr>
+                           <td><strong>Customer Service</strong></td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-partial">Good</td>
+                           <td class="feature-yes">Excellent</td>
+                           <td class="feature-yes">Excellent</td>
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+       </section>
+
+       <!-- Government Protection Info -->
+       <section class="info-box">
+           <h3><i class="fas fa-shield-alt"></i> Your Money is Protected</h3>
+           <p>All banks listed here are covered by the Australian Government's Financial Claims Scheme, which protects deposits up to $250,000 per account holder per bank. This means your money is safe regardless of which bank you choose.</p>
+       </section>
+
+       <!-- Tips Section -->
+       <section class="tips-section">
+           <h2 class="section-title" style="color: #f39c12;">Choosing the Right Bank: Expert Tips</h2>
+           <div class="tips-grid">
+               <div class="tip-card">
+                   <h3>Consider Your Lifestyle</h3>
+                   <p>If you're a digital native who rarely visits branches, ING or ANZ might be perfect. If you prefer face-to-face support, Commonwealth Bank or Westpac offer the most branches.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Look Beyond Just Fees</h3>
+                   <p>While no monthly fees are important, consider ATM access, international fees, savings rates, and customer service. A bank that saves you $3 in ATM fees monthly adds up to $36 annually.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Start With Student Accounts</h3>
+                   <p>Most banks offer special student accounts with better terms. You'll typically need to provide your student ID and may need to re-verify your status annually.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Plan for Your Future</h3>
+                   <p>Consider which bank offers good graduate programs, business banking (if you're entrepreneurial), or home loans (for future property purchases).</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Test the Mobile App</h3>
+                   <p>You'll likely do 90% of your banking on your phone. Download the apps and test them before deciding. Look for features like spending tracking and instant notifications.</p>
+               </div>
+
+               <div class="tip-card">
+                   <h3>Don't Feel Locked In</h3>
+                   <p>Switching banks is easier than ever in Australia. If your needs change or you find a better offer, you can always switch. Many banks will even help with the transition.</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Warning Section -->
+       <section class="warning-box">
+           <h3><i class="fas fa-exclamation-triangle"></i> Important Reminders</h3>
+           <p>Always read the full terms and conditions before opening an account. Student benefits may expire after graduation, and fee structures can change. Keep your student ID handy for verification, and remember to update your details if you change address or phone number.</p>
+       </section>
+
+       <!-- CTA Section -->
+       <section class="content-section" style="text-align: center;">
+           <h2 class="section-title">Ready to Open Your Account?</h2>
+           <p style="color: #ddd; font-size: 1.2rem; margin-bottom: 2rem;">Once you've chosen your bank, gather your documents and apply online or visit a branch to get started.</p>
+           <a href="banking-guide.html" class="cta-button" style="display: inline-block; width: auto; margin-right: 1rem;">Banking Guide</a>
+           <a href="financial-management.html" class="cta-button" style="display: inline-block; width: auto;">Financial Management Hub</a>
+       </section>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       function applyFilters() {
+           const accountType = document.getElementById('accountType').value;
+           const monthlyFee = document.getElementById('monthlyFee').value;
+           const atmAccess = document.getElementById('atmAccess').value;
+           const minBalance = document.getElementById('minBalance').value;
+           
+           const bankCards = document.querySelectorAll('.bank-card');
+           
+           bankCards.forEach(card => {
+               let shouldShow = true;
+               
+               // Account type filter
+               if (accountType !== 'all') {
+                   const cardType = card.getAttribute('data-type');
+                   if (cardType !== accountType) {
+                       shouldShow = false;
+                   }
+               }
+               
+               // Monthly fee filter
+               if (monthlyFee !== 'all') {
+                   const cardFee = card.getAttribute('data-fee');
+                   if (monthlyFee === 'free' && cardFee !== 'free') {
+                       shouldShow = false;
+                   }
+                   if (monthlyFee === 'low' && cardFee !== 'free' && cardFee !== 'low') {
+                       shouldShow = false;
+                   }
+               }
+               
+               // ATM access filter
+               if (atmAccess !== 'all') {
+                   const cardAtm = card.getAttribute('data-atm');
+                   if (atmAccess === 'extensive' && cardAtm !== 'extensive') {
+                       shouldShow = false;
+                   }
+                   if (atmAccess === 'fee-free' && cardAtm !== 'fee-free') {
+                       shouldShow = false;
+                   }
+               }
+               
+               // Minimum balance filter
+               if (minBalance !== 'all') {
+                   const cardBalance = card.getAttribute('data-balance');
+                   if (minBalance === 'none' && cardBalance !== 'none') {
+                       shouldShow = false;
+                   }
+                   if (minBalance === 'low' && cardBalance !== 'none' && cardBalance !== 'low') {
+                       shouldShow = false;
+                   }
+               }
+               
+               // Show or hide the card
+               if (shouldShow) {
+                   card.style.display = 'block';
+                   card.classList.remove('hidden');
+               } else {
+                   card.style.display = 'none';
+                   card.classList.add('hidden');
+               }
+           });
+           
+           // Show message if no banks match the filters
+           const visibleCards = document.querySelectorAll('.bank-card:not(.hidden)');
+           const bankGrid = document.getElementById('bankGrid');
+           
+           // Remove any existing no-results message
+           const existingMessage = document.querySelector('.no-results-message');
+           if (existingMessage) {
+               existingMessage.remove();
+           }
+           
+           if (visibleCards.length === 0) {
+               const noResultsMessage = document.createElement('div');
+               noResultsMessage.className = 'no-results-message';
+               noResultsMessage.style.cssText = `
+                   grid-column: 1 / -1;
+                   text-align: center;
+                   padding: 3rem;
+                   background-color: #333;
+                   border-radius: 10px;
+                   color: #ddd;
+               `;
+               noResultsMessage.innerHTML = `
+                   <h3 style="color: #f39c12; margin-bottom: 1rem;">No banks match your criteria</h3>
+                   <p>Try adjusting your filters to see more options. All major Australian banks offer competitive student accounts.</p>
+               `;
+               bankGrid.appendChild(noResultsMessage);
+           }
+       }
+
+       document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           // Update UI based on login status
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           // Handle logout
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+
+           // Add smooth scrolling for anchor links
+           document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+               anchor.addEventListener('click', function (e) {
+                   e.preventDefault();
+                   const target = document.querySelector(this.getAttribute('href'));
+                   if (target) {
+                       target.scrollIntoView({
+                           behavior: 'smooth'
+                       });
+                   }
+               });
+           });
+       });
+   </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

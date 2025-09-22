@@ -1,0 +1,561 @@
+<!-- card-collection.html - New page for viewing cards -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Collection - Vivify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base styles similar to your existing pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header styles (copy from your existing) */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #f39c12;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 2rem;
+        }
+
+        /* Page header */
+        .page-header {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        /* Collection stats */
+        .collection-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f39c12;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Filters */
+        .collection-filters {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .filter-select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Card styles */
+        .card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 2px solid;
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--rarity-color), transparent);
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Rarity-based card styling */
+        .card.common {
+            --rarity-color: #8e8e93;
+            border-color: rgba(142, 142, 147, 0.3);
+        }
+
+        .card.uncommon {
+            --rarity-color: #34c759;
+            border-color: rgba(52, 199, 89, 0.4);
+        }
+
+        .card.rare {
+            --rarity-color: #007aff;
+            border-color: rgba(0, 122, 255, 0.4);
+        }
+
+        .card.epic {
+            --rarity-color: #af52de;
+            border-color: rgba(175, 82, 222, 0.4);
+        }
+
+        .card.legendary {
+            --rarity-color: #ff9500;
+            border-color: rgba(255, 149, 0, 0.4);
+            background: linear-gradient(145deg, rgba(255, 149, 0, 0.1), rgba(255, 149, 0, 0.05));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .card-cost {
+            background: #f39c12;
+            color: #000;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .card-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--rarity-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .card-power {
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            color: #ff3b30;
+            margin: 1rem 0;
+            text-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
+        }
+
+        .card-description {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-effect {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-rarity {
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--rarity-color);
+        }
+
+        .card-stats {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .verified-badge {
+            background: #34c759;
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #f39c12;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 100px 1rem 2rem;
+            }
+            
+            .collection-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .collection-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Vivify</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="community.html">Community</a></li>
+                <li><a href="habits-tracker.html">Daily Habits</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
+                <li><a href="card-collection.html" class="active">Cards</a></li>
+                <li><a href="battle-arena.html">Battle Arena</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Card Collection</h1>
+            <p>View and manage your cards earned through habit completion and challenges</p>
+            
+            <!-- Collection Stats -->
+            <div class="collection-stats" id="collectionStats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCards">0</span>
+                    <span class="stat-label">Total Cards</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="battleLevel">1</span>
+                    <span class="stat-label">Battle Level</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="battleTrophies">0</span>
+                    <span class="stat-label">Trophies</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="collection-filters">
+            <div class="filter-group">
+                <span class="filter-label">Rarity:</span>
+                <select class="filter-select" id="rarityFilter">
+                    <option value="">All Rarities</option>
+                    <option value="common">Common</option>
+                    <option value="uncommon">Uncommon</option>
+                    <option value="rare">Rare</option>
+                    <option value="epic">Epic</option>
+                    <option value="legendary">Legendary</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Type:</span>
+                <select class="filter-select" id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="Endurance">Endurance</option>
+                    <option value="Focus">Focus</option>
+                    <option value="Calm">Calm</option>
+                    <option value="Discipline">Discipline</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Sort by:</span>
+                <select class="filter-select" id="sortFilter">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="power">Highest Power</option>
+                    <option value="rarity">Rarity</option>
+                    <option value="type">Type</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards Display -->
+        <div id="cardsContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading your card collection...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Add this to your card-collection.html to properly load cards
+        class CardCollectionManager {
+            constructor() {
+                this.username = localStorage.getItem('username');
+                this.baseURL = 'https://vivify-backend.onrender.com/api';
+            }
+
+            async loadCards() {
+                try {
+                    console.log('Loading cards for user:', this.username);
+                    
+                    // Try loading from backend first
+                    const response = await fetch(`${this.baseURL}/user/${this.username}`);
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        const cards = userData.cardBattleData?.cards || [];
+                        
+                        console.log('Cards loaded from backend:', cards);
+                        
+                        // Store in localStorage for offline access
+                        localStorage.setItem('userCards', JSON.stringify(cards));
+                        
+                        return cards;
+                    } else {
+                        throw new Error('Backend not available');
+                    }
+                    
+                } catch (error) {
+                    console.error('Failed to load from backend:', error);
+                    
+                    // Fallback to localStorage
+                    const localCards = JSON.parse(localStorage.getItem('userCards') || '[]');
+                    console.log('Using local cards:', localCards);
+                    
+                    return localCards;
+                }
+            }
+
+            displayCards(cards) {
+                const container = document.getElementById('cardsContainer');
+                
+                if (!container) {
+                    console.error('Cards container not found');
+                    return;
+                }
+
+                if (!cards || cards.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.7);">
+                            <h3>No Cards Yet</h3>
+                            <p>Complete habits and challenges to unlock your first cards!</p>
+                            <a href="habits-tracker.html" style="color: #f39c12;">Start with Daily Habits →</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = cards.map(card => `
+                    <div class="card-item" data-rarity="${card.rarity}">
+                        <div class="card-content">
+                            <h3>${card.name}</h3>
+                            <div class="card-rarity">${card.rarity}</div>
+                            <div class="card-stats">
+                                <span>ATK: ${card.attack}</span>
+                                <span>DEF: ${card.defense}</span>
+                            </div>
+                            <div class="card-special">${card.special}</div>
+                            <div class="card-source">Source: ${card.source || 'Unknown'}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize card collection on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const cardManager = new CardCollectionManager();
+            const cards = await cardManager.loadCards();
+            cardManager.displayCards(cards);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Habits Tracker - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with index.html */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .left-nav a.active::after {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Main Container */
+        .habits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 2rem;
+        }
+
+        /* Header Section */
+        .habits-header {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habits-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .streak-display {
+            text-align: center;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 2rem;
+            border-radius: 20px;
+            min-width: 150px;
+        }
+
+        .streak-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .streak-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: #f39c12;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Section Styles */
+        .habits-section, .weekly-overview, .achievements-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-summary {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Habit Cards */
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .habit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .habit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .habit-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .habit-card.completed {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .habit-card.completed::before {
+            background: #27ae60;
+            transform: scaleX(1);
+        }
+
+        .habit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .habit-info h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .habit-category {
+            color: #f39c12;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .habit-streak {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #f39c12;
+            font-weight: 600;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 0.5rem;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .habit-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .habit-progress {
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .habit-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: #fff;
+            flex: 1;
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-complete:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #f39c12;
+            border: 2px solid rgba(243, 156, 18, 0.2);
+            padding: 0.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: rgba(243, 156, 18, 0.4);
+        }
+
+        /* Weekly Overview */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .day-column {
+            text-align: center;
+        }
+
+        .day-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-habits {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .habit-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .habit-dot.completed {
+            background: #27ae60;
+            box-shadow: 0 0 15px rgba(39, 174, 96, 0.5);
+        }
+
+        .habit-dot.partial {
+            background: #f39c12;
+        }
+
+        /* Achievements */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .achievement-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-badge.earned {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.05);
+        }
+
+        .achievement-badge:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .achievement-badge.earned .achievement-icon {
+            color: #f39c12;
+        }
+
+        .achievement-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .achievement-badge.earned .achievement-name {
+            color: #fff;
+        }
+
+        /* Animations */
+        @keyframes completionPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .completion-animation {
+            animation: completionPulse 0.6s ease-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .habits-container {
+                padding: 100px 1rem 2rem;
+            }
+
+            .habits-header {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .header-content h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .week-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 0.75rem;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .habit-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            font-weight: 600;
+        }
+
+        .notification.achievement {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+
+        .custom-habit-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #f39c12;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.05);
+            box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-actions .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .form-actions .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-actions .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-actions .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .form-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.3);
+        }
+
+        /* Add Habit Card */
+        .add-habit-card {
+            border: 2px dashed rgba(243, 156, 18, 0.3);
+            background: rgba(243, 156, 18, 0.02);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .add-habit-card:hover {
+            border-color: rgba(243, 156, 18, 0.6);
+            background: rgba(243, 156, 18, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .add-habit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .add-habit-content {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .add-habit-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #f39c12;
+            transition: all 0.3s ease;
+        }
+
+        .add-habit-card:hover .add-habit-icon {
+            transform: scale(1.1);
+            background: rgba(243, 156, 18, 0.2);
+        }
+
+        .add-habit-content h3 {
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .add-habit-content p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Custom Badge */
+        .custom-badge {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+
+        /* Delete Button */
+        .btn-delete {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 2px solid rgba(231, 76, 60, 0.2);
+            padding: 0.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231, 76, 60, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+                max-height: 85vh;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+            
+            .add-habit-card {
+                min-height: 200px;
+            }
+            
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+<script src="js/vivify-unified-tracker.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="habits-tracker.html" class="active">Daily Habits</a></li>
+                    <li><a href="challenges.html">Challenges</a></li>
+                    <li><a href="community.html">Community</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link" class="hidden">Login</a></li>
+                    <li><a href="signup.html" id="signup-link" class="cta-nav hidden">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link">Profile</a></li>
+                    <li><a href="#" id="logout-link">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="habits-container">
+        <!-- Header Section -->
+        <div class="habits-header fade-in">
+            <div class="header-content">
+                <h1>Daily Performance Habits</h1>
+                <p>Build the daily routines that separate high performers from everyone else</p>
+            </div>
+            <div class="streak-display">
+                <div class="streak-number" id="currentStreak">0</div>
+                <div class="streak-label">Day Streak</div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" id="completedToday">0</div>
+                <div class="stat-label">Completed Today</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-target"></i>
+                </div>
+                <div class="stat-value" id="totalHabits">0</div>
+                <div class="stat-label">Daily Habits</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-value" id="longestStreak">0</div>
+                <div class="stat-label">Best Streak</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-value" id="completionRate">0%</div>
+                <div class="stat-label">This Week</div>
+            </div>
+        </div>
+
+        <!-- Today's Habits Section -->
+        <div class="habits-section fade-in">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-day"></i>
+                    Today's Performance Habits
+                </h2>
+                <div class="progress-summary" id="dailyProgress">
+                    0 of 0 completed
+                </div>
+            </div>
+            <div class="habits-grid" id="habitsGrid">
+                <!-- Habit cards will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Weekly Overview -->
+        <div class="weekly-overview fade-in">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Weekly Performance Overview
+                </h2>
+            </div>
+            <div class="week-grid" id="weekGrid">
+                <!-- Week view will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="achievements-section fade-in">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-trophy"></i>
+                    Performance Achievements
+                </h2>
+            </div>
+            <div class="achievements-grid" id="achievementsGrid">
+                <!-- Achievements will be loaded here -->
+            </div>
+        </div>
+    </main>
+    <script src="js/unified-leaderboard.js"></script>
+    <script>
+        function updateHabitsGrid(habits) {
+            const grid = document.getElementById('habitsGrid');
+            
+            let customHabitButton = `
+                <div class="habit-card add-habit-card" onclick="showCustomHabitModal()">
+                    <div class="add-habit-content">
+                        <div class="add-habit-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <h3>Create Custom Habit</h3>
+                        <p>Add your own personal performance habit</p>
+                    </div>
+                </div>
+            `;
+            
+            grid.innerHTML = habits.map(habit => {
+                const progress = habit.completed ? 100 : 0;
+                const deleteBtn = habit.isCustom ? 
+                    `<button class="btn btn-delete" onclick="deleteCustomHabit('${habit.id}')" title="Delete custom habit">
+                        <i class="fas fa-trash"></i>
+                    </button>` : 
+                    `<button class="btn btn-secondary" onclick="editHabit('${habit.id}')" title="Edit habit">
+                        <i class="fas fa-edit"></i>
+                    </button>`;
+                    
+                return `
+                    <div class="habit-card ${habit.completed ? 'completed' : ''} fade-in">
+                        <div class="habit-header">
+                            <div class="habit-info">
+                                <h3>${habit.name} ${habit.isCustom ? '<span class="custom-badge">Custom</span>' : ''}</h3>
+                                <div class="habit-category">${habit.category}</div>
+                            </div>
+                            <div class="habit-streak">
+                                ${habit.streak || 0} day streak
+                            </div>
+                        </div>
+                        <div class="habit-description">${habit.description}</div>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span>${habit.completed ? 'Completed' : 'Not started'}</span>
+                                <span>+${habit.points} points</span>
+                            </div>
+                        </div>
+                        <div class="habit-actions">
+                            <button class="btn btn-complete" 
+                                    onclick="completeHabit('${habit.id}')"
+                                    ${habit.completed ? 'disabled' : ''}>
+                                ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
+                            </button>
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                `;
+            }).join('') + customHabitButton;
+        }
+
+        function updateWeeklyOverview(dailyCompletions, habits) {
+            const grid = document.getElementById('weekGrid');
+            const today = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            let weekHtml = '';
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateString = date.toDateString();
+                const dayCompletions = dailyCompletions[dateString] || [];
+                
+                weekHtml += `
+                    <div class="day-column">
+                        <div class="day-label">${days[date.getDay()]}</div>
+                        <div class="day-habits">
+                            ${habits.map(habit => {
+                                const completed = dayCompletions.includes(habit.id);
+                                return `<div class="habit-dot ${completed ? 'completed' : ''}" title="${habit.name}"></div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            grid.innerHTML = weekHtml;
+        }
+
+        function updateAchievements() {
+            const achievements = [
+                { id: 'first_habit', name: 'Getting Started', icon: 'fas fa-play', description: 'Complete your first habit' },
+                { id: 'perfect_day', name: 'Perfect Day', icon: 'fas fa-star', description: 'Complete all habits in one day' },
+                { id: 'week_warrior', name: 'Week Warrior', icon: 'fas fa-calendar-check', description: '7 day streak' },
+                { id: 'consistency_king', name: 'Consistency Champion', icon: 'fas fa-crown', description: '30 day streak' },
+                { id: 'habit_master', name: 'Habit Master', icon: 'fas fa-graduation-cap', description: '100 total completions' },
+                { id: 'elite_performer', name: 'Elite Performer', icon: 'fas fa-trophy', description: '90% completion for a month' },
+                { id: 'custom_creator', name: 'Personal Touch', icon: 'fas fa-edit', description: 'Create your first custom habit' }
+            ];
+            
+            const grid = document.getElementById('achievementsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = achievements.map(achievement => {
+                const earned = vivifyTracker.data.achievements[achievement.id] || false;
+                return `
+                    <div class="achievement-badge ${earned ? 'earned' : ''}" title="${achievement.description}">
+                        <div class="achievement-icon">
+                            <i class="${achievement.icon}"></i>
+                        </div>
+                        <div class="achievement-name">${achievement.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Habit interaction functions
+        async function completeHabit(habitId) {
+            const success = await vivifyTracker.completeHabit(habitId);
+            if (success) {
+                displayHabitsPageUnified(); // Use unified display
+                
+                // Update leaderboard
+                if (window.VivifyLeaderboard) {
+                    window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+                }
+            }
+        }
+
+        function showCustomHabitModal() {
+            const modal = document.createElement('div');
+            modal.className = 'custom-habit-modal';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Create Custom Habit</h2>
+                        <button onclick="this.closest('.custom-habit-modal').remove()" class="close-btn">&times;</button>
+                    </div>
+                    <form id="customHabitForm" onsubmit="createCustomHabit(event)">
+                        <div class="form-group">
+                            <label for="habitName">Habit Name</label>
+                            <input type="text" id="habitName" required maxlength="50" 
+                                placeholder="e.g., Practice Piano">
+                        </div>
+                        <div class="form-group">
+                            <label for="habitDescription">Description</label>
+                            <textarea id="habitDescription" required maxlength="200" 
+                                    placeholder="What does success look like?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="habitCategory">Category</label>
+                            <select id="habitCategory" required>
+                                <option value="Physical Performance">Physical Performance</option>
+                                <option value="Mental Focus">Mental Focus</option>
+                                <option value="Performance Nutrition">Performance Nutrition</option>
+                                <option value="Excellence Habits">Excellence Habits</option>
+                                <option value="Creative Skills">Creative Skills</option>
+                                <option value="Personal Growth">Personal Growth</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="habitPoints">Point Value</label>
+                            <select id="habitPoints" required>
+                                <option value="10">10 points - Simple daily task</option>
+                                <option value="15">15 points - Regular habit</option>
+                                <option value="20" selected>20 points - Standard habit</option>
+                                <option value="25">25 points - Challenging habit</option>
+                                <option value="30">30 points - Difficult habit</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" onclick="this.closest('.custom-habit-modal').remove()" 
+                                    class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create Habit</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function createCustomHabit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('habitName').value.trim();
+            const description = document.getElementById('habitDescription').value.trim();
+            const category = document.getElementById('habitCategory').value;
+            const points = parseInt(document.getElementById('habitPoints').value);
+            
+            if (!name || !description) {
+                vivifyTracker.notifyCompletion('Please fill in all fields', 'error');
+                return;
+            }
+
+            const customHabit = vivifyTracker.createCustomHabit({
+                name: name,
+                description: description,
+                category: category,
+                points: points
+            });
+
+            // Check for custom habit achievement
+            if (!vivifyTracker.data.achievements.custom_creator) {
+                vivifyTracker.unlockAchievement('custom_creator');
+            }
+
+            // Close modal and refresh display
+            document.querySelector('.custom-habit-modal').remove();
+            displayHabitsPageUnified(); // Add this line
+            
+            vivifyTracker.notifyCompletion(`Custom habit "${name}" created!`, 'success');
+        }
+
+        function deleteCustomHabit(habitId) {
+            if (!habitId.startsWith('custom_')) {
+                vivifyTracker.notifyCompletion('Cannot delete default habits', 'error');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this custom habit?')) return;
+
+            const success = vivifyTracker.deleteCustomHabit(habitId);
+            if (success) {
+                displayHabitsPageUnified(); // Add this line
+                vivifyTracker.notifyCompletion('Custom habit deleted', 'info');
+            }
+        }
+
+        function editHabit(habitId) {
+            vivifyTracker.notifyCompletion('Habit editing feature coming soon! You can customize your habits in the full version.', 'info');
+        }
+
+        function displayHabitsPageUnified() {
+            const data = vivifyTracker.getHabitsPageData();
+            
+            // Update stats
+            updateHabitsStats(data.stats);
+            
+            // Update habits grid
+            updateHabitsGrid(data.habits);
+            
+            // Update weekly overview
+            updateWeeklyOverview(data.dailyCompletions, data.habits);
+            
+            // Update achievements
+            updateAchievements();
+        }
+
+        function updateHabitsStats(stats) {
+            document.getElementById('currentStreak').textContent = stats.currentStreak;
+            document.getElementById('completedToday').textContent = stats.completedToday;
+            document.getElementById('totalHabits').textContent = stats.totalHabits;
+            document.getElementById('longestStreak').textContent = stats.longestStreak;
+            document.getElementById('completionRate').textContent = stats.weeklyRate + '%';
+            document.getElementById('dailyProgress').textContent = `${stats.completedToday} of ${stats.totalHabits} completed`;
+        }
+
+        function setupLogoutHandler() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('User authenticated:', username);
+            
+            // Initialize UNIFIED tracker ONLY
+            vivifyTracker = new VivifyUnifiedTracker();
+            await vivifyTracker.initialize();
+            
+            // Initialize leaderboard with unified data
+            if (window.VivifyLeaderboard) {
+                window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+                console.log('VivifyLeaderboard initialized successfully');
+            }
+            
+            // Display habits using UNIFIED data
+            displayHabitsPageUnified();
+            
+            // Setup logout
+            setupLogoutHandler();
+        });
+
+        function joinChallenge(challengeId) {
+            return vivifyTracker.joinChallenge(challengeId);
+        }
+
+        function completeDay(challengeId) {
+            const challenge = challenges[challengeId];
+            return vivifyTracker.completeChallengeDay(challengeId, challenge);
+        }
+    </script>
+    <script src="js/flexible-mobile-nav.js"></script> 
+</body>
+</html>

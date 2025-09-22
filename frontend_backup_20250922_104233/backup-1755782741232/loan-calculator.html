@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Loan Calculator - Vivify</title>
+   
+    
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+   <style>
+        /* Footer styles to ensure it stays at bottom */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        footer .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+
+        footer .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .footer-links a:hover {
+            color: #f39c12;
+        }
+        
+       .calculator-hero {
+           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                       url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80');
+           background-size: cover;
+           background-position: center;
+           color: white;
+           padding: 6rem 2rem;
+           text-align: center;
+       }
+
+       .calculator-hero h1 {
+           font-size: 3.5rem;
+           margin-bottom: 1rem;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+       }
+
+       .calculator-hero p {
+           font-size: 1.25rem;
+           max-width: 800px;
+           margin: 0 auto 2rem;
+       }
+
+       .calculator-container {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 3rem 2rem;
+       }
+
+       .loan-types {
+           display: flex;
+           justify-content: center;
+           gap: 1rem;
+           margin-bottom: 3rem;
+           flex-wrap: wrap;
+       }
+
+       .loan-type-btn {
+           background-color: #333;
+           color: white;
+           border: 2px solid #444;
+           padding: 1rem 2rem;
+           border-radius: 10px;
+           cursor: pointer;
+           transition: all 0.3s;
+           font-size: 1rem;
+           font-weight: 600;
+       }
+
+       .loan-type-btn.active {
+           background-color: #f39c12;
+           color: black;
+           border-color: #f39c12;
+       }
+
+       .loan-type-btn:hover {
+           border-color: #f39c12;
+       }
+
+       .calculator-section {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 2rem;
+           margin-bottom: 3rem;
+       }
+
+       .input-panel {
+           background-color: #222;
+           border-radius: 10px;
+           padding: 2rem;
+       }
+
+       .results-panel {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+       }
+
+       .section-title {
+           color: #f39c12;
+           font-size: 2rem;
+           margin-bottom: 1.5rem;
+           text-align: center;
+       }
+
+       .form-group {
+           margin-bottom: 1.5rem;
+       }
+
+       .form-group label {
+           display: block;
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .form-group input,
+       .form-group select {
+           width: 100%;
+           padding: 0.8rem;
+           border: 2px solid #444;
+           border-radius: 5px;
+           background-color: #333;
+           color: white;
+           font-size: 1rem;
+       }
+
+       .form-group input:focus,
+       .form-group select:focus {
+           outline: none;
+           border-color: #f39c12;
+       }
+
+       .form-row {
+           display: flex;
+           gap: 1rem;
+       }
+
+       .form-row .form-group {
+           flex: 1;
+       }
+
+       .slider-group {
+           margin-bottom: 1.5rem;
+       }
+
+       .slider-group label {
+           display: block;
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+           font-weight: 600;
+       }
+
+       .slider {
+           width: 100%;
+           height: 8px;
+           border-radius: 5px;
+           background: #444;
+           outline: none;
+           appearance: none;
+       }
+
+       .slider::-webkit-slider-thumb {
+           appearance: none;
+           width: 20px;
+           height: 20px;
+           border-radius: 50%;
+           background: #f39c12;
+           cursor: pointer;
+       }
+
+       .slider::-moz-range-thumb {
+           width: 20px;
+           height: 20px;
+           border-radius: 50%;
+           background: #f39c12;
+           cursor: pointer;
+           border: none;
+       }
+
+       .slider-value {
+           color: white;
+           font-weight: bold;
+           margin-top: 0.5rem;
+           text-align: center;
+       }
+
+       .calculate-btn {
+           width: 100%;
+           padding: 1rem;
+           background-color: #f39c12;
+           color: black;
+           border: none;
+           border-radius: 5px;
+           font-size: 1.1rem;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       .calculate-btn:hover {
+           background-color: #e67e22;
+       }
+
+       .result-card {
+           background-color: #34495e;
+           padding: 1.5rem;
+           border-radius: 10px;
+           margin-bottom: 1rem;
+           text-align: center;
+       }
+
+       .result-main {
+           font-size: 2.5rem;
+           font-weight: bold;
+           color: #f39c12;
+           margin-bottom: 0.5rem;
+       }
+
+       .result-label {
+           color: white;
+           font-size: 1.1rem;
+           margin-bottom: 1rem;
+       }
+
+       .result-detail {
+           color: #ecf0f1;
+           font-size: 0.9rem;
+           margin-bottom: 0.5rem;
+       }
+
+       .payment-breakdown {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .breakdown-item {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 1rem;
+           margin-bottom: 1rem;
+           background-color: #222;
+           border-radius: 5px;
+           color: white;
+       }
+
+       .breakdown-item.total {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+           font-size: 1.1rem;
+       }
+
+       .breakdown-item.interest {
+           background-color: #e74c3c;
+       }
+
+       .breakdown-item.principal {
+           background-color: #27ae60;
+       }
+
+       .comparison-section {
+           background-color: #2c3e50;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .comparison-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .comparison-card {
+           background-color: #34495e;
+           padding: 1.5rem;
+           border-radius: 10px;
+           text-align: center;
+       }
+
+       .comparison-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .comparison-amount {
+           font-size: 1.5rem;
+           font-weight: bold;
+           color: white;
+           margin-bottom: 0.5rem;
+       }
+
+       .comparison-details {
+           color: #ecf0f1;
+           font-size: 0.9rem;
+       }
+
+       .amortization-table {
+           background-color: #111;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .table-container {
+           overflow-x: auto;
+           margin-top: 1rem;
+       }
+
+       .payment-table {
+           width: 100%;
+           border-collapse: collapse;
+           font-size: 0.9rem;
+       }
+
+       .payment-table th,
+       .payment-table td {
+           border: 1px solid #333;
+           padding: 0.8rem;
+           text-align: center;
+       }
+
+       .payment-table th {
+           background-color: #f39c12;
+           color: black;
+           font-weight: bold;
+           position: sticky;
+           top: 0;
+       }
+
+       .payment-table td {
+           background-color: #222;
+           color: white;
+       }
+
+       .payment-table tr:nth-child(even) td {
+           background-color: #333;
+       }
+
+       .australian-loans {
+           background-color: #27ae60;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .loan-info-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .loan-info-card {
+           background-color: rgba(255, 255, 255, 0.1);
+           padding: 1.5rem;
+           border-radius: 10px;
+       }
+
+       .loan-info-card h4 {
+           margin-bottom: 1rem;
+           color: #f39c12;
+       }
+
+       .loan-info-card p {
+           margin-bottom: 0.5rem;
+           font-size: 0.9rem;
+           line-height: 1.4;
+       }
+
+       .tips-section {
+           background-color: #34495e;
+           border-radius: 10px;
+           padding: 2rem;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .tips-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 1.5rem;
+           margin: 2rem 0;
+       }
+
+       .tip-card {
+           background-color: #2c3e50;
+           padding: 1.5rem;
+           border-radius: 10px;
+           border-left: 4px solid #f39c12;
+       }
+
+       .tip-card h4 {
+           color: #f39c12;
+           margin-bottom: 1rem;
+       }
+
+       .tip-card p {
+           color: #ecf0f1;
+           line-height: 1.6;
+       }
+
+       .warning-box {
+           background-color: #e67e22;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           text-align: center;
+           grid-column: span 2;
+       }
+
+       .hecs-info {
+           background-color: #3498db;
+           color: white;
+           padding: 2rem;
+           border-radius: 10px;
+           margin: 2rem 0;
+           grid-column: span 2;
+       }
+
+       .hecs-rates-table {
+           width: 100%;
+           border-collapse: collapse;
+           margin: 1rem 0;
+           font-size: 0.9rem;
+       }
+
+       .hecs-rates-table th,
+       .hecs-rates-table td {
+           border: 1px solid rgba(255, 255, 255, 0.3);
+           padding: 0.8rem;
+           text-align: center;
+       }
+
+       .hecs-rates-table th {
+           background-color: rgba(255, 255, 255, 0.2);
+           font-weight: bold;
+       }
+
+       @media (max-width: 768px) {
+           .calculator-hero h1 {
+               font-size: 2.5rem;
+           }
+           
+           .calculator-section {
+               grid-template-columns: 1fr;
+           }
+           
+           .payment-breakdown,
+           .comparison-section,
+           .amortization-table,
+           .australian-loans,
+           .tips-section,
+           .warning-box,
+           .hecs-info {
+               grid-column: span 1;
+           }
+           
+           .form-row {
+               flex-direction: column;
+           }
+           
+           .loan-types {
+               flex-direction: column;
+               align-items: center;
+           }
+           
+           .loan-type-btn {
+               width: 100%;
+               max-width: 300px;
+           }
+       }
+   @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+   <div class="wrapper">
+       <header>
+           <nav>
+               <div class="left-nav">
+                   <div class="logo">
+                       <a href="index.html" aria-label="Home Page"><h1>Vivify</h1></a>
+                   </div>
+                   <ul>
+                       <li><a href="about.html" aria-label="About Us Page">About</a></li>
+                       <li class="dropdown">
+                           <a href="#" class="dropbtn" aria-label="Categories Dropdown">Training</a>
+                           <div class="dropdown-content">
+                               <a href="fitness.html" aria-label="Fitness Page">Fitness</a>
+                               <a href="nutrition.html" aria-label="Nutrition Page">Nutrition</a>
+                               <a href="focus-resilience.html" aria-label="Focus & Resilience Page">Focus & Resilience</a>
+                               <a href="life-mastery.html" aria-label="Life Lessons Page">Life Mastery</a>
+                           </div>
+                       </li>
+                   </ul>
+               </div>
+               <div class="right-nav">
+                   <ul>
+                       <li><a href="dashboard.html" id="dashboardLink" aria-label="Dashboard">Performance Hub</a></li>
+                       <li><a href="profile.html" id="profileLink" aria-label="Profile Page">Profile</a></li>
+                       <li><a href="#" id="logoutLink" aria-label="Logout">Logout</a></li>
+                       <li><a href="login.html" id="loginLink" style="display: none;" aria-label="Login Page">Login</a></li>
+                       <li><a href="signup.html" id="signupLink" style="display: none;" aria-label="Sign Up Page">Sign Up</a></li>
+                   </ul>
+               </div>
+           </nav>
+       </header>
+
+       <!-- Hero Section -->
+       <section class="calculator-hero">
+           <h1>Loan Payment Calculator</h1>
+           <p>Calculate loan payments and understand the true cost of borrowing. Whether it's a car loan, personal loan, or understanding your future mortgage, make informed financial decisions with accurate calculations.</p>
+       </section>
+
+       <!-- Calculator Container -->
+       <div class="calculator-container">
+           <!-- Loan Type Selection -->
+           <div class="loan-types">
+               <button class="loan-type-btn active" onclick="setLoanType('personal')">Personal Loan</button>
+               <button class="loan-type-btn" onclick="setLoanType('car')">Car Loan</button>
+               <button class="loan-type-btn" onclick="setLoanType('home')">Home Loan</button>
+               <button class="loan-type-btn" onclick="setLoanType('student')">Student Loan</button>
+           </div>
+
+           <div class="calculator-section">
+               <!-- Input Panel -->
+               <div class="input-panel">
+                   <h2 class="section-title" id="calculatorTitle">Personal Loan Calculator</h2>
+                   
+                   <form id="loanForm">
+                       <div class="form-group">
+                           <label for="loanAmount">Loan Amount</label>
+                           <input type="number" id="loanAmount" placeholder="$25,000" min="1000" max="1000000" step="1000" value="25000">
+                       </div>
+                       
+                       <div class="slider-group">
+                           <label for="interestRate">Interest Rate (% per annum)</label>
+                           <input type="range" id="interestRateSlider" class="slider" min="3" max="25" value="8" step="0.1" oninput="updateSliderValue('interestRate', this.value)">
+                           <div class="slider-value" id="interestRateValue">8.0%</div>
+                       </div>
+                       
+                       <div class="slider-group">
+                           <label for="loanTerm">Loan Term</label>
+                           <input type="range" id="loanTermSlider" class="slider" min="1" max="30" value="5" step="1" oninput="updateSliderValue('loanTerm', this.value)">
+                           <div class="slider-value" id="loanTermValue">5 years</div>
+                       </div>
+                       
+                       <div class="form-row">
+                           <div class="form-group">
+                               <label for="paymentFrequency">Payment Frequency</label>
+                               <select id="paymentFrequency">
+                                   <option value="weekly">Weekly</option>
+                                   <option value="fortnightly">Fortnightly</option>
+                                   <option value="monthly" selected>Monthly</option>
+                               </select>
+                           </div>
+                           
+                           <div class="form-group">
+                               <label for="startDate">Loan Start Date</label>
+                               <input type="date" id="startDate">
+                           </div>
+                       </div>
+                       
+                       <button type="button" class="calculate-btn" onclick="calculateLoan()">Calculate Payments</button>
+                   </form>
+               </div>
+
+               <!-- Results Panel -->
+               <div class="results-panel">
+                   <h2 class="section-title">Payment Results</h2>
+                   
+                   <div class="result-card">
+                       <div class="result-main" id="paymentAmount">$0</div>
+                       <div class="result-label" id="paymentFrequencyLabel">Monthly Payment</div>
+                       <div class="result-detail" id="paymentDetails">Principal + Interest</div>
+                   </div>
+                   
+                   <div class="result-card">
+                       <div class="result-main" id="totalInterest">$0</div>
+                       <div class="result-label">Total Interest Paid</div>
+                       <div class="result-detail" id="interestPercentage">0% of loan amount</div>
+                   </div>
+                   
+                   <div class="result-card">
+                       <div class="result-main" id="totalCost">$0</div>
+                       <div class="result-label">Total Cost of Loan</div>
+                       <div class="result-detail" id="totalPayments">0 payments</div>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Payment Breakdown -->
+           <div class="payment-breakdown">
+               <h2 class="section-title">Payment Breakdown</h2>
+               
+               <div class="breakdown-item total">
+                   <span>Total Amount Repaid</span>
+                   <span id="breakdownTotal">$0</span>
+               </div>
+               
+               <div class="breakdown-item principal">
+                   <span>Principal (Original Loan)</span>
+                   <span id="breakdownPrincipal">$0</span>
+               </div>
+               
+               <div class="breakdown-item interest">
+                   <span>Interest Charges</span>
+                   <span id="breakdownInterest">$0</span>
+               </div>
+               
+               <div style="margin-top: 2rem; text-align: center;">
+                   <p style="color: #ddd;">Interest represents <span id="interestPercentOfTotal" style="color: #f39c12; font-weight: bold;">0%</span> of your total payments</p>
+               </div>
+           </div>
+
+           <!-- Payment Comparison -->
+           <div class="comparison-section">
+               <h2 class="section-title" style="color: #f39c12;">Payment Frequency Comparison</h2>
+               <p style="color: #ecf0f1; text-align: center; margin-bottom: 2rem;">See how different payment frequencies affect your loan:</p>
+               
+               <div class="comparison-grid" id="comparisonGrid">
+                   <!-- Comparison cards will be populated by JavaScript -->
+               </div>
+           </div>
+
+           <!-- HECS-HELP Information -->
+           <div class="hecs-info">
+               <h2 class="section-title" style="color: white;">HECS-HELP Student Loans</h2>
+               <p style="text-align: center; margin-bottom: 2rem;">Understanding Australia's Higher Education Contribution Scheme and repayment thresholds:</p>
+               
+               <div class="loan-info-grid">
+                   <div class="loan-info-card">
+                       <h4>2024-25 Repayment Rates</h4>
+                       <p><strong>Threshold:</strong> $51,550 income</p>
+                       <p><strong>Rate:</strong> 1% of income above threshold</p>
+                       <p><strong>Maximum:</strong> 10% for income over $151,200</p>
+                       <p>Repayments are automatic through the tax system</p>
+                   </div>
+                   
+                   <div class="loan-info-card">
+                       <h4>No Interest - Just Indexation</h4>
+                       <p>HECS-HELP debt is indexed annually to maintain its real value</p>
+                       <p><strong>2024 Rate:</strong> 4.8% indexation</p>
+                       <p>Applied on 1 June each year to outstanding balance</p>
+                       <p>Not charged interest like commercial loans</p>
+                   </div>
+                   
+                   <div class="loan-info-card">
+                       <h4>Early Repayment Benefits</h4>
+                       <p>Voluntary payments of $500+ receive 5% bonus</p>
+                       <p>Payment made before 1 June avoids indexation</p>
+                       <p>No penalty for early full repayment</p>
+                       <p>Can reduce future compulsory payments</p>
+                   </div>
+               </div>
+               
+               <table class="hecs-rates-table">
+                   <thead>
+                       <tr>
+                           <th>Income Range</th>
+                           <th>Repayment Rate</th>
+                           <th>Example: $60,000 Income</th>
+                           <th>Example: $80,000 Income</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <td>$51,550 - $59,518</td>
+                           <td>1%</td>
+                           <td>$85 annual</td>
+                           <td>-</td>
+                       </tr>
+                       <tr>
+                           <td>$59,519 - $63,089</td>
+                           <td>2%</td>
+                           <td>$200 annual</td>
+                           <td>-</td>
+                       </tr>
+                       <tr>
+                           <td>$63,090 - $66,875</td>
+                           <td>2.5%</td>
+                           <td>-</td>
+                           <td>-</td>
+                       </tr>
+                       <tr>
+                           <td>$75,000 - $82,874</td>
+                           <td>5%</td>
+                           <td>-</td>
+                           <td>$4,000 annual</td>
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+
+           <!-- Australian Loan Information -->
+           <div class="australian-loans">
+               <h2 class="section-title" style="color: white;">Australian Loan Market Overview</h2>
+               <p style="text-align: center; margin-bottom: 2rem;">Current interest rates and loan terms available to Australian students and young adults:</p>
+               
+               <div class="loan-info-grid">
+                   <div class="loan-info-card">
+                       <h4>Personal Loans</h4>
+                       <p><strong>Interest Rate:</strong> 6% - 20% p.a.</p>
+                       <p><strong>Term:</strong> 1 - 7 years</p>
+                       <p><strong>Amount:</strong> $2,000 - $75,000</p>
+                       <p>Unsecured loans for various purposes including debt consolidation, travel, or unexpected expenses</p>
+                   </div>
+                   
+                   <div class="loan-info-card">
+                       <h4>Car Loans</h4>
+                       <p><strong>Interest Rate:</strong> 4% - 15% p.a.</p>
+                       <p><strong>Term:</strong> 1 - 7 years</p>
+                       <p><strong>Amount:</strong> $5,000 - $100,000</p>
+                       <p>Secured by the vehicle. New cars typically get better rates than used cars</p>
+                   </div>
+                   
+                   <div class="loan-info-card">
+                       <h4>Home Loans</h4>
+                       <p><strong>Interest Rate:</strong> 5.5% - 7.5% p.a.</p>
+                       <p><strong>Term:</strong> 15 - 30 years</p>
+                       <p><strong>Deposit:</strong> 5% - 20% required</p>
+                       <p>First home buyer schemes available. LMI required if deposit < 20%</p>
+                   </div>
+                   
+                   <div class="loan-info-card">
+                       <h4>Student Personal Loans</h4>
+                       <p><strong>Interest Rate:</strong> 8% - 18% p.a.</p>
+                       <p><strong>Term:</strong> 2 - 5 years</p>
+                       <p><strong>Amount:</strong> $1,000 - $30,000</p>
+                       <p>For expenses not covered by HECS-HELP, like living costs or equipment</p>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Amortization Table -->
+           <div class="amortization-table" id="amortizationSection" style="display: none;">
+               <h2 class="section-title">Payment Schedule</h2>
+               <p style="color: #ddd; text-align: center; margin-bottom: 1rem;">Detailed breakdown of each payment (showing first 12 payments):</p>
+               
+               <div class="table-container">
+                   <table class="payment-table" id="paymentTable">
+                       <thead>
+                           <tr>
+                               <th>Payment #</th>
+                               <th>Date</th>
+                               <th>Payment Amount</th>
+                               <th>Principal</th>
+                               <th>Interest</th>
+                               <th>Remaining Balance</th>
+                           </tr>
+                       </thead>
+                       <tbody id="paymentTableBody">
+                           <!-- Table rows will be populated by JavaScript -->
+                       </tbody>
+                   </table>
+               </div>
+               
+               <div style="text-align: center; margin-top: 1rem;">
+                   <button onclick="toggleFullSchedule()" id="scheduleToggle" class="calculate-btn" style="width: auto; padding: 0.8rem 2rem;">Show Full Schedule</button>
+               </div>
+           </div>
+
+           <!-- Tips Section -->
+           <div class="tips-section">
+               <h2 class="section-title" style="color: #f39c12;">Smart Borrowing Tips for Students</h2>
+               <div class="tips-grid">
+                   <div class="tip-card">
+                       <h4>Shop Around for Rates</h4>
+                       <p>Interest rates can vary significantly between lenders. Compare rates from banks, credit unions, and online lenders. Even a 1% difference can save thousands over the loan term.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Consider Payment Frequency</h4>
+                       <p>Making weekly or fortnightly payments instead of monthly can reduce your total interest and pay off your loan faster by aligning with your pay cycle.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Build Your Credit Score First</h4>
+                       <p>A good credit score can qualify you for better interest rates. Pay bills on time, keep credit utilization low, and check your credit report regularly.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Avoid Borrowing for Depreciating Assets</h4>
+                       <p>Think carefully before taking loans for holidays, clothing, or electronics. These lose value quickly while you're still paying interest on the loan.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Make Extra Payments When Possible</h4>
+                       <p>Even small additional payments toward the principal can significantly reduce your total interest and loan term. Use windfalls like tax refunds or bonuses.</p>
+                   </div>
+                   
+                   <div class="tip-card">
+                       <h4>Understand All Fees</h4>
+                       <p>Look beyond the interest rate. Consider establishment fees, ongoing fees, early repayment fees, and any other charges that affect the total cost.</p>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Warning Section -->
+           <div class="warning-box">
+               <h3><i class="fas fa-exclamation-triangle"></i> Important Loan Considerations</h3>
+               <p>Only borrow what you can afford to repay comfortably. Factor loan payments into your budget and ensure you have an emergency fund. Missing loan payments can damage your credit score and lead to additional fees. Always read the loan terms carefully and understand your rights and obligations before signing any loan agreement.</p>
+           </div>
+       </div>
+
+       <!-- Footer -->
+       <footer>
+           <p>&copy; 2024 Vivify. All rights reserved.</p>
+           <ul class="footer-links">
+               <li><a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a></li>
+               <li><a href="terms.html" aria-label="Terms of Service">Terms of Service</a></li>
+               <li><a href="contact.html" aria-label="Contact Us">Contact Us</a></li>
+           </ul>
+       </footer>
+   </div>
+
+   <script>
+       let currentLoanType = 'personal';
+       let showFullSchedule = false;
+
+       // Set today's date as default
+       document.addEventListener('DOMContentLoaded', function() {
+           document.getElementById('startDate').valueAsDate = new Date();
+           calculateLoan(); // Initial calculation with default values
+           
+           // Login status check
+           const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+           
+           document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline';
+           document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('profileLink').style.display = isLoggedIn ? 'inline' : 'none';
+           document.getElementById('dashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+           
+           document.getElementById('logoutLink').addEventListener('click', function(e) {
+               e.preventDefault();
+               localStorage.removeItem('userLoggedIn');
+               localStorage.removeItem('authToken');
+               window.location.href = 'index.html';
+           });
+       });
+
+       function setLoanType(type) {
+           currentLoanType = type;
+           
+           // Update active button
+           document.querySelectorAll('.loan-type-btn').forEach(btn => btn.classList.remove('active'));
+           event.target.classList.add('active');
+           
+           // Update form defaults based on loan type
+           const loanAmount = document.getElementById('loanAmount');
+           const interestRateSlider = document.getElementById('interestRateSlider');
+           const loanTermSlider = document.getElementById('loanTermSlider');
+           const title = document.getElementById('calculatorTitle');
+           
+           switch(type) {
+               case 'personal':
+                   title.textContent = 'Personal Loan Calculator';
+                   loanAmount.value = 25000;
+                   interestRateSlider.value = 8;
+                   loanTermSlider.value = 5;
+                   loanTermSlider.max = 7;
+                   break;
+               case 'car':
+                   title.textContent = 'Car Loan Calculator';
+                   loanAmount.value = 35000;
+                   interestRateSlider.value = 6;
+                   loanTermSlider.value = 5;
+                   loanTermSlider.max = 7;
+                   break;
+               case 'home':
+                   title.textContent = 'Home Loan Calculator';
+                   loanAmount.value = 500000;
+                   interestRateSlider.value = 6.5;
+                   loanTermSlider.value = 25;
+                   loanTermSlider.max = 30;
+                   break;
+               case 'student':
+                   title.textContent = 'Student Loan Calculator';
+                   loanAmount.value = 15000;
+                   interestRateSlider.value = 10;
+                   loanTermSlider.value = 3;
+                   loanTermSlider.max = 5;
+                   break;
+           }
+           
+           updateSliderValue('interestRate', interestRateSlider.value);
+           updateSliderValue('loanTerm', loanTermSlider.value);
+           calculateLoan();
+       }
+
+       function updateSliderValue(type, value) {
+           if (type === 'interestRate') {
+               document.getElementById('interestRateValue').textContent = parseFloat(value).toFixed(1) + '%';
+           } else if (type === 'loanTerm') {
+               const years = parseInt(value);
+               document.getElementById('loanTermValue').textContent = years + (years === 1 ? ' year' : ' years');
+           }
+           
+           // Auto-calculate when sliders change
+           calculateLoan();
+       }
+
+       function calculateLoan() {
+           // Get input values
+           const principal = parseFloat(document.getElementById('loanAmount').value) || 0;
+           const annualRate = parseFloat(document.getElementById('interestRateSlider').value) || 0;
+           const years = parseInt(document.getElementById('loanTermSlider').value) || 0;
+           const frequency = document.getElementById('paymentFrequency').value;
+           
+           if (principal === 0 || annualRate === 0 || years === 0) {
+               return;
+           }
+           
+           // Calculate payment frequency
+           let paymentsPerYear;
+           let frequencyLabel;
+           
+           switch(frequency) {
+               case 'weekly':
+                   paymentsPerYear = 52;
+                   frequencyLabel = 'Weekly Payment';
+                   break;
+               case 'fortnightly':
+                   paymentsPerYear = 26;
+                   frequencyLabel = 'Fortnightly Payment';
+                   break;
+               case 'monthly':
+               default:
+                   paymentsPerYear = 12;
+                   frequencyLabel = 'Monthly Payment';
+                   break;
+           }
+           
+           const periodicRate = (annualRate / 100) / paymentsPerYear;
+           const totalPayments = years * paymentsPerYear;
+           
+           // Calculate payment amount using PMT formula
+           const payment = principal * (periodicRate * Math.pow(1 + periodicRate, totalPayments)) / 
+                          (Math.pow(1 + periodicRate, totalPayments) - 1);
+           
+           const totalCost = payment * totalPayments;
+           const totalInterest = totalCost - principal;
+           
+           // Update results display
+           document.getElementById('paymentAmount').textContent = `${payment.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+           document.getElementById('paymentFrequencyLabel').textContent = frequencyLabel;
+           document.getElementById('paymentDetails').textContent = 'Principal + Interest';
+           
+           document.getElementById('totalInterest').textContent = `${totalInterest.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+           document.getElementById('interestPercentage').textContent = `${((totalInterest / principal) * 100).toFixed(1)}% of loan amount`;
+           
+           document.getElementById('totalCost').textContent = `${totalCost.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+           document.getElementById('totalPayments').textContent = `${totalPayments} payments`;
+           
+           // Update breakdown
+           document.getElementById('breakdownTotal').textContent = `${totalCost.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+           document.getElementById('breakdownPrincipal').textContent = `${principal.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+           document.getElementById('breakdownInterest').textContent = `${totalInterest.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+           document.getElementById('interestPercentOfTotal').textContent = `${((totalInterest / totalCost) * 100).toFixed(1)}%`;
+           
+           // Update comparison
+           updateComparison(principal, annualRate, years);
+           
+           // Generate amortization table
+           generateAmortizationTable(principal, periodicRate, totalPayments, payment);
+       }
+
+       function updateComparison(principal, annualRate, years) {
+           const frequencies = [
+               { name: 'Weekly', payments: 52, label: 'week' },
+               { name: 'Fortnightly', payments: 26, label: 'fortnight' },
+               { name: 'Monthly', payments: 12, label: 'month' }
+           ];
+           
+           const comparisonGrid = document.getElementById('comparisonGrid');
+           comparisonGrid.innerHTML = '';
+           
+           frequencies.forEach(freq => {
+               const periodicRate = (annualRate / 100) / freq.payments;
+               const totalPayments = years * freq.payments;
+               const payment = principal * (periodicRate * Math.pow(1 + periodicRate, totalPayments)) / 
+                              (Math.pow(1 + periodicRate, totalPayments) - 1);
+               const totalCost = payment * totalPayments;
+               const totalInterest = totalCost - principal;
+               
+               const card = document.createElement('div');
+               card.className = 'comparison-card';
+               card.innerHTML = `
+                   <h4>${freq.name} Payments</h4>
+                   <div class="comparison-amount">${payment.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                   <div class="comparison-details">
+                       per ${freq.label}<br>
+                       Total Interest: ${totalInterest.toLocaleString('en-AU', {minimumFractionDigits: 0, maximumFractionDigits: 0})}<br>
+                       ${totalPayments} payments
+                   </div>
+               `;
+               comparisonGrid.appendChild(card);
+           });
+       }
+
+       function generateAmortizationTable(principal, periodicRate, totalPayments, payment) {
+           const tableBody = document.getElementById('paymentTableBody');
+           const startDate = new Date(document.getElementById('startDate').value);
+           const frequency = document.getElementById('paymentFrequency').value;
+           
+           let currentBalance = principal;
+           let currentDate = new Date(startDate);
+           
+           // Determine date increment
+           let dateIncrement;
+           switch(frequency) {
+               case 'weekly':
+                   dateIncrement = 7;
+                   break;
+               case 'fortnightly':
+                   dateIncrement = 14;
+                   break;
+               case 'monthly':
+               default:
+                   dateIncrement = 'month';
+                   break;
+           }
+           
+           tableBody.innerHTML = '';
+           
+           const paymentsToShow = showFullSchedule ? totalPayments : Math.min(12, totalPayments);
+           
+           for (let i = 1; i <= paymentsToShow; i++) {
+               const interestPayment = currentBalance * periodicRate;
+               const principalPayment = payment - interestPayment;
+               currentBalance -= principalPayment;
+               
+               const row = document.createElement('tr');
+               row.innerHTML = `
+                   <td>${i}</td>
+                   <td>${currentDate.toLocaleDateString('en-AU')}</td>
+                   <td>${payment.toLocaleString('en-AU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                   <td>${principalPayment.toLocaleString('en-AU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                   <td>${interestPayment.toLocaleString('en-AU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                   <td>${Math.max(0, currentBalance).toLocaleString('en-AU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+               `;
+               tableBody.appendChild(row);
+               
+               // Increment date
+               if (dateIncrement === 'month') {
+                   currentDate.setMonth(currentDate.getMonth() + 1);
+               } else {
+                   currentDate.setDate(currentDate.getDate() + dateIncrement);
+               }
+           }
+           
+           // Show the amortization section
+           document.getElementById('amortizationSection').style.display = 'block';
+           
+           // Update toggle button
+           const toggleBtn = document.getElementById('scheduleToggle');
+           if (totalPayments > 12) {
+               toggleBtn.style.display = 'block';
+               toggleBtn.textContent = showFullSchedule ? 'Show First 12 Payments' : `Show All ${totalPayments} Payments`;
+           } else {
+               toggleBtn.style.display = 'none';
+           }
+       }
+
+       function toggleFullSchedule() {
+           showFullSchedule = !showFullSchedule;
+           calculateLoan(); // Regenerate table with new setting
+       }
+
+       // Add event listeners for real-time calculation
+       document.getElementById('loanAmount').addEventListener('input', calculateLoan);
+       document.getElementById('interestRateSlider').addEventListener('input', function() {
+           updateSliderValue('interestRate', this.value);
+       });
+       document.getElementById('loanTermSlider').addEventListener('input', function() {
+           updateSliderValue('loanTerm', this.value);
+       });
+       document.getElementById('paymentFrequency').addEventListener('change', calculateLoan);
+       document.getElementById('startDate').addEventListener('change', calculateLoan);
+   </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Baseline Assessment - Vivify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        /* Assessment Container */
+        .assessment-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: linear-gradient(145deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .assessment-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+        }
+
+        .assessment-header h1 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .assessment-header p {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .assessment-header .subtitle {
+            color: #888;
+            font-size: 0.95rem;
+            background: rgba(255, 107, 53, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        /* Progress */
+        .progress-container {
+            margin-bottom: 3rem;
+            background: #222;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .progress-text {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #333;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Question Card */
+        .question-card {
+            background: linear-gradient(145deg, #222 0%, #2a2a2a 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .question-card h3 {
+            color: #ff6b35;
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Options */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.8rem 1.5rem;
+            background: linear-gradient(145deg, #333 0%, #3a3a3a 100%);
+            border-radius: 12px;
+            cursor: pointer;
+            border: 2px solid #555;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            min-height: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 107, 53, 0.1) 50%, 
+                transparent 100%);
+            transition: left 0.5s ease;
+        }
+
+        .option-label:hover::before {
+            left: 100%;
+        }
+
+        .option-label:hover {
+            border-color: #ff6b35;
+            background: linear-gradient(145deg, #3a3a3a 0%, #444 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.2);
+        }
+
+        .option-label.selected {
+            border-color: #ff6b35;
+            background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
+            color: #000;
+            font-weight: 600;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.4);
+        }
+
+        .option-label.selected::before {
+            display: none;
+        }
+
+        .option-label span {
+            color: #ccc;
+            font-size: 1.05rem;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .option-label:hover span {
+            color: #fff;
+        }
+
+        .option-label.selected span {
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .assessment-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        /* Results */
+        .results-container {
+            text-align: center;
+        }
+
+        .results-container h2 {
+            color: #27ae60;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-item {
+            background: linear-gradient(145deg, #333 0%, #3a3a3a 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #444;
+            transition: transform 0.3s ease;
+        }
+
+        .score-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-label {
+            color: #ccc;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .overall-score-display {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: #000;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.3);
+        }
+
+        .overall-score-display .score-value {
+            font-size: 3rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .assessment-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .assessment-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .scores-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .assessment-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .option-label {
+                padding: 1.5rem 1rem;
+                min-height: 60px;
+            }
+
+            .option-label span {
+                font-size: 1rem;
+            }
+        }
+
+        /* Loading state */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Success animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<!-- CSS Loading Order Fix -->
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- FOUC Prevention -->
+<style>
+    html { visibility: hidden; opacity: 0; }
+    html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+@media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.add('loaded');
+    });
+    window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+    });
+</script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Vivify</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="assessment-container">
+            <div class="assessment-header">
+                <div class="performance-badge">🚀 Performance Assessment</div>
+                <h1>Unlock Your Peak Performance</h1>
+                <p>Let's establish your current performance baseline across the key areas that drive student excellence</p>
+                <p class="subtitle">Track your progress and build elite daily habits (5 minutes)</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-text">
+                    Question <span id="currentQuestion">1</span> of <span id="totalQuestions">20</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div id="questionsContainer" style="min-height: 350px;">
+                <!-- Questions will be loaded here -->
+            </div>
+
+            <div class="assessment-buttons">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn btn-primary" id="completeBtn" onclick="completeAssessment()" style="display: none;">
+                    Complete Assessment <i class="fas fa-trophy"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const performanceQuestions = [
+            // Physical Performance & Energy
+            {
+                category: 'physical',
+                text: "How consistently do you maintain high energy levels throughout your day?",
+                options: [
+                    { text: "Always energetic and ready to perform", value: 95 },
+                    { text: "Usually energetic with occasional dips", value: 80 },
+                    { text: "Moderate energy, some afternoon crashes", value: 60 },
+                    { text: "Often tired and low energy", value: 35 }
+                ]
+            },
+            {
+                category: 'physical',
+                text: "How would you rate your physical fitness and strength?",
+                options: [
+                    { text: "Excellent fitness, very strong", value: 90 },
+                    { text: "Good fitness level, regular exercise", value: 75 },
+                    { text: "Average fitness, some physical activity", value: 55 },
+                    { text: "Poor fitness, rarely exercise", value: 25 }
+                ]
+            },
+            {
+                category: 'physical',
+                text: "How optimised is your sleep for peak performance?",
+                options: [
+                    { text: "Perfect sleep routine, wake up refreshed", value: 95 },
+                    { text: "Good sleep most nights", value: 75 },
+                    { text: "Inconsistent sleep, sometimes tired", value: 50 },
+                    { text: "Poor sleep habits, often exhausted", value: 20 }
+                ]
+            },
+            {
+                category: 'physical',
+                text: "How well do you recover from physical and mental challenges?",
+                options: [
+                    { text: "Bounce back quickly, excellent recovery", value: 90 },
+                    { text: "Generally recover well", value: 70 },
+                    { text: "Take some time to recover", value: 50 },
+                    { text: "Struggle to recover, stay drained", value: 25 }
+                ]
+            },
+            {
+                category: 'physical',
+                text: "How often do you push your physical limits and challenge yourself?",
+                options: [
+                    { text: "Regularly challenge myself physically", value: 85 },
+                    { text: "Sometimes push my limits", value: 65 },
+                    { text: "Occasionally challenge myself", value: 45 },
+                    { text: "Rarely push beyond comfort zone", value: 25 }
+                ]
+            },
+
+            // Mental Focus & Resilience
+            {
+                category: 'mental',
+                text: "How well can you maintain laser focus during challenging tasks?",
+                options: [
+                    { text: "Exceptional focus, rarely distracted", value: 95 },
+                    { text: "Good focus with minor distractions", value: 75 },
+                    { text: "Moderate focus, get distracted sometimes", value: 55 },
+                    { text: "Poor focus, easily distracted", value: 30 }
+                ]
+            },
+            {
+                category: 'mental',
+                text: "How do you perform under pressure and tight deadlines?",
+                options: [
+                    { text: "Thrive under pressure, best performance", value: 90 },
+                    { text: "Handle pressure well, stay composed", value: 75 },
+                    { text: "Manage pressure okay, some stress", value: 55 },
+                    { text: "Struggle under pressure, get overwhelmed", value: 25 }
+                ]
+            },
+            {
+                category: 'mental',
+                text: "How quickly do you bounce back from setbacks or failures?",
+                options: [
+                    { text: "Bounce back immediately, learn fast", value: 95 },
+                    { text: "Recover quickly, use failures as fuel", value: 80 },
+                    { text: "Take some time but eventually recover", value: 60 },
+                    { text: "Struggle to recover from setbacks", value: 30 }
+                ]
+            },
+            {
+                category: 'mental',
+                text: "How confident are you in tackling new challenges?",
+                options: [
+                    { text: "Extremely confident, love challenges", value: 90 },
+                    { text: "Generally confident in my abilities", value: 75 },
+                    { text: "Somewhat confident, have some doubts", value: 55 },
+                    { text: "Lack confidence, avoid challenges", value: 30 }
+                ]
+            },
+            {
+                category: 'mental',
+                text: "How well do you manage stress and maintain emotional control?",
+                options: [
+                    { text: "Excellent stress management, always calm", value: 90 },
+                    { text: "Good at managing stress", value: 70 },
+                    { text: "Sometimes get stressed but cope", value: 50 },
+                    { text: "Often overwhelmed by stress", value: 25 }
+                ]
+            },
+
+            // Performance Nutrition
+            {
+                category: 'nutrition',
+                text: "How strategically do you fuel your body for peak performance?",
+                options: [
+                    { text: "Highly strategic, optimised nutrition plan", value: 95 },
+                    { text: "Generally eat well for performance", value: 75 },
+                    { text: "Somewhat conscious of nutrition", value: 55 },
+                    { text: "Poor eating habits, no strategy", value: 25 }
+                ]
+            },
+            {
+                category: 'nutrition',
+                text: "How consistent are you with your eating schedule and habits?",
+                options: [
+                    { text: "Very consistent, perfect routine", value: 90 },
+                    { text: "Mostly consistent eating habits", value: 70 },
+                    { text: "Somewhat consistent, occasional lapses", value: 50 },
+                    { text: "Inconsistent, erratic eating patterns", value: 25 }
+                ]
+            },
+            {
+                category: 'nutrition',
+                text: "How well do you use nutrition to enhance your mental performance?",
+                options: [
+                    { text: "Actively use food to boost brain power", value: 85 },
+                    { text: "Somewhat aware of food-brain connection", value: 65 },
+                    { text: "Basic understanding, not optimised", value: 45 },
+                    { text: "Never consider nutrition for mental performance", value: 20 }
+                ]
+            },
+            {
+                category: 'nutrition',
+                text: "How disciplined are you with avoiding performance-draining foods?",
+                options: [
+                    { text: "Extremely disciplined, avoid all junk", value: 90 },
+                    { text: "Generally disciplined with occasional treats", value: 70 },
+                    { text: "Somewhat disciplined but give in to cravings", value: 50 },
+                    { text: "Poor discipline, eat whatever I want", value: 25 }
+                ]
+            },
+
+            // Excellence Habits & Life Mastery
+            {
+                category: 'habits',
+                text: "How consistent are you with your daily performance routines?",
+                options: [
+                    { text: "Extremely consistent, never miss routines", value: 95 },
+                    { text: "Very consistent, rarely skip", value: 80 },
+                    { text: "Somewhat consistent, occasional skips", value: 60 },
+                    { text: "Inconsistent, struggle with routines", value: 30 }
+                ]
+            },
+            {
+                category: 'habits',
+                text: "How well do you manage your time and prioritise high-impact activities?",
+                options: [
+                    { text: "Master of time management, ultra productive", value: 95 },
+                    { text: "Good time management skills", value: 75 },
+                    { text: "Decent at managing time", value: 55 },
+                    { text: "Poor time management, often scattered", value: 25 }
+                ]
+            },
+            {
+                category: 'habits',
+                text: "How committed are you to continuous learning and self-improvement?",
+                options: [
+                    { text: "Obsessed with growth, constantly improving", value: 95 },
+                    { text: "Very committed to learning", value: 80 },
+                    { text: "Somewhat interested in improvement", value: 60 },
+                    { text: "Rarely focus on self-improvement", value: 30 }
+                ]
+            },
+            {
+                category: 'habits',
+                text: "How well do you track and measure your progress?",
+                options: [
+                    { text: "Meticulously track everything, data-driven", value: 90 },
+                    { text: "Track important metrics regularly", value: 70 },
+                    { text: "Occasionally track some things", value: 50 },
+                    { text: "Rarely track progress", value: 25 }
+                ]
+            },
+            {
+                category: 'habits',
+                text: "How disciplined are you with your financial habits and money management?",
+                options: [
+                    { text: "Excellent financial discipline, track everything", value: 85 },
+                    { text: "Good money management habits", value: 70 },
+                    { text: "Basic financial awareness", value: 50 },
+                    { text: "Poor financial habits", value: 25 }
+                ]
+            },
+            {
+                category: 'habits',
+                text: "How effectively do you eliminate distractions and time-wasters?",
+                options: [
+                    { text: "Ruthlessly eliminate all distractions", value: 90 },
+                    { text: "Good at avoiding most distractions", value: 70 },
+                    { text: "Sometimes get distracted", value: 50 },
+                    { text: "Easily distracted, waste time often", value: 25 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let responses = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user should be here
+            const needsAssessment = localStorage.getItem('needsBaselineAssessment') === 'true';
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const hasCompletedBaseline = localStorage.getItem('performanceData');
+            
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (!needsAssessment && hasCompletedBaseline) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('totalQuestions').textContent = performanceQuestions.length;
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            const question = performanceQuestions[currentQuestionIndex];
+            const container = document.getElementById('questionsContainer');
+            
+            container.innerHTML = `
+                <div class="question-card fade-in-up">
+                    <h3>${question.text}</h3>
+                    <div class="options-grid">
+                        ${question.options.map((option, index) => `
+                            <div class="option-label" data-value="${option.value}">
+                                <span>${option.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Add click handling for the option boxes
+            const labels = container.querySelectorAll('.option-label');
+            labels.forEach(label => {
+                label.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    labels.forEach(l => l.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    label.classList.add('selected');
+                });
+            });
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / performanceQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const completeBtn = document.getElementById('completeBtn');
+
+            prevBtn.style.display = currentQuestionIndex > 0 ? 'inline-block' : 'none';
+            
+            if (currentQuestionIndex === performanceQuestions.length - 1) {
+                nextBtn.style.display = 'none';
+                completeBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                completeBtn.style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('.option-label.selected');
+            
+            if (!selectedOption) {
+                alert('Please select an answer before continuing.');
+                return;
+            }
+
+            responses[currentQuestionIndex] = {
+                question: performanceQuestions[currentQuestionIndex].text,
+                category: performanceQuestions[currentQuestionIndex].category,
+                value: parseInt(selectedOption.dataset.value),
+                answer: selectedOption.textContent.trim()
+            };
+
+            if (currentQuestionIndex < performanceQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+                
+                // Restore previous selection
+                if (responses[currentQuestionIndex]) {
+                    const value = responses[currentQuestionIndex].value;
+                    const targetOption = document.querySelector(`.option-label[data-value="${value}"]`);
+                    if (targetOption) {
+                        targetOption.classList.add('selected');
+                    }
+                }
+            }
+        }
+
+        function completeAssessment() {
+            const selectedOption = document.querySelector('.option-label.selected');
+            
+            if (!selectedOption) {
+                alert('Please answer the final question.');
+                return;
+            }
+
+            responses[currentQuestionIndex] = {
+                question: performanceQuestions[currentQuestionIndex].text,
+                category: performanceQuestions[currentQuestionIndex].category,
+                value: parseInt(selectedOption.dataset.value),
+                answer: selectedOption.textContent.trim()
+            };
+
+            calculatePerformanceScores();
+        }
+
+        async function calculatePerformanceScores() {
+            const scores = {
+                physical: [],
+                mental: [],
+                nutrition: [],
+                habits: []
+            };
+
+            // Group responses by category
+            responses.forEach(response => {
+                if (scores[response.category]) {
+                    scores[response.category].push(response.value);
+                }
+            });
+
+            // Calculate average for each category
+            const finalScores = {};
+            Object.keys(scores).forEach(category => {
+                if (scores[category].length > 0) {
+                    finalScores[category] = Math.round(
+                        scores[category].reduce((sum, val) => sum + val, 0) / scores[category].length
+                    );
+                } else {
+                    finalScores[category] = 60;
+                }
+            });
+
+            // Calculate overall performance score
+            finalScores.overall = Math.round(
+                (finalScores.physical + finalScores.mental + finalScores.nutrition + finalScores.habits) / 4
+            );
+
+            console.log('Calculated performance scores:', finalScores);
+
+            // Save to server if possible
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                try {
+                    const serverResponse = await fetch('/api/performance/baseline', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({
+                            scores: finalScores,
+                            responses: responses
+                        })
+                    });
+
+                    if (serverResponse.ok) {
+                        console.log('Performance baseline saved to server successfully');
+                    }
+                } catch (error) {
+                    console.log('Server not available, using localStorage');
+                }
+            }
+
+            // Always save locally
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            
+            const performanceData = {
+                user: {
+                    name: userProfile.username || userProfile.name || 'Student',
+                    username: userProfile.username || userProfile.name || 'Student',
+                    school: userProfile.school || 'Knox Grammar School',
+                    yearLevel: userProfile.yearLevel || '',
+                    userId: userProfile.id,
+                    joinDate: new Date().toISOString(),
+                    lastActive: new Date().toISOString()
+                },
+                scores: finalScores,
+                activities: [{
+                    id: Date.now(),
+                    type: 'baseline_assessment',
+                    category: 'general',
+                    description: 'Completed performance baseline assessment',
+                    points: 50,
+                    timestamp: new Date().toISOString()
+                }],
+                customGoals: [],
+                achievements: {
+                    first_login: true,
+                    assessment_complete: true
+                },
+                baselineCompleted: true,
+                assessmentResponses: responses,
+                lastUpdated: new Date().toISOString(),
+                streaks: {
+                    currentStreak: 1,
+                    longestStreak: 1,
+                    lastActiveDate: new Date().toDateString()
+                }
+            };
+
+            localStorage.setItem('performanceData', JSON.stringify(performanceData));
+            localStorage.removeItem('needsBaselineAssessment');
+            
+            console.log('Performance data saved:', performanceData);
+
+            showResults(finalScores);
+        }
+
+        function showResults(scores) {
+            const container = document.getElementById('questionsContainer');
+            
+            const getScoreColor = (score) => {
+                if (score >= 85) return '#27ae60';
+                if (score >= 70) return '#ff6b35';
+                if (score >= 55) return '#f39c12';
+                return '#e67e22';
+            };
+
+            const getPerformanceLevel = (score) => {
+                if (score >= 85) return 'Elite Performer';
+                if (score >= 70) return 'High Performer';
+                if (score >= 55) return 'Developing Performer';
+                return 'Emerging Performer';
+            };
+
+            const getScoreMessage = (overall) => {
+                if (overall >= 85) return "Exceptional! You're already operating at an elite performance level with outstanding habits across all areas.";
+                if (overall >= 70) return "Strong foundation! You're a high performer with solid habits - ready to push to the next level.";
+                if (overall >= 55) return "Good potential! You have developing performance habits with clear opportunities for significant growth.";
+                return "Perfect starting point! You're ready to transform your daily habits and unlock your performance potential.";
+            };
+
+            container.innerHTML = `
+                <div class="results-container fade-in-up">
+                    <h2><i class="fas fa-trophy"></i> Performance Assessment Complete!</h2>
+                    
+                    <div style="background: linear-gradient(145deg, #222 0%, #2a2a2a 100%); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; border: 1px solid #333;">
+                        <h3 style="color: #ff6b35; margin-bottom: 1.5rem; text-align: center; font-size: 1.5rem;">Your Performance Baseline Scores</h3>
+                        
+                        <div class="scores-grid">
+                            <div class="score-item">
+                                <div class="score-value" style="color: ${getScoreColor(scores.physical)};">${scores.physical}%</div>
+                                <div class="score-label">Physical Performance</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-value" style="color: ${getScoreColor(scores.mental)};">${scores.mental}%</div>
+                                <div class="score-label">Mental Focus</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-value" style="color: ${getScoreColor(scores.nutrition)};">${scores.nutrition}%</div>
+                                <div class="score-label">Performance Nutrition</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-value" style="color: ${getScoreColor(scores.habits)};">${scores.habits}%</div>
+                                <div class="score-label">Excellence Habits</div>
+                            </div>
+                        </div>
+                        
+                        <div class="overall-score-display">
+                            <div style="font-size: 3rem; font-weight: bold; margin-bottom: 0.5rem;">${scores.overall}%</div>
+                            <div style="font-weight: 600; font-size: 1.2rem;">Overall Performance Score</div>
+                            <div style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.9;">${getPerformanceLevel(scores.overall)}</div>
+                        </div>
+                        
+                        <div style="background: #2a2a2a; border-radius: 12px; padding: 2rem; margin-top: 2rem; border: 1px solid #333;">
+                            <h4 style="color: #ff6b35; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-chart-line"></i> Your Performance Profile
+                            </h4>
+                            <p style="color: #ccc; margin-bottom: 1rem; line-height: 1.6;">${getScoreMessage(scores.overall)}</p>
+                            <div style="background: #333; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ff6b35;">
+                                <p style="color: #ccc; margin: 0; font-size: 0.95rem; line-height: 1.6;">
+                                    <i class="fas fa-rocket" style="color: #ff6b35; margin-right: 0.5rem;"></i>
+                                    <strong>Ready to level up?</strong> These baseline scores show your current performance level. 
+                                    Use Vivify's daily challenges, habit tracking, and community features to systematically 
+                                    improve each area and unlock your peak performance potential!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2.5rem;">
+                            <h4 style="color: #ff6b35; margin-bottom: 1.5rem; text-align: center; font-size: 1.3rem;">
+                                <i class="fas fa-target"></i> Your Performance Training Starts Now
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                                <div style="background: linear-gradient(145deg, #333 0%, #3a3a3a 100%); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #444; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    <i class="fas fa-dumbbell" style="font-size: 2rem; color: #e74c3c; margin-bottom: 1rem; display: block;"></i>
+                                    <h5 style="margin: 0.5rem 0; color: #fff; font-size: 1.1rem;">Physical Edge Training</h5>
+                                    <p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.4;">Build energy, strength and athletic performance</p>
+                                </div>
+                                <div style="background: linear-gradient(145deg, #333 0%, #3a3a3a 100%); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #444; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    <i class="fas fa-brain" style="font-size: 2rem; color: #3498db; margin-bottom: 1rem; display: block;"></i>
+                                    <h5 style="margin: 0.5rem 0; color: #fff; font-size: 1.1rem;">Mental Toughness</h5>
+                                    <p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.4;">Develop focus, resilience and pressure performance</p>
+                                </div>
+                                <div style="background: linear-gradient(145deg, #333 0%, #3a3a3a 100%); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #444; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    <i class="fas fa-apple-alt" style="font-size: 2rem; color: #27ae60; margin-bottom: 1rem; display: block;"></i>
+                                    <h5 style="margin: 0.5rem 0; color: #fff; font-size: 1.1rem;">Fuel Optimization</h5>
+                                    <p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.4;">Strategic nutrition for peak brain and body function</p>
+                                </div>
+                                <div style="background: linear-gradient(145deg, #333 0%, #3a3a3a 100%); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #444; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    <i class="fas fa-chart-line" style="font-size: 2rem; color: #ff6b35; margin-bottom: 1rem; display: block;"></i>
+                                    <h5 style="margin: 0.5rem 0; color: #fff; font-size: 1.1rem;">Elite Habits</h5>
+                                    <p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.4;">Daily systems and habits of high performers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Update buttons
+            document.querySelector('.assessment-buttons').innerHTML = `
+                <button class="btn btn-primary" onclick="goToDashboard()" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                    <i class="fas fa-rocket"></i> Start Performance Training
+                </button>
+            `;
+        }
+
+        function goToDashboard() {
+            // Verify we have all required data
+            const performanceData = localStorage.getItem('performanceData');
+            const userProfile = localStorage.getItem('userProfile');
+            const username = localStorage.getItem('username');
+            
+            console.log('Pre-dashboard check:', {
+                hasPerformanceData: !!performanceData,
+                hasUserProfile: !!userProfile,
+                username: username
+            });
+            
+            if (!performanceData) {
+                alert('Assessment data not saved properly. Please try again.');
+                return;
+            }
+            
+            if (!username) {
+                alert('User data missing. Please log in again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Show loading message
+            const btn = document.querySelector('.assessment-buttons button');
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Launching your performance dashboard...';
+                btn.disabled = true;
+                btn.classList.add('loading');
+            }
+            
+            // Small delay to show loading state
+            setTimeout(() => {
+                console.log('Redirecting to dashboard with performance data');
+                window.location.href = 'dashboard.html';
+            }, 2000);
+        }
+
+        // Allow Enter key to advance questions
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                if (currentQuestionIndex === performanceQuestions.length - 1) {
+                    const completeBtn = document.getElementById('completeBtn');
+                    if (completeBtn.style.display !== 'none') {
+                        completeAssessment();
+                    }
+                } else {
+                    const nextBtn = document.getElementById('nextBtn');
+                    if (nextBtn.style.display !== 'none') {
+                        nextQuestion();
+                    }
+                }
+            }
+        });
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

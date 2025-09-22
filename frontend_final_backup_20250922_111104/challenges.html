@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Performance Challenges - Vivify</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;overflow-x:hidden}
+    header{position:fixed;top:0;width:100%;background:rgba(10,10,10,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.1);z-index:1000;transition:all .3s ease}
+    nav{max-width:1400px;margin:0 auto;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+    .left-nav{display:flex;align-items:center;gap:3rem}
+    .logo a{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+    .left-nav ul,.right-nav ul{display:flex;list-style:none;gap:2rem;align-items:center}
+    .left-nav a,.right-nav a{color:#fff;text-decoration:none;font-weight:500;transition:all .3s ease;position:relative}
+    .left-nav a:hover,.right-nav a:hover{color:#f39c12}
+    .left-nav a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:linear-gradient(135deg,#f39c12,#e67e22);transition:width .3s ease}
+    .left-nav a:hover::after,.left-nav a.active::after{width:100%}
+    .hidden{display:none!important}
+
+    .challenges-container{max-width:1400px;margin:0 auto;padding:120px 2rem 2rem}
+
+    .challenges-hero{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem 2rem;margin-bottom:3rem;text-align:center;position:relative;overflow:hidden}
+    .challenges-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22)}
+    .challenges-hero h1{font-size:3rem;font-weight:800;background:linear-gradient(135deg,#fff,#f39c12);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem}
+    .challenges-hero p{color:rgba(255,255,255,.7);font-size:1.2rem;max-width:700px;margin:0 auto 2rem;line-height:1.6}
+    .hero-stats{display:flex;justify-content:center;gap:4rem;margin-top:2rem}
+    .hero-stat{text-align:center}
+    .hero-stat-value{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:.5rem}
+    .hero-stat-label{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+
+    .challenge-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:2rem;margin-bottom:2rem;transition:all .4s ease;position:relative;overflow:hidden}
+    .challenge-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22);transform:scaleX(0);transition:transform .4s ease}
+    .challenge-card:hover::before{transform:scaleX(1)}
+    .challenge-card:hover{transform:translateY(-10px);background:rgba(243,156,18,.05);border-color:rgba(243,156,18,.2)}
+    .challenge-card.featured{border-color:#f39c12;background:rgba(243,156,18,.05)}
+    .challenge-card.featured::before{transform:scaleX(1)}
+    .challenge-card.active{border-color:#27ae60;background:rgba(39,174,96,.05)}
+    .challenge-card.completed{border-color:#9b59b6;background:rgba(155,89,182,.05)}
+
+    .challenge-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+    .challenge-info h3{color:#fff;font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+    .challenge-difficulty{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.7);font-size:.85rem;font-weight:500}
+    .difficulty-dots{display:flex;gap:3px}
+    .difficulty-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}
+    .difficulty-dot.active{background:#f39c12}
+    .challenge-badge{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:.35rem .85rem;border-radius:50px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .challenge-badge.weekly{background:rgba(52,152,219,.2);color:#3498db}
+    .challenge-badge.monthly{background:rgba(155,89,182,.2);color:#9b59b6}
+    .challenge-badge.ongoing{background:rgba(39,174,96,.2);color:#27ae60}
+    
+    .challenge-description{color:rgba(255,255,255,.8);margin-bottom:1.5rem;line-height:1.5;font-size:.95rem}
+    
+    .challenge-stats{display:flex;justify-content:space-between;margin-bottom:1.5rem;padding:1.25rem;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+    .challenge-stat{text-align:center}
+    .challenge-stat-value{font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:.25rem}
+    .challenge-stat-label{font-size:.75rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+
+    .daily-tracker{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+    .tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .tracker-title{color:#f39c12;font-weight:600;font-size:1rem}
+    .streak-counter{background:rgba(243,156,18,.1);color:#f39c12;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:600}
+    
+    .days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem;margin-bottom:1rem}
+    .day-box{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.1);border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease;position:relative}
+    .day-box.today{border-color:#f39c12;background:rgba(243,156,18,.1)}
+    .day-box.completed{background:#27ae60;border-color:#27ae60;color:#fff}
+    .day-box.missed{background:rgba(231,76,60,.2);border-color:#e74c3c;color:#e74c3c}
+    .day-box.future{opacity:.4;cursor:not-allowed}
+    .day-box:hover:not(.future):not(.completed){background:rgba(243,156,18,.2);border-color:rgba(243,156,18,.5)}
+
+    .today-action{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem;margin-bottom:1.5rem}
+    .today-title{color:#fff;font-weight:600;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+    .today-description{color:rgba(255,255,255,.7);font-size:.9rem;margin-bottom:1rem}
+    
+    .quick-actions{display:flex;gap:1rem;flex-wrap:wrap}
+    .quick-action{background:transparent;border:2px solid rgba(243,156,18,.3);color:#f39c12;padding:.5rem 1rem;border-radius:25px;cursor:pointer;transition:all .3s ease;font-weight:500;font-size:.9rem;font-family:inherit}
+    .quick-action:hover{background:rgba(243,156,18,.1);border-color:#f39c12}
+    .quick-action.selected{background:#f39c12;color:#000;border-color:#f39c12}
+    .quick-action.completed{background:#27ae60;color:#fff;border-color:#27ae60;cursor:not-allowed}
+
+    .complete-today-btn{background:linear-gradient(135deg,#f39c12,#e67e22);color:#000;border:none;padding:.75rem 2rem;border-radius:25px;font-weight:600;cursor:pointer;transition:all .3s ease;font-family:inherit;margin-top:1rem;width:100%}
+    .complete-today-btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(243,156,18,.4)}
+    .complete-today-btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+    .complete-today-btn.completed{background:#27ae60!important;color:#fff!important}
+
+    .challenge-progress{margin-bottom:2rem}
+    .progress-header{display:flex;justify-content:space-between;margin-bottom:.75rem}
+    .progress-text{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500}
+    .progress-percentage{color:#f39c12;font-weight:700;font-size:.9rem}
+    .progress-bar{background:rgba(255,255,255,.1);height:8px;border-radius:4px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,#f39c12,#e67e22);transition:width .3s ease;border-radius:4px}
+
+    .btn{padding:.75rem 1.5rem;border-radius:50px;font-weight:600;cursor:pointer;transition:all .3s ease;border:none;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-family:inherit}
+    .btn-primary{background:linear-gradient(135deg,#f39c12,#e67e22);color:#000}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(243,156,18,.4)}
+    .btn-secondary{background:transparent;color:#f39c12;border:2px solid rgba(243,156,18,.2);padding:.5rem;width:45px;height:45px;border-radius:50%}
+    .btn-secondary:hover{background:rgba(243,156,18,.1);border-color:rgba(243,156,18,.4)}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+    .btn.completed{background:#27ae60!important;color:#fff!important}
+    .btn.active{background:#3498db!important;color:#fff!important}
+
+    .leaderboard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem 2rem;margin-top:3rem;position:relative;overflow:hidden}
+    .leaderboard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#f39c12,#e67e22)}
+    .leaderboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+    .section-title{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#fff,#f39c12);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:.75rem}
+    .leaderboard-list{display:flex;flex-direction:column;gap:1rem}
+    .leaderboard-item{display:flex;align-items:center;padding:1.25rem;background:rgba(255,255,255,.03);border-radius:12px;transition:all .3s ease;border:1px solid rgba(255,255,255,.1)}
+    .leaderboard-item:hover{background:rgba(243,156,18,.1);border-color:rgba(243,156,18,.2);transform:translateY(-2px)}
+    .leaderboard-item.current-user{border-color:#f39c12;background:rgba(243,156,18,.1)}
+    .leaderboard-rank{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-width:50px}
+    .leaderboard-avatar{width:50px;height:50px;border-radius:50%;background:rgba(243,156,18,.1);display:flex;align-items:center;justify-content:center;margin:0 1rem;color:#f39c12;font-size:1.2rem}
+    .leaderboard-info{flex:1}
+    .leaderboard-name{color:#fff;font-weight:600;margin-bottom:.25rem;font-size:1rem}
+    .leaderboard-school{color:rgba(255,255,255,.7);font-size:.85rem}
+    .leaderboard-score{color:#f39c12;font-weight:700;font-size:1.1rem}
+    .overall-score{display:flex;flex-direction:column;align-items:flex-end;gap:.25rem}
+    .level-badge{background:linear-gradient(135deg,#f39c12,#e67e22);color:#000;padding:.2rem .5rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+
+    .achievements-section {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .achievement-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      transition: all .3s ease;
+    }
+
+    .achievement-card.unlocked {
+      border-color: #f39c12;
+      background: rgba(243,156,18,.1);
+    }
+
+    .achievement-card.locked {
+      opacity: 0.5;
+      filter: grayscale(100%);
+    }
+
+    .achievement-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .achievement-name {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .achievement-description {
+      color: rgba(255,255,255,.7);
+      font-size: 0.85rem;
+    }
+
+    .notification{position:fixed;top:100px;right:20px;background:#27ae60;color:#fff;padding:1rem 1.5rem;border-radius:50px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:1000;opacity:0;transform:translateY(-20px);transition:all .3s ease;max-width:350px;font-weight:600}
+    .notification.info{background:#3498db}
+    .notification.error{background:#e74c3c}
+    .notification.show{opacity:1;transform:translateY(0)}
+
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in-up{animation:fadeInUp .6s ease-out}
+
+    @media (max-width:768px){
+      .challenges-container{padding:100px 1rem 2rem}
+      .challenges-hero{padding:2rem 1rem}
+      .challenges-hero h1{font-size:2rem}
+      .hero-stats{flex-direction:column;gap:1.5rem}
+      .challenge-stats{flex-direction:column;gap:1rem}
+      .days-grid{grid-template-columns:repeat(7,1fr);gap:.3rem}
+      .quick-actions{flex-direction:column}
+      .quick-action{text-align:center}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="left-nav">
+      <div class="logo"><a href="index.html">Vivify</a></div>
+      <ul>
+        <li><a href="habits-tracker.html">Daily Habits</a></li>
+        <li><a href="challenges.html" class="active">Challenges</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+    <div class="right-nav">
+      <ul>
+        <li><a href="login.html" id="login-link" class="hidden">Login</a></li>
+        <li><a href="signup.html" id="signup-link" class="cta-nav hidden">Start Training</a></li>
+        <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+        <li><a href="profile.html" id="profile-link">Profile</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main class="challenges-container">
+  <!-- Hero -->
+  <div class="challenges-hero fade-in-up">
+    <h1>Performance Challenges</h1>
+    <p>Push your limits, compete with peers, and unlock your peak potential through structured challenges designed for ambitious students</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value" id="activeChallenges">0</span>
+        <span class="hero-stat-label">Active Challenges</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value" id="completedChallenges">0</span>
+        <span class="hero-stat-label">Completed</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value" id="totalPoints">0</span>
+        <span class="hero-stat-label">Total Points</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievements -->
+  <div class="achievements-section fade-in-up">
+    <h2 class="section-title">🏆 Your Achievements</h2>
+    <div class="achievements-grid" id="achievementsGrid">
+      <!-- Achievements will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Challenge Cards -->
+  <div id="challengesList">
+    <!-- Challenges will be populated by JavaScript -->
+  </div>
+
+  <!-- Your Real Leaderboard -->
+  <div class="leaderboard fade-in-up">
+    <div class="leaderboard-header">
+      <h2 class="section-title">🏆 Overall Performance Leaderboard</h2>
+      <button class="btn btn-secondary" onclick="viewFullLeaderboard()" title="View Full Leaderboard">📊</button>
+    </div>
+    <div class="leaderboard-list" id="leaderboardList">
+      <!-- Real leaderboard populated by your unified-leaderboard.js -->
+    </div>
+  </div>
+</main>
+
+<!-- Load your unified leaderboard FIRST -->
+<script src="js/unified-leaderboard.js"></script>
+<script src="js/vivify-unified-tracker.js"></script>
+
+<script>
+// Challenge definitions
+const challenges = {
+  'fitness-foundation': {
+    name: '30-Day Fitness Foundation',
+    type: 'monthly',
+    difficulty: 'Beginner',
+    difficultyLevel: 1,
+    description: 'Build a solid fitness foundation with 30 minutes of daily physical activity. Track workouts, measure progress, and develop the exercise habit that elite performers maintain.',
+    todayGoal: 'Complete 30 minutes of physical activity (any type you enjoy)',
+    quickActions: ['💪 Gym Workout', '🏃‍♂️ Run/Walk', '🧘‍♀️ Yoga', '🚴‍♂️ Cycling', '🏊‍♂️ Swimming'],
+    duration: 30,
+    totalGoal: 30,
+    points: 500,
+    dailyPoints: 15,
+    featured: true
+  },
+  'morning-energy': {
+    name: 'Morning Energy Boost',
+    type: 'weekly',
+    difficulty: 'Beginner',
+    difficultyLevel: 1,
+    description: 'Start each day with 10 minutes of movement to boost energy and mental clarity. Choose from stretching, yoga, or light cardio.',
+    todayGoal: 'Complete 10 minutes of morning movement before 9 AM',
+    quickActions: ['🧘‍♀️ Stretching', '🤸‍♂️ Yoga Flow', '🏃‍♂️ Light Jog', '💃 Dance', '🤾‍♂️ Jumping Jacks'],
+    duration: 7,
+    totalGoal: 7,
+    points: 150,
+    dailyPoints: 20
+  },
+  'deep-work': {
+    name: 'Deep Work Mastery',
+    type: 'weekly',
+    difficulty: 'Intermediate',
+    difficultyLevel: 2,
+    description: 'Complete 90-minute focused work sessions without distractions. Build the concentration skills that separate high performers from the rest.',
+    todayGoal: 'Complete one 90-minute deep work session with no distractions',
+    quickActions: ['📚 Study Session', '💻 Project Work', '📝 Writing', '📊 Analysis', '🎯 Skill Practice'],
+    duration: 7,
+    totalGoal: 7,
+    points: 200,
+    dailyPoints: 25
+  },
+  'stress-resilience': {
+    name: 'Stress Resilience Training',
+    type: 'ongoing',
+    difficulty: 'Beginner',
+    difficultyLevel: 1,
+    description: 'Build mental resilience through daily mindfulness practice and stress management techniques. Learn to perform under pressure.',
+    todayGoal: 'Practice 10 minutes of mindfulness or stress management',
+    quickActions: ['🧘‍♂️ Meditation', '📱 Breathing App', '📔 Journaling', '🎵 Calming Music', '🌿 Nature Walk'],
+    duration: 'ongoing',
+    totalGoal: 7,
+    points: 10,
+    dailyPoints: 10
+  },
+  'elite-morning': {
+    name: 'Elite Morning Routine',
+    type: 'monthly',
+    difficulty: 'Advanced',
+    difficultyLevel: 3,
+    description: 'Master the morning routine of high performers: exercise, planning, learning, and focused work within the first 3 hours of your day.',
+    todayGoal: 'Complete all 4 elements: Exercise + Planning + Learning + Focused Work (before 10 AM)',
+    quickActions: ['💪 Exercise', '📅 Planning', '📚 Learning', '🎯 Focused Work'],
+    duration: 30,
+    totalGoal: 30,
+    points: 750,
+    dailyPoints: 30,
+    featured: true
+  },
+  'time-mastery': {
+    name: 'Time Mastery Challenge',
+    type: 'weekly',
+    difficulty: 'Intermediate',
+    difficultyLevel: 2,
+    description: 'Track every hour and optimize your time allocation. Identify time wasters and maximize high-impact activities like top performers.',
+    todayGoal: 'Log every hour of your day and identify 3 optimization opportunities',
+    quickActions: ['⏰ Time Tracking', '📊 Analysis', '🎯 Prioritization', '❌ Eliminate Waste', '⚡ Optimize'],
+    duration: 7,
+    totalGoal: 7,
+    points: 300,
+    dailyPoints: 40
+  }
+};
+
+const achievementDefinitions = {
+  first_challenge: { name: 'First Challenge', description: 'Complete your first challenge', icon: '🏆' },
+  challenge_veteran: { name: 'Challenge Veteran', description: 'Complete 5 challenges', icon: '🎖️' },
+  challenge_master: { name: 'Challenge Master', description: 'Complete 10 challenges', icon: '👑' },
+  week_warrior: { name: 'Week Warrior', description: '7-day habit streak', icon: '⚡' },
+  month_master: { name: 'Month Master', description: '30-day habit streak', icon: '🔥' },
+  century_streak: { name: 'Century Streak', description: '100-day streak', icon: '💯' },
+  rising_star: { name: 'Rising Star', description: 'Reach 500 points', icon: '⭐' },
+  high_achiever: { name: 'High Achiever', description: 'Reach 1000 points', icon: '🚀' },
+  elite_performer: { name: 'Elite Performer', description: 'Reach 2500 points', icon: '💎' }
+};
+
+// UNIFIED DISPLAY FUNCTIONS
+function displayChallengesUnified() {
+    const data = vivifyTracker.getChallengesData();
+    
+    // Update stats using unified data
+    updateChallengeStats(data.stats);
+    
+    // Update challenges grid using unified data
+    updateChallengesGrid(data.challenges);
+    
+    // Update achievements using unified data
+    updateAchievementsUnified(data.achievements);
+}
+
+function updateChallengeStats(stats) {
+    document.getElementById('activeChallenges').textContent = stats.active;
+    document.getElementById('completedChallenges').textContent = stats.completed;
+    document.getElementById('totalPoints').textContent = stats.totalPoints;
+}
+
+function updateChallengesGrid(userChallenges) {
+    const container = document.getElementById('challengesList');
+    if (!container) return;
+
+    container.innerHTML = Object.entries(challenges).map(([id, challenge]) => {
+        const userChallenge = userChallenges[id];
+        const isJoined = userChallenge?.joined || false;
+        const isCompleted = userChallenge?.completed || false;
+        
+        let cardClass = 'challenge-card';
+        if (isCompleted) cardClass += ' completed';
+        else if (isJoined) cardClass += ' active';
+        if (challenge.featured) cardClass += ' featured';
+
+        return `
+            <div class="${cardClass}" data-challenge="${id}">
+                ${renderChallengeHeader(id, challenge)}
+                ${renderChallengeDescription(challenge)}
+                ${renderChallengeStats(id, challenge, userChallenge)}
+                ${isJoined ? renderDailyTracker(id, challenge, userChallenge) : ''}
+                ${isJoined ? renderTodayAction(id, challenge, userChallenge) : ''}
+                ${renderChallengeProgress(id, challenge, userChallenge)}
+                ${renderChallengeActions(id, challenge, userChallenge)}
+            </div>
+        `;
+    }).join('');
+}
+
+function renderChallengeHeader(id, challenge) {
+    return `
+        <div class="challenge-header">
+            <div class="challenge-info">
+                <h3>${challenge.name}</h3>
+                <div class="challenge-difficulty">
+                    <span>${challenge.difficulty}</span>
+                    <div class="difficulty-dots">
+                        ${Array(3).fill(0).map((_, i) => 
+                            `<div class="difficulty-dot ${i < challenge.difficultyLevel ? 'active' : ''}"></div>`
+                        ).join('')}
+                    </div>
+                </div>
+            </div>
+            <div class="challenge-badge ${challenge.type}">${challenge.type}</div>
+        </div>
+    `;
+}
+
+function renderChallengeDescription(challenge) {
+    return `<p class="challenge-description">${challenge.description}</p>`;
+}
+
+function renderChallengeStats(id, challenge, userChallenge) {
+    const daysLeft = challenge.type === 'ongoing' ? '∞' : Math.max(0, challenge.duration - (userChallenge?.totalDays || 0));
+    
+    return `
+        <div class="challenge-stats">
+            <div class="challenge-stat">
+                <span class="challenge-stat-value">0</span>
+                <span class="challenge-stat-label">Participants</span>
+            </div>
+            <div class="challenge-stat">
+                <span class="challenge-stat-value">${daysLeft}</span>
+                <span class="challenge-stat-label">${challenge.type === 'ongoing' ? 'Duration' : 'Days Left'}</span>
+            </div>
+            <div class="challenge-stat">
+                <span class="challenge-stat-value">${challenge.points}</span>
+                <span class="challenge-stat-label">Points</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderDailyTracker(id, challenge, userChallenge) {
+    const completedDays = userChallenge?.completedDays || [];
+    const streak = userChallenge?.streak || 0;
+    
+    // Generate last 7 days
+    const days = [];
+    const today = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        const dayName = date.toLocaleDateString('en', { weekday: 'short' });
+        const dayNum = date.getDate();
+        
+        let dayClass = 'day-box';
+        if (i === 0) dayClass += ' today';
+        if (completedDays.includes(dateStr)) dayClass += ' completed';
+        else if (i > 0) dayClass += ' missed';
+        
+        days.push(`
+            <div class="${dayClass}" data-date="${dateStr}">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.7rem; opacity: 0.7;">${dayName}</div>
+                    <div>${dayNum}</div>
+                </div>
+            </div>
+        `);
+    }
+
+    return `
+        <div class="daily-tracker">
+            <div class="tracker-header">
+                <div class="tracker-title">Daily Progress</div>
+                <div class="streak-counter">${streak} day streak</div>
+            </div>
+            <div class="days-grid">
+                ${days.join('')}
+            </div>
+        </div>
+    `;
+}
+
+function renderTodayAction(id, challenge, userChallenge) {
+    const today = new Date().toISOString().split('T')[0];
+    const completedToday = userChallenge?.completedDays?.includes(today) || false;
+    
+    if (completedToday) {
+        return `
+            <div class="today-action">
+                <div class="today-title">
+                    <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                    Today's Goal - Completed!
+                </div>
+                <div class="today-description">Great work! You've completed today's challenge. Come back tomorrow for your next goal.</div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="today-action">
+            <div class="today-title">
+                <i class="fas fa-target"></i>
+                Today's Goal
+            </div>
+            <div class="today-description">${challenge.todayGoal}</div>
+            <div class="quick-actions">
+                ${challenge.quickActions.map(action => 
+                    `<button class="quick-action" data-action="${action}">${action}</button>`
+                ).join('')}
+            </div>
+            <button class="complete-today-btn" onclick="completeDay('${id}')">
+                Mark as Complete
+            </button>
+        </div>
+    `;
+}
+
+function renderChallengeProgress(id, challenge, userChallenge) {
+    const progress = userChallenge ? Math.min(100, Math.round((userChallenge.totalDays / challenge.totalGoal) * 100)) : 0;
+    
+    return `
+        <div class="challenge-progress">
+            <div class="progress-header">
+                <span class="progress-text">Overall Progress</span>
+                <span class="progress-percentage">${progress}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+        </div>
+    `;
+}
+
+function renderChallengeActions(id, challenge, userChallenge) {
+    if (!userChallenge?.joined) {
+        return `
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="btn btn-primary" onclick="joinChallenge('${id}')" style="flex: 1;">
+                    Join Challenge
+                </button>
+                <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
+                    <i class="fas fa-info"></i>
+                </button>
+            </div>
+        `;
+    }
+    
+    if (userChallenge.completed) {
+        return `
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="btn completed" disabled style="flex: 1;">
+                    Challenge Completed ✓
+                </button>
+                <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
+                    <i class="fas fa-info"></i>
+                </button>
+            </div>
+        `;
+    }
+    
+    return `
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <button class="btn active" disabled style="flex: 1;">
+                Challenge Active
+            </button>
+            <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
+                <i class="fas fa-info"></i>
+            </button>
+        </div>
+    `;
+}
+
+function updateAchievementsUnified(userAchievements) {
+    const grid = document.getElementById('achievementsGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    Object.entries(achievementDefinitions).forEach(([key, achievement]) => {
+        const isUnlocked = userAchievements.includes(key);
+        
+        const card = document.createElement('div');
+        card.className = `achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+        
+        card.innerHTML = `
+            <span class="achievement-icon">${achievement.icon}</span>
+            <div class="achievement-name">${achievement.name}</div>
+            <div class="achievement-description">${achievement.description}</div>
+        `;
+        
+        grid.appendChild(card);
+    });
+}
+
+// UNIFIED CHALLENGE ACTIONS
+async function joinChallenge(challengeId) {
+    const success = await vivifyTracker.joinChallenge(challengeId);
+    if (success) {
+        displayChallengesUnified(); // Refresh using unified data
+        
+        // Update leaderboard display
+        if (window.VivifyLeaderboard) {
+            setTimeout(() => {
+                window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+            }, 100);
+        }
+    }
+}
+
+async function completeDay(challengeId) {
+    const challenge = challenges[challengeId];
+    const success = await vivifyTracker.completeChallengeDay(challengeId, challenge);
+    if (success) {
+        displayChallengesUnified(); // Refresh using unified data
+        
+        // Update leaderboard display
+        if (window.VivifyLeaderboard) {
+            setTimeout(() => {
+                window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+            }, 100);
+        }
+    }
+}
+
+function viewDetails(challengeId) {
+    const challenge = challenges[challengeId];
+    showNotification(`${challenge.name}\n\n${challenge.description}\n\nDaily Goal: ${challenge.todayGoal}\n\nReward: ${challenge.points} points`, 'info');
+}
+
+function viewFullLeaderboard() {
+    if (window.VivifyLeaderboard) {
+        const currentScore = window.VivifyLeaderboard.getCurrentUserScore();
+        const currentRank = window.VivifyLeaderboard.getCurrentUserRank();
+        showNotification(`Your Current Stats:\nScore: ${currentScore} points\nRank: #${currentRank || 'Unranked'}\n\nKeep completing challenges to climb the leaderboard!`, 'info');
+    }
+}
+
+function setupLogoutHandler() {
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        });
+    }
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.whiteSpace = 'pre-line';
+    notification.innerHTML = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('show'), 100);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+}
+
+// MAIN INITIALIZATION
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Challenges page loading...');
+    
+    // Check authentication
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+    const username = localStorage.getItem('username');
+    
+    if (userLoggedIn !== 'true' || !username) {
+        console.log('User not logged in, redirecting...');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    console.log('User authenticated:', username);
+    
+    // UNIFIED APPROACH: Initialize unified tracker (same as other pages)
+    vivifyTracker = new VivifyUnifiedTracker();
+    await vivifyTracker.initialize();
+    
+    // Initialize leaderboard with unified data
+    if (window.VivifyLeaderboard) {
+        window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
+        console.log('VivifyLeaderboard initialized successfully');
+        
+        setTimeout(() => {
+            window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
+        }, 100);
+    }
+    
+    // Display challenges using UNIFIED data
+    displayChallengesUnified();
+    
+    // Setup logout
+    setupLogoutHandler();
+    
+    // Set up animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(el);
+    });
+
+    console.log('Challenges page initialization complete - using unified tracker');
+});
+</script>
+</body>
+</html>

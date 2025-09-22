@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Intelligence - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .social-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .social-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .social-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .social-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Community Stats in Hero */
+        .social-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .social-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .social-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .social-stat .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Daily Challenge Widget */
+        .daily-challenge {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4rem 2rem;
+        }
+
+        .challenge-widget {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .challenge-timer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .challenge-participants {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .participant-stat {
+            text-align: center;
+        }
+
+        .participant-stat .number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f39c12;
+        }
+
+        .participant-stat .label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        /* Social Skills Categories */
+        .social-categories {
+            padding: 6rem 2rem;
+        }
+
+        .categories-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .category-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .category-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Social Progress Tracker */
+        .social-tracker {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6rem 2rem;
+        }
+
+        .tracker-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .tracker-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tracker-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tracker-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .tracker-content {
+            display: none;
+        }
+
+        .tracker-content.active {
+            display: block;
+        }
+
+        .skills-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .skill-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skill-item:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .skill-item.completed {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: rgba(39, 174, 96, 0.3);
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item.completed .skill-checkbox {
+            background: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .skill-item.completed .skill-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .skill-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .skill-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .skill-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .tracker-summary {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        /* Interactive Scenario Trainer */
+        .scenario-trainer {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .trainer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .scenario-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .scenario-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-tab.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .scenario-content {
+            display: none;
+        }
+
+        .scenario-content.active {
+            display: block;
+        }
+
+        .scenario-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scenario-title {
+            color: #f39c12;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-dialogue {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #f39c12;
+        }
+
+        .dialogue-speaker {
+            color: #f39c12;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .dialogue-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .dialogue-note {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Success Stories */
+        .success-stories {
+            padding: 6rem 2rem;
+        }
+
+        .stories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .story-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .story-info h4 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .story-info p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .story-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-item {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f39c12;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* CTA Section */
+        .social-cta {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .social-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .social-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .social-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tracker-tabs,
+            .scenario-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .skills-checklist {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section with Community Stats -->
+        <section class="social-hero fade-in-up">
+            <div class="hero-content">
+                <div class="social-badge">Elite Social Training</div>
+                <h1>Social Intelligence</h1>
+                <p>Join 876 ambitious students mastering elite social skills through gamified challenges. Build confidence, charisma, and the communication abilities that open doors and create opportunities.</p>
+                
+                <div class="social-stats">
+                    <div class="social-stat">
+                        <span class="stat-number">876</span>
+                        <span class="stat-label">Students Training</span>
+                    </div>
+                    <div class="social-stat">
+                        <span class="stat-number">142</span>
+                        <span class="stat-label">Confidence Gained</span>
+                    </div>
+                    <div class="social-stat">
+                        <span class="stat-number">89</span>
+                        <span class="stat-label">Social Wins Today</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#daily-challenge" class="btn btn-primary">Join Today's Challenge</a>
+                    <a href="#social-skills" class="btn btn-secondary">Explore Skills</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Challenge Widget -->
+        <section class="daily-challenge fade-in-up">
+            <div class="challenge-widget" id="daily-challenge">
+                <div class="challenge-header">
+                    <h3 class="challenge-title">Conversation Confidence Challenge</h3>
+                    <div class="challenge-timer" id="challenge-timer">Ends in 11:26:34</div>
+                </div>
+                
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem; text-align: center;">Start 3 genuine conversations with new people today! Join 293 students building conversation confidence through real-world practice. Use our conversation starters and track your social wins!</p>
+                <div class="challenge-participants">
+                    <div class="participant-stat">
+                        <span class="number">293</span>
+                        <span class="label">Participants</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">178</span>
+                        <span class="label">Completed</span>
+                    </div>
+                    <div class="participant-stat">
+                        <span class="number">4.7/5</span>
+                        <span class="label">Confidence Boost</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="joinConversationChallenge()">Accept Challenge</button>
+                    <button class="btn btn-secondary" onclick="viewSocialLeaderboard()">View Leaderboard</button>
+                    <button class="btn btn-secondary" onclick="shareSocialChallenge()">Invite Friends</button>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Social Skills Categories -->
+        <section class="social-categories fade-in-up">
+            <div class="categories-container" id="social-skills">
+                <h2 class="section-heading">Master Elite Social Skills</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Conversation Mastery</h3>
+                        <p>Start engaging conversations, maintain flow, and connect meaningfully with anyone in any situation.</p>
+                        <a href="#conversation-skills" class="btn btn-primary">Master Conversations</a>
+                    </div>
+    
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Social Confidence</h3>
+                        <p>Build unshakeable confidence in social situations, from networking events to casual gatherings.</p>
+                        <a href="#confidence-skills" class="btn btn-primary">Build Confidence</a>
+                    </div>
+    
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Strategic Networking</h3>
+                        <p>Build meaningful professional relationships that create opportunities and accelerate career growth.</p>
+                        <a href="#networking-skills" class="btn btn-primary">Network Strategically</a>
+                    </div>
+    
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Emotional Intelligence</h3>
+                        <p>Read social cues, manage emotions, and respond appropriately in complex social dynamics.</p>
+                        <a href="#emotional-skills" class="btn btn-primary">Develop EQ</a>
+                    </div>
+    
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3>Leadership Presence</h3>
+                        <p>Command respect, inspire others, and develop the charismatic presence of natural leaders.</p>
+                        <a href="#leadership-skills" class="btn btn-primary">Lead Others</a>
+                    </div>
+    
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-globe-asia"></i>
+                        </div>
+                        <h3>Cultural Intelligence</h3>
+                        <p>Navigate Australian social culture and connect effectively across diverse backgrounds and contexts.</p>
+                        <a href="#cultural-skills" class="btn btn-primary">Master Culture</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Social Progress Tracker -->
+        <section class="social-tracker fade-in-up">
+            <div class="tracker-container">
+                <h2 class="section-heading">Social Skills Development Tracker</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Track your daily social interactions and build streaks that compound into magnetic social presence. Compete with other ambitious students!</p>
+                
+                <div class="tracker-tabs">
+                    <div class="tracker-tab active" onclick="switchSocialTab('conversations')">Daily Conversations</div>
+                    <div class="tracker-tab" onclick="switchSocialTab('confidence')">Confidence Building</div>
+                    <div class="tracker-tab" onclick="switchSocialTab('networking')">Professional Network</div>
+                </div>
+    
+                <div id="conversations" class="tracker-content active">
+                    <div class="skills-checklist">
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'genuine-compliment')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Genuine Compliment</h4>
+                                    <p>Give authentic praise to someone</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Give one genuine, specific compliment to make someone's day better.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'active-listening')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Active Listening</h4>
+                                    <p>Fully focus on understanding someone</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Practice complete focus during a conversation - no phone, genuine questions, reflective responses.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'new-conversation')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>New Conversation</h4>
+                                    <p>Start conversation with stranger</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Initiate a friendly conversation with someone new - classmate, coffee shop worker, or neighbor.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'story-sharing')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Personal Story</h4>
+                                    <p>Share meaningful experience</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Share a personal story or experience that creates deeper connection and shows vulnerability.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'group-contribution')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Group Contribution</h4>
+                                    <p>Add value to group discussion</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Contribute meaningfully to a group conversation or class discussion without dominating.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'follow-up')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Follow-Up Contact</h4>
+                                    <p>Reconnect with someone</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Send a thoughtful message or make plans with someone you met recently.</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="confidence" class="tracker-content">
+                    <div class="skills-checklist">
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'eye-contact')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Strong Eye Contact</h4>
+                                    <p>Maintain confident presence</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Practice maintaining appropriate eye contact during conversations to show confidence and engagement.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'speak-up')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Speak Up</h4>
+                                    <p>Voice opinion in group setting</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Share your perspective or ask a question in a meeting, class, or group setting.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'confident-introduction')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Confident Introduction</h4>
+                                    <p>Introduce yourself with presence</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Introduce yourself to someone new with confidence, clear voice, and engaging energy.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'boundary-setting')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Set Boundary</h4>
+                                    <p>Communicate limits respectfully</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Practice saying no or expressing your boundaries in a kind but firm way.</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="networking" class="tracker-content">
+                    <div class="skills-checklist">
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'linkedin-connect')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>LinkedIn Connection</h4>
+                                    <p>Connect with new professional</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Send personalized LinkedIn connection request to someone in your field of interest.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'industry-engagement')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Industry Engagement</h4>
+                                    <p>Participate in professional discussion</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Comment thoughtfully on industry posts or participate in professional discussion online.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'coffee-invite')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Coffee Chat Invite</h4>
+                                    <p>Request informational meeting</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Invite someone for coffee to learn about their career path or industry insights.</div>
+                        </div>
+                        
+                        <div class="skill-item" onclick="toggleSocialSkill(this, 'value-offer')">
+                            <div class="skill-header">
+                                <div class="skill-checkbox"></div>
+                                <div class="skill-info">
+                                    <h4>Offer Value</h4>
+                                    <p>Help someone in your network</p>
+                                </div>
+                            </div>
+                            <div class="skill-description">Offer help, share an opportunity, or provide value to someone in your network.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tracker-summary">
+                    <div class="summary-score" id="social-score">0/6</div>
+                    <div class="summary-label">Social Skills Completed Today</div>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="saveSocialProgress()" id="save-social-btn" style="display: none;">Save Progress & Extend Streak</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Interactive Scenario Trainer -->
+        <section class="scenario-trainer fade-in-up">
+            <div class="trainer-container">
+                <h2 class="section-heading">Social Situation Trainer</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Practice real-world social scenarios with expert-designed conversations and Australian cultural context.</p>
+                
+                <div class="scenario-tabs">
+                    <div class="scenario-tab active" onclick="switchScenarioTab('university')">University Life</div>
+                    <div class="scenario-tab" onclick="switchScenarioTab('workplace')">Workplace</div>
+                    <div class="scenario-tab" onclick="switchScenarioTab('social')">Social Events</div>
+                    <div class="scenario-tab" onclick="switchScenarioTab('networking')">Networking</div>
+                </div>
+    
+                <div id="university" class="scenario-content active">
+                    <div class="scenario-card">
+                        <div class="scenario-title">Joining a Study Group</div>
+                        <div class="scenario-dialogue">
+                            <div class="dialogue-speaker">Situation: You want to join an existing study group</div>
+                            <div class="dialogue-text"><strong>You:</strong> "Hey, I heard you guys have a study group for Marketing. I'm really struggling with the concepts - would it be okay if I joined you?"</div>
+                            <div class="dialogue-text"><strong>Group member:</strong> "Yeah, for sure! We meet every Tuesday at 6pm in the library."</div>
+                            <div class="dialogue-text"><strong>You:</strong> "That's perfect! I can bring notes from the lecture I attended that you missed last week if that helps."</div>
+                            <div class="dialogue-note">Key: Show you can contribute value, not just take from the group</div>
+                        </div>
+                    </div>
+    
+                    <div class="scenario-card">
+                        <div class="scenario-title">Approaching a Lecturer</div>
+                        <div class="scenario-dialogue">
+                            <div class="dialogue-speaker">Situation: Asking for help after class</div>
+                            <div class="dialogue-text"><strong>You:</strong> "Professor Smith, could I grab a quick word? I'm having trouble understanding how to apply the framework from today's lecture."</div>
+                            <div class="dialogue-text"><strong>Lecturer:</strong> "Of course! What specifically are you struggling with?"</div>
+                            <div class="dialogue-text"><strong>You:</strong> "I understand the theory, but I'm not sure how to structure my analysis for the assignment."</div>
+                            <div class="dialogue-note">Key: Be specific about your question and show you've made an effort to understand</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="workplace" class="scenario-content">
+                    <div class="scenario-card">
+                        <div class="scenario-title">First Day at Work</div>
+                        <div class="scenario-dialogue">
+                            <div class="dialogue-speaker">Situation: Introducing yourself to team members</div>
+                            <div class="dialogue-text"><strong>You:</strong> "Hi everyone! I'm Alex, the new marketing intern. I'm really excited to be working with such a talented team."</div>
+                            <div class="dialogue-text"><strong>Team member:</strong> "Welcome aboard! What's your background?"</div>
+                            <div class="dialogue-text"><strong>You:</strong> "I'm studying marketing at uni and I'm particularly interested in digital strategy. I'd love to learn how you guys approach campaign development."</div>
+                            <div class="dialogue-note">Key: Show enthusiasm, mention your relevant background, and express interest in learning</div>
+                        </div>
+                    </div>
+    
+                    <div class="scenario-card">
+                        <div class="scenario-title">Workplace Disagreement</div>
+                        <div class="scenario-dialogue">
+                            <div class="dialogue-speaker">Situation: Respectfully disagreeing with a colleague's approach</div>
+                            <div class="dialogue-text"><strong>Colleague:</strong> "I think we should focus all our budget on social media advertising."</div>
+                            <div class="dialogue-text"><strong>You:</strong> "That's a strong strategy. I wonder if we could also consider some traditional channels to reach the older demographic in our target market?"</div>
+                            <div class="dialogue-text"><strong>Colleague:</strong> "Hmm, that's a good point. What did you have in mind?"</div>
+                            <div class="dialogue-note">Key: Acknowledge their idea first, then add your perspective as complementary rather than contradictory</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="social" class="scenario-content">
+                    <div class="scenario-card">
+                        <div class="scenario-title">Meeting New People at Party</div>
+                        <div class="scenario-dialogue">
+                            <div class="dialogue-speaker">Situation: Starting conversation at a house party</div>
+                            <div class="dialogue-text"><strong>You:</strong> "Hey! I'm Sarah. How do you know Tom?"</div>
+                            <div class="dialogue-text"><strong>New person:</strong> "Hi Sarah! I'm Jake, we work together. What about you?"</div>
+                            <div class="dialogue-text"><strong>You:</strong> "We went to school together. What kind of work do you do? Tom mentioned you guys have some pretty interesting projects."</div>
+                            <div class="dialogue-note">Key: Start with connection question, then build on their response with genuine interest</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="networking" class="scenario-content">
+                    <div class="scenario-card">
+                        <div class="scenario-title">Professional Networking Event</div>
+                        <div class="scenario-dialogue">
+                            <div class="dialogue-speaker">Situation: Approaching someone at a networking event</div>
+                            <div class="dialogue-text"><strong>You:</strong> "Hi, I'm Emma. This is a great turnout tonight! Are you in marketing as well?"</div>
+                            <div class="dialogue-text"><strong>Professional:</strong> "Hey Emma! Yes, I'm in digital marketing at XYZ Company. What about yourself?"</div>
+                            <div class="dialogue-text"><strong>You:</strong> "I'm finishing my marketing degree and really interested in the digital side. I'd love to hear about your experience in the industry."</div>
+                            <div class="dialogue-note">Key: Show genuine interest in their experience and ask thoughtful questions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Success Stories -->
+        <section class="success-stories fade-in-up">
+            <div class="stories-container">
+                <h2 class="section-heading">Social Success Stories</h2>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">OL</div>
+                            <div class="story-info">
+                                <h4>Olivia L.</h4>
+                                <p>Year 11, Brisbane Girls Grammar</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The conversation challenges completely transformed my confidence! I went from avoiding social events to actually enjoying them and making genuine friends."
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">127</span>
+                                <span class="metric-label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">25+</span>
+                                <span class="metric-label">New Connections</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">LW</div>
+                            <div class="story-info">
+                                <h4>Liam W.</h4>
+                                <p>Year 12, Sydney Grammar</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "The networking skills helped me connect with industry professionals and land a summer internship at a top consulting firm. The confidence training was a game-changer!"
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">89</span>
+                                <span class="metric-label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">BCG</span>
+                                <span class="metric-label">Internship</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <div class="story-header">
+                            <div class="story-avatar">ZK</div>
+                            <div class="story-info">
+                                <h4>Zoe K.</h4>
+                                <p>Year 10, Melbourne High</p>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            "Learning to read social cues and respond appropriately improved all my relationships. I'm now the one friends come to for advice and feel comfortable leading group projects."
+                        </div>
+                        <div class="story-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">156</span>
+                                <span class="metric-label">Day Streak</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">95%</span>
+                                <span class="metric-label">Confidence Score</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary" onclick="shareSocialSuccess()">Share Your Success</button>
+                    <button class="btn btn-secondary" onclick="joinSocialCommunity()">Join Elite Community</button>
+                </div>
+            </div>
+        </section>
+    
+        <!-- CTA Section -->
+        <section class="social-cta fade-in-up">
+            <div class="cta-content">
+                <h2 class="cta-title">Master Social Intelligence Today</h2>
+                <p class="cta-subtitle">Join 876 ambitious students building elite social skills that create opportunities, deepen relationships, and accelerate success in every area of life.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="signup.html" class="btn btn-primary">Start Social Training</a>
+                    <button class="btn btn-secondary" onclick="shareSocialPlatform()">Invite Friends</button>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Load saved progress
+            loadSocialProgress();
+            
+            // Start challenge timer
+            startChallengeTimer();
+            
+            // Add click handlers for category card buttons
+            document.querySelectorAll('.category-card .btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const buttonText = this.textContent.trim();
+                    handleSocialCategoryAction(buttonText);
+                });
+            });
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+
+        // Social Category Action Handler
+        function handleSocialCategoryAction(buttonText) {
+            switch(buttonText) {
+                case 'Master Conversations':
+                    showConversationTraining();
+                    break;
+                case 'Build Confidence':
+                    showConfidenceTraining();
+                    break;
+                case 'Network Strategically':
+                    showNetworkingTraining();
+                    break;
+                case 'Develop EQ':
+                    showEmotionalIntelligenceTraining();
+                    break;
+                case 'Lead Others':
+                    showLeadershipTraining();
+                    break;
+                case 'Master Culture':
+                    showCulturalIntelligenceTraining();
+                    break;
+                default:
+                    alert('Training module coming soon!');
+            }
+        }
+
+        function showConversationTraining() {
+            alert(`🗣️ CONVERSATION MASTERY TRAINING 🗣️
+
+Master the art of engaging conversation and social connection!
+
+📋 TRAINING MODULES:
+- Conversation Starters & Ice Breakers
+- Active Listening & Empathy Skills
+- Storytelling & Personal Sharing
+- Question Techniques & Flow Management
+- Ending Conversations Gracefully
+
+🏆 PRACTICAL CHALLENGES:
+- Start 3 new conversations daily for a week
+- Practice 10 different conversation starters
+- Share 5 personal stories with appropriate vulnerability
+- Master 20 open-ended questions
+- Complete 7 days of active listening practice
+
+⏱️ ESTIMATED TIME: 2-3 weeks
+🎁 COMPLETION REWARD: Conversation Master badge + social confidence boost session
+
+Ready to become a conversation magnet?`);
+        }
+
+        function showConfidenceTraining() {
+            alert(`💪 SOCIAL CONFIDENCE TRAINING 💪
+
+Build unshakeable confidence in any social situation!
+
+📋 TRAINING MODULES:
+- Body Language & Presence Mastery
+- Overcoming Social Anxiety
+- Assertiveness Training
+- Public Speaking & Group Dynamics
+- Rejection Resilience Building
+
+🏆 PRACTICAL CHALLENGES:
+- Maintain eye contact for entire conversations (5 days)
+- Speak up in 10 group settings
+- Give 5 confident self-introductions
+- Practice saying "no" respectfully (10 scenarios)
+- Join 3 new social groups or activities
+
+⏱️ ESTIMATED TIME: 3-4 weeks
+🎁 COMPLETION REWARD: Confidence Champion badge + personal presence coaching
+
+Ready to own every room you enter?`);
+        }
+
+        function showNetworkingTraining() {
+            alert(`🤝 STRATEGIC NETWORKING MASTERY 🤝
+
+Build a powerful network that accelerates your success!
+
+📋 TRAINING MODULES:
+- Professional Relationship Building
+- LinkedIn Optimization & Outreach
+- Industry Event Navigation
+- Mentorship Acquisition
+- Value-First Networking Approach
+
+🏆 PRACTICAL CHALLENGES:
+- Connect with 20 professionals in your field
+- Attend 3 networking events or industry meetups
+- Send 10 personalized LinkedIn messages
+- Schedule 5 coffee chats with industry professionals
+- Offer value to 15 connections without asking for anything
+
+⏱️ ESTIMATED TIME: 4-6 weeks (ongoing)
+🎁 COMPLETION REWARD: Network Builder badge + exclusive industry networking event
+
+Ready to build your professional empire?`);
+        }
+
+        function showEmotionalIntelligenceTraining() {
+            alert(`❤️ EMOTIONAL INTELLIGENCE MASTERY ❤️
+
+Develop the EQ that separates great leaders from the rest!
+
+📋 TRAINING MODULES:
+- Emotional Self-Awareness & Regulation
+- Social Cue Recognition & Response
+- Empathy Development & Application
+- Conflict Resolution & De-escalation
+- Motivational Intelligence
+
+🏆 PRACTICAL CHALLENGES:
+- Practice emotion recognition with 50 people
+- Successfully de-escalate 5 tense situations
+- Show genuine empathy in 20 conversations
+- Manage your emotional responses for 30 days
+- Help 10 people work through their emotions
+
+⏱️ ESTIMATED TIME: 4-5 weeks
+🎁 COMPLETION REWARD: EQ Master badge + emotional intelligence assessment
+
+Ready to read people like a book?`);
+        }
+
+        function showLeadershipTraining() {
+            alert(`👑 LEADERSHIP PRESENCE TRAINING 👑
+
+Develop the magnetic presence that makes people want to follow you!
+
+📋 TRAINING MODULES:
+- Charismatic Communication & Influence
+- Decision Making Under Pressure
+- Team Motivation & Inspiration
+- Vision Casting & Goal Setting
+- Authentic Leadership Development
+
+🏆 PRACTICAL CHALLENGES:
+- Lead 5 group projects or initiatives
+- Practice public speaking in 10 different contexts
+- Mentor 3 younger students or peers
+- Make 20 confident decisions and own the outcomes
+- Inspire others to take action on 15 occasions
+
+⏱️ ESTIMATED TIME: 5-6 weeks
+🎁 COMPLETION REWARD: Leadership Elite badge + executive presence coaching
+
+Ready to become the leader others naturally follow?`);
+        }
+
+        function showCulturalIntelligenceTraining() {
+            alert(`🌏 CULTURAL INTELLIGENCE MASTERY 🌏
+
+Navigate Australian culture and connect across diverse backgrounds!
+
+📋 TRAINING MODULES:
+- Australian Social Customs & Etiquette
+- Cross-Cultural Communication Skills
+- Cultural Sensitivity & Inclusion
+- International Student Integration
+- Workplace Culture Navigation
+
+🏆 PRACTICAL CHALLENGES:
+- Learn 10 Australian cultural nuances and practice them
+- Successfully connect with 15 people from different backgrounds
+- Navigate 5 culturally diverse social situations
+- Help international students feel included (10 interactions)
+- Master professional Australian communication style
+
+⏱️ ESTIMATED TIME: 3-4 weeks
+🎁 COMPLETION REWARD: Cultural Navigator badge + diversity leadership opportunity
+
+Ready to connect with anyone, anywhere?`);
+        }
+
+        // Challenge Functions
+        let challengeTimeRemaining = 11 * 3600 + 26 * 60 + 34; // 11:26:34 in seconds
+
+        function startChallengeTimer() {
+            const timer = document.getElementById('challenge-timer');
+            
+            setInterval(() => {
+                challengeTimeRemaining--;
+                const hours = Math.floor(challengeTimeRemaining / 3600);
+                const minutes = Math.floor((challengeTimeRemaining % 3600) / 60);
+                const seconds = challengeTimeRemaining % 60;
+                
+                timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (challengeTimeRemaining <= 0) {
+                    timer.textContent = 'Challenge Ended';
+                }
+            }, 1000);
+        }
+
+        function joinConversationChallenge() {
+            alert('🗣️ Conversation Confidence Challenge Accepted!\n\nYour Mission:\n• Start 3 genuine conversations with new people\n• Practice active listening in each interaction\n• Use open-ended questions to keep conversations flowing\n• Share one personal story or experience\n• End each conversation positively\n\n🏆 Rewards:\n• +75 XP for completion\n• Conversation Master badge\n• Social confidence boost\n\nTime to build your social superpowers!');
+        }
+
+        function viewSocialLeaderboard() {
+            const leaderboardData = `
+🏆 SOCIAL CONFIDENCE LEADERBOARD 🏆
+
+📊 Top Social Masters This Week:
+
+1. 🥇 Emma R. (Sydney Girls) - 156 day streak
+2. 🥈 Jake M. (Melbourne Grammar) - 134 day streak  
+3. 🥉 Sarah K. (Brisbane Girls) - 89 day streak
+4. Alex T. (Perth Modern) - 67 day streak
+5. Maya P. (Adelaide High) - 45 day streak
+
+📈 Your Stats:
+- Current Streak: Ready to start!
+- Conversations This Week: Time to begin
+- Confidence Score: Building your foundation
+- Network Growth: Your journey starts now
+
+💡 This Week's Focus: "Conversation Starters"
+Most participants are mastering the art of breaking the ice!
+            `;
+            alert(leaderboardData);
+        }
+
+        function shareSocialChallenge() {
+            const shareText = `I'm building elite social skills on Vivify! 🗣️\n\nJoin me in today's Conversation Confidence Challenge - let's see who can start the most meaningful conversations!\n\nCurrent participants: 293 students competing\n\n${window.location.origin}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join my Social Challenge!',
+                    text: shareText,
+                    url: window.location.origin
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('🗣️ Challenge invite copied to clipboard!\n\nShare it with friends who want to build social confidence!');
+                });
+            }
+        }
+
+        // Social Tracking Functions
+        let completedSocialSkills = new Set();
+        let currentSocialTab = 'conversations';
+
+        function switchSocialTab(tabName) {
+            currentSocialTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tracker-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tracker-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            
+            updateSocialScore();
+        }
+
+        function toggleSocialSkill(element, skillId) {
+            const fullSkillId = `${currentSocialTab}-${skillId}`;
+            
+            if (completedSocialSkills.has(fullSkillId)) {
+                completedSocialSkills.delete(fullSkillId);
+                element.classList.remove('completed');
+            } else {
+                completedSocialSkills.add(fullSkillId);
+                element.classList.add('completed');
+                
+                // Add success animation
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 1000);
+                
+                // Show success message
+                const skillName = element.querySelector('h4').textContent;
+                showSocialSkillSuccess(skillName);
+            }
+            
+            updateSocialScore();
+            saveSocialProgress();
+        }
+
+        function showSocialSkillSuccess(skillName) {
+            const xpReward = Math.floor(Math.random() * 20) + 15; // 15-35 XP
+            alert(`🎉 SOCIAL SKILL COMPLETED! 🎉\n\n✅ ${skillName}\n\n🏆 REWARDS:\n• +${xpReward} XP earned\n• Social confidence streak maintained\n• Progress toward social mastery\n\n🗣️ Building your social superpowers one interaction at a time!`);
+        }
+
+        function updateSocialScore() {
+            const currentSkills = Array.from(completedSocialSkills).filter(skill => skill.startsWith(currentSocialTab));
+            const totalSkills = document.querySelectorAll(`#${currentSocialTab} .skill-item`).length;
+            const score = currentSkills.length;
+            
+            document.getElementById('social-score').textContent = `${score}/${totalSkills}`;
+            
+            const saveBtn = document.getElementById('save-social-btn');
+            if (score > 0) {
+                saveBtn.style.display = 'inline-block';
+            } else {
+                saveBtn.style.display = 'none';
+            }
+        }
+
+        function saveSocialProgress() {
+            const progress = {
+                skills: Array.from(completedSocialSkills),
+                currentTab: currentSocialTab,
+                lastUpdated: Date.now()
+            };
+            
+            localStorage.setItem('socialProgress', JSON.stringify(progress));
+        }
+
+        function loadSocialProgress() {
+            const saved = localStorage.getItem('socialProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                
+                // Restore completed skills
+                completedSocialSkills = new Set(progress.skills || []);
+                
+                // Apply saved state to UI
+                progress.skills?.forEach(skillId => {
+                    const [tab, skill] = skillId.split('-', 2);
+                    const element = document.querySelector(`#${tab} .skill-item[onclick*="${skill}"]`);
+                    if (element) {
+                        element.classList.add('completed');
+                    }
+                });
+                
+                updateSocialScore();
+            }
+        }
+
+        function saveSocialProgress() {
+            const totalScore = completedSocialSkills.size;
+            if (totalScore === 0) return;
+            
+            const btn = document.getElementById('save-social-btn');
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                const streakDay = Math.floor(Math.random() * 127) + 1;
+                btn.textContent = `Saved! Social Confidence Streak Day ${streakDay}`;
+                setTimeout(() => {
+                    btn.textContent = 'Save Progress & Extend Streak';
+                    btn.disabled = false;
+                }, 2000);
+            }, 1000);
+        }
+
+        // Scenario Functions
+        function switchScenarioTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.scenario-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.scenario-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Success Story Functions
+        function shareSocialSuccess() {
+            const userStory = prompt(`🌟 SHARE YOUR SOCIAL SUCCESS! 🌟\n\nTell other students how building social skills changed your life:\n\nExamples:\n• "Made 15 new friends and feel confident at parties!"\n• "Networking skills helped me land dream internship"\n• "Overcame social anxiety and now lead group projects"\n\nYour success story (keep it under 150 characters):`);
+            
+            if (userStory && userStory.trim()) {
+                alert(`🎉 SOCIAL SUCCESS SHARED! 🎉\n\nYour story: "${userStory}"\n\n✅ Story will be reviewed and featured\n✅ +100 XP awarded for sharing\n✅ Social Inspiration badge unlocked\n\nThank you for inspiring other students! 🗣️`);
+            }
+        }
+
+        function joinSocialCommunity() {
+            alert(`🚀 JOINING ELITE SOCIAL COMMUNITY! 🚀\n\nWelcome to the exclusive community of students mastering social intelligence!\n\n🎯 COMMUNITY FEATURES:\n• Daily social challenges\n• Conversation practice groups\n• Confidence building workshops\n• Networking event meetups\n• Social skills masterclasses\n\n📱 ACCESS:\n• Discord server invite sent\n• Weekly social newsletter\n• Mobile app notifications enabled\n\n🗣️ Ready to build magnetic social presence with 876 ambitious students!`);
+        }
+
+        function shareSocialPlatform() {
+            const shareText = `I'm building elite social skills on Vivify! 🗣️\n\n📊 My Progress:\n• ${completedSocialSkills.size} social skills completed\n• Building magnetic presence daily\n• Connecting with ambitious students\n\nJoin 876+ students mastering social intelligence: ${window.location.origin}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join me on Vivify!',
+                    text: shareText,
+                    url: window.location.origin
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('🗣️ Invite link copied to clipboard!\n\nShare your social journey with friends!');
+                });
+            }
+        }
+
+        // Community Stats Updates
+        function updateCommunityStats() {
+            const baseStats = {
+                students: 876,
+                confidenceGained: 142,
+                socialWins: 89
+            };
+            
+            setInterval(() => {
+                const variation = () => Math.floor(Math.random() * 5);
+                
+                const statsElements = document.querySelectorAll('.social-stat .stat-number');
+                if (statsElements.length >= 3) {
+                    statsElements[0].textContent = baseStats.students + variation();
+                    statsElements[1].textContent = baseStats.confidenceGained + variation();
+                    statsElements[2].textContent = baseStats.socialWins + variation();
+                }
+            }, 45000); // Update every 45 seconds
+        }
+
+        // Start community stats updates
+        updateCommunityStats();
+    </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>

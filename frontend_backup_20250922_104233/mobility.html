@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movement & Mobility - Vivify</title>
+    
+    <!-- Load fonts first -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header - Consistent with other pages */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .left-nav ul, .right-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .left-nav a, .right-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .left-nav a:hover, .right-nav a:hover {
+            color: #f39c12;
+        }
+
+        .left-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .left-nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            color: #000 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .mobility-hero {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+                url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 2rem 6rem;
+            text-align: center;
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mobility-badge {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .mobility-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f39c12 50%, #e67e22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .mobility-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+            color: #000;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-content p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .benefit-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Mobility vs Flexibility Section */
+        .comparison-section {
+            padding: 6rem 2rem;
+        }
+
+        .comparison-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .comparison-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comparison-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .comparison-box:hover::before {
+            transform: scaleX(1);
+        }
+
+        .comparison-box:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .comparison-box h3 {
+            color: #ffffff;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(243, 156, 18, 0.3);
+            padding-bottom: 1rem;
+        }
+
+        .comparison-box p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .comparison-box ul {
+            color: rgba(255, 255, 255, 0.7);
+            padding-left: 2rem;
+            line-height: 1.7;
+        }
+
+        .comparison-box ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .comparison-box strong {
+            color: #f39c12;
+        }
+
+        /* Movement Categories Section */
+        .movement-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .movement-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .movement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .movement-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .movement-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .movement-card:hover {
+            transform: translateY(-15px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .movement-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .movement-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .movement-info h3 {
+            margin: 0 0 1rem 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .movement-info p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .movement-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .view-details {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        /* Routines Section */
+        .routines-section {
+            padding: 6rem 2rem;
+        }
+
+        .routines-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .routine-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .routine-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .routine-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .routine-card:hover {
+            transform: translateY(-5px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+        }
+
+        .routine-card h3 {
+            color: #ffffff;
+            margin: 0 0 1rem 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .routine-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .routine-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .routine-details h4 {
+            color: #f39c12;
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .routine-details ul {
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 2rem;
+            line-height: 1.7;
+        }
+
+        .routine-details li {
+            margin-bottom: 0.75rem;
+        }
+
+        .routine-details strong {
+            color: #ffffff;
+        }
+
+        /* Safety Tips Section */
+        .safety-section {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .safety-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(243, 156, 18, 0.05);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            border-left: 6px solid #f39c12;
+        }
+
+        .safety-container h3 {
+            color: #f39c12;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .safety-container p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .safety-container ul {
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 2rem;
+            line-height: 1.7;
+        }
+
+        .safety-container li {
+            margin-bottom: 1rem;
+        }
+
+        .safety-container strong {
+            color: #ffffff;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 6rem 2rem;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 4rem auto 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 400px;
+        }
+
+        .faq-answer p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            .mobility-hero {
+                padding: 120px 1rem 4rem;
+            }
+
+            .mobility-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .movement-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .movement-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    @media (max-width: 768px) {
+            /* FORCE hide all desktop navigation */
+            nav ul,
+            nav li,
+            .left-nav ul,
+            .right-nav ul,
+            .left-nav li,
+            .right-nav li,
+            .left-nav > ul,
+            .right-nav > ul {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure nav container works properly */
+            nav {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Keep logo visible */
+            .logo,
+            .logo a {
+                display: block !important;
+                visibility: visible !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Force show mobile button if it exists */
+            .mobile-menu-btn {
+                display: flex !important;
+                visibility: visible !important;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                z-index: 1001;
+            }
+            
+            /* Mobile button styles */
+            .mobile-menu-btn .hamburger {
+                width: 25px;
+                height: 3px;
+                background: #ffffff;
+                margin: 3px 0;
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            
+            /* Ensure right-nav container shows mobile button */
+            .right-nav {
+                display: flex !important;
+                align-items: center !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* If no mobile button exists, add this emergency button */
+        @media (max-width: 768px) {
+            nav:not(:has(.mobile-menu-btn))::after {
+                content: "☰";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-link:hover {
+            color: #f39c12;
+            padding-left: 1rem;
+        }
+
+        .mobile-menu-link.mobile-cta {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000 !important;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu,
+            .mobile-menu-btn {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+    <script>
+        // Authentication-aware mobile menu
+function createMobileMenu() {
+    // Only create mobile menu on mobile devices
+    if (window.innerWidth > 768) {
+        return; // Exit early on desktop
+    }
+    
+    // Check authentication status
+    const authToken = localStorage.getItem('authToken');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
+    const username = localStorage.getItem('username') || 'User';
+    
+    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
+    
+    // Create mobile menu if it doesn't exist
+    if (!document.getElementById('mobile-menu')) {
+        const header = document.querySelector('header');
+        const mobileMenu = document.createElement('div');
+        mobileMenu.id = 'mobile-menu';
+        mobileMenu.className = 'mobile-menu';
+        
+        // Generate auth-specific menu items
+        let authMenuItems = '';
+        if (isLoggedIn) {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <div class="mobile-user-info">
+                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
+                </div>
+                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
+                <a href="profile.html" class="mobile-menu-link">Profile</a>
+                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
+            `;
+        } else {
+            authMenuItems = `
+                <div class="mobile-menu-divider"></div>
+                <a href="login.html" class="mobile-menu-link">Login</a>
+                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
+            `;
+        }
+        
+        mobileMenu.innerHTML = `
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <div class="logo"><a href="index.html">Vivify</a></div>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+                </div>
+                <div class="mobile-menu-links">
+                    <a href="index.html" class="mobile-menu-link">Home</a>
+                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
+                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
+                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
+                    <a href="about.html" class="mobile-menu-link">About</a>
+                    <a href="community.html" class="mobile-menu-link">Community</a>
+                    ${authMenuItems}
+                </div>
+            </div>
+        `;
+        header.appendChild(mobileMenu);
+    }
+    
+    // Create mobile button if it doesn't exist
+    if (!document.getElementById('mobile-menu-btn')) {
+        const nav = document.querySelector('nav');
+        const rightNav = nav.querySelector('.right-nav') || nav;
+        const mobileBtn = document.createElement('button');
+        mobileBtn.id = 'mobile-menu-btn';
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.onclick = toggleMobileMenu;
+        mobileBtn.innerHTML = `
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+        `;
+        rightNav.appendChild(mobileBtn);
+    }
+}
+
+function handleMobileLogout(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear all auth data
+        localStorage.clear();
+        
+        // Close mobile menu
+        closeMobileMenu();
+        
+        // Refresh the page to update UI
+        window.location.reload();
+    }
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    
+    menu.classList.remove('active');
+    btn.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Function to update mobile menu when auth state changes
+function updateMobileMenuAuth() {
+    const existingMenu = document.getElementById('mobile-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    createMobileMenu();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', createMobileMenu);
+
+// Listen for auth state changes (if you have an auth system that fires events)
+window.addEventListener('authStateChanged', updateMobileMenuAuth);
+
+// Export functions for external use
+window.updateMobileMenuAuth = updateMobileMenuAuth;
+window.handleMobileLogout = handleMobileLogout;
+// Add this at the end of your mobile menu script
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Remove mobile elements on desktop
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        
+        if (mobileMenu) mobileMenu.remove();
+        if (mobileBtn) mobileBtn.remove();
+        
+        // Reset body overflow
+        document.body.style.overflow = '';
+    } else if (window.innerWidth <= 768) {
+        // Recreate mobile menu if switching to mobile
+        const existingMenu = document.getElementById('mobile-menu');
+        if (!existingMenu) {
+            createMobileMenu();
+        }
+    }
+});
+        </script>
+<script src="js/vivify-stats.js"></script>
+<script src="js/leaderboard-system.js"></script>
+<script src="js/card-system.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <div class="logo">
+                    <a href="index.html">Vivify</a>
+                </div>
+                <ul>
+                    <li><a href="index.html#training">Training Areas</a></li>
+                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" class="cta-nav" id="signup-link">Start Training</a></li>
+                    <!-- Logged in navigation -->
+                    <li><a href="dashboard.html" id="dashboard-link" class="hidden">Dashboard</a></li>
+                    <li><a href="profile.html" id="profile-link" class="hidden">Profile</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <!-- Hero Section -->
+        <section class="mobility-hero fade-in-up">
+            <div class="hero-content">
+                <div class="mobility-badge">🏃‍♂️ Elite Movement Training</div>
+                <h1>Master Movement Quality</h1>
+                <p>Develop the movement quality and body control of elite athletes. Master mobility protocols that enhance performance, prevent injury, and create the physical freedom that supports peak academic and life performance.</p>
+                <a href="#movement-types" class="btn btn-primary">Start Moving</a>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="intro-section fade-in-up">
+            <h2 class="section-heading">Elite Movement Development</h2>
+            <div class="intro-content">
+                <p>Movement quality is the foundation of all physical performance. Elite mobility training develops the joint range of motion, muscle flexibility, and movement control that allows your body to function at its highest level.</p>
+                <p>For ambitious students, mobility training counters the negative effects of prolonged sitting, reduces injury risk during physical activities, and builds the body awareness that translates to better posture, confidence, and physical presence.</p>
+                <p>Master the movement protocols used by professional athletes and performers to maintain peak physical function while managing demanding academic and professional schedules.</p>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section fade-in-up">
+            <div class="benefits-container">
+                <h2 class="section-heading">Elite Movement Benefits</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Elite Posture</h3>
+                        <p>Develop the confident posture and physical presence that commands respect and projects success in all situations.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <h3>Performance Enhancement</h3>
+                        <p>Improve efficiency in all movement patterns, from daily activities to athletic performance and physical challenges.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Injury Prevention</h3>
+                        <p>Build resilient movement patterns that protect against injury and maintain peak function throughout demanding schedules.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Stress Relief</h3>
+                        <p>Release physical tension and mental stress through mindful movement practices that promote relaxation and focus.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                        <h3>Enhanced Energy</h3>
+                        <p>Improve circulation and reduce fatigue through movement practices that energize your body and sharpen your mind.</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Body Control</h3>
+                        <p>Develop the balance, coordination, and body awareness that enhances athletic ability and daily movement confidence.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mobility vs Flexibility Comparison -->
+        <section class="comparison-section fade-in-up">
+            <div class="comparison-container">
+                <h2 class="section-heading">Understanding Elite Movement: Mobility vs Flexibility</h2>
+                <div class="comparison-grid">
+                    <div class="comparison-box">
+                        <h3>Flexibility Training</h3>
+                        <p>Flexibility focuses on a muscle's ability to lengthen passively through its range of motion.</p>
+                        <p><strong>Key Characteristics:</strong></p>
+                        <ul>
+                            <li>Passive muscle lengthening capacity</li>
+                            <li>Focuses on muscle elasticity and extensibility</li>
+                            <li>Measured by static stretch positions</li>
+                            <li>Improved primarily through stretching protocols</li>
+                            <li>Example: How far your hamstring can stretch in a seated forward fold</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-box">
+                        <h3>Mobility Training</h3>
+                        <p>Mobility is the ability to move a joint actively through its full range of motion with strength and control.</p>
+                        <p><strong>Key Characteristics:</strong></p>
+                        <ul>
+                            <li>Active movement control and strength</li>
+                            <li>Involves coordination, stability, and joint function</li>
+                            <li>Measured by functional movement patterns</li>
+                            <li>Improved through dynamic movement and motor control</li>
+                            <li>Example: Performing a deep squat with perfect form and control</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Movement Categories Section -->
+        <section class="movement-section fade-in-up">
+            <div class="movement-container">
+                <h2 class="section-heading" id="movement-types">Elite Movement Categories</h2>
+                <div class="movement-grid">
+                    <div class="movement-card">
+                        <img src="https://images.unsplash.com/photo-1600881333165-2e200f153624?auto=format&fit=crop&w=600&q=80" alt="Hip Mobility">
+                        <div class="movement-info">
+                            <h3>Hip Mobility Mastery</h3>
+                            <p>Develop powerful hip mobility for improved lower body movement patterns, reduced low back stress, and enhanced athletic performance.</p>
+                            <div class="movement-meta">
+                                <span>Focus: Lower Body</span>
+                                <span>Difficulty: Beginner-Advanced</span>
+                            </div>
+                            <a href="mobility/hip-mobility.html" class="btn btn-primary view-details">Master Hip Movement</a>
+                        </div>
+                    </div>
+
+                    <div class="movement-card">
+                        <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?auto=format&fit=crop&w=600&q=80" alt="Shoulder Mobility">
+                        <div class="movement-info">
+                            <h3>Shoulder Mobility Excellence</h3>
+                            <p>Master the complex shoulder joint for improved posture, overhead performance, and elimination of desk-related tension.</p>
+                            <div class="movement-meta">
+                                <span>Focus: Upper Body</span>
+                                <span>Difficulty: Beginner-Intermediate</span>
+                            </div>
+                            <a href="mobility/shoulder-mobility.html" class="btn btn-primary view-details">Perfect Shoulders</a>
+                        </div>
+                    </div>
+
+                    <div class="movement-card">
+                        <img src="https://images.unsplash.com/photo-1597347322523-c1633bb314fc?auto=format&fit=crop&w=600&q=80" alt="Ankle Mobility">
+                        <div class="movement-info">
+                            <h3>Ankle Mobility Foundation</h3>
+                            <p>Build the ankle mobility essential for proper squat mechanics, walking efficiency, and lower leg injury prevention.</p>
+                            <div class="movement-meta">
+                                <span>Focus: Foundation</span>
+                                <span>Difficulty: Beginner</span>
+                            </div>
+                            <a href="mobility/ankle-mobility.html" class="btn btn-primary view-details">Strengthen Foundation</a>
+                        </div>
+                    </div>
+
+                    <div class="movement-card">
+                        <img src="https://images.unsplash.com/photo-1581093199718-6a3a3a7ec7c9?auto=format&fit=crop&w=600&q=80" alt="Spine Mobility">
+                        <div class="movement-info">
+                            <h3>Spine Mobility Elite</h3>
+                            <p>Develop the spinal mobility that creates confident posture, reduces back pain, and enhances overall movement quality.</p>
+                            <div class="movement-meta">
+                                <span>Focus: Core Stability</span>
+                                <span>Difficulty: Intermediate</span>
+                            </div>
+                            <a href="mobility/spine-mobility.html" class="btn btn-primary view-details">Perfect Posture</a>
+                        </div>
+                    </div>
+
+                    <div class="movement-card">
+                        <img src="https://images.unsplash.com/photo-1596357395186-5b32507890d8?auto=format&fit=crop&w=600&q=80" alt="Dynamic Stretching">
+                        <div class="movement-info">
+                            <h3>Dynamic Movement Patterns</h3>
+                            <p>Master controlled movement through full ranges of motion to prepare your body for peak performance activities.</p>
+                            <div class="movement-meta">
+                                <span>Focus: Performance Prep</span>
+                                <span>Difficulty: Beginner-Intermediate</span>
+                            </div>
+                            <a href="mobility/dynamic-movement.html" class="btn btn-primary view-details">Train Movement</a>
+                        </div>
+                    </div>
+
+                    <div class="movement-card">
+                        <img src="https://images.unsplash.com/photo-1593164842264-0820ab39e724?auto=format&fit=crop&w=600&q=80" alt="Active Recovery">
+                        <div class="movement-info">
+                            <h3>Recovery Movement</h3>
+                            <p>Use gentle movement patterns to enhance recovery, reduce stiffness, and maintain mobility during high-stress periods.</p>
+                            <div class="movement-meta">
+                                <span>Focus: Recovery</span>
+                                <span>Difficulty: Beginner</span>
+                            </div>
+                            <a href="mobility/recovery-movement.html" class="btn btn-primary view-details">Enhance Recovery</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Elite Routines Section -->
+        <section class="routines-section fade-in-up">
+            <div class="routines-container">
+                <h2 class="section-heading">Elite Movement Routines</h2>
+                
+                <div class="routine-card">
+                    <h3>Peak Performance Morning Flow</h3>
+                    <p>A dynamic 10-minute morning routine designed to activate your body and mind for peak daily performance. Perfect for ambitious students starting their day with intention.</p>
+                    <div class="routine-details">
+                        <h4>Routine Details:</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> 10 minutes</li>
+                            <li><strong>Frequency:</strong> Daily upon waking</li>
+                            <li><strong>Equipment:</strong> None required</li>
+                            <li><strong>Key Movements:</strong> Spinal waves, hip circles, shoulder rolls, leg swings, dynamic lunges</li>
+                            <li><strong>Focus:</strong> Full-body activation, mental clarity, energy optimization</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="routine-card">
+                    <h3>Study Break Reset</h3>
+                    <p>A targeted 5-minute mobility sequence to counteract prolonged sitting and reset your posture between study sessions or classes.</p>
+                    <div class="routine-details">
+                        <h4>Routine Details:</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> 5 minutes</li>
+                            <li><strong>Frequency:</strong> Every 1-2 hours during study sessions</li>
+                            <li><strong>Equipment:</strong> Chair or desk space</li>
+                            <li><strong>Key Movements:</strong> Neck releases, thoracic extensions, hip flexor stretches, wrist mobility</li>
+                            <li><strong>Focus:</strong> Posture reset, tension relief, circulation boost</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="routine-card">
+                    <h3>Pre-Training Mobility Prep</h3>
+                    <p>A comprehensive warm-up protocol that prepares your body for intense physical training while reducing injury risk and optimizing performance.</p>
+                    <div class="routine-details">
+                        <h4>Routine Details:</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> 12-15 minutes</li>
+                            <li><strong>Frequency:</strong> Before every workout</li>
+                            <li><strong>Equipment:</strong> Open space</li>
+                            <li><strong>Key Movements:</strong> Joint circles, walking lunges, arm swings, leg swings, bodyweight squats</li>
+                            <li><strong>Focus:</strong> Movement preparation, injury prevention, performance optimization</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="routine-card">
+                    <h3>Elite Recovery Flow</h3>
+                    <p>A restorative movement sequence designed to enhance recovery after intense training or high-stress academic periods.</p>
+                    <div class="routine-details">
+                        <h4>Routine Details:</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> 15-20 minutes</li>
+                            <li><strong>Frequency:</strong> Post-workout or evening</li>
+                            <li><strong>Equipment:</strong> Yoga mat recommended</li>
+                            <li><strong>Key Movements:</strong> Gentle stretches, breathing exercises, myofascial release techniques</li>
+                            <li><strong>Focus:</strong> Stress reduction, muscle recovery, sleep preparation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="routine-card">
+                    <h3>Competition Day Movement Prep</h3>
+                    <p>An elite activation sequence for peak performance days - whether academic exams, athletic competitions, or important presentations.</p>
+                    <div class="routine-details">
+                        <h4>Routine Details:</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> 8-10 minutes</li>
+                            <li><strong>Frequency:</strong> Before high-pressure situations</li>
+                            <li><strong>Equipment:</strong> Minimal space required</li>
+                            <li><strong>Key Movements:</strong> Nervous system activation, focus-enhancing movements, confidence-building postures</li>
+                            <li><strong>Focus:</strong> Mental preparation, physical readiness, peak state activation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Guidelines Section -->
+        <section class="safety-section fade-in-up">
+            <div class="safety-container">
+                <h3>Elite Movement Safety Principles</h3>
+                <p>Master these safety guidelines to maximize benefits while minimizing risk during your movement training:</p>
+                <ul>
+                    <li><strong>Quality over intensity:</strong> Focus on movement quality and control rather than forcing range of motion</li>
+                    <li><strong>Progressive development:</strong> Gradually increase range and complexity as your body adapts</li>
+                    <li><strong>Pain-free movement:</strong> Distinguish between productive muscle tension and harmful pain signals</li>
+                    <li><strong>Individual adaptation:</strong> Respect your body's unique structure and limitations</li>
+                    <li><strong>Proper warm-up:</strong> Always prepare your body with gentle movement before deeper ranges</li>
+                    <li><strong>Consistent practice:</strong> Regular, moderate sessions produce better results than sporadic intense training</li>
+                    <li><strong>Professional guidance:</strong> Consult qualified professionals for persistent pain or movement restrictions</li>
+                </ul>
+                <p>Remember: Elite performers prioritize longevity and sustainable practices over short-term gains.</p>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section fade-in-up">
+            <div class="faq-container">
+                <h2 class="section-heading">Movement Training Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How often should I practice mobility training?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For optimal results, incorporate mobility work 5-7 days per week. Daily movement practice, even for 5-10 minutes, is more effective than infrequent longer sessions. You can alternate between longer dedicated sessions (15-30 minutes) and shorter movement breaks. For busy students, breaking mobility work into micro-sessions throughout the day - morning activation, study breaks, and evening recovery - creates sustainable habits while maximizing benefits.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What's the difference between mobility and flexibility training?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Flexibility focuses on passive range of motion - how far a muscle can be stretched. Mobility encompasses active range of motion - your ability to control movement through that range with strength and stability. While flexibility is important, mobility is more functional for daily activities and athletic performance. Elite training programs emphasize both, but prioritize mobility development for its direct translation to improved movement quality and injury prevention.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>When is the best time to work on mobility?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Mobility work is beneficial throughout the day. Morning mobility activates your body and sets positive movement patterns. Pre-workout dynamic mobility prepares your body for training. Post-workout mobility aids recovery and capitalizes on warm muscles. Evening mobility can reduce stress and prepare your body for restorative sleep. For students, incorporating movement breaks every 1-2 hours during study sessions helps maintain posture and mental clarity.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How can mobility training help with academic performance?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Mobility training enhances academic performance through multiple pathways: improved posture reduces fatigue and maintains alertness during long study sessions; increased blood flow enhances cognitive function; stress-relieving movements activate the parasympathetic nervous system, improving focus and memory consolidation; regular movement breaks prevent the physical stiffness that can distract from mental tasks; and confident physical posture translates to improved mental confidence during presentations and exams.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Should mobility training be painful?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, mobility training should never be painful. You should feel mild tension or stretch sensations, but never sharp, shooting, or intense pain. Pain indicates you're pushing beyond safe limits and potentially causing tissue damage. Elite performers focus on gradual, controlled progression that respects the body's adaptation timeline. If you experience persistent discomfort or pain during movement, consult a qualified movement professional to assess your technique and identify any underlying issues.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 Vivify. Building elite habits, one day at a time.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            const isLoggedIn = localStorage.getItem('authToken') || localStorage.getItem('userLoggedIn') === 'true';
+            
+            // Update UI based on login status
+            updateAuthState(isLoggedIn);
+            
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+            
+            function updateAuthState(isLoggedIn) {
+                // Navigation updates
+                document.getElementById('login-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('signup-link').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('dashboard-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('profile-link').classList.toggle('hidden', !isLoggedIn);
+                document.getElementById('logout-link').classList.toggle('hidden', !isLoggedIn);
+            }
+            
+            // Logout functionality
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    updateAuthState(false);
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    const icon = question.querySelector('i');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    document.querySelectorAll('.faq-question i').forEach(i => {
+                        i.classList.remove('fa-chevron-up');
+                        i.classList.add('fa-chevron-down');
+                    });
+                    
+                    // Toggle clicked answer
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                           behavior: 'smooth',
+                           block: 'start'
+                       });
+                   }
+               });
+           });
+           
+           // Header background on scroll
+           window.addEventListener('scroll', function() {
+               const header = document.querySelector('header');
+               if (window.scrollY > 100) {
+                   header.style.background = 'rgba(10, 10, 10, 0.98)';
+               } else {
+                   header.style.background = 'rgba(10, 10, 10, 0.95)';
+               }
+           });
+       });
+   </script>
+<script src="js/flexible-mobile-nav.js"></script> </body>
+</html>
