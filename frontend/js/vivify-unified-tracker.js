@@ -795,4 +795,4 @@ class VivifyUnifiedTracker {
 }
 
 // Global instance
-let vivifyTracker;
+window.vivifyTracker = null;
