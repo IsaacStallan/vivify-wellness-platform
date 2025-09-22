@@ -1237,6 +1237,7 @@ window.addEventListener('resize', function() {
 <script src="js/vivify-stats.js"></script>
 <script src="js/leaderboard-system.js"></script>
 <script src="js/card-system.js"></script>
+<script src="js/vivify-unified-tracker.js"></script>
 </head>
 <body>
     <header>
@@ -1354,522 +1355,28 @@ window.addEventListener('resize', function() {
     </main>
     <script src="js/unified-leaderboard.js"></script>
     <script>
-        // Add this to habits-tracker.html BEFORE your existing JavaScript
-        // This will run alongside your current system for testing
-
-        // UNIFIED TRACKING SYSTEM
-        class UnifiedTracker {
-            constructor() {
-                this.baseURL = 'https://vivify-backend.onrender.com/api';
-                this.username = localStorage.getItem('username');
-                
-                // Single data structure for ALL tracking
-                this.data = {
-                    // Core habits (same across all pages)
-                    habits: [
-                        {
-                            id: 'morning_routine',
-                            name: 'Morning Power Routine',
-                            description: 'Complete energizing morning routine within 1 hour of waking',
-                            category: 'Physical Performance',
-                            points: 20,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'physical_training',
-                            name: 'Physical Training',
-                            description: 'Complete 30+ minutes of intentional physical exercise',
-                            category: 'Physical Performance', 
-                            points: 25,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'deep_work',
-                            name: 'Deep Work Session',
-                            description: 'Complete 90 minutes of focused, distraction-free work',
-                            category: 'Mental Focus',
-                            points: 30,
-                            type: 'daily', 
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'nutrition_tracking',
-                            name: 'Performance Nutrition',
-                            description: 'Track all meals and hit protein/hydration targets',
-                            category: 'Performance Nutrition',
-                            points: 15,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'reading',
-                            name: 'Learning & Growth',
-                            description: 'Read or learn something new for 30+ minutes',
-                            category: 'Excellence Habits',
-                            points: 20,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'reflection',
-                            name: 'Performance Review',
-                            description: 'Reflect on wins, losses, and tomorrow\'s priorities',
-                            category: 'Excellence Habits',
-                            points: 15,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'sleep_prep',
-                            name: 'Recovery Preparation',
-                            description: 'Wind down routine and in bed by target time',
-                            category: 'Physical Performance',
-                            points: 20,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        },
-                        {
-                            id: 'skill_practice',
-                            name: 'Skill Development',
-                            description: 'Practice a specific skill for 45+ minutes',
-                            category: 'Excellence Habits',
-                            points: 25,
-                            type: 'daily',
-                            completed: false,
-                            streak: 0
-                        }
-                    ],
-                    
-                    // Custom habits created by students
-                    customHabits: [],
-                    
-                    // Progress tracking
-                    dailyCompletions: {}, // date -> [habitIds]
-                    streaks: {},
-                    totalPoints: 0,
-                    
-                    // Unified activity log
-                    activities: []
-                };
-            }
-
-            async initialize() {
-                await this.loadData();
-                this.resetDailyIfNewDay();
-                this.mergeWithExistingHabits(); // NEW: Merge with current system
-                return this;
-            }
-
-            async loadData() {
-                try {
-                    // Load from backend first
-                    const response = await fetch(`${this.baseURL}/user/${this.username}`);
-                    const serverData = await response.json();
-                    
-                    if (!serverData.error) {
-                        this.mergeServerData(serverData);
-                    }
-                } catch (error) {
-                    console.log('Loading from local storage...');
-                }
-                
-                // Load existing unified data
-                const localData = localStorage.getItem('unifiedTrackerData');
-                if (localData) {
-                    const parsed = JSON.parse(localData);
-                    this.data = { ...this.data, ...parsed };
-                }
-                
-                this.save();
-            }
-
-            mergeWithExistingHabits() {
-                // Merge with your existing habits system for smooth transition
-                const existingHabits = localStorage.getItem('habitsData');
-                if (existingHabits) {
-                    try {
-                        const habitsData = JSON.parse(existingHabits);
-                        
-                        // Migrate daily completions
-                        if (habitsData.dailyCompletions) {
-                            this.data.dailyCompletions = { ...this.data.dailyCompletions, ...habitsData.dailyCompletions };
-                        }
-                        
-                        // Migrate custom habits
-                        if (habitsData.customHabits) {
-                            habitsData.customHabits.forEach(habit => {
-                                if (!this.data.customHabits.find(h => h.id === habit.id)) {
-                                    this.data.customHabits.push(habit);
-                                }
-                            });
-                        }
-                        
-                        // Migrate completion status for today
-                        const today = new Date().toDateString();
-                        if (habitsData.dailyCompletions && habitsData.dailyCompletions[today]) {
-                            habitsData.dailyCompletions[today].forEach(habitId => {
-                                const habit = this.data.habits.find(h => h.id === habitId) || 
-                                            this.data.customHabits.find(h => h.id === habitId);
-                                if (habit) {
-                                    habit.completed = true;
-                                }
-                            });
-                        }
-                        
-                        console.log('Successfully merged existing habits data');
-                    } catch (error) {
-                        console.error('Error merging existing habits:', error);
-                    }
-                }
-            }
-
-            mergeServerData(serverData) {
-                if (serverData.habitsData) {
-                    const today = new Date().toDateString();
-                    Object.keys(serverData.habitsData).forEach(habitType => {
-                        const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
-                        if (habit && serverData.habitsData[habitType].completedToday) {
-                            habit.completed = true;
-                            if (!this.data.dailyCompletions[today]) {
-                                this.data.dailyCompletions[today] = [];
-                            }
-                            if (!this.data.dailyCompletions[today].includes(habit.id)) {
-                                this.data.dailyCompletions[today].push(habit.id);
-                            }
-                        }
-                    });
-                }
-                
-                if (serverData.totalPoints) {
-                    this.data.totalPoints = serverData.totalPoints;
-                }
-            }
-
-            mapHabitToType(habitId) {
-                const map = {
-                    'morning_routine': 'exercise',
-                    'physical_training': 'exercise', 
-                    'deep_work': 'study',
-                    'nutrition_tracking': 'nutrition',
-                    'reading': 'study',
-                    'reflection': 'mindfulness',
-                    'sleep_prep': 'sleep',
-                    'skill_practice': 'study'
-                };
-                return map[habitId] || 'study';
-            }
-
-            resetDailyIfNewDay() {
-                const today = new Date().toDateString();
-                const lastDate = localStorage.getItem('unifiedLastActiveDate');
-                
-                if (lastDate !== today) {
-                    // Reset daily completions
-                    this.data.habits.forEach(habit => {
-                        habit.completed = false;
-                    });
-                    this.data.customHabits.forEach(habit => {
-                        habit.completed = false;
-                    });
-                    
-                    localStorage.setItem('unifiedLastActiveDate', today);
-                    this.save();
-                }
-            }
-
-            // UNIFIED COMPLETION METHOD - this will replace your toggleHabit function
-            async completeHabit(habitId) {
-                const habit = this.data.habits.find(h => h.id === habitId) || 
-                            this.data.customHabits.find(h => h.id === habitId);
-                
-                if (!habit || habit.completed) {
-                    console.log('Habit already completed or not found');
-                    return false;
-                }
-                
-                // Mark as completed
-                habit.completed = true;
-                const today = new Date().toDateString();
-                
-                // Update daily completions
-                if (!this.data.dailyCompletions[today]) {
-                    this.data.dailyCompletions[today] = [];
-                }
-                this.data.dailyCompletions[today].push(habitId);
-                
-                // Update streak
-                habit.streak = (habit.streak || 0) + 1;
-                this.data.streaks[habitId] = habit.streak;
-                
-                // Add points
-                this.data.totalPoints += habit.points;
-                
-                // Log activity
-                this.logActivity(habit.name, habit.points, 'habit');
-                
-                // Sync to backend
-                await this.syncToBackend(habitId, habit.points);
-                
-                // Add to unified leaderboard
-                if (window.VivifyLeaderboard) {
-                    window.VivifyLeaderboard.addPoints(habit.points, 'habit_complete', {
-                        habitId: habitId,
-                        habitName: habit.name
-                    });
-                }
-                
-                this.save();
-                this.notifyCompletion(habit.name, habit.points);
-                
-                console.log(`Completed habit: ${habit.name} (+${habit.points} points)`);
-                return true;
-            }
-
-            logActivity(name, points, type) {
-                this.data.activities.unshift({
-                    id: Date.now(),
-                    name: name,
-                    points: points,
-                    type: type,
-                    timestamp: new Date().toISOString()
-                });
-                
-                // Keep last 50 activities
-                if (this.data.activities.length > 50) {
-                    this.data.activities = this.data.activities.slice(0, 50);
-                }
-            }
-
-            async syncToBackend(habitId, points) {
-                try {
-                    const habitType = this.mapHabitToType(habitId);
-                    
-                    await fetch(`${this.baseURL}/habits/update`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            username: this.username,
-                            habitType: habitType,
-                            value: 100
-                        })
-                    });
-                    
-                    console.log('Synced to backend successfully');
-                } catch (error) {
-                    console.error('Sync failed:', error);
-                }
-            }
-
-            // CREATE CUSTOM HABIT
-            createCustomHabit(data) {
-                const habit = {
-                    id: 'custom_' + Date.now(),
-                    name: data.name,
-                    description: data.description,
-                    category: data.category,
-                    points: data.points,
-                    type: 'daily',
-                    completed: false,
-                    streak: 0,
-                    isCustom: true
-                };
-                
-                this.data.customHabits.push(habit);
-                this.save();
-                
-                console.log('Created custom habit:', habit.name);
-                return habit;
-            }
-
-            deleteCustomHabit(habitId) {
-                if (!habitId.startsWith('custom_')) {
-                    console.error('Cannot delete default habits');
-                    return false;
-                }
-
-                this.data.customHabits = this.data.customHabits.filter(h => h.id !== habitId);
-                
-                // Clean up related data
-                delete this.data.streaks[habitId];
-                Object.keys(this.data.dailyCompletions).forEach(date => {
-                    this.data.dailyCompletions[date] = this.data.dailyCompletions[date].filter(id => id !== habitId);
-                });
-
-                this.save();
-                console.log('Deleted custom habit:', habitId);
-                return true;
-            }
-
-            // GET DATA FOR HABITS PAGE
-            getHabitsPageData() {
-                const allHabits = [...this.data.habits, ...this.data.customHabits];
-                const completedToday = allHabits.filter(h => h.completed).length;
-                const totalHabits = allHabits.length;
-                const currentStreak = this.calculateCurrentStreak();
-                const longestStreak = Math.max(...Object.values(this.data.streaks), 0);
-                const weeklyRate = this.calculateWeeklyCompletionRate();
-
-                return {
-                    habits: allHabits,
-                    stats: {
-                        completedToday,
-                        totalHabits,
-                        currentStreak,
-                        longestStreak,
-                        weeklyRate,
-                        totalPoints: this.data.totalPoints
-                    },
-                    dailyCompletions: this.data.dailyCompletions,
-                    activities: this.data.activities.slice(0, 5)
-                };
-            }
-
-            calculateCurrentStreak() {
-                let streak = 0;
-                let checkDate = new Date();
-                
-                while (true) {
-                    const dateStr = checkDate.toDateString();
-                    const dayCompletions = this.data.dailyCompletions[dateStr] || [];
-                    const completionRate = this.data.habits.length > 0 ? dayCompletions.length / this.data.habits.length : 0;
-                    
-                    if (completionRate >= 0.7) { // 70% completion threshold
-                        streak++;
-                        checkDate.setDate(checkDate.getDate() - 1);
-                    } else {
-                        break;
-                    }
-                }
-                
-                return streak;
-            }
-
-            calculateWeeklyCompletionRate() {
-                const today = new Date();
-                let totalPossible = 0;
-                let totalCompleted = 0;
-
-                for (let i = 0; i < 7; i++) {
-                    const checkDate = new Date(today);
-                    checkDate.setDate(today.getDate() - i);
-                    const dateString = checkDate.toDateString();
-                    
-                    totalPossible += this.data.habits.length;
-                    const dayCompletions = this.data.dailyCompletions[dateString] || [];
-                    totalCompleted += dayCompletions.length;
-                }
-
-                return totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-            }
-
-            save() {
-                localStorage.setItem('unifiedTrackerData', JSON.stringify(this.data));
-            }
-
-            notifyCompletion(name, points) {
-                // Show unified completion notification
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed; top: 100px; right: 20px; z-index: 10000;
-                    background: linear-gradient(135deg, #27ae60, #2ecc71);
-                    color: white; padding: 1rem 1.5rem; border-radius: 12px;
-                    box-shadow: 0 10px 30px rgba(39, 174, 96, 0.4);
-                    transform: translateX(100px); opacity: 0;
-                    transition: all 0.4s ease; font-weight: 600;
-                `;
-                notification.innerHTML = `
-                    <div style="font-size: 1.1rem; margin-bottom: 0.25rem;">✅ ${name} completed!</div>
-                    <div style="font-size: 0.9rem; opacity: 0.9;">+${points} points earned</div>
-                `;
-                
-                document.body.appendChild(notification);
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(0)';
-                    notification.style.opacity = '1';
-                }, 100);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(100px)';
-                    notification.style.opacity = '0';
-                    setTimeout(() => notification.remove(), 400);
-                }, 3000);
-            }
-        }
-
-        // INITIALIZE UNIFIED SYSTEM
-        let unifiedTracker;
-
-        // Add this initialization BEFORE your existing DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('Initializing unified tracker...');
-            unifiedTracker = new UnifiedTracker();
-            await unifiedTracker.initialize();
-            
-            // Make globally available
-            window.unifiedTracker = unifiedTracker;
-            
-            console.log('Unified tracking system initialized');
-            
-            // Test: Add a button to switch to unified display
-            addUnifiedTestButton();
-        });
-
-        // ADD TEST BUTTON to switch between old and new system
-        function addUnifiedTestButton() {
-            const habitsSection = document.querySelector('.habits-section .section-header');
-            if (habitsSection) {
-                const button = document.createElement('button');
-                button.textContent = 'Test Unified System';
-                button.className = 'btn btn-secondary';
-                button.style.marginLeft = '1rem';
-                button.onclick = displayUnifiedHabits;
-                habitsSection.appendChild(button);
-            }
-        }
-
-        // TEST FUNCTION: Display habits using unified system
-        function displayUnifiedHabits() {
-            if (!window.unifiedTracker) {
-                console.error('Unified tracker not initialized');
-                return;
-            }
-            
-            const data = window.unifiedTracker.getHabitsPageData();
+        function updateHabitsGrid(habits) {
             const grid = document.getElementById('habitsGrid');
             
-            if (!grid) {
-                console.error('Habits grid not found');
-                return;
-            }
+            let customHabitButton = `
+                <div class="habit-card add-habit-card" onclick="showCustomHabitModal()">
+                    <div class="add-habit-content">
+                        <div class="add-habit-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <h3>Create Custom Habit</h3>
+                        <p>Add your own personal performance habit</p>
+                    </div>
+                </div>
+            `;
             
-            console.log('Displaying unified habits:', data);
-            
-            // Update stats
-            document.getElementById('currentStreak').textContent = data.stats.currentStreak;
-            document.getElementById('completedToday').textContent = data.stats.completedToday;
-            document.getElementById('totalHabits').textContent = data.stats.totalHabits;
-            document.getElementById('longestStreak').textContent = data.stats.longestStreak;
-            document.getElementById('completionRate').textContent = data.stats.weeklyRate + '%';
-            document.getElementById('dailyProgress').textContent = 
-                `${data.stats.completedToday} of ${data.stats.totalHabits} completed`;
-            
-            // Display habits
-            grid.innerHTML = data.habits.map(habit => {
+            grid.innerHTML = habits.map(habit => {
                 const progress = habit.completed ? 100 : 0;
                 const deleteBtn = habit.isCustom ? 
-                    `<button class="btn btn-delete" onclick="window.unifiedTracker.deleteCustomHabit('${habit.id}'); displayUnifiedHabits();" title="Delete custom habit">
+                    `<button class="btn btn-delete" onclick="deleteCustomHabit('${habit.id}')" title="Delete custom habit">
                         <i class="fas fa-trash"></i>
                     </button>` : 
-                    `<button class="btn btn-secondary" title="Edit habit">
+                    `<button class="btn btn-secondary" onclick="editHabit('${habit.id}')" title="Edit habit">
                         <i class="fas fa-edit"></i>
                     </button>`;
                     
@@ -1896,7 +1403,7 @@ window.addEventListener('resize', function() {
                         </div>
                         <div class="habit-actions">
                             <button class="btn btn-complete" 
-                                    onclick="window.unifiedTracker.completeHabit('${habit.id}').then(() => displayUnifiedHabits())"
+                                    onclick="completeHabit('${habit.id}')"
                                     ${habit.completed ? 'disabled' : ''}>
                                 ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
                             </button>
@@ -1904,745 +1411,260 @@ window.addEventListener('resize', function() {
                         </div>
                     </div>
                 `;
-            }).join('');
+            }).join('') + customHabitButton;
+        }
+
+        function updateWeeklyOverview(dailyCompletions, habits) {
+            const grid = document.getElementById('weekGrid');
+            const today = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             
-            console.log('Unified habits display updated');
+            let weekHtml = '';
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateString = date.toDateString();
+                const dayCompletions = dailyCompletions[dateString] || [];
+                
+                weekHtml += `
+                    <div class="day-column">
+                        <div class="day-label">${days[date.getDay()]}</div>
+                        <div class="day-habits">
+                            ${habits.map(habit => {
+                                const completed = dayCompletions.includes(habit.id);
+                                return `<div class="habit-dot ${completed ? 'completed' : ''}" title="${habit.name}"></div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            grid.innerHTML = weekHtml;
         }
-        // Default performance habits for new users
-        const defaultHabits = [
-            {
-                id: 'morning_routine',
-                name: 'Morning Power Routine',
-                description: 'Complete your energising morning routine within 1 hour of waking',
-                category: 'Physical Performance',
-                points: 20,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'exercise',
-                name: 'Physical Training',
-                description: 'Complete 30+ minutes of intentional physical exercise',
-                category: 'Physical Performance',
-                points: 25,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'deep_work',
-                name: 'Deep Work Session',
-                description: 'Complete 90 minutes of focused, distraction-free work',
-                category: 'Mental Focus',
-                points: 30,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'nutrition_tracking',
-                name: 'Performance Nutrition',
-                description: 'Track all meals and hit protein/hydration targets',
-                category: 'Performance Nutrition',
-                points: 15,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'reading',
-                name: 'Learning & Growth',
-                description: 'Read or learn something new for 30+ minutes',
-                category: 'Excellence Habits',
-                points: 20,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'reflection',
-                name: 'Performance Review',
-                description: 'Reflect on wins, losses, and tomorrow\'s priorities',
-                category: 'Excellence Habits',
-                points: 15,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'sleep_prep',
-                name: 'Recovery Preparation',
-                description: 'Wind down routine and in bed by target time',
-                category: 'Physical Performance',
-                points: 20,
-                target: 1,
-                streak: 0,
-                completed: false
-            },
-            {
-                id: 'skill_practice',
-                name: 'Skill Development',
-                description: 'Practice a specific skill for 45+ minutes',
-                category: 'Excellence Habits',
-                points: 25,
-                target: 1,
-                streak: 0,
-                completed: false
-            }
-        ];
 
-        // Add this new class after the defaultHabits array
-        // Replace your entire habits JavaScript section with this improved version:
+        function updateAchievements() {
+            const achievements = [
+                { id: 'first_habit', name: 'Getting Started', icon: 'fas fa-play', description: 'Complete your first habit' },
+                { id: 'perfect_day', name: 'Perfect Day', icon: 'fas fa-star', description: 'Complete all habits in one day' },
+                { id: 'week_warrior', name: 'Week Warrior', icon: 'fas fa-calendar-check', description: '7 day streak' },
+                { id: 'consistency_king', name: 'Consistency Champion', icon: 'fas fa-crown', description: '30 day streak' },
+                { id: 'habit_master', name: 'Habit Master', icon: 'fas fa-graduation-cap', description: '100 total completions' },
+                { id: 'elite_performer', name: 'Elite Performer', icon: 'fas fa-trophy', description: '90% completion for a month' },
+                { id: 'custom_creator', name: 'Personal Touch', icon: 'fas fa-edit', description: 'Create your first custom habit' }
+            ];
+            
+            const grid = document.getElementById('achievementsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = achievements.map(achievement => {
+                const earned = vivifyTracker.data.achievements[achievement.id] || false;
+                return `
+                    <div class="achievement-badge ${earned ? 'earned' : ''}" title="${achievement.description}">
+                        <div class="achievement-icon">
+                            <i class="${achievement.icon}"></i>
+                        </div>
+                        <div class="achievement-name">${achievement.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
 
-        // CLEAN HABITS SYSTEM - Replace everything after your defaultHabits array with this:
-
-        // Enhanced Habits Manager with custom creation
-        class EnhancedHabitsManager {
-            constructor() {
-                this.baseURL = 'https://vivify-backend.onrender.com/api';
-                this.username = localStorage.getItem('username');
-                this.habitsData = {};
-                this.userStats = {};
-                this.achievements = [
-                    { id: 'first_habit', name: 'Getting Started', icon: 'fas fa-play', description: 'Complete your first habit' },
-                    { id: 'perfect_day', name: 'Perfect Day', icon: 'fas fa-star', description: 'Complete all habits in one day' },
-                    { id: 'week_warrior', name: 'Week Warrior', icon: 'fas fa-calendar-check', description: '7 day streak' },
-                    { id: 'consistency_king', name: 'Consistency Champion', icon: 'fas fa-crown', description: '30 day streak' },
-                    { id: 'habit_master', name: 'Habit Master', icon: 'fas fa-graduation-cap', description: '100 total completions' },
-                    { id: 'elite_performer', name: 'Elite Performer', icon: 'fas fa-trophy', description: '90% completion for a month' },
-                    { id: 'custom_creator', name: 'Personal Touch', icon: 'fas fa-edit', description: 'Create your first custom habit' }
-                ];
-            }
-
-            async initialize() {
-                await this.loadUserData();
-                this.resetDailyHabitsIfNewDay();
-                this.calculateStats();
-                this.updateDisplay();
-                this.setupEventListeners();
-            }
-
-            async loadUserData() {
-                try {
-                    console.log('Loading habits data for:', this.username);
-                    
-                    // Load saved habits or use defaults
-                    const savedHabits = localStorage.getItem('habitsData');
-                    if (savedHabits) {
-                        this.habitsData = JSON.parse(savedHabits);
-                        // Ensure we have the structure we need
-                        if (!this.habitsData.customHabits) this.habitsData.customHabits = [];
-                        if (!this.habitsData.achievements) this.habitsData.achievements = {};
-                        if (!this.habitsData.dailyCompletions) this.habitsData.dailyCompletions = {};
-                        if (!this.habitsData.streaks) this.habitsData.streaks = {};
-                    } else {
-                        this.habitsData = {
-                            habits: [...defaultHabits],
-                            customHabits: [],
-                            dailyCompletions: {},
-                            streaks: {},
-                            achievements: {},
-                            lastActiveDate: new Date().toDateString()
-                        };
-                    }
-                    
-                    // Merge custom habits with defaults
-                    this.mergeCustomHabits();
-                    
-                    // Try to sync with backend
-                    try {
-                        const response = await fetch(`${this.baseURL}/user/${this.username}`);
-                        const data = await response.json();
-                        
-                        if (!data.error && data.habitsData) {
-                            this.syncBackendCompletions(data.habitsData);
-                        }
-                    } catch (error) {
-                        console.log('Backend sync failed, continuing with local data');
-                    }
-                    
-                    this.saveHabitsData();
-                    console.log('Habits data loaded successfully');
-                    
-                } catch (error) {
-                    console.error('Failed to load habits data:', error);
-                }
-            }
-
-            mergeCustomHabits() {
-                // Reset habits array to just defaults
-                this.habitsData.habits = [...defaultHabits];
+        // Habit interaction functions
+        async function completeHabit(habitId) {
+            const success = await vivifyTracker.completeHabit(habitId);
+            if (success) {
+                displayHabitsPageUnified(); // Use unified display
                 
-                // Add custom habits
-                if (this.habitsData.customHabits && this.habitsData.customHabits.length > 0) {
-                    this.habitsData.habits.push(...this.habitsData.customHabits);
-                }
-            }
-
-            syncBackendCompletions(backendData) {
-                const today = new Date().toDateString();
-                
-                Object.keys(backendData).forEach(habitType => {
-                    const habitData = backendData[habitType];
-                    if (habitData && habitData.completedToday) {
-                        const habit = this.habitsData.habits.find(h => this.mapHabitIdToType(h.id) === habitType);
-                        if (habit) {
-                            habit.completed = true;
-                            if (!this.habitsData.dailyCompletions[today]) {
-                                this.habitsData.dailyCompletions[today] = [];
-                            }
-                            if (!this.habitsData.dailyCompletions[today].includes(habit.id)) {
-                                this.habitsData.dailyCompletions[today].push(habit.id);
-                            }
-                        }
-                    }
-                });
-            }
-
-            mapHabitIdToType(habitId) {
-                const map = {
-                    'morning_routine': 'exercise',
-                    'exercise': 'exercise',
-                    'deep_work': 'study',
-                    'nutrition_tracking': 'nutrition',
-                    'reading': 'study',
-                    'reflection': 'mindfulness',
-                    'sleep_prep': 'sleep',
-                    'skill_practice': 'study'
-                };
-                return map[habitId] || 'study';
-            }
-
-            resetDailyHabitsIfNewDay() {
-                const today = new Date().toDateString();
-                if (this.habitsData.lastActiveDate !== today) {
-                    this.habitsData.habits.forEach(habit => {
-                        habit.completed = false;
-                    });
-                    this.habitsData.lastActiveDate = today;
-                    this.saveHabitsData();
-                }
-            }
-
-            calculateStats() {
-                const completedToday = this.habitsData.habits.filter(h => h.completed).length;
-                const totalHabits = this.habitsData.habits.length;
-                
-                // Calculate current streak
-                let currentStreak = 0;
-                let checkDate = new Date();
-                const streakThreshold = 0.7;
-                
-                while (true) {
-                    const dateString = checkDate.toDateString();
-                    const dayCompletions = this.habitsData.dailyCompletions[dateString] || [];
-                    const completionRate = totalHabits > 0 ? dayCompletions.length / totalHabits : 0;
-                    
-                    if (completionRate >= streakThreshold) {
-                        currentStreak++;
-                        checkDate.setDate(checkDate.getDate() - 1);
-                    } else {
-                        break;
-                    }
-                }
-
-                const longestStreak = Math.max(currentStreak, Object.values(this.habitsData.streaks || {}).reduce((max, streak) => Math.max(max, streak), 0));
-                const weeklyRate = this.calculateWeeklyCompletionRate();
-
-                this.userStats = {
-                    completedToday,
-                    totalHabits,
-                    currentStreak,
-                    longestStreak,
-                    weeklyRate
-                };
-            }
-
-            calculateWeeklyCompletionRate() {
-                const today = new Date();
-                let totalPossible = 0;
-                let totalCompleted = 0;
-
-                for (let i = 0; i < 7; i++) {
-                    const checkDate = new Date(today);
-                    checkDate.setDate(today.getDate() - i);
-                    const dateString = checkDate.toDateString();
-                    
-                    totalPossible += this.habitsData.habits.length;
-                    const dayCompletions = this.habitsData.dailyCompletions[dateString] || [];
-                    totalCompleted += dayCompletions.length;
-                }
-
-                return totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-            }
-
-            async toggleHabit(habitId) {
-                const habit = this.habitsData.habits.find(h => h.id === habitId);
-                if (!habit || habit.completed) return;
-
-                // Mark as completed
-                habit.completed = true;
-                const today = new Date().toDateString();
-                if (!this.habitsData.dailyCompletions[today]) {
-                    this.habitsData.dailyCompletions[today] = [];
-                }
-                this.habitsData.dailyCompletions[today].push(habitId);
-
-                // Update streak
-                habit.streak = (habit.streak || 0) + 1;
-                this.habitsData.streaks[habitId] = habit.streak;
-
-                // Save locally first
-                this.saveHabitsData();
-
-                // Add points to unified leaderboard
+                // Update leaderboard
                 if (window.VivifyLeaderboard) {
-                    window.VivifyLeaderboard.addPoints(habit.points, 'habit_complete', { 
-                        habitId: habitId,
-                        habitName: habit.name 
-                    });
+                    window.VivifyLeaderboard.displayForChallengesPage('leaderboardList');
                 }
-
-                // Sync to backend
-                await this.syncToBackend(habitId, habit.points);
-
-                // Check achievements
-                this.checkAchievements();
-
-                // Update display
-                this.calculateStats();
-                this.updateDisplay();
-
-                // Show notification
-                this.showNotification(`${habit.name} completed! +${habit.points} points`, 'success');
-            }
-
-            async syncToBackend(habitId, points) {
-                try {
-                    const habitType = this.mapHabitIdToType(habitId);
-                    
-                    const response = await fetch(`${this.baseURL}/habits/update`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            username: this.username,
-                            habitType: habitType,
-                            value: 100
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.newCard) {
-                        this.showCardUnlockAnimation(result.newCard);
-                        const cards = JSON.parse(localStorage.getItem('userCards') || '[]');
-                        cards.push(result.newCard);
-                        localStorage.setItem('userCards', JSON.stringify(cards));
-                    }
-                } catch (error) {
-                    console.error('Failed to sync to backend:', error);
-                }
-            }
-
-            showCustomHabitModal() {
-                const modal = document.createElement('div');
-                modal.className = 'custom-habit-modal';
-                modal.innerHTML = `
-                    <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Create Custom Habit</h2>
-                            <button onclick="this.closest('.custom-habit-modal').remove()" class="close-btn">&times;</button>
-                        </div>
-                        <form id="customHabitForm" onsubmit="habitManager.createCustomHabit(event)">
-                            <div class="form-group">
-                                <label for="habitName">Habit Name</label>
-                                <input type="text" id="habitName" required maxlength="50" 
-                                    placeholder="e.g., Practice Piano">
-                            </div>
-                            <div class="form-group">
-                                <label for="habitDescription">Description</label>
-                                <textarea id="habitDescription" required maxlength="200" 
-                                        placeholder="What does success look like?"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="habitCategory">Category</label>
-                                <select id="habitCategory" required>
-                                    <option value="Physical Performance">Physical Performance</option>
-                                    <option value="Mental Focus">Mental Focus</option>
-                                    <option value="Performance Nutrition">Performance Nutrition</option>
-                                    <option value="Excellence Habits">Excellence Habits</option>
-                                    <option value="Creative Skills">Creative Skills</option>
-                                    <option value="Personal Growth">Personal Growth</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="habitPoints">Point Value</label>
-                                <select id="habitPoints" required>
-                                    <option value="10">10 points - Simple daily task</option>
-                                    <option value="15">15 points - Regular habit</option>
-                                    <option value="20" selected>20 points - Standard habit</option>
-                                    <option value="25">25 points - Challenging habit</option>
-                                    <option value="30">30 points - Difficult habit</option>
-                                </select>
-                            </div>
-                            <div class="form-actions">
-                                <button type="button" onclick="this.closest('.custom-habit-modal').remove()" 
-                                        class="btn btn-secondary">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Create Habit</button>
-                            </div>
-                        </form>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-            }
-
-            createCustomHabit(event) {
-                event.preventDefault();
-                
-                const name = document.getElementById('habitName').value.trim();
-                const description = document.getElementById('habitDescription').value.trim();
-                const category = document.getElementById('habitCategory').value;
-                const points = parseInt(document.getElementById('habitPoints').value);
-                
-                if (!name || !description) {
-                    this.showNotification('Please fill in all fields', 'error');
-                    return;
-                }
-
-                const customHabit = {
-                    id: 'custom_' + Date.now(),
-                    name: name,
-                    description: description,
-                    category: category,
-                    points: points,
-                    target: 1,
-                    streak: 0,
-                    completed: false,
-                    isCustom: true
-                };
-
-                // Add to custom habits array
-                this.habitsData.customHabits.push(customHabit);
-                
-                // Add to main habits array for display
-                this.habitsData.habits.push(customHabit);
-
-                // Check for custom habit achievement
-                if (!this.habitsData.achievements.custom_creator) {
-                    this.unlockAchievement('custom_creator');
-                }
-
-                this.saveHabitsData();
-                this.calculateStats();
-                this.updateDisplay();
-                
-                // Close modal
-                document.querySelector('.custom-habit-modal').remove();
-                
-                this.showNotification(`Custom habit "${name}" created!`, 'success');
-            }
-
-            deleteCustomHabit(habitId) {
-                if (!habitId.startsWith('custom_')) {
-                    this.showNotification('Cannot delete default habits', 'error');
-                    return;
-                }
-
-                if (!confirm('Are you sure you want to delete this custom habit?')) return;
-
-                // Remove from both arrays
-                this.habitsData.habits = this.habitsData.habits.filter(h => h.id !== habitId);
-                this.habitsData.customHabits = this.habitsData.customHabits.filter(h => h.id !== habitId);
-
-                // Clean up related data
-                delete this.habitsData.streaks[habitId];
-                Object.keys(this.habitsData.dailyCompletions).forEach(date => {
-                    this.habitsData.dailyCompletions[date] = this.habitsData.dailyCompletions[date].filter(id => id !== habitId);
-                });
-
-                this.saveHabitsData();
-                this.calculateStats();
-                this.updateDisplay();
-                
-                this.showNotification('Custom habit deleted', 'info');
-            }
-
-            updateDisplay() {
-                this.updateStats();
-                this.updateHabitsGrid();
-                this.updateWeeklyOverview();
-                this.updateAchievements();
-            }
-
-            updateStats() {
-                document.getElementById('currentStreak').textContent = this.userStats.currentStreak;
-                document.getElementById('completedToday').textContent = this.userStats.completedToday;
-                document.getElementById('totalHabits').textContent = this.userStats.totalHabits;
-                document.getElementById('longestStreak').textContent = this.userStats.longestStreak;
-                document.getElementById('completionRate').textContent = this.userStats.weeklyRate + '%';
-                document.getElementById('dailyProgress').textContent = 
-                    `${this.userStats.completedToday} of ${this.userStats.totalHabits} completed`;
-            }
-
-            updateHabitsGrid() {
-                const grid = document.getElementById('habitsGrid');
-                
-                let customHabitButton = `
-                    <div class="habit-card add-habit-card" onclick="habitManager.showCustomHabitModal()">
-                        <div class="add-habit-content">
-                            <div class="add-habit-icon">
-                                <i class="fas fa-plus"></i>
-                            </div>
-                            <h3>Create Custom Habit</h3>
-                            <p>Add your own personal performance habit</p>
-                        </div>
-                    </div>
-                `;
-                
-                grid.innerHTML = this.habitsData.habits.map(habit => {
-                    const progress = habit.completed ? 100 : 0;
-                    const deleteBtn = habit.isCustom ? 
-                        `<button class="btn btn-delete" onclick="habitManager.deleteCustomHabit('${habit.id}')" title="Delete custom habit">
-                            <i class="fas fa-trash"></i>
-                        </button>` : 
-                        `<button class="btn btn-secondary" onclick="habitManager.editHabit('${habit.id}')" title="Edit habit">
-                            <i class="fas fa-edit"></i>
-                        </button>`;
-                        
-                    return `
-                        <div class="habit-card ${habit.completed ? 'completed' : ''} fade-in">
-                            <div class="habit-header">
-                                <div class="habit-info">
-                                    <h3>${habit.name} ${habit.isCustom ? '<span class="custom-badge">Custom</span>' : ''}</h3>
-                                    <div class="habit-category">${habit.category}</div>
-                                </div>
-                                <div class="habit-streak">
-                                    ${habit.streak || 0} day streak
-                                </div>
-                            </div>
-                            <div class="habit-description">${habit.description}</div>
-                            <div class="habit-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${progress}%"></div>
-                                </div>
-                                <div class="progress-text">
-                                    <span>${habit.completed ? 'Completed' : 'Not started'}</span>
-                                    <span>+${habit.points} points</span>
-                                </div>
-                            </div>
-                            <div class="habit-actions">
-                                <button class="btn btn-complete" 
-                                        onclick="habitManager.toggleHabit('${habit.id}')"
-                                        ${habit.completed ? 'disabled' : ''}>
-                                    ${habit.completed ? 'Completed ✓' : 'Mark Complete'}
-                                </button>
-                                ${deleteBtn}
-                            </div>
-                        </div>
-                    `;
-                }).join('') + customHabitButton;
-            }
-
-            updateWeeklyOverview() {
-                const grid = document.getElementById('weekGrid');
-                const today = new Date();
-                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                
-                let weekHtml = '';
-                
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date(today);
-                    date.setDate(today.getDate() - i);
-                    const dateString = date.toDateString();
-                    const dayCompletions = this.habitsData.dailyCompletions[dateString] || [];
-                    
-                    weekHtml += `
-                        <div class="day-column">
-                            <div class="day-label">${days[date.getDay()]}</div>
-                            <div class="day-habits">
-                                ${this.habitsData.habits.map(habit => {
-                                    const completed = dayCompletions.includes(habit.id);
-                                    return `<div class="habit-dot ${completed ? 'completed' : ''}" title="${habit.name}"></div>`;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                grid.innerHTML = weekHtml;
-            }
-
-            updateAchievements() {
-                const grid = document.getElementById('achievementsGrid');
-                grid.innerHTML = this.achievements.map(achievement => {
-                    const earned = this.habitsData.achievements[achievement.id] || false;
-                    return `
-                        <div class="achievement-badge ${earned ? 'earned' : ''}" title="${achievement.description}">
-                            <div class="achievement-icon">
-                                <i class="${achievement.icon}"></i>
-                            </div>
-                            <div class="achievement-name">${achievement.name}</div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            checkAchievements() {
-                const completedToday = this.habitsData.habits.filter(h => h.completed).length;
-                const totalHabits = this.habitsData.habits.length;
-
-                if (!this.habitsData.achievements.first_habit && completedToday >= 1) {
-                    this.unlockAchievement('first_habit');
-                }
-
-                if (!this.habitsData.achievements.perfect_day && completedToday === totalHabits) {
-                    this.unlockAchievement('perfect_day');
-                }
-
-                if (!this.habitsData.achievements.week_warrior && this.userStats.currentStreak >= 7) {
-                    this.unlockAchievement('week_warrior');
-                }
-
-                if (!this.habitsData.achievements.consistency_king && this.userStats.currentStreak >= 30) {
-                    this.unlockAchievement('consistency_king');
-                }
-
-                const totalCompletions = Object.values(this.habitsData.dailyCompletions)
-                    .reduce((total, day) => total + day.length, 0);
-                
-                if (!this.habitsData.achievements.habit_master && totalCompletions >= 100) {
-                    this.unlockAchievement('habit_master');
-                }
-
-                if (!this.habitsData.achievements.elite_performer && this.userStats.weeklyRate >= 90) {
-                    this.unlockAchievement('elite_performer');
-                }
-            }
-
-            unlockAchievement(achievementId) {
-                this.habitsData.achievements[achievementId] = true;
-                const achievement = this.achievements.find(a => a.id === achievementId);
-                
-                if (achievement) {
-                    this.showNotification(`Achievement Unlocked: ${achievement.name}!`, 'achievement');
-                }
-                
-                this.saveHabitsData();
-            }
-
-            editHabit(habitId) {
-                this.showNotification('Habit editing feature coming soon! You can customize your habits in the full version.', 'info');
-            }
-
-            setupEventListeners() {
-                const logoutLink = document.getElementById('logout-link');
-                if (logoutLink) {
-                    logoutLink.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        if (confirm('Are you sure you want to logout?')) {
-                            localStorage.clear();
-                            window.location.href = 'index.html';
-                        }
-                    });
-                }
-            }
-
-            saveHabitsData() {
-                localStorage.setItem('habitsData', JSON.stringify(this.habitsData));
-            }
-
-            showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                notification.textContent = message;
-                document.body.appendChild(notification);
-                
-                setTimeout(() => notification.classList.add('show'), 100);
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                    setTimeout(() => notification.remove(), 300);
-                }, 3000);
-            }
-
-            showCardUnlockAnimation(card) {
-                const overlay = document.createElement('div');
-                overlay.style.cssText = `
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                    background: rgba(0,0,0,0.9); display: flex; align-items: center;
-                    justify-content: center; z-index: 10000;
-                `;
-                
-                overlay.innerHTML = `
-                    <div style="text-align: center; color: white;">
-                        <h2 style="font-size: 2em; margin-bottom: 20px;">🎉 New Card Unlocked! 🎉</h2>
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                                    padding: 20px; border-radius: 15px;">
-                            <h3>${card.name}</h3>
-                            <p>Rarity: ${card.rarity}</p>
-                            <p>Attack: ${card.attack} | Defense: ${card.defense}</p>
-                            <p style="font-style: italic;">${card.special}</p>
-                        </div>
-                        <button onclick="this.parentElement.parentElement.remove()" 
-                                style="margin-top: 20px; padding: 10px 30px; font-size: 1.2em;
-                                    background: white; border: none; border-radius: 25px; cursor: pointer;">
-                            Epic!
-                        </button>
-                    </div>
-                `;
-                
-                document.body.appendChild(overlay);
             }
         }
 
-        // Initialize the habits manager
-        let habitManager;
+        function showCustomHabitModal() {
+            const modal = document.createElement('div');
+            modal.className = 'custom-habit-modal';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Create Custom Habit</h2>
+                        <button onclick="this.closest('.custom-habit-modal').remove()" class="close-btn">&times;</button>
+                    </div>
+                    <form id="customHabitForm" onsubmit="createCustomHabit(event)">
+                        <div class="form-group">
+                            <label for="habitName">Habit Name</label>
+                            <input type="text" id="habitName" required maxlength="50" 
+                                placeholder="e.g., Practice Piano">
+                        </div>
+                        <div class="form-group">
+                            <label for="habitDescription">Description</label>
+                            <textarea id="habitDescription" required maxlength="200" 
+                                    placeholder="What does success look like?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="habitCategory">Category</label>
+                            <select id="habitCategory" required>
+                                <option value="Physical Performance">Physical Performance</option>
+                                <option value="Mental Focus">Mental Focus</option>
+                                <option value="Performance Nutrition">Performance Nutrition</option>
+                                <option value="Excellence Habits">Excellence Habits</option>
+                                <option value="Creative Skills">Creative Skills</option>
+                                <option value="Personal Growth">Personal Growth</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="habitPoints">Point Value</label>
+                            <select id="habitPoints" required>
+                                <option value="10">10 points - Simple daily task</option>
+                                <option value="15">15 points - Regular habit</option>
+                                <option value="20" selected>20 points - Standard habit</option>
+                                <option value="25">25 points - Challenging habit</option>
+                                <option value="30">30 points - Difficult habit</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" onclick="this.closest('.custom-habit-modal').remove()" 
+                                    class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create Habit</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function createCustomHabit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('habitName').value.trim();
+            const description = document.getElementById('habitDescription').value.trim();
+            const category = document.getElementById('habitCategory').value;
+            const points = parseInt(document.getElementById('habitPoints').value);
+            
+            if (!name || !description) {
+                vivifyTracker.notifyCompletion('Please fill in all fields', 'error');
+                return;
+            }
+
+            const customHabit = vivifyTracker.createCustomHabit({
+                name: name,
+                description: description,
+                category: category,
+                points: points
+            });
+
+            // Check for custom habit achievement
+            if (!vivifyTracker.data.achievements.custom_creator) {
+                vivifyTracker.unlockAchievement('custom_creator');
+            }
+
+            // Close modal and refresh display
+            document.querySelector('.custom-habit-modal').remove();
+            displayHabitsPageUnified(); // Add this line
+            
+            vivifyTracker.notifyCompletion(`Custom habit "${name}" created!`, 'success');
+        }
+
+        function deleteCustomHabit(habitId) {
+            if (!habitId.startsWith('custom_')) {
+                vivifyTracker.notifyCompletion('Cannot delete default habits', 'error');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this custom habit?')) return;
+
+            const success = vivifyTracker.deleteCustomHabit(habitId);
+            if (success) {
+                displayHabitsPageUnified(); // Add this line
+                vivifyTracker.notifyCompletion('Custom habit deleted', 'info');
+            }
+        }
+
+        function editHabit(habitId) {
+            vivifyTracker.notifyCompletion('Habit editing feature coming soon! You can customize your habits in the full version.', 'info');
+        }
+
+        function displayHabitsPageUnified() {
+            const data = vivifyTracker.getHabitsPageData();
+            
+            // Update stats
+            updateHabitsStats(data.stats);
+            
+            // Update habits grid
+            updateHabitsGrid(data.habits);
+            
+            // Update weekly overview
+            updateWeeklyOverview(data.dailyCompletions, data.habits);
+            
+            // Update achievements
+            updateAchievements();
+        }
+
+        function updateHabitsStats(stats) {
+            document.getElementById('currentStreak').textContent = stats.currentStreak;
+            document.getElementById('completedToday').textContent = stats.completedToday;
+            document.getElementById('totalHabits').textContent = stats.totalHabits;
+            document.getElementById('longestStreak').textContent = stats.longestStreak;
+            document.getElementById('completionRate').textContent = stats.weeklyRate + '%';
+            document.getElementById('dailyProgress').textContent = `${stats.completedToday} of ${stats.totalHabits} completed`;
+        }
+
+        function setupLogoutHandler() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async function() {
             // Check authentication
             const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
             const username = localStorage.getItem('username');
             
             if (userLoggedIn !== 'true' || !username) {
+                console.log('User not logged in, redirecting...');
                 window.location.href = 'login.html';
                 return;
             }
             
-            // Initialize ONLY the enhanced habits manager
-            habitManager = new EnhancedHabitsManager();
-            await habitManager.initialize();
+            console.log('User authenticated:', username);
             
-            // Initialize unified leaderboard
-            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-            if (window.VivifyLeaderboard && username) {
+            // Initialize UNIFIED tracker ONLY
+            vivifyTracker = new VivifyUnifiedTracker();
+            await vivifyTracker.initialize();
+            
+            // Initialize leaderboard with unified data
+            if (window.VivifyLeaderboard) {
                 window.VivifyLeaderboard.initialize(userProfile.id || username, username, 'Knox Grammar');
-                console.log('Unified leaderboard initialized for habits page');
+                console.log('VivifyLeaderboard initialized successfully');
             }
             
-            // Add scroll animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
+            // Display habits using UNIFIED data
+            displayHabitsPageUnified();
             
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-            
-            document.querySelectorAll('.fade-in').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                observer.observe(el);
-            });
+            // Setup logout
+            setupLogoutHandler();
         });
+
+        function joinChallenge(challengeId) {
+            return vivifyTracker.joinChallenge(challengeId);
+        }
+
+        function completeDay(challengeId) {
+            const challenge = challenges[challengeId];
+            return vivifyTracker.completeChallengeDay(challengeId, challenge);
+        }
     </script>
     <script src="js/flexible-mobile-nav.js"></script> 
 </body>
