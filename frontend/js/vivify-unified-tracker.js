@@ -250,15 +250,31 @@ class VivifyUnifiedTracker {
                 }
             });
         }
-        
+    
         if (serverData.totalPoints) {
             this.data.totalPoints = serverData.totalPoints;
         }
-
+    
         if (serverData.challengeData) {
             this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
         }
-    }
+    
+        // NEW: pull challengeStats → scores
+        const cs = serverData.challengeStats || serverData.performanceData?.scores;
+        if (cs) {
+            const mapped = {
+                physical:   cs.fitnessScore    ?? cs.physical    ?? 0,
+                mental:     cs.mentalScore     ?? cs.mental      ?? 0,
+                nutrition:  cs.nutritionScore  ?? cs.nutrition   ?? 0,
+                lifeSkills: cs.lifeSkillsScore ?? cs.lifeSkills  ?? 0,
+            };
+            const rawOverall = cs.overallScore ?? cs.overall ?? 0;
+            // scale if your DB stores XP-style big numbers
+            mapped.overall = rawOverall > 100 ? Math.min(100, Math.round(rawOverall / 20)) : Math.round(rawOverall);
+    
+            this.data.scores = { ...this.data.scores, ...mapped };
+        }
+    }    
 
     mapHabitToType(habitId) {
         const map = {
@@ -393,37 +409,39 @@ class VivifyUnifiedTracker {
 
     calculateWeeklyCompletionRates() {
         const today = new Date();
-        const rates = {
-            physical: 0,
-            mental: 0,
-            nutrition: 0,
-            lifeSkills: 0
-        };
-        
+        const rates = { physical: 0, mental: 0, nutrition: 0, lifeSkills: 0 };
+        const counts = { physical: 0, mental: 0, nutrition: 0, lifeSkills: 0 };
+    
         const categoryMap = {
             'Physical Performance': 'physical',
             'Mental Focus': 'mental',
             'Performance Nutrition': 'nutrition',
             'Excellence Habits': 'lifeSkills'
         };
-        
+    
         for (let i = 0; i < 7; i++) {
             const checkDate = new Date(today);
             checkDate.setDate(today.getDate() - i);
             const dateStr = checkDate.toDateString();
-            
             const dayCompletions = this.data.dailyCompletions[dateStr] || [];
-            
+    
             this.getAllHabits().forEach(habit => {
                 const category = categoryMap[habit.category];
-                if (category && dayCompletions.includes(habit.id)) {
-                    rates[category] += 1/7; // 1/7th for each day completed
+                if (!category) return;
+                counts[category] += 1; // one possible completion
+                if (dayCompletions.includes(habit.id)) {
+                    rates[category] += 1;
                 }
             });
         }
-        
-        return rates;
-    }
+    
+        return {
+            physical:   counts.physical   ? rates.physical   / counts.physical   : 0,
+            mental:     counts.mental     ? rates.mental     / counts.mental     : 0,
+            nutrition:  counts.nutrition  ? rates.nutrition  / counts.nutrition  : 0,
+            lifeSkills: counts.lifeSkills ? rates.lifeSkills / counts.lifeSkills : 0,
+        };
+    }    
 
     // CHALLENGE METHODS
     async joinChallenge(challengeId) {
