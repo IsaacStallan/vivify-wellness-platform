@@ -104,6 +104,21 @@ router.put('/update-score', async (req, res) => {
     }
 });
 
+// GET /api/users - Get all users for leaderboard (what your frontend is calling)
+router.get('/', async (req, res) => {
+    try {
+        const users = await User.find({})
+            .select('username school overallScore fitnessScore mentalScore nutritionScore lifeSkillsScore habitPoints challengeStats level isAnonymous lastActive')
+            .sort({ overallScore: -1 });
+            
+        res.json(users);
+        
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+});
+
 // GET /api/users/leaderboard - Get current leaderboard (cleaner version)
 router.get('/leaderboard', async (req, res) => {
     try {
