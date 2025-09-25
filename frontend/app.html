@@ -682,6 +682,88 @@
             border-color: rgba(243, 156, 18, 0.4);
         }
 
+        /* Weekly Overview */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .day-column {
+            text-align: center;
+        }
+
+        .day-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-habits {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .habit-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .habit-dot.completed {
+            background: #27ae60;
+            box-shadow: 0 0 15px rgba(39, 174, 96, 0.5);
+        }
+
+        .habit-dot.partial {
+            background: #f39c12;
+        }
+
+        /* Section Styles */
+        .habits-section, .weekly-overview, .achievements-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-summary {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
         /* Challenges Styles */
         .challenges-hero {
             background: rgba(255, 255, 255, 0.03);
@@ -1615,6 +1697,20 @@
                     </div>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Weekly Performance Overview
+                  </h2>
+                  <div class="progress-summary" id="dailyProgress">0 of 0 completed</div>
+                </div>
+                <div class="card-content">
+                  <div class="week-grid" id="weekGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:1.5rem;">
+                    <!-- Week view gets rendered here -->
+                  </div>
+                </div>
+            </div>
         </div>
 
         <!-- Challenges Tab Content -->
@@ -2068,6 +2164,8 @@
             
             updateHabitsStats(data.stats);
             updateHabitsGrid(data.habits);
+            updateWeeklyOverview();
+            updateDailyProgressLine();
         }
 
         function updateHabitsStats(stats) {
@@ -2127,6 +2225,111 @@
                 `;
             }).join('');
         }
+
+        /** ---------- DAILY RESET (24h) ---------- */
+        /* Ensures habits reset when the calendar day changes (local time). */
+        function ensureDailyReset() {
+        try {
+            const todayKey = new Date().toDateString();
+            const lastResetKey = localStorage.getItem('vivify:lastResetDate');
+
+            if (lastResetKey !== todayKey) {
+            // Preferred: ask tracker to reset if it supports it
+            if (appTracker && typeof appTracker.resetDailyHabits === 'function') {
+                appTracker.resetDailyHabits();
+            } else if (appTracker && appTracker.data && appTracker.data.habits) {
+                // Fallback: clear 'completed' flags locally
+                appTracker.data.habits.forEach(h => { h.completed = false; });
+            }
+            localStorage.setItem('vivify:lastResetDate', todayKey);
+            // After reset, refresh current tab so UI updates
+            if (typeof loadTabContent === 'function') loadTabContent(currentTab);
+            }
+        } catch (e) {
+            console.warn('ensureDailyReset error:', e);
+        }
+        }
+
+        /** ---------- WEEKLY OVERVIEW (DOTS) ---------- */
+        /* Renders a 7-day grid; filled dot = that habit was completed on that date. */
+        function updateWeeklyOverview() {
+        const grid = document.getElementById('weekGrid');
+        if (!grid) return;
+
+        const today = new Date();
+        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+        // Source of truth for completions by day:
+        // Prefer appTracker.data.dailyCompletions (same shape as original page).
+        // Fallback: build a minimal history from appTracker.data.activity if available.
+        let dailyCompletions = {};
+        if (appTracker?.data?.dailyCompletions) {
+            dailyCompletions = appTracker.data.dailyCompletions;
+        } else if (appTracker?.data?.activity) {
+            // Build a naive map: dateString -> [habitId,...]
+            dailyCompletions = {};
+            appTracker.data.activity.forEach(a => {
+            if (a.type === 'habit_completed' && a.habitId && a.timestamp) {
+                const ds = new Date(a.timestamp).toDateString();
+                if (!dailyCompletions[ds]) dailyCompletions[ds] = [];
+                if (!dailyCompletions[ds].includes(a.habitId)) dailyCompletions[ds].push(a.habitId);
+            }
+            });
+        }
+
+        const habits = (appTracker?.getHabitsPageData?.().habits) || (appTracker?.data?.habits) || [];
+
+        let html = '';
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            const ds = date.toDateString();
+            const dayCompletions = dailyCompletions[ds] || [];
+
+            html += `
+            <div class="day-column" style="text-align:center;">
+                <div class="day-label" style="opacity:.8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${days[date.getDay()]}</div>
+                <div class="day-habits" style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                ${habits.map(h => {
+                    const completed = dayCompletions.includes(h.id);
+                    return `<div class="habit-dot ${completed ? 'completed' : ''}" 
+                                title="${h.name}" 
+                                style="width:24px;height:24px;border-radius:50%;background:${completed ? '#27ae60' : 'rgba(255,255,255,0.1)'};box-shadow:${completed ? '0 0 15px rgba(39,174,96,0.5)' : 'none'};">
+                            </div>`;
+                }).join('')}
+                </div>
+            </div>`;
+        }
+        grid.innerHTML = html;
+        }
+
+        /** ---------- DAILY PROGRESS LINE ---------- */
+        function updateDailyProgressLine() {
+        const el = document.getElementById('dailyProgress');
+        if (!el || !appTracker) return;
+        const data = appTracker.getHabitsPageData();
+        el.textContent = `${data.stats.completedToday} of ${data.stats.totalHabits} completed`;
+        }
+
+        /** ---------- Hook into your existing flows ---------- */
+        // 1) When switching to Habits tab or after completing a habit, refresh all pieces.
+        const _oldDisplayHabits = window.displayHabits;
+        window.displayHabits = function() {
+        if (typeof _oldDisplayHabits === 'function') _oldDisplayHabits();
+        updateWeeklyOverview();
+        updateDailyProgressLine();
+        };
+
+        // 2) On load & every time we switch tabs, also ensure daily reset.
+        (function bootstrapDailyReset() {
+        ensureDailyReset();
+        // Also re-check on tab switches:
+        const _oldSwitchTab = window.switchTab;
+        window.switchTab = function(tabName) {
+            ensureDailyReset();
+            if (typeof _oldSwitchTab === 'function') _oldSwitchTab(tabName);
+        };
+        })();
 
         // Challenges Functions
         function displayChallenges() {
