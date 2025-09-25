@@ -2512,16 +2512,16 @@
         let currentBoardType = 'world';
 
         async function displayLeaderboard(timeframe = 'weekly') {
-            console.log('displayLeaderboard() called');
+            console.log('displayLeaderboard() called with timeframe:', timeframe);
 
             if (!appTracker) {
                 console.warn('appTracker not ready, will retry...');
-                // Instead of recursive setTimeout, just show loading state
                 showLeaderboardLoading();
                 return;
             }
 
             try {
+                // Pass the timeframe to getLeaderboardData
                 const data = await appTracker.getLeaderboardData(timeframe);
                 console.log('Got leaderboard data:', data);
 
@@ -2692,7 +2692,8 @@
                         displayChallenges();
                         break;
                     case 'leaderboard':
-                        await displayLeaderboard(); // Make sure this is awaited
+                        // Use the current time filter when loading leaderboard
+                        await displayLeaderboard(currentTimeFilter);
                         break;
                 }
             } catch (error) {
@@ -2730,7 +2731,7 @@
             });
         }
 
-        function switchTimeFilter(timeFilter) {
+        async function switchTimeFilter(timeFilter) {
             currentTimeFilter = timeFilter;
             
             // Update button states
@@ -2742,9 +2743,17 @@
                 activeBtn.classList.add('active');
             }
             
+            // Show loading state while fetching new data
+            showLeaderboardLoading();
+            
             // Reload leaderboard data with new timeframe
             if (appTracker) {
-                displayLeaderboard(timeFilter);
+                try {
+                    await displayLeaderboard(timeFilter);
+                } catch (error) {
+                    console.error('Error switching time filter:', error);
+                    showLeaderboardError();
+                }
             }
         }
 

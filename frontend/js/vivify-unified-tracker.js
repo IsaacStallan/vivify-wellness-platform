@@ -460,12 +460,12 @@ class VivifyUnifiedTracker {
         };
     }  
     
-    // Add this method to your VivifyUnifiedTracker class
     async getLeaderboardData(timeframe = 'weekly') {
         try {
             console.log('Fetching leaderboard data for:', timeframe);
             
-            const response = await fetch(`${this.baseURL}/users`, {
+            // Add timeframe parameter to the API call
+            const response = await fetch(`${this.baseURL}/users?timeframe=${timeframe}`, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -475,16 +475,18 @@ class VivifyUnifiedTracker {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            const leaderboardData = await response.json();
-            console.log('Raw API response:', leaderboardData);
+            const apiResponse = await response.json();
+            console.log('Raw API response:', apiResponse);
             
-            if (!leaderboardData || !Array.isArray(leaderboardData) || leaderboardData.length === 0) {
+            // Handle the new API structure that returns {users: [], timeframe, total}
+            const leaderboardData = apiResponse.users || apiResponse;
+            
+            if (!Array.isArray(leaderboardData) || leaderboardData.length === 0) {
                 console.warn('No leaderboard data available, using fallback');
                 return this.getFallbackLeaderboardData();
             }
             
-            // Sort by overallScore descending
-            leaderboardData.sort((a, b) => (b.overallScore || 0) - (a.overallScore || 0));
+            // Data is already sorted by the backend
             
             // Find current user
             const username = this.username;
@@ -497,62 +499,48 @@ class VivifyUnifiedTracker {
                 if (user.username === username) {
                     currentUser = user;
                     userRank = i + 1;
-                    userScore = user.overallScore || 0;
+                    userScore = user.score || 0;
                     break;
                 }
             }
             
             // Transform data for display
             const worldData = leaderboardData.map((user, index) => {
-                const isCurrentUser = currentUser && user._id === currentUser._id;
+                const isCurrentUser = currentUser && user.username === currentUser.username;
                 
                 return {
-                    _id: user._id,
+                    _id: user.id,
                     realName: user.username || `User${index + 1}`,
-                    displayName: user.isAnonymous ? `User${index + 1}` : (user.username || `User${index + 1}`),
+                    displayName: user.displayName || user.username || `User${index + 1}`,
                     school: user.school || 'Knox Grammar',
-                    score: user.overallScore || 0,
+                    score: user.score || 0,
                     rankChange: null,
                     isCurrentUser: isCurrentUser,
-                    isAnonymous: user.isAnonymous || false
+                    isAnonymous: false
                 };
             });
             
-            // FIXED: Calculate score breakdown properly using the current user's actual data
+            // Use the scoreBreakdown from the backend response
             let breakdown = {
                 assessment: 0,
                 habits: 0,
                 challenges: 0
             };
             
-            if (currentUser) {
-                // Calculate assessment as sum of category scores (the actual assessment)
-                const categorySum = (currentUser.fitnessScore || 0) + 
-                                   (currentUser.mentalScore || 0) + 
-                                   (currentUser.nutritionScore || 0) + 
-                                   (currentUser.lifeSkillsScore || 0);
-                
-                breakdown = {
-                    assessment: categorySum,  // 288 in your case
-                    habits: currentUser.habitPoints || 0,  // 400
-                    challenges: currentUser.challengeStats?.totalPoints || 0  // 10
-                };
-                
-                // The REAL overall score should be the sum of these
-                const realOverallScore = breakdown.assessment + breakdown.habits + breakdown.challenges;
-                
-                console.log('Corrected breakdown:', breakdown);
-                console.log('Real overall score should be:', realOverallScore, 'not', userScore);
+            if (currentUser && currentUser.scoreBreakdown) {
+                breakdown = currentUser.scoreBreakdown;
             }
             
             console.log('Final breakdown calculation:', breakdown);
+            console.log('Timeframe processed:', timeframe);
             
             const result = {
                 world: worldData,
                 friends: [],
                 userRank: userRank || 1,
                 userScore: userScore,
-                scoreBreakdown: breakdown
+                scoreBreakdown: breakdown,
+                timeframe: timeframe
             };
             
             console.log('Final leaderboard result:', result);

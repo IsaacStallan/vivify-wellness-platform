@@ -104,20 +104,91 @@ router.put('/update-score', async (req, res) => {
     }
 });
 
-// GET /api/users - Get all users for leaderboard (what your frontend is calling)
+// GET /api/users - Get all users with optional time filtering
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find({})
-            .select('username school overallScore fitnessScore mentalScore nutritionScore lifeSkillsScore habitPoints challengeStats level isAnonymous lastActive')
-            .sort({ overallScore: -1 });
-            
-        res.json(users);
+      const { timeframe = 'weekly' } = req.query;
+      
+      // Calculate date ranges
+      const now = new Date();
+      let startDate;
+      
+      switch (timeframe) {
+        case 'weekly':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'monthly':
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+          break;
+        case 'alltime':
+          startDate = new Date(0); // Beginning of time
+          break;
+        default:
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      }
+  
+      const users = await User.find({}).lean();
+      
+      // Filter and calculate time-based scores for each user
+      const processedUsers = users.map(user => {
+        let timeBasedHabitPoints = 0;
+        let timeBasedChallengePoints = 0;
         
+        // Filter habit completions by timeframe
+        if (user.activity && Array.isArray(user.activity)) {
+          user.activity.forEach(activity => {
+            const activityDate = new Date(activity.timestamp);
+            if (activityDate >= startDate) {
+              if (activity.type === 'habit_completed') {
+                timeBasedHabitPoints += activity.points || 0;
+              } else if (activity.type === 'challenge_completed') {
+                timeBasedChallengePoints += activity.points || 0;
+              }
+            }
+          });
+        }
+        
+        // For all-time, use stored totals; for time periods, use calculated values
+        const habitPoints = timeframe === 'alltime' ? (user.habitPoints || 0) : timeBasedHabitPoints;
+        const challengePoints = timeframe === 'alltime' ? 
+          (user.challengeStats?.totalPoints || 0) : timeBasedChallengePoints;
+        
+        // Assessment scores are current state (not time-based)
+        const assessmentScore = (user.fitnessScore || 0) + 
+                               (user.mentalScore || 0) + 
+                               (user.nutritionScore || 0) + 
+                               (user.lifeSkillsScore || 0);
+        
+        const totalScore = assessmentScore + habitPoints + challengePoints;
+        
+        return {
+          id: user._id,
+          username: user.username,
+          displayName: user.displayName || user.username,
+          school: user.school || 'Knox Grammar',
+          score: totalScore,
+          scoreBreakdown: {
+            assessment: assessmentScore,
+            habits: habitPoints,
+            challenges: challengePoints
+          }
+        };
+      });
+      
+      // Sort by score and add rankings
+      processedUsers.sort((a, b) => b.score - a.score);
+      
+      res.json({
+        users: processedUsers,
+        timeframe,
+        total: processedUsers.length
+      });
+      
     } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ error: 'Failed to fetch users' });
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Failed to fetch users' });
     }
-});
+  });
 
 // POST /api/users/update-habit-points - Update user's habit points
 router.post('/update-habit-points', async (req, res) => {
