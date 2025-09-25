@@ -465,9 +465,11 @@ class VivifyUnifiedTracker {
     // Add this method to your VivifyUnifiedTracker class
     async getLeaderboardData(timeframe = 'weekly') {
         try {
+            console.log('Fetching leaderboard data for:', timeframe);
+            
             // Get user info
             const username = localStorage.getItem('username');
-            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            console.log('Current username:', username);
             
             // Fetch leaderboard data from your existing API
             const response = await fetch(`https://vivify-backend.onrender.com/api/leaderboard/overall`, {
@@ -476,11 +478,20 @@ class VivifyUnifiedTracker {
                 }
             });
             
+            console.log('Response status:', response.status);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
             const leaderboardData = await response.json();
+            console.log('Raw leaderboard data:', leaderboardData);
+            
+            // Check if we actually have data
+            if (!leaderboardData || !Array.isArray(leaderboardData) || leaderboardData.length === 0) {
+                console.log('No leaderboard data found, using mock data');
+                throw new Error('No leaderboard data available');
+            }
             
             // Find current user's rank and score
             let userRank = null;
@@ -489,6 +500,7 @@ class VivifyUnifiedTracker {
             const currentUser = leaderboardData.find(user => 
                 user.displayName === username || user.username === username
             );
+            console.log('Current user found in leaderboard:', currentUser);
             
             if (currentUser) {
                 userRank = leaderboardData.indexOf(currentUser) + 1;
@@ -500,41 +512,46 @@ class VivifyUnifiedTracker {
                 displayName: user.displayName || user.username,
                 school: user.school || 'Knox Grammar',
                 score: user.overallScore || 0,
-                scoreChange: Math.floor(Math.random() * 21) - 10, // Random for now
-                isCurrentUser: user.displayName === username || user.username === username
+                scoreChange: Math.floor(Math.random() * 21) - 10,
+                isCurrentUser: (user.displayName === username || user.username === username)
             }));
             
-            // Calculate score breakdown (mock for now)
+            console.log('Transformed world data:', worldData);
+            
+            // Calculate score breakdown
             const breakdown = {
                 assessment: Math.round(userScore * 0.4),
                 habits: Math.round(userScore * 0.3),
                 challenges: Math.round(userScore * 0.3)
             };
             
-            return {
+            const result = {
                 world: worldData,
-                friends: [], // Empty for now
-                userRank: userRank,
+                friends: [], 
+                userRank: userRank || '--',
                 userScore: userScore,
                 scoreBreakdown: breakdown
             };
             
+            console.log('Final leaderboard result:', result);
+            return result;
+            
         } catch (error) {
             console.error('Error fetching leaderboard data:', error);
             
-            // Return mock data on error
-            return {
+            // Return mock data with some real users to test display
+            const mockData = {
                 world: [
                     {
-                        displayName: "PerformanceKing",
+                        displayName: "TestUser1",
                         school: "Knox Grammar",
                         score: 850,
                         scoreChange: 15,
                         isCurrentUser: false
                     },
                     {
-                        displayName: "StudyMaster",
-                        school: "Knox Grammar", 
+                        displayName: "TestUser2", 
+                        school: "Knox Grammar",
                         score: 820,
                         scoreChange: -5,
                         isCurrentUser: false
@@ -556,6 +573,9 @@ class VivifyUnifiedTracker {
                     challenges: 234
                 }
             };
+            
+            console.log('Using mock data:', mockData);
+            return mockData;
         }
     }
 
