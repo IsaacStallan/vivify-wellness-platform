@@ -1,0 +1,63 @@
+<!-- admin-email.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Update Emails</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
+        .form-group { margin: 20px 0; }
+        input, button { padding: 10px; width: 100%; font-size: 16px; }
+        button { background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #e67e22; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Send User Update Emails</h1>
+    
+    <div class="form-group">
+        <label>Admin Key:</label>
+        <input type="password" id="adminKey" placeholder="Enter admin key">
+    </div>
+    
+    <button onclick="sendEmails()">Send Update Emails to All Users</button>
+    
+    <div id="result"></div>
+
+    <script>
+        async function sendEmails() {
+            const adminKey = document.getElementById('adminKey').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!adminKey) {
+                resultDiv.innerHTML = '<div class="error">Please enter admin key</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div>Sending emails... This may take a while...</div>';
+            
+            try {
+                const response = await fetch('https://vivify-backend.onrender.com/api/users/send-update-emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ adminKey })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">${result.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

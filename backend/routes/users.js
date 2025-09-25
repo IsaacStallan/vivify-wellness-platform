@@ -429,4 +429,156 @@ router.get('/debug/:username', async (req, res) => {
     }
 });
 
+const nodemailer = require('nodemailer');
+
+// Add this route to your existing users.js file
+// POST /api/users/send-update-emails (Admin only)
+router.post('/send-update-emails', async (req, res) => {
+  try {
+    const { adminKey } = req.body;
+    
+    // Simple admin authentication
+    if (adminKey !== process.env.ADMIN_KEY) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    // Find users with emails (optionally filter by last login)
+    const users = await User.find({ 
+      email: { $exists: true, $ne: '' }
+      // Uncomment below to only email inactive users
+      // lastLogin: { $lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } // 7 days ago
+    });
+    
+    console.log(`Found ${users.length} users to email`);
+    
+    // Configure nodemailer
+    const transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+    
+    let emailsSent = 0;
+    const errors = [];
+    
+    for (const user of users) {
+      try {
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: 'Vivify App Updates - Sync Your Performance Data',
+          html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }
+                .cta-button { background: #f39c12; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; font-weight: bold; }
+                .feature-list { background: white; padding: 20px; border-radius: 6px; margin: 20px 0; }
+                .feature-list li { margin: 10px 0; }
+                .username { background: #fff; padding: 10px; border-radius: 4px; font-weight: bold; color: #f39c12; }
+              </style>
+            </head>
+            <body>
+              <div class="header">
+                <h1 style="margin: 0; font-size: 2rem;">Vivify Performance Hub</h1>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Major Updates & Data Sync Required</p>
+              </div>
+              
+              <div class="content">
+                <p>Hi <strong>${user.username}</strong>,</p>
+                
+                <p>We've been hard at work improving Vivify since you first signed up! The app now has some amazing new features:</p>
+                
+                <div class="feature-list">
+                  <ul>
+                    <li><strong>Real-time Leaderboards:</strong> See how you rank against other students and compete for the top spot</li>
+                    <li><strong>Enhanced Habit Tracking:</strong> Build streaks, earn XP, and track your daily performance habits</li>
+                    <li><strong>Performance Challenges:</strong> Join weekly and monthly challenges to push your limits</li>
+                    <li><strong>Better Data Sync:</strong> Your progress now saves across all your devices</li>
+                    <li><strong>Gamified Experience:</strong> Earn points, maintain streaks, and unlock achievements</li>
+                  </ul>
+                </div>
+                
+                <div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 20px 0;">
+                  <h3 style="margin-top: 0; color: #856404;">⚠️ Action Required: Sync Your Data</h3>
+                  <p style="margin-bottom: 0;">Your assessment results are currently saved locally on your device. We need you to log back in so we can sync them to our improved system and add them to the leaderboard!</p>
+                </div>
+                
+                <p><strong>What you need to do:</strong></p>
+                <ol>
+                  <li>Click the login button below</li>
+                  <li>Sign in with your existing credentials</li>
+                  <li>Your assessment data will automatically sync</li>
+                  <li>Check out your position on the new leaderboard!</li>
+                </ol>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="https://vivify-app.netlify.app/login" class="cta-button">
+                    Login to Vivify →
+                  </a>
+                </div>
+                
+                <div class="username">
+                  <strong>Your Username:</strong> ${user.username}
+                </div>
+                
+                <p>Once you log back in, you'll see:</p>
+                <ul>
+                  <li>Your assessment scores properly reflected in your overall performance rating</li>
+                  <li>Where you rank among all users</li>
+                  <li>New habits to build your daily routine</li>
+                  <li>Challenges you can join to compete with others</li>
+                </ul>
+                
+                <p>Questions about the updates or need help logging in? Just reply to this email and we'll help you out.</p>
+                
+                <p>Thanks for being part of the Vivify community!</p>
+                
+                <p>Best,<br>
+                <strong>The Vivify Team</strong><br>
+                <em>Building better habits, one day at a time</em></p>
+                
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+                <p style="font-size: 12px; color: #666; text-align: center;">
+                  You're receiving this because you have a Vivify account. If you no longer want updates, you can ignore this email.
+                </p>
+              </div>
+            </body>
+            </html>
+          `
+        });
+        
+        emailsSent++;
+        console.log(`✓ Email sent to ${user.username} (${user.email})`);
+        
+        // Rate limiting to avoid spam filters (1 email every 2 seconds)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+      } catch (emailError) {
+        errors.push({ user: user.username, email: user.email, error: emailError.message });
+        console.error(`✗ Failed to send to ${user.username}:`, emailError.message);
+      }
+    }
+    
+    console.log(`\nEmail campaign complete: ${emailsSent}/${users.length} sent successfully`);
+    
+    res.json({ 
+      success: true,
+      message: `Email campaign complete: ${emailsSent}/${users.length} emails sent successfully`,
+      totalUsers: users.length,
+      emailsSent,
+      errors: errors.length > 0 ? errors : undefined
+    });
+    
+  } catch (error) {
+    console.error('Error in bulk email send:', error);
+    res.status(500).json({ error: 'Failed to send emails', details: error.message });
+  }
+});
+
 module.exports = router;
