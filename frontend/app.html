@@ -2525,15 +2525,55 @@
                 return;
             }
             
-            appTracker.getLeaderboardData().then(data => {
-                console.log('Got leaderboard data in displayLeaderboard:', data);
-                
-                updateUserRankInfo(data.userRank, data.userScore);
-                updateScoreBreakdown(data.scoreBreakdown);
-                updateLeaderboards(data.world, data.friends);
-            }).catch(error => {
-                console.error('Error in displayLeaderboard:', error);
-            });
+            // Replace your existing getLeaderboardData with this version
+            appTracker.getLeaderboardData = async function () {
+            const username = localStorage.getItem('username') || 'you';
+            const activities = (this.data && this.data.activities) ? [...this.data.activities] : [];
+
+            // Time window based on the UI filter (weekly / monthly / all)
+            const now = new Date();
+            let start = new Date(0); // default: all time
+            if (window.currentTimeFilter === 'weekly') {
+                start = new Date(now); start.setDate(now.getDate() - 7);
+            } else if (window.currentTimeFilter === 'monthly') {
+                start = new Date(now.getFullYear(), now.getMonth(), 1);
+            }
+
+            const inRange = a => {
+                try { return new Date(a.timestamp) >= start; } catch { return true; }
+            };
+
+            // Sum helpers
+            const sumPoints = (pred) =>
+                activities.filter(a => inRange(a) && pred(a)).reduce((s, a) => s + (a.points || 0), 0);
+
+            // Real breakdown
+            const habitPoints      = sumPoints(a => (a.type || '').startsWith('habit'));
+            const challengePoints  = sumPoints(a => (a.type || '').startsWith('challenge'));
+            // If you ever log assessments, tag them with type 'assessment'
+            const assessmentPoints = sumPoints(a => (a.type || '') === 'assessment');
+
+            // Overall: prefer backend/score if present, else sum we have
+            const overallScore =
+                Math.round(this.data?.scores?.overall || (habitPoints + challengePoints + assessmentPoints));
+
+            // If assessments aren’t explicitly logged, treat “everything else” as assessment
+            const computedAssessment = assessmentPoints || Math.max(0, overallScore - habitPoints - challengePoints);
+
+            // Minimal world/friends scaffolding (keep whatever you already had)
+            return {
+                userRank: null,
+                userScore: overallScore,
+                scoreBreakdown: {
+                assessment: computedAssessment,
+                habits: habitPoints,
+                challenges: challengePoints
+                },
+                world: [],     // your existing code fills these later
+                friends: []    // ^
+            };
+            };
+
         }
 
         function updateUserRankInfo(rank, score) {
