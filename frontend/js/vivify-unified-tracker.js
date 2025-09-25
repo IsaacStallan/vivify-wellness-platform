@@ -470,7 +470,7 @@ class VivifyUnifiedTracker {
             const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
             
             // Fetch leaderboard data from your existing API
-            const response = await fetch(`https://vivify-backend.onrender.com/api/leaderboard/${timeframe}`, {
+            const response = await fetch(`https://vivify-backend.onrender.com/api/leaderboard/overall`, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
