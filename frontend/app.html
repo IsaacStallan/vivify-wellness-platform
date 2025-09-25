@@ -2435,9 +2435,6 @@
             showNotification(`${challenge.name}\n\n${challenge.description}\n\nReward: ${challenge.points} points`, 'info');
         }
 
-        let showingAllUsers = false;
-        let allLeaderboardData = [];
-
         function showMoreUsers() {
             if (!showingAllUsers && allLeaderboardData.length > 10) {
                 // Show all users
@@ -2510,7 +2507,7 @@
             }
         }
 
-        // Leaderboard Management
+        // Leaderboard Management - Fixed version
         let currentTimeFilter = 'weekly';
         let currentBoardType = 'world';
 
@@ -2518,91 +2515,125 @@
             console.log('displayLeaderboard() called');
 
             if (!appTracker) {
-                // try again shortly rather than failing silently
-                setTimeout(displayLeaderboard, 150);
-                return;
-            }
-
-            if (!window.appTracker) {
-                console.warn('No appTracker instance yet.');
+                console.warn('appTracker not ready, will retry...');
+                // Instead of recursive setTimeout, just show loading state
+                showLeaderboardLoading();
                 return;
             }
 
             try {
-                // Use your existing tracker method as-is
                 const data = await appTracker.getLeaderboardData(timeframe);
-                console.log('Got leaderboard data in displayLeaderboard:', data);
+                console.log('Got leaderboard data:', data);
 
-                // Defensive fallbacks
-                const world   = Array.isArray(data?.world)   ? data.world   : [];
+                const world = Array.isArray(data?.world) ? data.world : [];
                 const friends = Array.isArray(data?.friends) ? data.friends : [];
-                const rank    = data?.userRank ?? '--';
-                const score   = data?.userScore ?? 0;
+                const rank = data?.userRank ?? '--';
+                const score = data?.userScore ?? 0;
                 const breakdown = data?.scoreBreakdown ?? { assessment: 0, habits: 0, challenges: 0 };
 
                 updateUserRankInfo(rank, score);
                 updateScoreBreakdown(breakdown);
-                renderLeaderboard('worldLeaderboardList', world);
-                renderLeaderboard('friendsLeaderboardList', friends);
+                updateWorldLeaderboard(world);
+                updateFriendsLeaderboard(friends);
+
             } catch (err) {
                 console.error('Error in displayLeaderboard:', err);
-
-                // Minimal fallback so the panel never looks empty
-                const you = localStorage.getItem('username') || 'You';
-                const score = Number(localStorage.getItem('overallScore') || 0);
-                updateUserRankInfo(1, score);
-                updateScoreBreakdown({ assessment: Math.round(score*0.4), habits: Math.round(score*0.3), challenges: Math.round(score*0.3) });
-                renderLeaderboard('worldLeaderboardList', [{ displayName: you, realName: you, school: '—', score, rankChange: 0, isCurrentUser: true }]);
-                renderLeaderboard('friendsLeaderboardList', []);
+                showLeaderboardError();
             }
-            }
-
-            // Small renderer to avoid duplication
-            function renderLeaderboard(listId, rows) {
-            const ul = document.getElementById(listId);
-            if (!ul) return;
-
-            ul.innerHTML = '';
-            rows
-                .sort((a, b) => (b.score || 0) - (a.score || 0))
-                .forEach((u, i) => {
-                ul.appendChild(createLeaderboardEntry({
-                    rank: i + 1,
-                    name: u.displayName || u.realName || `User ${i+1}`,
-                    school: u.school || '—',
-                    score: u.score || 0,
-                    change: u.rankChange ?? 0,
-                    isCurrentUser: !!u.isCurrentUser
-                }));
-                });
-            }
-
-        function updateUserRankInfo(rank, score) {
-            const rankElement = document.getElementById('userRank');
-            const scoreElement = document.getElementById('overallRankScore');
-            
-            if (rankElement) rankElement.textContent = rank ? `#${rank}` : '#--';
-            if (scoreElement) scoreElement.textContent = Math.round(score || 0);
         }
 
-        function updateScoreBreakdown(breakdown) {
-            if (!breakdown) return;
-            
-            const elements = {
-                'assessmentContribution': Math.round(breakdown.assessment || 0),
-                'habitsContribution': Math.round(breakdown.habits || 0),
-                'challengesContribution': Math.round(breakdown.challenges || 0)
-            };
-            
-            Object.entries(elements).forEach(([id, value]) => {
-                const element = document.getElementById(id);
-                if (element) element.textContent = value;
-            });
+        function showLeaderboardLoading() {
+            const container = document.getElementById('worldLeaderboardList');
+            if (container) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                        <h3>Loading leaderboard...</h3>
+                        <p>Fetching the latest performance rankings</p>
+                    </div>
+                `;
+            }
         }
 
-        function updateLeaderboards(worldData, friendsData) {
-            updateWorldLeaderboard(worldData || []);
-            updateFriendsLeaderboard(friendsData || []);
+        function showLeaderboardError() {
+            const container = document.getElementById('worldLeaderboardList');
+            if (container) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem; color: #e74c3c;"></i>
+                        <h3>Unable to load leaderboard</h3>
+                        <p>Please check your connection and try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Fix the createLeaderboardEntry function
+        function createLeaderboardEntry(entry, rank) {
+            const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
+            const isCurrentUser = entry.isCurrentUser || false;
+            const displayName = entry.displayName || entry.name || `User ${rank}`;
+            
+            let changeElement = '';
+            if (entry.rankChange !== null && entry.rankChange !== undefined) {
+                const rankChange = entry.rankChange;
+                let changeClass = 'score-same';
+                let changeSymbol = '—';
+                
+                if (rankChange > 0) {
+                    changeClass = 'score-up';
+                    changeSymbol = `↑${rankChange}`;
+                } else if (rankChange < 0) {
+                    changeClass = 'score-down';
+                    changeSymbol = `↓${Math.abs(rankChange)}`;
+                }
+                
+                changeElement = `<div class="entry-score-change ${changeClass}">${changeSymbol}</div>`;
+            }
+            
+            return `
+                <div class="leaderboard-entry ${isCurrentUser ? 'current-user' : ''}">
+                    <div class="entry-rank ${rankClass}">${rank}</div>
+                    <div class="entry-info">
+                        <div class="entry-name">${displayName}</div>
+                        <div class="entry-school">${entry.school || 'Knox Grammar'}</div>
+                    </div>
+                    <div class="entry-score">
+                        <div class="entry-score-value">${Math.round(entry.score || 0)}</div>
+                        ${changeElement}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fix the "Show More" functionality
+        let showingAllUsers = false;
+        let allLeaderboardData = [];
+
+        function showMoreUsers() {
+            const container = document.getElementById('worldLeaderboardList');
+            const btn = document.getElementById('showMoreBtn');
+            
+            if (!container || !btn) return;
+            
+            if (!showingAllUsers && allLeaderboardData.length > 10) {
+                // Show all users
+                container.innerHTML = allLeaderboardData.map((entry, index) => 
+                    createLeaderboardEntry(entry, index + 1)
+                ).join('');
+                
+                btn.textContent = 'Show Less';
+                showingAllUsers = true;
+            } else {
+                // Show only top 10
+                const displayData = allLeaderboardData.slice(0, 10);
+                container.innerHTML = displayData.map((entry, index) => 
+                    createLeaderboardEntry(entry, index + 1)
+                ).join('');
+                
+                btn.textContent = 'Show More Users';
+                showingAllUsers = false;
+            }
         }
 
         function updateWorldLeaderboard(worldData) {
@@ -2613,13 +2644,7 @@
             if (!container) return;
             
             if (worldData.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-globe" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
-                        <h3>Loading leaderboard...</h3>
-                        <p>Fetching the latest performance rankings</p>
-                    </div>
-                `;
+                showLeaderboardLoading();
                 return;
             }
             
@@ -2643,121 +2668,36 @@
             }
         }
 
-        function updateFriendsLeaderboard(friendsData) {
-            const container = document.getElementById('friendsLeaderboardList');
-            const noFriendsMessage = document.getElementById('noFriendsMessage');
-            
-            if (!container || !noFriendsMessage) return;
-            
-            if (friendsData.length === 0) {
-                container.style.display = 'none';
-                noFriendsMessage.style.display = 'block';
-                return;
-            }
-            
-            container.style.display = 'block';
-            noFriendsMessage.style.display = 'none';
-            container.innerHTML = friendsData.map((entry, index) => createLeaderboardEntry(entry, index + 1, true)).join('');
-        }
-
-        // Leaderboard Controls
-        function initializeLeaderboardControls() {
-            // Time filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const timeFilter = btn.dataset.time;
-                    switchTimeFilter(timeFilter);
-                });
-            });
-            
-            // Board type toggle
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const boardType = btn.dataset.board;
-                    switchBoardType(boardType);
-                });
-            });
-        }
-
-        function switchTimeFilter(timeFilter) {
-            currentTimeFilter = timeFilter;
-            
-            // Update button states
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-time="${timeFilter}"]`).classList.add('active');
-            
-            // Reload leaderboard data - but keep using the same endpoint since others might not exist
-            if (appTracker) {
-                displayLeaderboard(); // Just reload current data for now
-            }
-        }
-
-        function switchBoardType(boardType) {
-            currentBoardType = boardType;
-            
-            // Update toggle buttons
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-board="${boardType}"]`).classList.add('active');
-            
-            // Update board sections
-            document.querySelectorAll('.board-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(`${boardType}-leaderboard`).classList.add('active');
-        }
-
-        // Friend Management
-        function openAddFriendModal() {
-            const modal = document.getElementById('addFriendModal');
-            if (modal) {
-                modal.classList.add('show');
-                document.getElementById('friendUsername').focus();
-            }
-        }
-
-        function closeAddFriendModal() {
-            const modal = document.getElementById('addFriendModal');
-            if (modal) {
-                modal.classList.remove('show');
-                // Clear form
-                document.getElementById('friendUsername').value = '';
-                document.getElementById('friendMessage').value = 'Hey! Let\'s motivate each other on Vivify!';
-            }
-        }
-
-        async function sendFriendRequest() {
-            const username = document.getElementById('friendUsername').value.trim();
-            const message = document.getElementById('friendMessage').value.trim();
-            
-            if (!username) {
-                showNotification('Please enter a username', 'error');
-                return;
-            }
-            
+        // Updated loadTabContent function to handle leaderboard properly
+        async function loadTabContent(tabName) {
             if (!appTracker) {
-                showNotification('System not ready. Please try again.', 'error');
+                console.log('appTracker not initialized yet, showing loading...');
+                if (tabName === 'leaderboard') {
+                    showLeaderboardLoading();
+                }
                 return;
             }
+            
+            console.log('Loading content for tab:', tabName);
             
             try {
-                const success = await appTracker.sendFriendRequest(username, message);
-                if (success) {
-                    closeAddFriendModal();
-                    showNotification('Friend request sent successfully!', 'success');
-                    // Reload friends leaderboard
-                    if (currentBoardType === 'friends') {
-                        loadTabContent('leaderboard');
-                    }
+                switch(tabName) {
+                    case 'dashboard':
+                        displayDashboard();
+                        break;
+                    case 'habits':
+                        displayHabits();
+                        break;
+                    case 'challenges':
+                        displayChallenges();
+                        break;
+                    case 'leaderboard':
+                        await displayLeaderboard(); // Make sure this is awaited
+                        break;
                 }
             } catch (error) {
-                console.error('Error sending friend request:', error);
-                showNotification('Error sending friend request. Please try again.', 'error');
+                console.error('Error loading tab content:', error);
+                showNotification('Error loading content. Please refresh the page.', 'error');
             }
         }
 
