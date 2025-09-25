@@ -1887,7 +1887,8 @@
 
     <script>
         // Global variables - declare first to avoid reference errors
-        let appTracker = null;
+        let appTracker;         // make sure this exists once at top-level
+        window.appTracker = null;
         let currentTab = 'dashboard';
 
         // Challenge definitions
@@ -2515,6 +2516,12 @@
 
         async function displayLeaderboard(timeframe = 'weekly') {
             console.log('displayLeaderboard() called');
+
+            if (!appTracker) {
+                // try again shortly rather than failing silently
+                setTimeout(displayLeaderboard, 150);
+                return;
+            }
 
             if (!window.appTracker) {
                 console.warn('No appTracker instance yet.');
