@@ -121,7 +121,7 @@ router.get('/', async (req, res) => {
           startDate = new Date(now.getFullYear(), now.getMonth(), 1);
           break;
         case 'alltime':
-          startDate = new Date(0); // Beginning of time
+          startDate = null; // No date filtering for all-time
           break;
         default:
           startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -134,32 +134,33 @@ router.get('/', async (req, res) => {
         let timeBasedHabitPoints = 0;
         let timeBasedChallengePoints = 0;
         
-        // Filter habit completions by timeframe
-        if (user.activity && Array.isArray(user.activity)) {
-          user.activity.forEach(activity => {
-            const activityDate = new Date(activity.timestamp);
-            if (activityDate >= startDate) {
-              if (activity.type === 'habit_completed') {
-                timeBasedHabitPoints += activity.points || 0;
-              } else if (activity.type === 'challenge_completed') {
-                timeBasedChallengePoints += activity.points || 0;
+        // For all-time, use stored totals directly
+        if (timeframe === 'alltime') {
+          timeBasedHabitPoints = user.habitPoints || 0;
+          timeBasedChallengePoints = user.challengeStats?.totalPoints || 0;
+        } else {
+          // For weekly/monthly, calculate from activity log
+          if (user.activity && Array.isArray(user.activity)) {
+            user.activity.forEach(activity => {
+              const activityDate = new Date(activity.timestamp);
+              if (activityDate >= startDate) {
+                if (activity.type === 'habit_completed') {
+                  timeBasedHabitPoints += activity.points || 0;
+                } else if (activity.type === 'challenge_completed') {
+                  timeBasedChallengePoints += activity.points || 0;
+                }
               }
-            }
-          });
+            });
+          }
         }
         
-        // For all-time, use stored totals; for time periods, use calculated values
-        const habitPoints = timeframe === 'alltime' ? (user.habitPoints || 0) : timeBasedHabitPoints;
-        const challengePoints = timeframe === 'alltime' ? 
-          (user.challengeStats?.totalPoints || 0) : timeBasedChallengePoints;
-        
-        // Assessment scores are current state (not time-based)
+        // Assessment scores are always current state (not time-based)
         const assessmentScore = (user.fitnessScore || 0) + 
                                (user.mentalScore || 0) + 
                                (user.nutritionScore || 0) + 
                                (user.lifeSkillsScore || 0);
         
-        const totalScore = assessmentScore + habitPoints + challengePoints;
+        const totalScore = assessmentScore + timeBasedHabitPoints + timeBasedChallengePoints;
         
         return {
           id: user._id,
@@ -169,8 +170,8 @@ router.get('/', async (req, res) => {
           score: totalScore,
           scoreBreakdown: {
             assessment: assessmentScore,
-            habits: habitPoints,
-            challenges: challengePoints
+            habits: timeBasedHabitPoints,
+            challenges: timeBasedChallengePoints
           }
         };
       });
@@ -188,7 +189,7 @@ router.get('/', async (req, res) => {
       console.error('Error fetching users:', error);
       res.status(500).json({ error: 'Failed to fetch users' });
     }
-  });
+});
 
 // POST /api/users/update-habit-points - Update user's habit points
 router.post('/update-habit-points', async (req, res) => {
