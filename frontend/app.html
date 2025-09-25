@@ -2880,6 +2880,45 @@
             }
         }
 
+        // Add this function for debugging - you can call it in browser console
+        function checkLocalStorageData() {
+            console.log('=== LOCAL STORAGE DEBUG ===');
+            
+            const keys = [
+                'vivify:assessmentResults',
+                'userProfile',
+                'vivify:userData',
+                'username',
+                'userLoggedIn'
+            ];
+            
+            keys.forEach(key => {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    try {
+                        const parsed = JSON.parse(data);
+                        console.log(`${key}:`, parsed);
+                    } catch (e) {
+                        console.log(`${key}:`, data);
+                    }
+                } else {
+                    console.log(`${key}: null`);
+                }
+            });
+            
+            console.log('=== END DEBUG ===');
+        }
+
+        // Also add this to manually trigger sync (for testing)
+        function manualAssessmentSync() {
+            if (window.appTracker || window.vivifyTracker) {
+                const tracker = window.appTracker || window.vivifyTracker;
+                tracker.syncExistingAssessmentData();
+            } else {
+                console.error('No tracker instance found');
+            }
+        }
+
         // Main Initialization
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('App initializing...');

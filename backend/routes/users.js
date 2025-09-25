@@ -199,6 +199,65 @@ router.get('/', async (req, res) => {
     }
 });
 
+// POST /api/users/sync-assessment - Sync existing assessment data
+router.post('/sync-assessment', async (req, res) => {
+    try {
+      const { username, fitnessScore, mentalScore, nutritionScore, lifeSkillsScore, hasCompletedAssessment, lastAssessmentDate } = req.body;
+      
+      if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
+      }
+      
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Only sync if user doesn't already have assessment data
+      if (!user.hasCompletedAssessment || user.fitnessScore === 0) {
+        console.log(`Syncing assessment data for user: ${username}`);
+        
+        user.fitnessScore = fitnessScore || 0;
+        user.mentalScore = mentalScore || 0;
+        user.nutritionScore = nutritionScore || 0;
+        user.lifeSkillsScore = lifeSkillsScore || 0;
+        user.hasCompletedAssessment = true;
+        user.lastAssessmentDate = new Date(lastAssessmentDate || Date.now());
+        
+        // Calculate new overall score
+        const assessmentTotal = (fitnessScore || 0) + (mentalScore || 0) + (nutritionScore || 0) + (lifeSkillsScore || 0);
+        user.overallScore = assessmentTotal + (user.habitPoints || 0) + (user.challengeStats?.totalPoints || 0);
+        
+        await user.save();
+        
+        console.log(`Assessment synced for ${username}:`, {
+          fitness: user.fitnessScore,
+          mental: user.mentalScore,
+          nutrition: user.nutritionScore,
+          lifeSkills: user.lifeSkillsScore,
+          overallScore: user.overallScore
+        });
+        
+        res.json({ 
+          message: 'Assessment data synced successfully',
+          scores: {
+            fitness: user.fitnessScore,
+            mental: user.mentalScore,
+            nutrition: user.nutritionScore,
+            lifeSkills: user.lifeSkillsScore
+          },
+          overallScore: user.overallScore
+        });
+      } else {
+        res.json({ message: 'User already has assessment data' });
+      }
+      
+    } catch (error) {
+      console.error('Error syncing assessment:', error);
+      res.status(500).json({ error: 'Failed to sync assessment data' });
+    }
+});
+
 // POST /api/users/update-habit-points - Update user's habit points
 router.post('/update-habit-points', async (req, res) => {
     try {

@@ -137,6 +137,14 @@ class VivifyUnifiedTracker {
       
         this.resetDailyIfNewDay();
         this.migrateExistingData();
+    
+        // Check for existing assessment data in localStorage and sync it
+        await this.syncExistingAssessmentData();
+    
+        // Reload data after potential assessment sync to get updated scores
+        if (!this._scoresFromServer) {
+          await this.loadData();
+        }
       
         // Only compute local scores if we didn't get them from server
         if (!this._scoresFromServer) {
@@ -643,6 +651,97 @@ class VivifyUnifiedTracker {
                 }
             }
         };
+    }
+
+    async syncExistingAssessmentData() {
+        try {
+            // Check for existing assessment data in localStorage
+            const localAssessment = localStorage.getItem('vivify:assessmentResults');
+            const localUserProfile = localStorage.getItem('userProfile');
+            
+            if (!localAssessment) {
+                console.log('No local assessment data found');
+                return;
+            }
+            
+            const assessmentData = JSON.parse(localAssessment);
+            const userProfile = JSON.parse(localUserProfile || '{}');
+            
+            // Check if we have scores to sync
+            if (assessmentData.scores && Object.keys(assessmentData.scores).length > 0) {
+                console.log('Found local assessment data:', assessmentData.scores);
+                
+                // Check if user already has assessment data in database
+                const hasDbAssessment = this.data.scores && 
+                    (this.data.scores.physical > 0 || this.data.scores.mental > 0 || 
+                     this.data.scores.nutrition > 0 || this.data.scores.lifeSkills > 0);
+                
+                if (!hasDbAssessment) {
+                    console.log('User has no assessment data in database, syncing...');
+                    
+                    // Prepare the sync data
+                    const syncData = {
+                        username: this.username,
+                        fitnessScore: assessmentData.scores.fitness || assessmentData.scores.physical || 0,
+                        mentalScore: assessmentData.scores.mental || 0,
+                        nutritionScore: assessmentData.scores.nutrition || 0,
+                        lifeSkillsScore: assessmentData.scores.lifeSkills || assessmentData.scores.lifestyle || 0,
+                        hasCompletedAssessment: true,
+                        lastAssessmentDate: assessmentData.completedAt || assessmentData.timestamp || new Date().toISOString()
+                    };
+                    
+                    console.log('Syncing data:', syncData);
+                    
+                    // Sync to backend
+                    const response = await fetch(`${this.baseURL}/users/sync-assessment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(syncData)
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('Successfully synced assessment data:', result);
+                        
+                        // Update local data
+                        this.data.scores = {
+                            ...this.data.scores,
+                            physical: syncData.fitnessScore,
+                            mental: syncData.mentalScore,
+                            nutrition: syncData.nutritionScore,
+                            lifeSkills: syncData.lifeSkillsScore
+                        };
+                        this.data.hasCompletedAssessment = true;
+                        
+                        // Show success notification
+                        if (typeof showNotification === 'function') {
+                            showNotification('Your previous assessment data has been recovered and synced!', 'success');
+                        }
+                        
+                        // Refresh current view if on dashboard or leaderboard
+                        if (typeof currentTab !== 'undefined' && (currentTab === 'dashboard' || currentTab === 'leaderboard')) {
+                            setTimeout(() => {
+                                if (typeof loadTabContent === 'function') {
+                                    loadTabContent(currentTab);
+                                }
+                            }, 1000);
+                        }
+                        
+                    } else {
+                        const error = await response.text();
+                        console.error('Failed to sync assessment data:', error);
+                    }
+                } else {
+                    console.log('User already has assessment data in database');
+                }
+            } else {
+                console.log('No valid assessment scores found in localStorage');
+            }
+        } catch (error) {
+            console.error('Error syncing existing assessment data:', error);
+        }
     }
 
     // CHALLENGE METHODS
