@@ -467,10 +467,7 @@ class VivifyUnifiedTracker {
         try {
             console.log('Fetching leaderboard data for:', timeframe);
             
-            const username = localStorage.getItem('username');
-            console.log('Current username:', username);
-            
-            const response = await fetch(`https://vivify-backend.onrender.com/api/users`, {
+            const response = await fetch(`${this.baseURL}/users`, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -481,16 +478,18 @@ class VivifyUnifiedTracker {
             }
             
             const leaderboardData = await response.json();
-            console.log('Raw leaderboard data:', leaderboardData);
+            console.log('Raw API response:', leaderboardData);
             
             if (!leaderboardData || !Array.isArray(leaderboardData) || leaderboardData.length === 0) {
-                throw new Error('No leaderboard data available');
+                console.warn('No leaderboard data available, using fallback');
+                return this.getFallbackLeaderboardData();
             }
             
             // Sort by overallScore descending
             leaderboardData.sort((a, b) => (b.overallScore || 0) - (a.overallScore || 0));
             
             // Find current user
+            const username = this.username;
             let currentUser = null;
             let userRank = null;
             let userScore = 0;
@@ -505,12 +504,8 @@ class VivifyUnifiedTracker {
                 }
             }
             
-            console.log('Current user found:', currentUser);
-            
-
-
-            // Transform data - each user decides their own privacy
-            const worldData = leaderboardData.slice(0, 10).map((user, index) => {
+            // Transform data for display
+            const worldData = leaderboardData.map((user, index) => {
                 const isCurrentUser = currentUser && user._id === currentUser._id;
                 
                 return {
@@ -519,63 +514,41 @@ class VivifyUnifiedTracker {
                     displayName: user.isAnonymous ? `User${index + 1}` : (user.username || `User${index + 1}`),
                     school: user.school || 'Knox Grammar',
                     score: user.overallScore || 0,
-                    rankChange: null, // Remove random changes - we'll implement real tracking later
+                    rankChange: null,
                     isCurrentUser: isCurrentUser,
                     isAnonymous: user.isAnonymous || false
                 };
             });
             
-            console.log('Transformed world data:', worldData);
-            
-            let habitPts = 0, challengePts = 0;
-
-            // decide start boundary from timeframe
-            const now = new Date();
-            let since = null;
-            if (timeframe === 'weekly')  { since = new Date(now); since.setDate(now.getDate() - 7); }
-            else if (timeframe === 'monthly') { since = new Date(now); since.setDate(now.getDate() - 30); }
-            // 'all time' (or anything else) -> since = null
-
-            const startMs = since ? since.getTime() : 0;
-            const activities = Array.isArray(this?.data?.activities) ? this.data.activities : [];
-
-            for (const a of activities) {
-            const ts = new Date(a.timestamp).getTime();
-            if (Number.isFinite(ts) && ts >= startMs) {
-                if (a.type === 'habit') habitPts += a.points || 0;
-                if (a.type === 'challenge_join' || a.type === 'challenge_daily' || a.type === 'challenge_complete')
-                challengePts += a.points || 0;
-            }
-            }
-
-            // Prefer explicit point buckets if your backend provides them:
-            const habitsPts     = Number(currentUser?.habitXP ?? currentUser?.habitPoints ?? 0);
-            const challengesPts = Number(currentUser?.challengeXP ?? currentUser?.challengePoints ?? 0);
-            const overall       = Number(currentUser?.overallScore ?? 0);
-
-            // If assessment isn’t provided, derive it as the remainder of overall
-            let assessmentPts   = Number(currentUser?.assessmentScore ?? 0);
-            if (!assessmentPts && overall) {
-            assessmentPts = Math.max(0, overall - (habitsPts + challengesPts));
-            }
-
-            // Absolute values (no percentage split unless we have nothing else)
-            let breakdown = { assessment: assessmentPts, habits: habitsPts, challenges: challengesPts };
-
-            // Last-resort fallback if everything is zero but overall exists
-            if (!breakdown.assessment && !breakdown.habits && !breakdown.challenges && overall) {
-            breakdown = {
-                assessment: Math.round(overall * 0.4),
-                habits:     Math.round(overall * 0.3),
-                challenges: Math.round(overall * 0.3)
+            // FIXED: Calculate score breakdown properly using the current user's actual data
+            let breakdown = {
+                assessment: 0,
+                habits: 0,
+                challenges: 0
             };
+            
+            if (currentUser) {
+                // Try to get real breakdown from server data
+                breakdown.assessment = currentUser.assessmentScore || Math.round(userScore * 0.4);
+                breakdown.habits = currentUser.habitXP || currentUser.habitPoints || Math.round(userScore * 0.3);
+                breakdown.challenges = currentUser.challengeXP || currentUser.challengePoints || Math.round(userScore * 0.3);
+                
+                // If we still don't have proper data, calculate from total
+                if (breakdown.assessment === 0 && breakdown.habits === 0 && breakdown.challenges === 0) {
+                    breakdown = {
+                        assessment: Math.round(userScore * 0.4),
+                        habits: Math.round(userScore * 0.3), 
+                        challenges: Math.round(userScore * 0.3)
+                    };
+                }
             }
-
+            
+            console.log('Final breakdown calculation:', breakdown);
             
             const result = {
                 world: worldData,
-                friends: [], 
-                userRank: userRank || '--',
+                friends: [],
+                userRank: userRank || 1,
                 userScore: userScore,
                 scoreBreakdown: breakdown
             };
@@ -585,45 +558,7 @@ class VivifyUnifiedTracker {
             
         } catch (error) {
             console.error('Error fetching leaderboard data:', error);
-            return {
-                world: [
-                    {
-                        displayName: "Isaac",
-                        realName: "Isaac",
-                        school: "UTS",
-                        score: 1942,
-                        rankChange: 0,
-                        isCurrentUser: true,
-                        isAnonymous: false
-                    },
-                    {
-                        displayName: "Grey",
-                        realName: "Grey", 
-                        school: "Unknown School",
-                        score: 120,
-                        rankChange: -1,
-                        isCurrentUser: false,
-                        isAnonymous: false
-                    },
-                    {
-                        displayName: "Jazzy",
-                        realName: "Jazzy",
-                        school: "Unknown School",
-                        score: 117,
-                        rankChange: 1,
-                        isCurrentUser: false,
-                        isAnonymous: false
-                    }
-                ],
-                friends: [],
-                userRank: 1,
-                userScore: 1942,
-                scoreBreakdown: {
-                    assessment: 777,
-                    habits: 583,
-                    challenges: 583
-                }
-            };
+            return this.getFallbackLeaderboardData();
         }
     }
 
