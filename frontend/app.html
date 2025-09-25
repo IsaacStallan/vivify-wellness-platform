@@ -2709,6 +2709,168 @@
             }
         });
 
+        // Leaderboard Controls - Add these missing functions
+        function initializeLeaderboardControls() {
+            // Time filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const timeFilter = btn.dataset.time;
+                    switchTimeFilter(timeFilter);
+                });
+            });
+            
+            // Board type toggle
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const boardType = btn.dataset.board;
+                    switchBoardType(boardType);
+                });
+            });
+        }
+
+        function switchTimeFilter(timeFilter) {
+            currentTimeFilter = timeFilter;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector(`[data-time="${timeFilter}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            // Reload leaderboard data with new timeframe
+            if (appTracker) {
+                displayLeaderboard(timeFilter);
+            }
+        }
+
+        function switchBoardType(boardType) {
+            currentBoardType = boardType;
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector(`[data-board="${boardType}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            // Update board sections
+            document.querySelectorAll('.board-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            const activeSection = document.getElementById(`${boardType}-leaderboard`);
+            if (activeSection) {
+                activeSection.classList.add('active');
+            }
+        }
+
+        function updateUserRankInfo(rank, score) {
+            const rankElement = document.getElementById('userRank');
+            const scoreElement = document.getElementById('overallRankScore');
+            
+            if (rankElement) rankElement.textContent = rank ? `#${rank}` : '#--';
+            if (scoreElement) scoreElement.textContent = Math.round(score || 0);
+        }
+
+        function updateScoreBreakdown(breakdown) {
+            if (!breakdown) return;
+            
+            const elements = {
+                'assessmentContribution': Math.round(breakdown.assessment || 0),
+                'habitsContribution': Math.round(breakdown.habits || 0),
+                'challengesContribution': Math.round(breakdown.challenges || 0)
+            };
+            
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+        }
+
+        function updateFriendsLeaderboard(friendsData) {
+            const container = document.getElementById('friendsLeaderboardList');
+            const noFriendsMessage = document.getElementById('noFriendsMessage');
+            
+            if (!container || !noFriendsMessage) return;
+            
+            if (friendsData.length === 0) {
+                container.style.display = 'none';
+                noFriendsMessage.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'block';
+            noFriendsMessage.style.display = 'none';
+            container.innerHTML = friendsData.map((entry, index) => 
+                createLeaderboardEntry(entry, index + 1)
+            ).join('');
+        }
+
+        // Friend Management Functions
+        function openAddFriendModal() {
+            const modal = document.getElementById('addFriendModal');
+            if (modal) {
+                modal.classList.add('show');
+                const usernameInput = document.getElementById('friendUsername');
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+            }
+        }
+
+        function closeAddFriendModal() {
+            const modal = document.getElementById('addFriendModal');
+            if (modal) {
+                modal.classList.remove('show');
+                // Clear form
+                const usernameInput = document.getElementById('friendUsername');
+                const messageInput = document.getElementById('friendMessage');
+                if (usernameInput) usernameInput.value = '';
+                if (messageInput) messageInput.value = 'Hey! Let\'s motivate each other on Vivify!';
+            }
+        }
+
+        async function sendFriendRequest() {
+            const usernameInput = document.getElementById('friendUsername');
+            const messageInput = document.getElementById('friendMessage');
+            
+            if (!usernameInput || !messageInput) return;
+            
+            const username = usernameInput.value.trim();
+            const message = messageInput.value.trim();
+            
+            if (!username) {
+                showNotification('Please enter a username', 'error');
+                return;
+            }
+            
+            if (!appTracker) {
+                showNotification('System not ready. Please try again.', 'error');
+                return;
+            }
+            
+            try {
+                const success = await appTracker.sendFriendRequest(username, message);
+                if (success) {
+                    closeAddFriendModal();
+                    showNotification('Friend request sent successfully!', 'success');
+                    // Reload friends leaderboard
+                    if (currentBoardType === 'friends') {
+                        loadTabContent('leaderboard');
+                    }
+                }
+            } catch (error) {
+                console.error('Error sending friend request:', error);
+                showNotification('Error sending friend request. Please try again.', 'error');
+            }
+        }
+
         // Main Initialization
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('App initializing...');
