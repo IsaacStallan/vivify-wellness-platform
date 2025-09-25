@@ -548,21 +548,29 @@ class VivifyUnifiedTracker {
             }
             }
 
-            // derive assessment as "the rest", never negative
-            let assessmentPts = Math.max(0, (userScore || 0) - habitPts - challengePts);
+            // Prefer explicit point buckets if your backend provides them:
+            const habitsPts     = Number(currentUser?.habitXP ?? currentUser?.habitPoints ?? 0);
+            const challengesPts = Number(currentUser?.challengeXP ?? currentUser?.challengePoints ?? 0);
+            const overall       = Number(currentUser?.overallScore ?? 0);
 
-            // sensible fallback if no local activities were found but you still have a score
-            if ((habitPts + challengePts) === 0 && (userScore || 0) > 0) {
-            assessmentPts = Math.round(userScore * 0.4);
-            habitPts      = Math.round(userScore * 0.3);
-            challengePts  = userScore - assessmentPts - habitPts; // keep total exact
+            // If assessment isn’t provided, derive it as the remainder of overall
+            let assessmentPts   = Number(currentUser?.assessmentScore ?? 0);
+            if (!assessmentPts && overall) {
+            assessmentPts = Math.max(0, overall - (habitsPts + challengesPts));
             }
 
-            const breakdown = {
-            assessment: assessmentPts,
-            habits: habitPts,
-            challenges: challengePts
+            // Absolute values (no percentage split unless we have nothing else)
+            let breakdown = { assessment: assessmentPts, habits: habitsPts, challenges: challengesPts };
+
+            // Last-resort fallback if everything is zero but overall exists
+            if (!breakdown.assessment && !breakdown.habits && !breakdown.challenges && overall) {
+            breakdown = {
+                assessment: Math.round(overall * 0.4),
+                habits:     Math.round(overall * 0.3),
+                challenges: Math.round(overall * 0.3)
             };
+            }
+
             
             const result = {
                 world: worldData,

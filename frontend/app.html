@@ -1820,11 +1820,6 @@
                         </div>
                         <div class="card-content">
                             <div id="worldLeaderboardList" class="leaderboard-list">
-                                <!-- World leaderboard entries -->
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div id="worldLeaderboardList" class="leaderboard-list">
                                 <!-- Top 10 entries -->
                             </div>
                             <div class="show-more-container" style="text-align: center; margin-top: 2rem;">
@@ -2518,63 +2513,62 @@
         let currentTimeFilter = 'weekly';
         let currentBoardType = 'world';
 
-        async function displayLeaderboard() {
+        async function displayLeaderboard(timeframe = 'weekly') {
             console.log('displayLeaderboard() called');
-            if (!appTracker) {
-                console.log('No appTracker available');
+
+            if (!window.appTracker) {
+                console.warn('No appTracker instance yet.');
                 return;
             }
-            
-            // Replace your existing getLeaderboardData with this version
-            appTracker.getLeaderboardData = async function () {
-            const username = localStorage.getItem('username') || 'you';
-            const activities = (this.data && this.data.activities) ? [...this.data.activities] : [];
 
-            // Time window based on the UI filter (weekly / monthly / all)
-            const now = new Date();
-            let start = new Date(0); // default: all time
-            if (window.currentTimeFilter === 'weekly') {
-                start = new Date(now); start.setDate(now.getDate() - 7);
-            } else if (window.currentTimeFilter === 'monthly') {
-                start = new Date(now.getFullYear(), now.getMonth(), 1);
+            try {
+                // Use your existing tracker method as-is
+                const data = await appTracker.getLeaderboardData(timeframe);
+                console.log('Got leaderboard data in displayLeaderboard:', data);
+
+                // Defensive fallbacks
+                const world   = Array.isArray(data?.world)   ? data.world   : [];
+                const friends = Array.isArray(data?.friends) ? data.friends : [];
+                const rank    = data?.userRank ?? '--';
+                const score   = data?.userScore ?? 0;
+                const breakdown = data?.scoreBreakdown ?? { assessment: 0, habits: 0, challenges: 0 };
+
+                updateUserRankInfo(rank, score);
+                updateScoreBreakdown(breakdown);
+                renderLeaderboard('worldLeaderboardList', world);
+                renderLeaderboard('friendsLeaderboardList', friends);
+            } catch (err) {
+                console.error('Error in displayLeaderboard:', err);
+
+                // Minimal fallback so the panel never looks empty
+                const you = localStorage.getItem('username') || 'You';
+                const score = Number(localStorage.getItem('overallScore') || 0);
+                updateUserRankInfo(1, score);
+                updateScoreBreakdown({ assessment: Math.round(score*0.4), habits: Math.round(score*0.3), challenges: Math.round(score*0.3) });
+                renderLeaderboard('worldLeaderboardList', [{ displayName: you, realName: you, school: '—', score, rankChange: 0, isCurrentUser: true }]);
+                renderLeaderboard('friendsLeaderboardList', []);
+            }
             }
 
-            const inRange = a => {
-                try { return new Date(a.timestamp) >= start; } catch { return true; }
-            };
+            // Small renderer to avoid duplication
+            function renderLeaderboard(listId, rows) {
+            const ul = document.getElementById(listId);
+            if (!ul) return;
 
-            // Sum helpers
-            const sumPoints = (pred) =>
-                activities.filter(a => inRange(a) && pred(a)).reduce((s, a) => s + (a.points || 0), 0);
-
-            // Real breakdown
-            const habitPoints      = sumPoints(a => (a.type || '').startsWith('habit'));
-            const challengePoints  = sumPoints(a => (a.type || '').startsWith('challenge'));
-            // If you ever log assessments, tag them with type 'assessment'
-            const assessmentPoints = sumPoints(a => (a.type || '') === 'assessment');
-
-            // Overall: prefer backend/score if present, else sum we have
-            const overallScore =
-                Math.round(this.data?.scores?.overall || (habitPoints + challengePoints + assessmentPoints));
-
-            // If assessments aren’t explicitly logged, treat “everything else” as assessment
-            const computedAssessment = assessmentPoints || Math.max(0, overallScore - habitPoints - challengePoints);
-
-            // Minimal world/friends scaffolding (keep whatever you already had)
-            return {
-                userRank: null,
-                userScore: overallScore,
-                scoreBreakdown: {
-                assessment: computedAssessment,
-                habits: habitPoints,
-                challenges: challengePoints
-                },
-                world: [],     // your existing code fills these later
-                friends: []    // ^
-            };
-            };
-
-        }
+            ul.innerHTML = '';
+            rows
+                .sort((a, b) => (b.score || 0) - (a.score || 0))
+                .forEach((u, i) => {
+                ul.appendChild(createLeaderboardEntry({
+                    rank: i + 1,
+                    name: u.displayName || u.realName || `User ${i+1}`,
+                    school: u.school || '—',
+                    score: u.score || 0,
+                    change: u.rankChange ?? 0,
+                    isCurrentUser: !!u.isCurrentUser
+                }));
+                });
+            }
 
         function updateUserRankInfo(rank, score) {
             const rankElement = document.getElementById('userRank');
