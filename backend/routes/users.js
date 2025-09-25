@@ -109,24 +109,6 @@ router.get('/', async (req, res) => {
     try {
       const { timeframe = 'weekly' } = req.query;
       
-      // Calculate date ranges
-      const now = new Date();
-      let startDate;
-      
-      switch (timeframe) {
-        case 'weekly':
-          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          break;
-        case 'monthly':
-          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-          break;
-        case 'alltime':
-          startDate = null; // No date filtering for all-time
-          break;
-        default:
-          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      }
-  
       const users = await User.find({}).lean();
       
       // Filter and calculate time-based scores for each user
@@ -136,10 +118,36 @@ router.get('/', async (req, res) => {
         
         // For all-time, use stored totals directly
         if (timeframe === 'alltime') {
+          // FIXED: Check multiple sources for habit points
           timeBasedHabitPoints = user.habitPoints || 0;
+          
+          // If habitPoints is 0 but overallScore exists, use overallScore as fallback
+          // (for older users like Freeman who have points in overallScore)
+          if (timeBasedHabitPoints === 0 && user.overallScore > 0) {
+            // Subtract assessment scores to get habit points
+            const assessmentScore = (user.fitnessScore || 0) + 
+                                   (user.mentalScore || 0) + 
+                                   (user.nutritionScore || 0) + 
+                                   (user.lifeSkillsScore || 0);
+            const challengePoints = user.challengeStats?.totalPoints || 0;
+            timeBasedHabitPoints = Math.max(0, user.overallScore - assessmentScore - challengePoints);
+          }
+          
           timeBasedChallengePoints = user.challengeStats?.totalPoints || 0;
         } else {
           // For weekly/monthly, calculate from activity log
+          const now = new Date();
+          let startDate;
+          
+          switch (timeframe) {
+            case 'weekly':
+              startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+              break;
+            case 'monthly':
+              startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+              break;
+          }
+          
           if (user.activity && Array.isArray(user.activity)) {
             user.activity.forEach(activity => {
               const activityDate = new Date(activity.timestamp);
