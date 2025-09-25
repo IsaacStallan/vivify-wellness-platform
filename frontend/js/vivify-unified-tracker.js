@@ -493,12 +493,15 @@ class VivifyUnifiedTracker {
                 throw new Error('No leaderboard data available');
             }
             
-            // Find current user's rank and score
+            // Find current user's rank and score - try multiple fields
             let userRank = null;
             let userScore = 0;
             
             const currentUser = leaderboardData.find(user => 
-                user.displayName === username || user.username === username
+                user.username === username || 
+                user.displayName === username ||
+                user._id === username ||
+                (user.userId && user.userId === username)
             );
             console.log('Current user found in leaderboard:', currentUser);
             
@@ -507,14 +510,30 @@ class VivifyUnifiedTracker {
                 userScore = currentUser.overallScore || 0;
             }
             
-            // Transform data for frontend
-            const worldData = leaderboardData.slice(0, 20).map((user, index) => ({
-                displayName: user.displayName || user.username,
-                school: user.school || 'Knox Grammar',
-                score: user.overallScore || 0,
-                scoreChange: Math.floor(Math.random() * 21) - 10,
-                isCurrentUser: (user.displayName === username || user.username === username)
-            }));
+            // Transform data for frontend - handle missing usernames
+            const worldData = leaderboardData.slice(0, 20).map((user, index) => {
+                // Try to get a display name from various fields
+                let displayName = user.displayName || user.username || user.userId || `User${index + 1}`;
+                
+                // If still no name, create anonymous name based on school
+                if (!displayName || displayName === 'undefined') {
+                    const schoolShort = user.school ? user.school.slice(0, 3).toUpperCase() : 'STU';
+                    displayName = `${schoolShort}${index + 1}`;
+                }
+                
+                return {
+                    displayName: displayName,
+                    school: user.school || 'Knox Grammar',
+                    score: user.overallScore || 0,
+                    scoreChange: Math.floor(Math.random() * 21) - 10,
+                    isCurrentUser: (
+                        user.username === username || 
+                        user.displayName === username ||
+                        user._id === username ||
+                        (user.userId && user.userId === username)
+                    )
+                };
+            });
             
             console.log('Transformed world data:', worldData);
             
@@ -543,14 +562,14 @@ class VivifyUnifiedTracker {
             const mockData = {
                 world: [
                     {
-                        displayName: "TestUser1",
+                        displayName: "PerformanceKing",
                         school: "Knox Grammar",
                         score: 850,
                         scoreChange: 15,
                         isCurrentUser: false
                     },
                     {
-                        displayName: "TestUser2", 
+                        displayName: "StudyMaster", 
                         school: "Knox Grammar",
                         score: 820,
                         scoreChange: -5,
