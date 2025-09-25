@@ -507,22 +507,21 @@ class VivifyUnifiedTracker {
             
             console.log('Current user found:', currentUser);
             
+
+
             // Transform data - each user decides their own privacy
-            const worldData = leaderboardData.slice(0, 20).map((user, index) => {
+            const worldData = leaderboardData.slice(0, 10).map((user, index) => {
                 const isCurrentUser = currentUser && user._id === currentUser._id;
-                
-                // User chooses their own anonymity (default to showing names)
-                const userWantsAnonymity = user.isAnonymous || false; // This would be a field in their profile
                 
                 return {
                     _id: user._id,
                     realName: user.username || `User${index + 1}`,
-                    displayName: userWantsAnonymity ? `User${index + 1}` : (user.username || `User${index + 1}`),
+                    displayName: user.isAnonymous ? `User${index + 1}` : (user.username || `User${index + 1}`),
                     school: user.school || 'Knox Grammar',
                     score: user.overallScore || 0,
-                    rankChange: Math.floor(Math.random() * 3) - 1, // -1, 0, or +1 for rank changes
+                    rankChange: null, // Remove random changes - we'll implement real tracking later
                     isCurrentUser: isCurrentUser,
-                    isAnonymous: userWantsAnonymity
+                    isAnonymous: user.isAnonymous || false
                 };
             });
             

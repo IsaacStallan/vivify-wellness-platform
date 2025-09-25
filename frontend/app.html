@@ -1719,6 +1719,16 @@
                                 <!-- World leaderboard entries -->
                             </div>
                         </div>
+                        <div class="card-content">
+                            <div id="worldLeaderboardList" class="leaderboard-list">
+                                <!-- Top 10 entries -->
+                            </div>
+                            <div class="show-more-container" style="text-align: center; margin-top: 2rem;">
+                                <button class="btn btn-secondary" id="showMoreBtn" onclick="showMoreUsers()" style="display: none;">
+                                    Show More Users
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1871,19 +1881,24 @@
         function createLeaderboardEntry(entry, rank) {
             const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
             const isCurrentUser = entry.isCurrentUser || false;
-            const displayName = entry.displayName; // Each user controls their own display name
+            const displayName = entry.displayName;
             
-            // Show rank change instead of score change
-            const rankChange = entry.rankChange || 0;
-            let changeClass = 'score-same';
-            let changeSymbol = '—';
-            
-            if (rankChange > 0) {
-                changeClass = 'score-up';
-                changeSymbol = `↑${rankChange}`;
-            } else if (rankChange < 0) {
-                changeClass = 'score-down';
-                changeSymbol = `↓${Math.abs(rankChange)}`;
+            // Only show rank changes if we have real data
+            let changeElement = '';
+            if (entry.rankChange !== null && entry.rankChange !== undefined) {
+                const rankChange = entry.rankChange;
+                let changeClass = 'score-same';
+                let changeSymbol = '—';
+                
+                if (rankChange > 0) {
+                    changeClass = 'score-up';
+                    changeSymbol = `↑${rankChange}`;
+                } else if (rankChange < 0) {
+                    changeClass = 'score-down';
+                    changeSymbol = `↓${Math.abs(rankChange)}`;
+                }
+                
+                changeElement = `<div class="entry-score-change ${changeClass}">${changeSymbol}</div>`;
             }
             
             return `
@@ -1895,7 +1910,7 @@
                     </div>
                     <div class="entry-score">
                         <div class="entry-score-value">${Math.round(entry.score || 0)}</div>
-                        <div class="entry-score-change ${changeClass}">${changeSymbol}</div>
+                        ${changeElement}
                     </div>
                 </div>
             `;
