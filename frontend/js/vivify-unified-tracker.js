@@ -527,10 +527,41 @@ class VivifyUnifiedTracker {
             
             console.log('Transformed world data:', worldData);
             
+            let habitPts = 0, challengePts = 0;
+
+            // decide start boundary from timeframe
+            const now = new Date();
+            let since = null;
+            if (timeframe === 'weekly')  { since = new Date(now); since.setDate(now.getDate() - 7); }
+            else if (timeframe === 'monthly') { since = new Date(now); since.setDate(now.getDate() - 30); }
+            // 'all time' (or anything else) -> since = null
+
+            const startMs = since ? since.getTime() : 0;
+            const activities = Array.isArray(this?.data?.activities) ? this.data.activities : [];
+
+            for (const a of activities) {
+            const ts = new Date(a.timestamp).getTime();
+            if (Number.isFinite(ts) && ts >= startMs) {
+                if (a.type === 'habit') habitPts += a.points || 0;
+                if (a.type === 'challenge_join' || a.type === 'challenge_daily' || a.type === 'challenge_complete')
+                challengePts += a.points || 0;
+            }
+            }
+
+            // derive assessment as "the rest", never negative
+            let assessmentPts = Math.max(0, (userScore || 0) - habitPts - challengePts);
+
+            // sensible fallback if no local activities were found but you still have a score
+            if ((habitPts + challengePts) === 0 && (userScore || 0) > 0) {
+            assessmentPts = Math.round(userScore * 0.4);
+            habitPts      = Math.round(userScore * 0.3);
+            challengePts  = userScore - assessmentPts - habitPts; // keep total exact
+            }
+
             const breakdown = {
-                assessment: Math.round(userScore * 0.4),
-                habits: Math.round(userScore * 0.3),
-                challenges: Math.round(userScore * 0.3)
+            assessment: assessmentPts,
+            habits: habitPts,
+            challenges: challengePts
             };
             
             const result = {
@@ -587,6 +618,50 @@ class VivifyUnifiedTracker {
             };
         }
     }
+
+    _computeLocalBreakdown(range = 'all') {
+        // decide the start boundary based on the selected range
+        const now = new Date();
+        const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - ((now.getDay()+6)%7)); startOfWeek.setHours(0,0,0,0);
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      
+        const after = range === 'week' ? +startOfWeek :
+                      range === 'month' ? +startOfMonth : 0;
+      
+        const acts = (this.data && this.data.activities) ? this.data.activities : [];
+        let habits = 0, challenges = 0, assessments = 0;
+      
+        for (const ev of acts) {
+          if (!ev || (after && +new Date(ev.timestamp || ev.ts || 0) < after)) continue;
+          const xp = Number(ev.xp || ev.points || 0);
+          switch ((ev.type || '').toLowerCase()) {
+            case 'habit':
+              habits += xp; break;
+            case 'challenge-join':
+            case 'challenge-complete':
+            case 'challenge':
+              challenges += xp; break;
+            case 'assessment':
+              assessments += xp; break;
+            default:
+              // ignore
+          }
+        }
+        const total = habits + challenges + assessments;
+        return { habits, challenges, assessments, total };
+      }
+      
+      _buildLocalLeaderboardFallback(range = 'all') {
+        const breakdown = this._computeLocalBreakdown(range);
+        const me = (this.getCurrentUser?.() || {}).name || 'You';
+        return {
+          myRank: 1,
+          breakdown,
+          world: { users: [{ rank: 1, name: me, score: breakdown.total, you: true }], totalUsers: 1, top3: [] },
+          friends: { users: [] }
+        };
+      }
+      
 
     // Also add these methods for friend functionality
     async sendFriendRequest(targetUsername, message) {
