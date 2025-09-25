@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const nodemailer = require('nodemailer');
 
 // Middleware for authentication
 function authenticateToken(req, res, next) {
@@ -428,8 +429,6 @@ router.get('/debug/:username', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-const nodemailer = require('nodemailer');
 
 // Add this route to your existing users.js file
 // POST /api/users/send-update-emails (Admin only)
