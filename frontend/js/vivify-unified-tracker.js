@@ -528,19 +528,23 @@ class VivifyUnifiedTracker {
             };
             
             if (currentUser) {
-                // Try to get real breakdown from server data
-                breakdown.assessment = currentUser.assessmentScore || Math.round(userScore * 0.4);
-                breakdown.habits = currentUser.habitXP || currentUser.habitPoints || Math.round(userScore * 0.3);
-                breakdown.challenges = currentUser.challengeXP || currentUser.challengePoints || Math.round(userScore * 0.3);
+                // Calculate assessment as sum of category scores (the actual assessment)
+                const categorySum = (currentUser.fitnessScore || 0) + 
+                                   (currentUser.mentalScore || 0) + 
+                                   (currentUser.nutritionScore || 0) + 
+                                   (currentUser.lifeSkillsScore || 0);
                 
-                // If we still don't have proper data, calculate from total
-                if (breakdown.assessment === 0 && breakdown.habits === 0 && breakdown.challenges === 0) {
-                    breakdown = {
-                        assessment: Math.round(userScore * 0.4),
-                        habits: Math.round(userScore * 0.3), 
-                        challenges: Math.round(userScore * 0.3)
-                    };
-                }
+                breakdown = {
+                    assessment: categorySum,  // 288 in your case
+                    habits: currentUser.habitPoints || 0,  // 400
+                    challenges: currentUser.challengeStats?.totalPoints || 0  // 10
+                };
+                
+                // The REAL overall score should be the sum of these
+                const realOverallScore = breakdown.assessment + breakdown.habits + breakdown.challenges;
+                
+                console.log('Corrected breakdown:', breakdown);
+                console.log('Real overall score should be:', realOverallScore, 'not', userScore);
             }
             
             console.log('Final breakdown calculation:', breakdown);
