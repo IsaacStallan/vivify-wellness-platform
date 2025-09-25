@@ -460,7 +460,152 @@ class VivifyUnifiedTracker {
             nutrition:  counts.nutrition  ? rates.nutrition  / counts.nutrition  : 0,
             lifeSkills: counts.lifeSkills ? rates.lifeSkills / counts.lifeSkills : 0,
         };
-    }    
+    }  
+    
+    // Add this method to your VivifyUnifiedTracker class
+    async getLeaderboardData(timeframe = 'weekly') {
+        try {
+            // Get user info
+            const username = localStorage.getItem('username');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            
+            // Fetch leaderboard data from your existing API
+            const response = await fetch(`https://vivify-backend.onrender.com/api/leaderboard/${timeframe}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const leaderboardData = await response.json();
+            
+            // Find current user's rank and score
+            let userRank = null;
+            let userScore = 0;
+            
+            const currentUser = leaderboardData.find(user => 
+                user.displayName === username || user.username === username
+            );
+            
+            if (currentUser) {
+                userRank = leaderboardData.indexOf(currentUser) + 1;
+                userScore = currentUser.overallScore || 0;
+            }
+            
+            // Transform data for frontend
+            const worldData = leaderboardData.slice(0, 20).map((user, index) => ({
+                displayName: user.displayName || user.username,
+                school: user.school || 'Knox Grammar',
+                score: user.overallScore || 0,
+                scoreChange: Math.floor(Math.random() * 21) - 10, // Random for now
+                isCurrentUser: user.displayName === username || user.username === username
+            }));
+            
+            // Calculate score breakdown (mock for now)
+            const breakdown = {
+                assessment: Math.round(userScore * 0.4),
+                habits: Math.round(userScore * 0.3),
+                challenges: Math.round(userScore * 0.3)
+            };
+            
+            return {
+                world: worldData,
+                friends: [], // Empty for now
+                userRank: userRank,
+                userScore: userScore,
+                scoreBreakdown: breakdown
+            };
+            
+        } catch (error) {
+            console.error('Error fetching leaderboard data:', error);
+            
+            // Return mock data on error
+            return {
+                world: [
+                    {
+                        displayName: "PerformanceKing",
+                        school: "Knox Grammar",
+                        score: 850,
+                        scoreChange: 15,
+                        isCurrentUser: false
+                    },
+                    {
+                        displayName: "StudyMaster",
+                        school: "Knox Grammar", 
+                        score: 820,
+                        scoreChange: -5,
+                        isCurrentUser: false
+                    },
+                    {
+                        displayName: localStorage.getItem('username') || "You",
+                        school: "Knox Grammar",
+                        score: 780,
+                        scoreChange: 25,
+                        isCurrentUser: true
+                    }
+                ],
+                friends: [],
+                userRank: 3,
+                userScore: 780,
+                scoreBreakdown: {
+                    assessment: 312,
+                    habits: 234,
+                    challenges: 234
+                }
+            };
+        }
+    }
+
+    // Also add these methods for friend functionality
+    async sendFriendRequest(targetUsername, message) {
+        try {
+            const response = await fetch('https://vivify-backend.onrender.com/api/friends/request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    targetUsername,
+                    message
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to send friend request');
+            }
+            
+            const result = await response.json();
+            return result.success;
+            
+        } catch (error) {
+            console.error('Error sending friend request:', error);
+            return false;
+        }
+    }
+
+    async getChallengesData() {
+        // Return mock challenge data for now
+        return {
+            stats: {
+                active: 2,
+                completed: 1,
+                totalPoints: 150
+            },
+            challenges: {
+                'fitness-foundation': {
+                    joined: true,
+                    completed: false
+                },
+                'morning-energy': {
+                    joined: true,
+                    completed: true
+                }
+            }
+        };
+    }
 
     // CHALLENGE METHODS
     async joinChallenge(challengeId) {
