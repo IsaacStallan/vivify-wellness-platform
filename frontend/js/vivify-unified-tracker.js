@@ -372,7 +372,7 @@ class VivifyUnifiedTracker {
         this.checkAchievements();
         
         this.save();
-        this.notifyCompletion(habit.name, habit.points);
+        this.notifyCompletion(`✅ ${habit.name} +${habit.points} XP — nice work!`, 'success');
         
         console.log(`Completed habit: ${habit.name} (+${habit.points} points)`);
         return true;
