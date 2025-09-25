@@ -1875,7 +1875,7 @@
         function createLeaderboardEntry(entry, rank) {
             const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
             const isCurrentUser = entry.isCurrentUser || false;
-            const displayName = entry.displayName;
+            const displayName = entry.displayName; // Each user controls their own display name
             
             // Show rank change instead of score change
             const rankChange = entry.rankChange || 0;
@@ -2339,8 +2339,9 @@
                 return;
             }
             
+            // Remove the showRealNames parameter since each user controls their own privacy now
             container.innerHTML = worldData.map((entry, index) => 
-                createLeaderboardEntry(entry, index + 1, showRealNames)
+                createLeaderboardEntry(entry, index + 1)
             ).join('');
         }
 
