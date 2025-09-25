@@ -2229,6 +2229,27 @@
             showNotification(`${challenge.name}\n\n${challenge.description}\n\nReward: ${challenge.points} points`, 'info');
         }
 
+        let showingAllUsers = false;
+        let allLeaderboardData = [];
+
+        function showMoreUsers() {
+            if (!showingAllUsers && allLeaderboardData.length > 10) {
+                // Show all users
+                const container = document.getElementById('worldLeaderboardList');
+                container.innerHTML = allLeaderboardData.map((entry, index) => 
+                    createLeaderboardEntry(entry, index + 1)
+                ).join('');
+                
+                const btn = document.getElementById('showMoreBtn');
+                btn.textContent = 'Show Less';
+                showingAllUsers = true;
+            } else {
+                // Show only top 10
+                displayLeaderboard();
+                showingAllUsers = false;
+            }
+        }
+
         // Utility Functions
         function getTimeAgo(timestamp) {
             try {
@@ -2336,6 +2357,7 @@
         function updateWorldLeaderboard(worldData) {
             console.log('updateWorldLeaderboard called with:', worldData);
             const container = document.getElementById('worldLeaderboardList');
+            const showMoreBtn = document.getElementById('showMoreBtn');
             
             if (!container) return;
             
@@ -2350,10 +2372,24 @@
                 return;
             }
             
-            // Remove the showRealNames parameter since each user controls their own privacy now
-            container.innerHTML = worldData.map((entry, index) => 
+            // Store all data for "Show More" functionality
+            allLeaderboardData = worldData;
+            
+            // Show only top 10 initially
+            const displayData = showingAllUsers ? worldData : worldData.slice(0, 10);
+            container.innerHTML = displayData.map((entry, index) => 
                 createLeaderboardEntry(entry, index + 1)
             ).join('');
+            
+            // Show "Show More" button if there are more than 10 users
+            if (showMoreBtn) {
+                if (worldData.length > 10) {
+                    showMoreBtn.style.display = 'block';
+                    showMoreBtn.textContent = showingAllUsers ? 'Show Less' : 'Show More Users';
+                } else {
+                    showMoreBtn.style.display = 'none';
+                }
+            }
         }
 
         function updateFriendsLeaderboard(friendsData) {
