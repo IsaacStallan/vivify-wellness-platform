@@ -625,6 +625,7 @@ class VivifyUnifiedTracker {
             return false;
         }
     }
+    
 
     async getChallengesData() {
         // Return mock challenge data for now
