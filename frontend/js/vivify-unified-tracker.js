@@ -368,8 +368,6 @@ class VivifyUnifiedTracker {
             });
         }
         
-        // Check achievements
-        this.checkAchievements();
         
         this.save();
         this.notifyCompletion(`✅ ${habit.name} +${habit.points} XP — nice work!`, 'success');
@@ -822,6 +820,7 @@ class VivifyUnifiedTracker {
         }
     }
 
+    /*    
     checkAchievements() {
         const completedToday = this.getAllHabits().filter(h => h.completed).length;
         const totalHabits = this.getAllHabits().length;
@@ -842,7 +841,7 @@ class VivifyUnifiedTracker {
         if (!this.data.achievements.consistency_king && currentStreak >= 30) {
             this.unlockAchievement('consistency_king');
         }
-    }
+    } */
 
     calculateCurrentStreak() {
         let streak = 0;
