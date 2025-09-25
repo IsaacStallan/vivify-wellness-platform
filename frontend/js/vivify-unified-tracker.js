@@ -471,7 +471,8 @@ class VivifyUnifiedTracker {
             const username = localStorage.getItem('username');
             console.log('Current username:', username);
             
-            const response = await fetch(`https://vivify-backend.onrender.com/api/leaderboard/overall`, {
+            // First, let's try the users endpoint to get full user data including usernames
+            const response = await fetch(`https://vivify-backend.onrender.com/api/users`, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -488,12 +489,15 @@ class VivifyUnifiedTracker {
                 throw new Error('No leaderboard data available');
             }
             
+            // Sort by overallScore descending
+            leaderboardData.sort((a, b) => (b.overallScore || 0) - (a.overallScore || 0));
+            
             // Try to find current user by multiple methods
             let currentUser = null;
             let userRank = null;
             let userScore = 0;
             
-            // Check what fields are available in the first user for debugging
+            // Check what fields are available in the first user
             if (leaderboardData.length > 0) {
                 console.log('Available user fields:', Object.keys(leaderboardData[0]));
             }
@@ -501,10 +505,10 @@ class VivifyUnifiedTracker {
             // Try different ways to find the current user
             for (let i = 0; i < leaderboardData.length; i++) {
                 const user = leaderboardData[i];
-                // Add more identification methods as we discover the database structure
                 if (user.username === username || 
                     user.userId === username ||
                     user.displayName === username ||
+                    user.email === `${username}@temp.com` || // Check temp email pattern from your server
                     user._id === username) {
                     currentUser = user;
                     userRank = i + 1;
@@ -517,7 +521,6 @@ class VivifyUnifiedTracker {
             
             // Transform data with proper user identification
             const worldData = leaderboardData.slice(0, 20).map((user, index) => {
-                // For now, create fallback names but store the real data
                 const isCurrentUser = currentUser && user._id === currentUser._id;
                 
                 return {
@@ -528,7 +531,7 @@ class VivifyUnifiedTracker {
                     score: user.overallScore || 0,
                     scoreChange: Math.floor(Math.random() * 21) - 10,
                     isCurrentUser: isCurrentUser,
-                    showRealName: false // Privacy setting
+                    showRealName: false
                 };
             });
             
@@ -555,7 +558,7 @@ class VivifyUnifiedTracker {
             console.error('Error fetching leaderboard data:', error);
             
             // Mock data for testing
-            const mockData = {
+            return {
                 world: [
                     {
                         displayName: "TestUser1",
@@ -594,8 +597,6 @@ class VivifyUnifiedTracker {
                     challenges: 234
                 }
             };
-            
-            return mockData;
         }
     }
 
