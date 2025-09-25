@@ -2220,13 +2220,21 @@
         let currentBoardType = 'world';
 
         function displayLeaderboard() {
-            if (!appTracker) return;
+            console.log('displayLeaderboard() called');
+            if (!appTracker) {
+                console.log('No appTracker available');
+                return;
+            }
             
-            const data = appTracker.getLeaderboardData();
-            
-            updateUserRankInfo(data.userRank, data.userScore);
-            updateScoreBreakdown(data.scoreBreakdown);
-            updateLeaderboards(data.world, data.friends);
+            appTracker.getLeaderboardData().then(data => {
+                console.log('Got leaderboard data in displayLeaderboard:', data);
+                
+                updateUserRankInfo(data.userRank, data.userScore);
+                updateScoreBreakdown(data.scoreBreakdown);
+                updateLeaderboards(data.world, data.friends);
+            }).catch(error => {
+                console.error('Error in displayLeaderboard:', error);
+            });
         }
 
         function updateUserRankInfo(rank, score) {
@@ -2258,10 +2266,14 @@
         }
 
         function updateWorldLeaderboard(worldData) {
+            console.log('updateWorldLeaderboard called with:', worldData);
             const container = document.getElementById('worldLeaderboardList');
+            console.log('Container found:', container);
+            
             if (!container) return;
             
             if (worldData.length === 0) {
+                console.log('No world data, showing empty state');
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-globe" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
@@ -2272,7 +2284,12 @@
                 return;
             }
             
-            container.innerHTML = worldData.map((entry, index) => createLeaderboardEntry(entry, index + 1)).join('');
+            console.log('Creating leaderboard entries for', worldData.length, 'users');
+            const html = worldData.map((entry, index) => createLeaderboardEntry(entry, index + 1)).join('');
+            console.log('Generated HTML length:', html.length);
+            
+            container.innerHTML = html;
+            console.log('HTML inserted into container');
         }
 
         function updateFriendsLeaderboard(friendsData) {
