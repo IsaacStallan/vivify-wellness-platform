@@ -1652,17 +1652,9 @@
                     <h2>Performance Leaderboard</h2>
                     <p>See how you stack up against other high performers. Compete, learn, and grow together.</p>
                 </div>
-                <div class="header-controls">
-                    <div class="privacy-toggle">
-                        <button class="btn btn-secondary" id="privacyToggle" onclick="togglePrivacyMode()">
-                            <i class="fas fa-eye" id="privacyIcon"></i>
-                            <span id="privacyText">Show Names</span>
-                        </button>
-                    </div>
-                    <div class="rank-display">
-                        <div class="rank-number" id="userRank">#--</div>
-                        <div class="rank-label">Your Rank</div>
-                    </div>
+                <div class="rank-display">
+                    <div class="rank-number" id="userRank">#1</div>
+                    <div class="rank-label">Your Rank</div>
                 </div>
             </div>
 
@@ -1880,47 +1872,22 @@
             }
         }
 
-        let showRealNames = false;
-
-        function togglePrivacyMode() {
-            showRealNames = !showRealNames;
-            
-            const icon = document.getElementById('privacyIcon');
-            const text = document.getElementById('privacyText');
-            
-            if (showRealNames) {
-                icon.className = 'fas fa-eye-slash';
-                text.textContent = 'Hide Names';
-            } else {
-                icon.className = 'fas fa-eye';
-                text.textContent = 'Show Names';
-            }
-            
-            // Refresh the leaderboard display
-            if (appTracker) {
-                displayLeaderboard();
-            }
-        }
-
-        function createLeaderboardEntry(entry, rank, showRealNames = false) {
+        function createLeaderboardEntry(entry, rank) {
             const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
             const isCurrentUser = entry.isCurrentUser || false;
+            const displayName = entry.displayName;
             
-            // Use real name if privacy is off or if it's the current user
-            const displayName = (showRealNames || isCurrentUser) ? 
-                (entry.realName || entry.displayName) : 
-                entry.displayName;
-            
-            const scoreChange = entry.scoreChange || 0;
+            // Show rank change instead of score change
+            const rankChange = entry.rankChange || 0;
             let changeClass = 'score-same';
             let changeSymbol = '—';
             
-            if (scoreChange > 0) {
+            if (rankChange > 0) {
                 changeClass = 'score-up';
-                changeSymbol = `+${scoreChange}`;
-            } else if (scoreChange < 0) {
+                changeSymbol = `↑${rankChange}`;
+            } else if (rankChange < 0) {
                 changeClass = 'score-down';
-                changeSymbol = scoreChange.toString();
+                changeSymbol = `↓${Math.abs(rankChange)}`;
             }
             
             return `
@@ -2394,39 +2361,6 @@
             container.innerHTML = friendsData.map((entry, index) => createLeaderboardEntry(entry, index + 1, true)).join('');
         }
 
-        function createLeaderboardEntry(entry, rank, showRealNames = false) {
-            const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
-            const isCurrentUser = entry.isCurrentUser || false;
-            const displayName = showRealNames ? entry.realName : entry.displayName;
-            
-            // Calculate score change indicator
-            const scoreChange = entry.scoreChange || 0;
-            let changeClass = 'score-same';
-            let changeSymbol = '—';
-            
-            if (scoreChange > 0) {
-                changeClass = 'score-up';
-                changeSymbol = `+${scoreChange}`;
-            } else if (scoreChange < 0) {
-                changeClass = 'score-down';
-                changeSymbol = scoreChange.toString();
-            }
-            
-            return `
-                <div class="leaderboard-entry ${isCurrentUser ? 'current-user' : ''}">
-                    <div class="entry-rank ${rankClass}">${rank}</div>
-                    <div class="entry-info">
-                        <div class="entry-name">${displayName}</div>
-                        <div class="entry-school">${entry.school || 'Knox Grammar'}</div>
-                    </div>
-                    <div class="entry-score">
-                        <div class="entry-score-value">${Math.round(entry.score || 0)}</div>
-                        <div class="entry-score-change ${changeClass}">${changeSymbol}</div>
-                    </div>
-                </div>
-            `;
-        }
-
         // Leaderboard Controls
         function initializeLeaderboardControls() {
             // Time filter buttons
@@ -2457,10 +2391,9 @@
             });
             document.querySelector(`[data-time="${timeFilter}"]`).classList.add('active');
             
-            // Reload leaderboard data
+            // Reload leaderboard data - but keep using the same endpoint since others might not exist
             if (appTracker) {
-                const data = appTracker.getLeaderboardData(timeFilter);
-                updateLeaderboards(data.world, data.friends);
+                displayLeaderboard(); // Just reload current data for now
             }
         }
 
