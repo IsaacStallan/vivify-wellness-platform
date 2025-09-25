@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const usersRoutes = require('./routes/users');
 const CardModel = require('./models/Card');
+const leaderboardRoutes = require('./routes/leaderboard');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static('../frontend'));
 app.use('/api/users', usersRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 
 // Build MongoDB URI from env vars
 const uri = process.env.MONGODB_URI;

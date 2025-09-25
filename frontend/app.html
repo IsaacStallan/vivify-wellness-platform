@@ -839,6 +839,394 @@
             font-size: 0.9rem;
         }
 
+        /* Leaderboard Styles */
+        .leaderboard-header {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leaderboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .rank-display {
+            text-align: center;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            padding: 2rem;
+            border-radius: 20px;
+            min-width: 150px;
+        }
+
+        .rank-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .rank-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Leaderboard Controls */
+        .leaderboard-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            gap: 2rem;
+        }
+
+        .time-filters, .board-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 0.5rem;
+            gap: 0.25rem;
+        }
+
+        .filter-btn, .toggle-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover, .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .filter-btn.active, .toggle-btn.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+
+        /* Leaderboard Container */
+        .leaderboard-container {
+            position: relative;
+        }
+
+        .board-section {
+            display: none;
+        }
+
+        .board-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Leaderboard List */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .leaderboard-entry:hover {
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .leaderboard-entry.current-user {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .leaderboard-entry.current-user::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 2px;
+        }
+
+        /* Rank Display */
+        .entry-rank {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-right: 1.5rem;
+            color: #000;
+        }
+
+        .entry-rank.rank-1 { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        .entry-rank.rank-2 { background: linear-gradient(135deg, #95a5a6, #bdc3c7); }
+        .entry-rank.rank-3 { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .entry-rank.rank-other { 
+            background: rgba(255, 255, 255, 0.1); 
+            color: #f39c12; 
+            border: 2px solid rgba(243, 156, 18, 0.2);
+        }
+
+        /* User Info */
+        .entry-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .entry-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .entry-school {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        /* Score Display */
+        .entry-score {
+            text-align: right;
+        }
+
+        .entry-score-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .entry-score-change {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .score-up { 
+            color: #27ae60; 
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .score-down { 
+            color: #e74c3c; 
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .score-same { 
+            color: rgba(255, 255, 255, 0.6); 
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Privacy Info */
+        .privacy-info {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-state h3 {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 2rem 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.05);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .leaderboard-header {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .leaderboard-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .time-filters, .board-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .leaderboard-entry {
+                padding: 1rem;
+            }
+
+            .entry-rank {
+                width: 40px;
+                height: 40px;
+                margin-right: 1rem;
+                font-size: 1rem;
+            }
+
+            .entry-score-value {
+                font-size: 1.2rem;
+            }
+        }
+
         /* Notifications */
         .notification {
             position: fixed;
@@ -960,6 +1348,10 @@
             <button class="tab-button" data-tab="challenges">
                 <i class="fas fa-trophy"></i>
                 Challenges
+            </button>
+            <button class="tab-button" data-tab="leaderboard">
+                <i class="fas fa-medal"></i>
+                Leaderboard
             </button>
         </div>
 
@@ -1228,6 +1620,140 @@
                 <!-- Challenges will be populated by JavaScript -->
             </div>
         </div>
+        <!-- Leaderboard Tab Content -->
+        <div id="leaderboard-tab" class="tab-content">
+            <!-- Leaderboard Header -->
+            <div class="leaderboard-header">
+                <div class="header-content">
+                    <h2>Performance Leaderboard</h2>
+                    <p>See how you stack up against other high performers. Compete, learn, and grow together.</p>
+                </div>
+                <div class="rank-display">
+                    <div class="rank-number" id="userRank">#--</div>
+                    <div class="rank-label">Your Rank</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Controls -->
+            <div class="leaderboard-controls">
+                <div class="time-filters">
+                    <button class="filter-btn active" data-time="weekly">This Week</button>
+                    <button class="filter-btn" data-time="monthly">This Month</button>
+                    <button class="filter-btn" data-time="alltime">All Time</button>
+                </div>
+                <div class="board-toggle">
+                    <button class="toggle-btn active" data-board="world">World</button>
+                    <button class="toggle-btn" data-board="friends">Friends</button>
+                </div>
+            </div>
+
+            <!-- User Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-value" id="overallRankScore">0</div>
+                    <div class="stat-label">Overall Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value" id="assessmentContribution">0</div>
+                    <div class="stat-label">Assessment (40%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-target"></i>
+                    </div>
+                    <div class="stat-value" id="habitsContribution">0</div>
+                    <div class="stat-label">Habits (30%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="stat-value" id="challengesContribution">0</div>
+                    <div class="stat-label">Challenges (30%)</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Lists -->
+            <div class="leaderboard-container">
+                <!-- World Leaderboard -->
+                <div id="world-leaderboard" class="board-section active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-globe"></i>
+                                World Leaderboard
+                            </h2>
+                            <div class="privacy-info">
+                                <i class="fas fa-shield-alt"></i>
+                                Anonymous display names only
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div id="worldLeaderboardList" class="leaderboard-list">
+                                <!-- World leaderboard entries -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Friends Leaderboard -->
+                <div id="friends-leaderboard" class="board-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-users"></i>
+                                Friends Leaderboard
+                            </h2>
+                            <button class="btn btn-secondary" onclick="openAddFriendModal()">
+                                <i class="fas fa-user-plus"></i>
+                                Add Friend
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <div id="friendsLeaderboardList" class="leaderboard-list">
+                                <!-- Friends leaderboard entries -->
+                            </div>
+                            <div id="noFriendsMessage" class="empty-state">
+                                <i class="fas fa-users" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                                <h3>No friends added yet</h3>
+                                <p>Add friends to see how you compare and motivate each other!</p>
+                                <button class="btn btn-complete" onclick="openAddFriendModal()">Add Your First Friend</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Friend Modal -->
+        <div id="addFriendModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Friend</h3>
+                    <button class="modal-close" onclick="closeAddFriendModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="friendUsername">Friend's Username</label>
+                        <input type="text" id="friendUsername" placeholder="Enter username">
+                    </div>
+                    <div class="input-group">
+                        <label for="friendMessage">Optional Message</label>
+                        <textarea id="friendMessage" placeholder="Hey! Let's motivate each other on Vivify!"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeAddFriendModal()">Cancel</button>
+                    <button class="btn btn-complete" onclick="sendFriendRequest()">Send Request</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -1284,9 +1810,11 @@
 
             // Handle URL hash navigation
             const hash = window.location.hash.substring(1);
-            if (hash && ['dashboard', 'habits', 'challenges'].includes(hash)) {
+            if (hash && ['dashboard', 'habits', 'challenges', 'leaderboard'].includes(hash)) {
                 switchTab(hash);
             }
+
+            initializeLeaderboardControls(); // <- ADD THIS LINE
         }
 
         function switchTab(tabName) {
@@ -1338,6 +1866,9 @@
                         break;
                     case 'challenges':
                         displayChallenges();
+                        break;
+                    case 'leaderboard':
+                        displayLeaderboard();
                         break;
                 }
             } catch (error) {
@@ -1683,6 +2214,226 @@
                 });
             }
         }
+
+        // Leaderboard Management
+        let currentTimeFilter = 'weekly';
+        let currentBoardType = 'world';
+
+        function displayLeaderboard() {
+            if (!appTracker) return;
+            
+            const data = appTracker.getLeaderboardData();
+            
+            updateUserRankInfo(data.userRank, data.userScore);
+            updateScoreBreakdown(data.scoreBreakdown);
+            updateLeaderboards(data.world, data.friends);
+        }
+
+        function updateUserRankInfo(rank, score) {
+            const rankElement = document.getElementById('userRank');
+            const scoreElement = document.getElementById('overallRankScore');
+            
+            if (rankElement) rankElement.textContent = rank ? `#${rank}` : '#--';
+            if (scoreElement) scoreElement.textContent = Math.round(score || 0);
+        }
+
+        function updateScoreBreakdown(breakdown) {
+            if (!breakdown) return;
+            
+            const elements = {
+                'assessmentContribution': Math.round(breakdown.assessment || 0),
+                'habitsContribution': Math.round(breakdown.habits || 0),
+                'challengesContribution': Math.round(breakdown.challenges || 0)
+            };
+            
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+        }
+
+        function updateLeaderboards(worldData, friendsData) {
+            updateWorldLeaderboard(worldData || []);
+            updateFriendsLeaderboard(friendsData || []);
+        }
+
+        function updateWorldLeaderboard(worldData) {
+            const container = document.getElementById('worldLeaderboardList');
+            if (!container) return;
+            
+            if (worldData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-globe" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                        <h3>Loading leaderboard...</h3>
+                        <p>Fetching the latest performance rankings</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = worldData.map((entry, index) => createLeaderboardEntry(entry, index + 1)).join('');
+        }
+
+        function updateFriendsLeaderboard(friendsData) {
+            const container = document.getElementById('friendsLeaderboardList');
+            const noFriendsMessage = document.getElementById('noFriendsMessage');
+            
+            if (!container || !noFriendsMessage) return;
+            
+            if (friendsData.length === 0) {
+                container.style.display = 'none';
+                noFriendsMessage.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'block';
+            noFriendsMessage.style.display = 'none';
+            container.innerHTML = friendsData.map((entry, index) => createLeaderboardEntry(entry, index + 1, true)).join('');
+        }
+
+        function createLeaderboardEntry(entry, rank, showRealNames = false) {
+            const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
+            const isCurrentUser = entry.isCurrentUser || false;
+            const displayName = showRealNames ? entry.realName : entry.displayName;
+            
+            // Calculate score change indicator
+            const scoreChange = entry.scoreChange || 0;
+            let changeClass = 'score-same';
+            let changeSymbol = '—';
+            
+            if (scoreChange > 0) {
+                changeClass = 'score-up';
+                changeSymbol = `+${scoreChange}`;
+            } else if (scoreChange < 0) {
+                changeClass = 'score-down';
+                changeSymbol = scoreChange.toString();
+            }
+            
+            return `
+                <div class="leaderboard-entry ${isCurrentUser ? 'current-user' : ''}">
+                    <div class="entry-rank ${rankClass}">${rank}</div>
+                    <div class="entry-info">
+                        <div class="entry-name">${displayName}</div>
+                        <div class="entry-school">${entry.school || 'Knox Grammar'}</div>
+                    </div>
+                    <div class="entry-score">
+                        <div class="entry-score-value">${Math.round(entry.score || 0)}</div>
+                        <div class="entry-score-change ${changeClass}">${changeSymbol}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Leaderboard Controls
+        function initializeLeaderboardControls() {
+            // Time filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const timeFilter = btn.dataset.time;
+                    switchTimeFilter(timeFilter);
+                });
+            });
+            
+            // Board type toggle
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const boardType = btn.dataset.board;
+                    switchBoardType(boardType);
+                });
+            });
+        }
+
+        function switchTimeFilter(timeFilter) {
+            currentTimeFilter = timeFilter;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-time="${timeFilter}"]`).classList.add('active');
+            
+            // Reload leaderboard data
+            if (appTracker) {
+                const data = appTracker.getLeaderboardData(timeFilter);
+                updateLeaderboards(data.world, data.friends);
+            }
+        }
+
+        function switchBoardType(boardType) {
+            currentBoardType = boardType;
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-board="${boardType}"]`).classList.add('active');
+            
+            // Update board sections
+            document.querySelectorAll('.board-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${boardType}-leaderboard`).classList.add('active');
+        }
+
+        // Friend Management
+        function openAddFriendModal() {
+            const modal = document.getElementById('addFriendModal');
+            if (modal) {
+                modal.classList.add('show');
+                document.getElementById('friendUsername').focus();
+            }
+        }
+
+        function closeAddFriendModal() {
+            const modal = document.getElementById('addFriendModal');
+            if (modal) {
+                modal.classList.remove('show');
+                // Clear form
+                document.getElementById('friendUsername').value = '';
+                document.getElementById('friendMessage').value = 'Hey! Let\'s motivate each other on Vivify!';
+            }
+        }
+
+        async function sendFriendRequest() {
+            const username = document.getElementById('friendUsername').value.trim();
+            const message = document.getElementById('friendMessage').value.trim();
+            
+            if (!username) {
+                showNotification('Please enter a username', 'error');
+                return;
+            }
+            
+            if (!appTracker) {
+                showNotification('System not ready. Please try again.', 'error');
+                return;
+            }
+            
+            try {
+                const success = await appTracker.sendFriendRequest(username, message);
+                if (success) {
+                    closeAddFriendModal();
+                    showNotification('Friend request sent successfully!', 'success');
+                    // Reload friends leaderboard
+                    if (currentBoardType === 'friends') {
+                        loadTabContent('leaderboard');
+                    }
+                }
+            } catch (error) {
+                console.error('Error sending friend request:', error);
+                showNotification('Error sending friend request. Please try again.', 'error');
+            }
+        }
+
+        // Modal click outside to close
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('addFriendModal');
+            if (modal && e.target === modal) {
+                closeAddFriendModal();
+            }
+        });
 
         // Main Initialization
         document.addEventListener('DOMContentLoaded', async function() {
