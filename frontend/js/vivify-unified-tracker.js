@@ -822,12 +822,6 @@ class VivifyUnifiedTracker {
         }
     }
 
-    unlockAchievement(achievementId) {
-        this.data.achievements[achievementId] = true;
-        this.notifyCompletion(`Achievement Unlocked: ${achievementId}!`, 'achievement');
-        this.save();
-    }
-
     calculateCurrentStreak() {
         let streak = 0;
         let checkDate = new Date();
