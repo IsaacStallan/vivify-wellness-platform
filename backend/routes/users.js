@@ -119,6 +119,45 @@ router.get('/', async (req, res) => {
     }
 });
 
+// POST /api/users/update-habit-points - Update user's habit points
+router.post('/update-habit-points', async (req, res) => {
+    try {
+        const { username, pointsToAdd, habitId } = req.body;
+        
+        if (!username || !pointsToAdd) {
+            return res.status(400).json({ error: 'Username and pointsToAdd required' });
+        }
+        
+        // Find and update user
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { 
+                $inc: { 
+                    habitPoints: pointsToAdd,
+                    overallScore: pointsToAdd
+                }
+            },
+            { new: true }
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        console.log(`Added ${pointsToAdd} habit points to ${username}`);
+        
+        res.json({
+            success: true,
+            habitPoints: updatedUser.habitPoints,
+            overallScore: updatedUser.overallScore
+        });
+        
+    } catch (error) {
+        console.error('Error updating habit points:', error);
+        res.status(500).json({ error: 'Failed to update habit points' });
+    }
+});
+
 // GET /api/users/leaderboard - Get current leaderboard (cleaner version)
 router.get('/leaderboard', async (req, res) => {
     try {

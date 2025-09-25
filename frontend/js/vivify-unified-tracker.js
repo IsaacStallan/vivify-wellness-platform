@@ -800,21 +800,27 @@ class VivifyUnifiedTracker {
         }
     }
 
-    async syncToBackend(identifier, points) {
+    async syncToBackend(habitId, points) {
         try {
-            const habitType = this.mapHabitToType(identifier);
-            
-            await fetch(`${this.baseURL}/habits/update`, {
+            // Update habit points in the database
+            const response = await fetch(`${this.baseURL}/users/update-habit-points`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
                 body: JSON.stringify({
                     username: this.username,
-                    habitType: habitType,
-                    value: 100
+                    pointsToAdd: points,
+                    habitId: habitId
                 })
             });
             
-            console.log('Synced to backend successfully');
+            if (response.ok) {
+                console.log(`Synced ${points} habit points to backend`);
+            } else {
+                console.error('Failed to sync to backend:', await response.text());
+            }
+            
         } catch (error) {
             console.error('Sync failed:', error);
         }
