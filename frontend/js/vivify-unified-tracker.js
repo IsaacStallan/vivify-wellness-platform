@@ -1076,7 +1076,7 @@ class VivifyUnifiedTracker {
         };
     }
 
-    async getChallengesData() {
+    getChallengesData() {
         const active = Object.values(this.data.challenges).filter(c => c.joined && !c.completed).length;
         const completed = Object.values(this.data.challenges).filter(c => c.completed).length;
         
