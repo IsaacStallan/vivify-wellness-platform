@@ -362,11 +362,11 @@ class VivifyUnifiedTracker {
         // Update performance scores
         this.updateScoresFromHabit(habit);
         
-        // Log activity
-        this.logActivity(habit.name, habit.points, 'habit');
+        // Log activity - FIXED: Add proper activity logging
+        this.logActivity(habit.name, habit.points, 'habit_completed', habitId);
         
-        // Sync to backend
-        await this.syncToBackend(habitId, habit.points);
+        // Sync to backend - FIXED: Include activity data
+        await this.syncToBackend(habitId, habit.points, 'habit_completed');
         
         // Add to unified leaderboard
         if (window.VivifyLeaderboard) {
@@ -750,7 +750,7 @@ class VivifyUnifiedTracker {
             this.notifyCompletion('You are already in this challenge', 'info');
             return;
         }
-
+    
         const now = new Date();
         this.data.challenges[challengeId] = {
             joined: true,
@@ -761,13 +761,14 @@ class VivifyUnifiedTracker {
             streak: 0,
             totalDays: 0
         };
-
+    
         this.data.totalPoints += 25;
         this.data.totalXP += 25;
         
-        this.logActivity(`Joined challenge`, 25, 'challenge_join');
-
-        await this.syncToBackend(`challenge_${challengeId}`, 25);
+        // FIXED: Use proper activity logging
+        this.logActivity(`Joined challenge`, 25, 'challenge_joined', challengeId);
+    
+        await this.syncToBackend(`challenge_${challengeId}`, 25, 'challenge_joined');
         
         if (window.VivifyLeaderboard) {
             window.VivifyLeaderboard.addPoints(25, 'challenge_join', { 
@@ -871,15 +872,22 @@ class VivifyUnifiedTracker {
         return [...this.data.habits, ...this.data.customHabits];
     }
 
-    logActivity(name, points, type) {
-        this.data.activities.unshift({
+    logActivity(name, points, type, habitId = null) {
+        const activityEntry = {
             id: Date.now(),
             name: name,
             points: points,
             type: type,
             timestamp: new Date().toISOString(),
             description: name
-        });
+        };
+        
+        // Add habitId for habit completions
+        if (habitId && type === 'habit_completed') {
+            activityEntry.habitId = habitId;
+        }
+        
+        this.data.activities.unshift(activityEntry);
         
         // Keep last 50 activities
         if (this.data.activities.length > 50) {
@@ -887,7 +895,7 @@ class VivifyUnifiedTracker {
         }
     }
 
-    async syncToBackend(habitId, points) {
+    async syncToBackend(habitId, points, activityType = 'habit') {
         try {
             // Update habit points in the database
             const response = await fetch(`${this.baseURL}/users/update-habit-points`, {
@@ -898,12 +906,14 @@ class VivifyUnifiedTracker {
                 body: JSON.stringify({
                     username: this.username,
                     pointsToAdd: points,
-                    habitId: habitId
+                    habitId: habitId,
+                    activityType: activityType,
+                    timestamp: new Date().toISOString()
                 })
             });
             
             if (response.ok) {
-                console.log(`Synced ${points} habit points to backend`);
+                console.log(`Synced ${points} habit points to backend with activity log`);
             } else {
                 console.error('Failed to sync to backend:', await response.text());
             }

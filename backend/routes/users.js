@@ -262,11 +262,19 @@ router.post('/sync-assessment', async (req, res) => {
 // POST /api/users/update-habit-points - Update user's habit points
 router.post('/update-habit-points', async (req, res) => {
     try {
-        const { username, pointsToAdd, habitId } = req.body;
+        const { username, pointsToAdd, habitId, activityType, timestamp } = req.body;
         
         if (!username || !pointsToAdd) {
             return res.status(400).json({ error: 'Username and pointsToAdd required' });
         }
+        
+        // Create activity entry for time-based filtering
+        const activityEntry = {
+            type: activityType || 'habit_completed',
+            habitId: habitId,
+            points: pointsToAdd,
+            timestamp: timestamp || new Date().toISOString()
+        };
         
         // Find and update user
         const updatedUser = await User.findOneAndUpdate(
@@ -275,6 +283,15 @@ router.post('/update-habit-points', async (req, res) => {
                 $inc: { 
                     habitPoints: pointsToAdd,
                     overallScore: pointsToAdd
+                },
+                $push: {
+                    activity: {
+                        $each: [activityEntry],
+                        $slice: -100  // Keep only last 100 activities
+                    }
+                },
+                $set: {
+                    lastActive: new Date()
                 }
             },
             { new: true }
@@ -284,12 +301,13 @@ router.post('/update-habit-points', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        console.log(`Added ${pointsToAdd} habit points to ${username}`);
+        console.log(`Added ${pointsToAdd} habit points to ${username} with activity log`);
         
         res.json({
             success: true,
             habitPoints: updatedUser.habitPoints,
-            overallScore: updatedUser.overallScore
+            overallScore: updatedUser.overallScore,
+            activityLogged: true
         });
         
     } catch (error) {
