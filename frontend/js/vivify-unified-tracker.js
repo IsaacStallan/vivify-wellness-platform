@@ -898,7 +898,7 @@ class VivifyUnifiedTracker {
         }
     }
 
-    async syncToBackend(habitId, points, activityType = 'habit') {
+    async syncToBackend(habitId, points, activityType = 'habit_completed') {
         try {
             // Update habit points in the database
             const response = await fetch(`${this.baseURL}/users/update-habit-points`, {
@@ -910,8 +910,8 @@ class VivifyUnifiedTracker {
                     username: this.username,
                     pointsToAdd: points,
                     habitId: habitId,
-                    activityType: activityType,
-                    timestamp: new Date().toISOString()
+                    activityType: activityType,  // ADD THIS
+                    timestamp: new Date().toISOString()  // ADD THIS
                 })
             });
             
