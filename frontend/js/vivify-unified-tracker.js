@@ -633,28 +633,6 @@ class VivifyUnifiedTracker {
             return false;
         }
     }
-    
-
-    async getChallengesData() {
-        // Return mock challenge data for now
-        return {
-            stats: {
-                active: 2,
-                completed: 1,
-                totalPoints: 150
-            },
-            challenges: {
-                'fitness-foundation': {
-                    joined: true,
-                    completed: false
-                },
-                'morning-energy': {
-                    joined: true,
-                    completed: true
-                }
-            }
-        };
-    }
 
     async syncExistingAssessmentData() {
         try {
@@ -1098,7 +1076,7 @@ class VivifyUnifiedTracker {
         };
     }
 
-    getChallengesData() {
+    async getChallengesData() {
         const active = Object.values(this.data.challenges).filter(c => c.joined && !c.completed).length;
         const completed = Object.values(this.data.challenges).filter(c => c.completed).length;
         
