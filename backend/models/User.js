@@ -66,6 +66,37 @@ const userSchema = new mongoose.Schema({
     longestStreak: { type: Number, default: 0 },
     achievements: [String],
     
+    // NEW: Activity tracking for time-based leaderboards
+    activity: [{
+        type: {
+            type: String,
+            required: true,
+            enum: ['habit_completed', 'challenge_joined', 'challenge_completed', 'assessment_completed']
+        },
+        habitId: {
+            type: String,
+            required: function() { return this.type === 'habit_completed'; }
+        },
+        challengeId: {
+            type: String,
+            required: function() { return this.type.includes('challenge'); }
+        },
+        points: {
+            type: Number,
+            required: true,
+            min: 0
+        },
+        timestamp: {
+            type: Date,
+            required: true,
+            default: Date.now
+        },
+        metadata: {
+            type: mongoose.Schema.Types.Mixed,
+            default: {}
+        }
+    }],
+
     // NEW: ENHANCED HABITS DATA for Daily Tracking
     habitsData: {
         // Daily habit tracking (0-100 scale for progress bars)
