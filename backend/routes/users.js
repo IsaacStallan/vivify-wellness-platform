@@ -155,7 +155,9 @@ router.get('/', async (req, res) => {
               if (activityDate >= startDate) {
                 if (activity.type === 'habit_completed') {
                   timeBasedHabitPoints += activity.points || 0;
-                } else if (activity.type === 'challenge_completed') {
+                } else if (activity.type === 'challenge_completed' || 
+                           activity.type === 'challenge_joined' || 
+                           activity.type === 'challenge_daily') {
                   timeBasedChallengePoints += activity.points || 0;
                 }
               }
