@@ -480,7 +480,7 @@ router.get('/export-emails', async (req, res) => {
     }
 });
 
-// POST /api/users/clear-habit-data - Clear user's habit completion data
+// POST /api/users/clear-habit-data - Clear user's habit completion data (FIXED VERSION)
 router.post('/clear-habit-data', async (req, res) => {
     try {
         const { username } = req.body;
@@ -489,16 +489,18 @@ router.post('/clear-habit-data', async (req, res) => {
             return res.status(400).json({ error: 'Username required' });
         }
         
+        // Clear the correct fields based on your MongoDB structure
         const updatedUser = await User.findOneAndUpdate(
             { username: username },
             { 
                 $unset: {
-                    habitData: "",
-                    dailyCompletions: "",
+                    habitsData: "",        // This is where your data actually is
                     activity: ""
                 },
                 $set: {
-                    habitPoints: 0
+                    habitPoints: 0,
+                    currentStreak: 0,
+                    habitStreak: 0
                 }
             },
             { new: true }
@@ -508,7 +510,7 @@ router.post('/clear-habit-data', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        console.log(`Cleared habit data for ${username}`);
+        console.log(`Cleared habitsData field for ${username}`);
         res.json({ success: true, message: 'Habit data cleared from database' });
         
     } catch (error) {
