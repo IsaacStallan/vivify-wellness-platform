@@ -262,8 +262,23 @@ class VivifyUnifiedTracker {
     mergeServerData(serverData) {
         // Skip the old habitsData merging since we're using the new unified system
         if (serverData.totalPoints != null) this.data.totalPoints = serverData.totalPoints;
+        
+        // IGNORE old challenge data from server - only merge if it has the new challenge IDs
         if (serverData.challengeData) {
-            this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
+            const newChallengeIds = [
+                'morning-momentum', 'focus-sprint', 'consistency-master',
+                'performance-edge', 'elite-performer', 'exam-domination'
+            ];
+            
+            const filteredChallenges = {};
+            Object.keys(serverData.challengeData).forEach(challengeId => {
+                if (newChallengeIds.includes(challengeId)) {
+                    filteredChallenges[challengeId] = serverData.challengeData[challengeId];
+                }
+            });
+            
+            this.data.challenges = { ...this.data.challenges, ...filteredChallenges };
+            console.log('Filtered out old challenge data from server');
         }
     
         // Handle assessment scores properly
