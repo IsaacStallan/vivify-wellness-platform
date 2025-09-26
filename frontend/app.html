@@ -1892,36 +1892,96 @@
         let currentTab = 'dashboard';
 
         // Challenge definitions
+
         const challenges = {
-            'fitness-foundation': {
-                name: '30-Day Fitness Foundation',
-                type: 'monthly',
-                difficulty: 'Beginner',
-                description: 'Build a solid fitness foundation with 30 minutes of daily physical activity.',
-                points: 500,
-                dailyPoints: 15,
-                duration: 30,
-                totalGoal: 30
-            },
-            'morning-energy': {
-                name: 'Morning Energy Boost',
-                type: 'weekly',
-                difficulty: 'Beginner',
-                description: 'Start each day with 10 minutes of movement to boost energy and mental clarity.',
-                points: 150,
+            // BEGINNER TIER - Easy wins to build momentum
+            'morning-momentum': {
+                name: '7-Day Morning Momentum',
+                type: 'beginner',
+                difficulty: 'Easy Start',
+                description: 'Wake up 30 minutes earlier and do ONE productive thing before checking your phone. Build the foundation of peak performance.',
+                points: 200,
                 dailyPoints: 20,
                 duration: 7,
-                totalGoal: 7
+                category: 'habits',
+                tier: 'bronze',
+                participants: 0,
+                completionRate: 78
             },
-            'deep-work': {
-                name: 'Deep Work Mastery',
-                type: 'weekly',
-                difficulty: 'Intermediate',
-                description: 'Complete 90-minute focused work sessions without distractions.',
-                points: 200,
+            'focus-sprint': {
+                name: '5-Day Focus Sprint',
+                type: 'beginner', 
+                difficulty: 'Quick Win',
+                description: 'Complete 25-minute focused work sessions without distractions. No social media, just pure productivity.',
+                points: 150,
                 dailyPoints: 25,
-                duration: 7,
-                totalGoal: 7
+                duration: 5,
+                category: 'mental',
+                tier: 'bronze',
+                participants: 0,
+                completionRate: 65
+            },
+            
+            // INTERMEDIATE TIER - Building consistency
+            'consistency-master': {
+                name: '14-Day Consistency Master',
+                type: 'intermediate',
+                difficulty: 'Commitment',
+                description: 'Complete your top 3 daily habits every single day for 2 weeks. Miss one day, start over.',
+                points: 500,
+                dailyPoints: 30,
+                duration: 14,
+                category: 'habits',
+                tier: 'silver',
+                participants: 0,
+                completionRate: 42,
+                requirements: ['Complete at least 2 beginner challenges']
+            },
+            'performance-edge': {
+                name: '21-Day Performance Edge',
+                type: 'intermediate',
+                difficulty: 'Game Changer',
+                description: 'Exercise 30+ minutes, eat clean, get 8+ hours sleep, and do focused work daily. The complete performance stack.',
+                points: 750,
+                dailyPoints: 35,
+                duration: 21,
+                category: 'lifestyle',
+                tier: 'silver',
+                participants: 0,
+                completionRate: 38
+            },
+            
+            // ADVANCED TIER - Elite performance
+            'elite-performer': {
+                name: '30-Day Elite Performer',
+                type: 'advanced',
+                difficulty: 'Elite',
+                description: 'Master-level challenge: Perfect morning routine, 90-min deep work, fitness, nutrition tracking, evening reflection. Every. Single. Day.',
+                points: 1200,
+                dailyPoints: 40,
+                duration: 30,
+                category: 'elite',
+                tier: 'gold',
+                participants: 0,
+                completionRate: 23,
+                requirements: ['Complete 2+ intermediate challenges', 'Total points > 1000']
+            },
+            
+            // SEASONAL/LIMITED TIME
+            'exam-domination': {
+                name: 'Exam Season Domination',
+                type: 'seasonal',
+                difficulty: 'Intense',
+                description: 'Peak performance during exam period: optimized study sessions, stress management, peak physical condition.',
+                points: 800,
+                dailyPoints: 50,
+                duration: 14,
+                category: 'academic',
+                tier: 'platinum',
+                participants: 0,
+                completionRate: 55,
+                isLimited: true,
+                endDate: '2024-12-20'
             }
         };
 
@@ -2351,6 +2411,8 @@
             });
         }
 
+        // Replace updateChallengesGrid function:
+
         function updateChallengesGrid(userChallenges) {
             const container = document.getElementById('challengesList');
             if (!container) return;
@@ -2359,34 +2421,208 @@
                 const userChallenge = userChallenges[id];
                 const isJoined = userChallenge?.joined || false;
                 const isCompleted = userChallenge?.completed || false;
+                const canJoin = checkChallengeEligibility(challenge, userChallenges);
                 
-                let cardClass = 'challenge-card';
-                if (isCompleted) cardClass += ' completed';
-                else if (isJoined) cardClass += ' active';
+                // Calculate progress
+                let progressBar = '';
+                let statusBadge = challenge.type;
+                let buttonContent = '';
+                
+                if (isCompleted) {
+                    progressBar = `
+                        <div class="progress-bar" style="background: rgba(39,174,96,0.2); margin: 1rem 0;">
+                            <div class="progress-fill" style="width: 100%; background: linear-gradient(135deg, #27ae60, #2ecc71);"></div>
+                        </div>
+                        <div style="color: #27ae60; font-weight: 600; margin-bottom: 1rem;">
+                            ✅ Completed • +${challenge.points} points earned
+                        </div>
+                    `;
+                    statusBadge = 'Completed';
+                    buttonContent = `<button class="btn" disabled style="flex: 1; background: #27ae60;">Completed ✓</button>`;
+                } else if (isJoined) {
+                    const progress = userChallenge.progressPercentage || 0;
+                    const daysLeft = userChallenge.daysRemaining || challenge.duration;
+                    progressBar = `
+                        <div class="progress-bar" style="background: rgba(52,152,219,0.2); margin: 1rem 0;">
+                            <div class="progress-fill" style="width: ${progress}%; background: linear-gradient(135deg, #3498db, #2980b9);"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span style="color: #3498db; font-weight: 600;">Day ${userChallenge.totalDays || 0}/${challenge.duration}</span>
+                            <span style="color: rgba(255,255,255,0.7);">${daysLeft} days left</span>
+                        </div>
+                    `;
+                    statusBudge = 'Active';
+                    buttonContent = `
+                        <button class="btn btn-complete" onclick="completeChallengeDay('${id}')" style="flex: 1;">
+                            Mark Today Complete
+                        </button>
+                        <button class="btn btn-secondary" onclick="viewChallengeDetails('${id}')" title="View Progress">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                    `;
+                } else if (canJoin) {
+                    buttonContent = `<button class="btn btn-complete" onclick="joinChallenge('${id}')" style="flex: 1;">Join Challenge</button>`;
+                } else {
+                    buttonContent = `<button class="btn" disabled style="flex: 1; opacity: 0.5;">Requirements Not Met</button>`;
+                }
 
                 return `
-                    <div class="${cardClass}" data-challenge="${id}">
+                    <div class="challenge-card ${isCompleted ? 'completed' : isJoined ? 'active' : ''}" data-challenge="${id}">
+                        <div style="position: absolute; top: 1rem; right: 1rem;">
+                            <div class="challenge-badge tier-${challenge.tier}">${statusBadge}</div>
+                        </div>
+                        
                         <div class="challenge-header">
                             <div class="challenge-info">
                                 <h3>${challenge.name}</h3>
+                                <div style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin: 0.5rem 0;">
+                                    ${challenge.difficulty} • ${challenge.duration} days • ${challenge.completionRate}% success rate
+                                </div>
                             </div>
-                            <div class="challenge-badge">${challenge.type}</div>
                         </div>
+                        
                         <div class="challenge-description">${challenge.description}</div>
+                        
+                        ${progressBar}
+                        
+                        <div style="display: flex; justify-content: space-between; margin: 1rem 0; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                            <span><i class="fas fa-users"></i> ${challenge.participants} participants</span>
+                            <span><i class="fas fa-trophy"></i> ${challenge.points} points</span>
+                        </div>
+                        
                         <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                            ${!isJoined ? 
-                                `<button class="btn btn-complete" onclick="joinChallenge('${id}')" style="flex: 1;">Join Challenge</button>` :
-                                isCompleted ? 
-                                    `<button class="btn" disabled style="flex: 1; background: #27ae60; color: #fff;">Challenge Completed ✓</button>` :
-                                    `<button class="btn" disabled style="flex: 1; background: #3498db; color: #fff;">Challenge Active</button>`
-                            }
-                            <button class="btn btn-secondary" onclick="viewDetails('${id}')" title="View Details">
-                                <i class="fas fa-info"></i>
-                            </button>
+                            ${buttonContent}
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        // Add eligibility checking
+        function checkChallengeEligibility(challenge, userChallenges) {
+            if (!challenge.requirements) return true;
+            
+            // Check requirements like completed challenges, point thresholds
+            const completedChallenges = Object.values(userChallenges).filter(c => c.completed).length;
+            const totalPoints = appTracker?.data?.totalPoints || 0;
+            
+            for (const req of challenge.requirements) {
+                if (req.includes('beginner challenges') && completedChallenges < 2) return false;
+                if (req.includes('intermediate challenges') && completedChallenges < 3) return false;
+                if (req.includes('points > 1000') && totalPoints < 1000) return false;
+            }
+            
+            return true;
+        }
+
+        // Add these new functions after updateChallengesGrid()
+
+        function displayChallengeLeaderboard(challengeId) {
+            // Show who's leading in current challenge
+            const modal = document.createElement('div');
+            modal.className = 'modal show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>${challenges[challengeId]?.name} Leaderboard</h3>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="challengeLeaderboard">Loading...</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // TODO: Fetch actual leaderboard data from backend
+            setTimeout(() => {
+                document.getElementById('challengeLeaderboard').innerHTML = `
+                    <div class="empty-state">
+                        <p>Challenge leaderboards coming soon!</p>
+                        <p>You'll see who's ahead and get motivated by the competition.</p>
+                    </div>
+                `;
+            }, 500);
+        }
+
+        function viewChallengeDetails(challengeId) {
+            const userChallenge = appTracker?.data?.challenges?.[challengeId];
+            const challenge = challenges[challengeId];
+            
+            if (!userChallenge || !challenge) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>${challenge.name} - Progress</h3>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                <span>Progress: ${userChallenge.totalDays || 0}/${challenge.duration} days</span>
+                                <span>${userChallenge.progressPercentage || 0}%</span>
+                            </div>
+                            <div class="progress-bar" style="background: rgba(52,152,219,0.2);">
+                                <div class="progress-fill" style="width: ${userChallenge.progressPercentage || 0}%; background: linear-gradient(135deg, #3498db, #2980b9);"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 2rem;">
+                            ${Array.from({length: challenge.duration}, (_, i) => {
+                                const dayCompleted = userChallenge.completedDays?.length > i;
+                                return `
+                                    <div style="
+                                        width: 40px; height: 40px; border-radius: 8px;
+                                        background: ${dayCompleted ? '#27ae60' : 'rgba(255,255,255,0.1)'};
+                                        display: flex; align-items: center; justify-content: center;
+                                        color: ${dayCompleted ? '#fff' : 'rgba(255,255,255,0.5)'};
+                                        font-weight: 600; font-size: 0.8rem;
+                                    ">${i + 1}</div>
+                                `;
+                            }).join('')}
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <button class="btn btn-complete" onclick="completeChallengeDay('${challengeId}'); this.closest('.modal').remove();">
+                                Mark Today Complete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        async function completeChallengeDay(challengeId) {
+            if (!appTracker) {
+                showNotification('System not ready. Please try again.', 'error');
+                return;
+            }
+            
+            try {
+                const success = await appTracker.completeChallengeDay(challengeId);
+                if (success) {
+                    // Refresh challenges display
+                    loadTabContent('challenges');
+                    
+                    // Show progress update
+                    const userChallenge = appTracker.data.challenges[challengeId];
+                    const challenge = challenges[challengeId];
+                    
+                    if (userChallenge?.completed) {
+                        showNotification(`🎉 Challenge completed! You earned ${challenge.points} points!`, 'success');
+                    } else {
+                        const daysLeft = challenge.duration - (userChallenge?.totalDays || 0);
+                        showNotification(`Day completed! ${daysLeft} days remaining in your challenge.`, 'success');
+                    }
+                }
+            } catch (error) {
+                console.error('Error completing challenge day:', error);
+                showNotification('Error completing challenge. Please try again.', 'error');
+            }
         }
 
         // Interaction Functions

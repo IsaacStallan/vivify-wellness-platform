@@ -748,12 +748,16 @@ class VivifyUnifiedTracker {
     }
 
     // CHALLENGE METHODS
+
     async joinChallenge(challengeId) {
+        const challenge = challenges[challengeId];
+        if (!challenge) return false;
+        
         if (this.data.challenges[challengeId]?.joined) {
             this.notifyCompletion('You are already in this challenge', 'info');
-            return;
+            return false;
         }
-    
+
         const now = new Date();
         this.data.challenges[challengeId] = {
             joined: true,
@@ -762,25 +766,66 @@ class VivifyUnifiedTracker {
             lastCompletedDate: null,
             completed: false,
             streak: 0,
-            totalDays: 0
+            totalDays: 0,
+            daysRemaining: challenge.duration,
+            progressPercentage: 0
         };
-    
+
+        // Award join points
         this.data.totalPoints += 25;
         this.data.totalXP += 25;
         
-        // FIXED: Use proper activity logging
-        this.logActivity(`Joined challenge`, 25, 'challenge_joined', challengeId);
-    
+        this.logActivity(`Joined ${challenge.name}`, 25, 'challenge_joined', challengeId);
         await this.syncToBackend(`challenge_${challengeId}`, 25, 'challenge_joined');
         
-        if (window.VivifyLeaderboard) {
-            window.VivifyLeaderboard.addPoints(25, 'challenge_join', { 
-                challengeId: challengeId
-            });
+        this.save();
+        this.notifyCompletion(`Challenge joined! Track daily progress to earn rewards`, 'success');
+        return true;
+    }
+
+    // Add daily progress tracking
+    async completeChallengeDay(challengeId) {
+        const challenge = challenges[challengeId];
+        const userChallenge = this.data.challenges[challengeId];
+        
+        if (!userChallenge?.joined || userChallenge.completed) return false;
+        
+        const today = new Date().toISOString().split('T')[0];
+        if (userChallenge.completedDays.includes(today)) {
+            this.notifyCompletion('Already completed today!', 'info');
+            return false;
+        }
+
+        // Mark day complete
+        userChallenge.completedDays.push(today);
+        userChallenge.lastCompletedDate = today;
+        userChallenge.totalDays = userChallenge.completedDays.length;
+        userChallenge.daysRemaining = challenge.duration - userChallenge.totalDays;
+        userChallenge.progressPercentage = Math.round((userChallenge.totalDays / challenge.duration) * 100);
+        
+        // Award daily points
+        const dailyPoints = challenge.dailyPoints || 15;
+        this.data.totalPoints += dailyPoints;
+        this.data.totalXP += dailyPoints;
+        
+        this.logActivity(`Day ${userChallenge.totalDays} of ${challenge.name}`, dailyPoints, 'challenge_daily');
+        
+        // Check completion
+        if (userChallenge.totalDays >= challenge.duration) {
+            userChallenge.completed = true;
+            const completionBonus = challenge.points;
+            this.data.totalPoints += completionBonus;
+            this.data.totalXP += completionBonus;
+            
+            this.logActivity(`Completed ${challenge.name}!`, completionBonus, 'challenge_completed');
+            this.notifyCompletion(`🏆 Challenge completed! +${completionBonus + dailyPoints} total points`, 'success');
+        } else {
+            this.notifyCompletion(`Day ${userChallenge.totalDays}/${challenge.duration} complete! +${dailyPoints} points`, 'success');
         }
         
+        await this.syncToBackend(`challenge_${challengeId}`, dailyPoints, 'challenge_daily');
         this.save();
-        this.notifyCompletion(`Challenge joined! +25 points`, 'success');
+        return true;
     }
 
     async completeChallengeDay(challengeId, challenge) {
@@ -828,6 +873,82 @@ class VivifyUnifiedTracker {
 
         await this.syncToBackend(`challenge_${challengeId}`, dailyPoints);
         this.save();
+    }
+
+    // Add this method inside the VivifyUnifiedTracker class
+
+    checkChallengeStreaks() {
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 24*60*60*1000).toISOString().split('T')[0];
+        
+        Object.entries(this.data.challenges).forEach(([id, userChallenge]) => {
+            if (!userChallenge?.joined || userChallenge.completed) return;
+            
+            const challenge = challenges[id];
+            if (!challenge) return;
+            
+            const lastCompleted = userChallenge.lastCompletedDate;
+            const daysSinceStart = Math.floor((new Date() - new Date(userChallenge.startDate)) / (1000 * 60 * 60 * 24));
+            
+            // Check if they're behind schedule
+            if (daysSinceStart > userChallenge.totalDays && lastCompleted !== today) {
+                // They missed a day - show warning
+                userChallenge.streak = 0;
+                userChallenge.behindSchedule = true;
+                
+                this.notifyCompletion(`⚠️ ${challenge.name}: You're behind schedule! Complete today to stay in the challenge.`, 'error');
+            }
+            
+            // Check if they've been inactive for 2+ days (challenge failure)
+            if (lastCompleted && lastCompleted !== today && lastCompleted !== yesterday) {
+                const daysSinceLast = Math.floor((new Date() - new Date(lastCompleted + 'T00:00:00')) / (1000 * 60 * 60 * 24));
+                
+                if (daysSinceLast >= 2) {
+                    userChallenge.failed = true;
+                    userChallenge.joined = false;
+                    
+                    this.notifyCompletion(`❌ Challenge failed: ${challenge.name}. You can restart anytime!`, 'error');
+                    
+                    // Log the failure
+                    this.logActivity(`Failed challenge: ${challenge.name}`, 0, 'challenge_failed', id);
+                }
+            }
+        });
+        
+        this.save();
+    }
+
+    // Also add this method to check challenges daily
+    resetDailyIfNewDay() {
+        const today = new Date().toDateString();
+        
+        if (this.data.lastActiveDate !== today) {
+            console.log(`New day detected: ${this.data.lastActiveDate} -> ${today}`);
+            
+            // Reset habit completions
+            this.getAllHabits().forEach(habit => {
+                habit.completed = false;
+            });
+            
+            // Check challenge streaks for missed days
+            this.checkChallengeStreaks();
+            
+            // Check if we missed a day (gap of more than 1 day)
+            const lastActive = new Date(this.data.lastActiveDate);
+            const todayDate = new Date(today);
+            const daysDiff = Math.floor((todayDate - lastActive) / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff > 1) {
+                console.log(`Missed ${daysDiff - 1} days, resetting streaks`);
+                this.getAllHabits().forEach(habit => {
+                    habit.streak = 0;
+                });
+                this.data.streaks = {};
+            }
+            
+            this.data.lastActiveDate = today;
+            this.save();
+        }
     }
 
     // CUSTOM HABIT CREATION
