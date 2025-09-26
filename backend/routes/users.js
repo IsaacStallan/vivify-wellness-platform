@@ -480,4 +480,41 @@ router.get('/export-emails', async (req, res) => {
     }
 });
 
+// POST /api/users/clear-habit-data - Clear user's habit completion data
+router.post('/clear-habit-data', async (req, res) => {
+    try {
+        const { username } = req.body;
+        
+        if (!username) {
+            return res.status(400).json({ error: 'Username required' });
+        }
+        
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { 
+                $unset: {
+                    habitData: "",
+                    dailyCompletions: "",
+                    activity: ""
+                },
+                $set: {
+                    habitPoints: 0
+                }
+            },
+            { new: true }
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        console.log(`Cleared habit data for ${username}`);
+        res.json({ success: true, message: 'Habit data cleared from database' });
+        
+    } catch (error) {
+        console.error('Error clearing habit data:', error);
+        res.status(500).json({ error: 'Failed to clear habit data' });
+    }
+});
+
 module.exports = router;
