@@ -157,15 +157,34 @@ class VivifyUnifiedTracker {
       
 
     async loadData() {
-        // 1) Load local cache FIRST
+        // 1) Load local cache FIRST - but filter old challenges
         const localData = localStorage.getItem('vivifyUnifiedData');
         if (localData) {
-          try {
+        try {
             const parsed = JSON.parse(localData);
+            
+            // Filter out old challenges from localStorage too
+            if (parsed.challenges) {
+            const newChallengeIds = [
+                'morning-momentum', 'focus-sprint', 'consistency-master',
+                'performance-edge', 'elite-performer', 'exam-domination'
+            ];
+            
+            const filteredChallenges = {};
+            Object.keys(parsed.challenges).forEach(challengeId => {
+                if (newChallengeIds.includes(challengeId)) {
+                filteredChallenges[challengeId] = parsed.challenges[challengeId];
+                }
+            });
+            parsed.challenges = filteredChallenges;
+            
+            console.log('Filtered old challenges from localStorage');
+            }
+            
             this.data = { ...this.data, ...parsed };
-          } catch (e) {
+        } catch (e) {
             console.warn('Bad vivifyUnifiedData JSON, ignoring.');
-          }
+        }
         }
       
         // 2) THEN fetch server and override what we got locally
