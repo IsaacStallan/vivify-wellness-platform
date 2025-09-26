@@ -828,53 +828,6 @@ class VivifyUnifiedTracker {
         return true;
     }
 
-    async completeChallengeDay(challengeId, challenge) {
-        const uc = this.data.challenges[challengeId];
-        
-        if (!uc?.joined) {
-            this.notifyCompletion('Join the challenge first', 'info');
-            return;
-        }
-
-        const today = new Date().toISOString().split('T')[0];
-        if (uc.completedDays.includes(today)) {
-            this.notifyCompletion('Already completed today!', 'info');
-            return;
-        }
-
-        uc.completedDays.push(today);
-        uc.lastCompletedDate = today;
-        uc.totalDays = uc.completedDays.length;
-        
-        const dailyPoints = challenge.dailyPoints || 10;
-        this.data.totalPoints += dailyPoints;
-        this.data.totalXP += dailyPoints;
-        
-        this.logActivity(`Challenge day completed: ${challenge.name}`, dailyPoints, 'challenge_daily');
-        
-        // Check completion
-        if (uc.totalDays >= challenge.totalGoal) {
-            uc.completed = true;
-            const completionBonus = challenge.points - (dailyPoints * challenge.totalGoal);
-            if (completionBonus > 0) {
-                this.data.totalPoints += completionBonus;
-                this.data.totalXP += completionBonus;
-            }
-            this.notifyCompletion(`Challenge completed! +${challenge.points} total points`, 'success');
-        } else {
-            this.notifyCompletion(`Day completed! +${dailyPoints} points`, 'success');
-        }
-
-        if (window.VivifyLeaderboard) {
-            window.VivifyLeaderboard.addPoints(dailyPoints, 'challenge_daily', { 
-                challengeId: challengeId
-            });
-        }
-
-        await this.syncToBackend(`challenge_${challengeId}`, dailyPoints);
-        this.save();
-    }
-
     // Add this method inside the VivifyUnifiedTracker class
 
     checkChallengeStreaks() {
@@ -916,39 +869,6 @@ class VivifyUnifiedTracker {
         });
         
         this.save();
-    }
-
-    // Also add this method to check challenges daily
-    resetDailyIfNewDay() {
-        const today = new Date().toDateString();
-        
-        if (this.data.lastActiveDate !== today) {
-            console.log(`New day detected: ${this.data.lastActiveDate} -> ${today}`);
-            
-            // Reset habit completions
-            this.getAllHabits().forEach(habit => {
-                habit.completed = false;
-            });
-            
-            // Check challenge streaks for missed days
-            this.checkChallengeStreaks();
-            
-            // Check if we missed a day (gap of more than 1 day)
-            const lastActive = new Date(this.data.lastActiveDate);
-            const todayDate = new Date(today);
-            const daysDiff = Math.floor((todayDate - lastActive) / (1000 * 60 * 60 * 24));
-            
-            if (daysDiff > 1) {
-                console.log(`Missed ${daysDiff - 1} days, resetting streaks`);
-                this.getAllHabits().forEach(habit => {
-                    habit.streak = 0;
-                });
-                this.data.streaks = {};
-            }
-            
-            this.data.lastActiveDate = today;
-            this.save();
-        }
     }
 
     // CUSTOM HABIT CREATION
