@@ -322,10 +322,28 @@ class VivifyUnifiedTracker {
         const today = new Date().toDateString();
         
         if (this.data.lastActiveDate !== today) {
-            // Reset daily completions
+            console.log(`New day detected: ${this.data.lastActiveDate} -> ${today}`);
+            
+            // FIXED: Only reset completion status, NOT streaks
+            // Streaks should only reset after 24+ hours of inactivity
             this.getAllHabits().forEach(habit => {
-                habit.completed = false;
+                habit.completed = false; // Reset daily completion status
+                // Don't touch habit.streak here - that's handled by missed day logic
             });
+            
+            // Check if we missed a day (gap of more than 1 day)
+            const lastActive = new Date(this.data.lastActiveDate);
+            const todayDate = new Date(today);
+            const daysDiff = Math.floor((todayDate - lastActive) / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff > 1) {
+                console.log(`Missed ${daysDiff - 1} days, resetting streaks`);
+                // Only reset streaks if we actually missed days
+                this.getAllHabits().forEach(habit => {
+                    habit.streak = 0;
+                });
+                this.data.streaks = {};
+            }
             
             this.data.lastActiveDate = today;
             this.save();
@@ -946,25 +964,37 @@ class VivifyUnifiedTracker {
         }
     } */
 
-    calculateCurrentStreak() {
-        let streak = 0;
-        let checkDate = new Date();
-        
-        while (true) {
-            const dateStr = checkDate.toDateString();
-            const dayCompletions = this.data.dailyCompletions[dateStr] || [];
-            const completionRate = this.getAllHabits().length > 0 ? dayCompletions.length / this.getAllHabits().length : 0;
+        calculateCurrentStreak() {
+            let streak = 0;
+            let checkDate = new Date();
+            const habits = this.getAllHabits();
             
-            if (completionRate >= 0.7) {
-                streak++;
-                checkDate.setDate(checkDate.getDate() - 1);
-            } else {
-                break;
+            // Start from today and work backwards
+            while (true) {
+                const dateStr = checkDate.toDateString();
+                const dayCompletions = this.data.dailyCompletions[dateStr] || [];
+                
+                // Consider a day "complete" if at least 70% of habits were done
+                const completionRate = habits.length > 0 ? dayCompletions.length / habits.length : 0;
+                
+                if (completionRate >= 0.7) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    // If today has no completions, don't count it against streak yet
+                    if (streak === 0 && dateStr === new Date().toDateString()) {
+                        checkDate.setDate(checkDate.getDate() - 1);
+                        continue;
+                    }
+                    break;
+                }
+                
+                // Safety break to prevent infinite loops
+                if (streak > 365) break;
             }
+            
+            return streak;
         }
-        
-        return streak;
-    }
 
     calculateUserLevel() {
         const levels = [

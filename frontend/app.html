@@ -2257,54 +2257,47 @@
         /** ---------- WEEKLY OVERVIEW (DOTS) ---------- */
         /* Renders a 7-day grid; filled dot = that habit was completed on that date. */
         function updateWeeklyOverview() {
-        const grid = document.getElementById('weekGrid');
-        if (!grid) return;
+            const grid = document.getElementById('weekGrid');
+            if (!grid) return;
 
-        const today = new Date();
-        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const today = new Date();
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-        // Source of truth for completions by day:
-        // Prefer appTracker.data.dailyCompletions (same shape as original page).
-        // Fallback: build a minimal history from appTracker.data.activity if available.
-        let dailyCompletions = {};
-        if (appTracker?.data?.dailyCompletions) {
-            dailyCompletions = appTracker.data.dailyCompletions;
-        } else if (appTracker?.data?.activity) {
-            // Build a naive map: dateString -> [habitId,...]
-            dailyCompletions = {};
-            appTracker.data.activity.forEach(a => {
-            if (a.type === 'habit_completed' && a.habitId && a.timestamp) {
-                const ds = new Date(a.timestamp).toDateString();
-                if (!dailyCompletions[ds]) dailyCompletions[ds] = [];
-                if (!dailyCompletions[ds].includes(a.habitId)) dailyCompletions[ds].push(a.habitId);
+            // Get clean daily completions data
+            let dailyCompletions = {};
+            if (appTracker?.data?.dailyCompletions) {
+                dailyCompletions = appTracker.data.dailyCompletions;
             }
-            });
-        }
 
-        const habits = (appTracker?.getHabitsPageData?.().habits) || (appTracker?.data?.habits) || [];
+            const habits = (appTracker?.getHabitsPageData?.().habits) || (appTracker?.data?.habits) || [];
 
-        let html = '';
-        for (let i = 6; i >= 0; i--) {
-            const date = new Date(today);
-            date.setDate(today.getDate() - i);
-            const ds = date.toDateString();
-            const dayCompletions = dailyCompletions[ds] || [];
+            let html = '';
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const ds = date.toDateString();
+                
+                // FIXED: Only show completions that actually exist
+                const dayCompletions = dailyCompletions[ds] || [];
+                
+                // Debug logging
+                console.log(`Date: ${ds}, Completions:`, dayCompletions);
 
-            html += `
-            <div class="day-column" style="text-align:center;">
-                <div class="day-label" style="opacity:.8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${days[date.getDay()]}</div>
-                <div class="day-habits" style="display:flex;flex-direction:column;gap:8px;align-items:center;">
-                ${habits.map(h => {
-                    const completed = dayCompletions.includes(h.id);
-                    return `<div class="habit-dot ${completed ? 'completed' : ''}" 
-                                title="${h.name}" 
-                                style="width:24px;height:24px;border-radius:50%;background:${completed ? '#27ae60' : 'rgba(255,255,255,0.1)'};box-shadow:${completed ? '0 0 15px rgba(39,174,96,0.5)' : 'none'};">
-                            </div>`;
-                }).join('')}
-                </div>
-            </div>`;
-        }
-        grid.innerHTML = html;
+                html += `
+                <div class="day-column" style="text-align:center;">
+                    <div class="day-label" style="opacity:.8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${days[date.getDay()]}</div>
+                    <div class="day-habits" style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                    ${habits.map(h => {
+                        const completed = dayCompletions.includes(h.id);
+                        return `<div class="habit-dot ${completed ? 'completed' : ''}" 
+                                    title="${h.name}" 
+                                    style="width:24px;height:24px;border-radius:50%;background:${completed ? '#27ae60' : 'rgba(255,255,255,0.1)'};box-shadow:${completed ? '0 0 15px rgba(39,174,96,0.5)' : 'none'};">
+                                </div>`;
+                    }).join('')}
+                    </div>
+                </div>`;
+            }
+            grid.innerHTML = html;
         }
 
         /** ---------- DAILY PROGRESS LINE ---------- */
