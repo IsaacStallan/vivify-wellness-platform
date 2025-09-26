@@ -260,33 +260,19 @@ class VivifyUnifiedTracker {
     }
 
     mergeServerData(serverData) {
-        if (serverData.habitsData) {
-            const today = new Date().toDateString();
-            Object.keys(serverData.habitsData).forEach(habitType => {
-                const habit = this.data.habits.find(h => this.mapHabitToType(h.id) === habitType);
-                if (habit && serverData.habitsData[habitType].completedToday) {
-                    habit.completed = true;
-                    if (!this.data.dailyCompletions[today]) this.data.dailyCompletions[today] = [];
-                    if (!this.data.dailyCompletions[today].includes(habit.id)) {
-                        this.data.dailyCompletions[today].push(habit.id);
-                    }
-                }
-            });
-        }
-    
+        // Skip the old habitsData merging since we're using the new unified system
         if (serverData.totalPoints != null) this.data.totalPoints = serverData.totalPoints;
         if (serverData.challengeData) {
             this.data.challenges = { ...this.data.challenges, ...serverData.challengeData };
         }
     
-        // Fix: Properly map your MongoDB scores
+        // Handle assessment scores properly
         if (serverData.fitnessScore !== undefined) {
             this.data.scores.physical = serverData.fitnessScore;
             this.data.scores.mental = serverData.mentalScore;
             this.data.scores.nutrition = serverData.nutritionScore;
             this.data.scores.lifeSkills = serverData.lifeSkillsScore;
             
-            // Handle the large overallScore (scale it down)
             this.data.scores.overall = Math.round((
                 this.data.scores.physical + 
                 this.data.scores.mental + 
@@ -294,7 +280,6 @@ class VivifyUnifiedTracker {
                 this.data.scores.lifeSkills
             ) / 4);
             
-            // Store the leaderboard points separately
             this.data.totalPoints = serverData.overallScore || this.data.totalPoints;
             this.data.totalXP = serverData.overallScore || this.data.totalXP;
                 
