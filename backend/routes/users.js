@@ -140,16 +140,31 @@ router.get('/', async (req, res) => {
           const now = new Date();
           let startDate;
           
-          switch (timeframe) {
+        switch (timeframe) {
             case 'weekly':
-              startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-              break;
+                startDate = new Date();
+                startDate.setDate(startDate.getDate() - 7);
+                startDate.setHours(0, 0, 0, 0); // Start of day 7 days ago
+                break;
             case 'monthly':
               startDate = new Date(now.getFullYear(), now.getMonth(), 1);
               break;
-          }
+        }
+
+        console.log('=== DEBUG TIMEFRAME CALCULATION ===');
+        console.log('Timeframe:', timeframe);
+        console.log('Current time:', now);
+        console.log('Start date:', startDate);
+        console.log('User:', user.username);
+        if (user.activity && user.activity.length > 0) {
+        console.log('Sample activity dates:', user.activity.slice(0, 3).map(a => ({
+            timestamp: a.timestamp,
+            type: a.type,
+            points: a.points
+        })));
+        }
           
-          if (user.activity && Array.isArray(user.activity)) {
+        if (user.activity && Array.isArray(user.activity)) {
             user.activity.forEach(activity => {
               const activityDate = new Date(activity.timestamp);
               if (activityDate >= startDate) {
