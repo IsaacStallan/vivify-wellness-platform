@@ -761,12 +761,45 @@ class VivifyUnifiedTracker {
 
     // CHALLENGE METHODS
 
+    // FIXED joinChallenge method in VivifyUnifiedTracker class
     async joinChallenge(challengeId) {
         const challenge = challenges[challengeId];
-        if (!challenge) return false;
+        if (!challenge) {
+            console.error('Challenge not found:', challengeId);
+            return false;
+        }
         
+        // CRITICAL FIX: Check if already joined (prevent duplicates)
         if (this.data.challenges[challengeId]?.joined) {
+            console.log('Already joined challenge:', challengeId);
             this.notifyCompletion('You are already in this challenge', 'info');
+            return false;
+        }
+
+        // ADDITIONAL CHECK: Look for existing activities to prevent duplicates
+        const existingJoinActivity = this.data.activities.find(activity => 
+            activity.type === 'challenge_joined' && 
+            activity.description?.includes(challenge.name)
+        );
+        
+        if (existingJoinActivity) {
+            console.log('Found existing join activity, preventing duplicate');
+            this.notifyCompletion('You have already joined this challenge', 'info');
+            
+            // Sync local state with what should be reality
+            this.data.challenges[challengeId] = {
+                joined: true,
+                startDate: existingJoinActivity.timestamp,
+                completedDays: [],
+                lastCompletedDate: null,
+                completed: false,
+                streak: 0,
+                totalDays: 0,
+                daysRemaining: challenge.duration,
+                progressPercentage: 0
+            };
+            
+            this.save();
             return false;
         }
 
@@ -783,16 +816,133 @@ class VivifyUnifiedTracker {
             progressPercentage: 0
         };
 
-        // Award join points
+        // Award join points ONCE
         this.data.totalPoints += 25;
         this.data.totalXP += 25;
         
+        // Log activity
         this.logActivity(`Joined ${challenge.name}`, 25, 'challenge_joined', challengeId);
+        
+        // Sync to backend
         await this.syncToBackend(`challenge_${challengeId}`, 25, 'challenge_joined');
         
         this.save();
         this.notifyCompletion(`Challenge joined! Track daily progress to earn rewards`, 'success');
         return true;
+    }
+
+    // Add this method to VivifyUnifiedTracker class for cleaning up duplicates
+    cleanupDuplicateActivities() {
+        console.log('Starting duplicate activity cleanup...');
+        
+        if (!this.data.activities || !Array.isArray(this.data.activities)) {
+            console.log('No activities to clean up');
+            return;
+        }
+        
+        const originalCount = this.data.activities.length;
+        const seenActivities = new Set();
+        const cleanActivities = [];
+        let pointsToSubtract = 0;
+        
+        // Group activities to identify duplicates
+        const activityGroups = {};
+        
+        this.data.activities.forEach((activity, index) => {
+            if (!activity || !activity.type) return;
+            
+            // Create a unique key for challenge join activities
+            let uniqueKey;
+            if (activity.type === 'challenge_joined') {
+                // For challenge joins, use type + challenge name
+                const challengeName = activity.description?.replace('Joined ', '') || activity.name;
+                uniqueKey = `${activity.type}_${challengeName}`;
+            } else if (activity.type === 'challenge_daily' || activity.type === 'challenge_completed') {
+                // For daily/completion, allow multiples but track by challenge + date
+                const date = new Date(activity.timestamp).toDateString();
+                const challengeName = activity.description?.split(' of ')[1] || activity.name;
+                uniqueKey = `${activity.type}_${challengeName}_${date}`;
+            } else {
+                // For other activities, use type + name + date
+                const date = new Date(activity.timestamp).toDateString();
+                uniqueKey = `${activity.type}_${activity.name || activity.description}_${date}`;
+            }
+            
+            if (!activityGroups[uniqueKey]) {
+                activityGroups[uniqueKey] = [];
+            }
+            activityGroups[uniqueKey].push({ activity, index });
+        });
+        
+        // Process each group
+        Object.entries(activityGroups).forEach(([key, group]) => {
+            if (group.length > 1) {
+                console.log(`Found ${group.length} duplicates for: ${key}`);
+                
+                // Keep the earliest one (first timestamp)
+                group.sort((a, b) => new Date(a.activity.timestamp) - new Date(b.activity.timestamp));
+                const keeper = group[0];
+                const duplicates = group.slice(1);
+                
+                // Add the keeper to clean activities
+                cleanActivities.push(keeper.activity);
+                
+                // Calculate points to subtract from duplicates
+                duplicates.forEach(dup => {
+                    const points = dup.activity.points || 0;
+                    pointsToSubtract += points;
+                    console.log(`Removing duplicate: ${dup.activity.description} (-${points} points)`);
+                });
+            } else {
+                // No duplicates, keep the activity
+                cleanActivities.push(group[0].activity);
+            }
+        });
+        
+        // Update the data
+        this.data.activities = cleanActivities;
+        
+        // Subtract the duplicate points
+        if (pointsToSubtract > 0) {
+            this.data.totalPoints = Math.max(0, (this.data.totalPoints || 0) - pointsToSubtract);
+            this.data.totalXP = Math.max(0, (this.data.totalXP || 0) - pointsToSubtract);
+            
+            console.log(`Cleanup complete:
+    - Removed ${originalCount - cleanActivities.length} duplicate activities
+    - Subtracted ${pointsToSubtract} phantom points
+    - New total points: ${this.data.totalPoints}
+    - New activities count: ${cleanActivities.length}`);
+            
+            // Save the cleaned data
+            this.save();
+            
+            // Show notification to user
+            this.notifyCompletion(`Cleaned up ${originalCount - cleanActivities.length} duplicate activities and corrected point totals`, 'success');
+            
+            return {
+                removed: originalCount - cleanActivities.length,
+                pointsSubtracted: pointsToSubtract,
+                newTotal: this.data.totalPoints
+            };
+        } else {
+            console.log('No duplicates found - data is clean');
+            return { removed: 0, pointsSubtracted: 0, newTotal: this.data.totalPoints };
+        }
+    }
+
+    // Add this method to run cleanup automatically on initialize
+    async initializeWithCleanup() {
+        await this.initialize();
+        
+        // Run cleanup once per session to fix any existing duplicates
+        const hasRunCleanup = sessionStorage.getItem(`vivify_cleanup_${this.username}`);
+        if (!hasRunCleanup) {
+            console.log('Running one-time duplicate cleanup...');
+            this.cleanupDuplicateActivities();
+            sessionStorage.setItem(`vivify_cleanup_${this.username}`, 'true');
+        }
+        
+        return this;
     }
 
     // Add daily progress tracking

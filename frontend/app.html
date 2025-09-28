@@ -3148,7 +3148,8 @@
             }
         }
 
-        // Main Initialization
+        // Replace the initialization section in app.html with this corrected version
+        // Main Initialization - FIXED VERSION
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('App initializing...');
             
@@ -3175,11 +3176,13 @@
                     return;
                 }
                 
-                // Initialize unified tracker
+                // Initialize unified tracker WITH CLEANUP
                 appTracker = new VivifyUnifiedTracker();
                 window.vivifyTracker = appTracker;
-                await appTracker.initialize();
-                console.log('appTracker initialized');
+                
+                // CHANGED: Use the new initializeWithCleanup method
+                await appTracker.initializeWithCleanup();
+                console.log('appTracker initialized with cleanup');
                 
                 // Initialize leaderboard if available
                 const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
@@ -3196,11 +3199,147 @@
                 
                 console.log('Unified app initialization complete');
                 
+                // Debug commands for console access
+                window.debugTracker = appTracker;
+                window.debugShowDuplicates = function() {
+                    const activities = appTracker.data.activities || [];
+                    const challengeJoins = activities.filter(a => a.type === 'challenge_joined');
+                    console.log('Challenge join activities:', challengeJoins);
+                    
+                    // Group by challenge name
+                    const groups = {};
+                    challengeJoins.forEach(activity => {
+                        const challengeName = activity.description?.replace('Joined ', '') || 'Unknown';
+                        if (!groups[challengeName]) groups[challengeName] = [];
+                        groups[challengeName].push(activity);
+                    });
+                    
+                    console.log('Grouped by challenge:', groups);
+                    
+                    // Show duplicates
+                    Object.entries(groups).forEach(([name, activities]) => {
+                        if (activities.length > 1) {
+                            console.warn(`DUPLICATE: ${name} joined ${activities.length} times`);
+                            activities.forEach((act, i) => {
+                                console.log(`  ${i + 1}. ${act.timestamp} (+${act.points} points)`);
+                            });
+                        }
+                    });
+                    
+                    return groups;
+                };
+                
             } catch (error) {
                 console.error('Error during initialization:', error);
                 showNotification('Error initializing app. Please refresh the page.', 'error');
             }
         });
+
+        // Add these debug utilities to the global scope for troubleshooting
+        window.fixUserData = async function() {
+            console.log('=== MANUAL USER DATA FIX ===');
+            
+            if (!window.appTracker) {
+                console.error('No appTracker found');
+                return;
+            }
+            
+            const tracker = window.appTracker;
+            const username = tracker.username;
+            
+            console.log(`Fixing data for user: ${username}`);
+            
+            // 1. Clean up duplicates
+            const cleanupResult = tracker.cleanupDuplicateActivities();
+            console.log('Cleanup result:', cleanupResult);
+            
+            // 2. Sync challenge states
+            Object.keys(challenges).forEach(challengeId => {
+                const userChallenge = tracker.data.challenges[challengeId];
+                const joinActivity = tracker.data.activities.find(a => 
+                    a.type === 'challenge_joined' && 
+                    a.description?.includes(challenges[challengeId].name)
+                );
+                
+                if (joinActivity && !userChallenge?.joined) {
+                    console.log(`Syncing challenge state for: ${challengeId}`);
+                    tracker.data.challenges[challengeId] = {
+                        joined: true,
+                        startDate: joinActivity.timestamp,
+                        completedDays: [],
+                        lastCompletedDate: null,
+                        completed: false,
+                        streak: 0,
+                        totalDays: 0,
+                        daysRemaining: challenges[challengeId].duration,
+                        progressPercentage: 0
+                    };
+                }
+            });
+            
+            // 3. Recalculate totals
+            const challengeActivities = tracker.data.activities.filter(a => 
+                a.type === 'challenge_joined' || 
+                a.type === 'challenge_daily' || 
+                a.type === 'challenge_completed'
+            );
+            
+            const challengePoints = challengeActivities.reduce((sum, activity) => 
+                sum + (activity.points || 0), 0
+            );
+            
+            console.log(`Recalculated challenge points: ${challengePoints}`);
+            
+            // 4. Save
+            tracker.save();
+            
+            // 5. Refresh display
+            if (typeof loadTabContent === 'function') {
+                loadTabContent(currentTab);
+            }
+            
+            console.log('=== FIX COMPLETE ===');
+            return {
+                cleanupResult,
+                challengePoints,
+                totalPoints: tracker.data.totalPoints
+            };
+        };
+
+        window.debugLeaderboard = async function() {
+            if (!window.appTracker) {
+                console.error('No appTracker found');
+                return;
+            }
+            
+            console.log('=== LEADERBOARD DEBUG ===');
+            
+            const timeframes = ['weekly', 'monthly', 'alltime'];
+            const results = {};
+            
+            for (const timeframe of timeframes) {
+                try {
+                    console.log(`Fetching ${timeframe} leaderboard...`);
+                    const data = await window.appTracker.getLeaderboardData(timeframe);
+                    
+                    const currentUser = data.world?.find(u => u.username === window.appTracker.username);
+                    results[timeframe] = {
+                        userRank: data.userRank,
+                        userScore: data.userScore,
+                        scoreBreakdown: data.scoreBreakdown,
+                        currentUserInList: currentUser
+                    };
+                    
+                    console.log(`${timeframe.toUpperCase()}:`, results[timeframe]);
+                } catch (error) {
+                    console.error(`Error fetching ${timeframe}:`, error);
+                    results[timeframe] = { error: error.message };
+                }
+            }
+            
+            console.log('=== LEADERBOARD DEBUG COMPLETE ===');
+            return results;
+        };
     </script>
 </body>
 </html>

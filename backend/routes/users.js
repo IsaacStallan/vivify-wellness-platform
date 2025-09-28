@@ -105,7 +105,9 @@ router.put('/update-score', async (req, res) => {
     }
 });
 
-// GET /api/users - Get all users with optional time filtering
+// FIXED date filtering logic in backend/routes/users.js
+// Replace the existing GET /api/users route with this corrected version
+
 router.get('/', async (req, res) => {
     try {
       const { timeframe = 'weekly' } = req.query;
@@ -119,13 +121,10 @@ router.get('/', async (req, res) => {
         
         // For all-time, use stored totals directly
         if (timeframe === 'alltime') {
-          // FIXED: Check multiple sources for habit points
           timeBasedHabitPoints = user.habitPoints || 0;
           
-          // If habitPoints is 0 but overallScore exists, use overallScore as fallback
-          // (for older users like Freeman who have points in overallScore)
+          // If habitPoints is 0 but overallScore exists, calculate habit points
           if (timeBasedHabitPoints === 0 && user.overallScore > 0) {
-            // Subtract assessment scores to get habit points
             const assessmentScore = (user.fitnessScore || 0) + 
                                    (user.mentalScore || 0) + 
                                    (user.nutritionScore || 0) + 
@@ -136,48 +135,59 @@ router.get('/', async (req, res) => {
           
           timeBasedChallengePoints = user.challengeStats?.totalPoints || 0;
         } else {
-          // For weekly/monthly, calculate from activity log
+          // FIXED: For weekly/monthly, calculate from activity log with proper date filtering
           const now = new Date();
           let startDate;
           
-        switch (timeframe) {
+          switch (timeframe) {
             case 'weekly':
-                startDate = new Date();
-                startDate.setDate(startDate.getDate() - 7);
-                startDate.setHours(0, 0, 0, 0); // Start of day 7 days ago
+                // FIXED: Calculate proper start of week (7 days ago from now)
+                startDate = new Date(now);
+                startDate.setDate(now.getDate() - 7);
+                startDate.setHours(0, 0, 0, 0);
                 break;
             case 'monthly':
-              startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-              break;
-        }
+                // Start of current month
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                break;
+          }
 
-        console.log('=== DEBUG TIMEFRAME CALCULATION ===');
-        console.log('Timeframe:', timeframe);
-        console.log('Current time:', now);
-        console.log('Start date:', startDate);
-        console.log('User:', user.username);
-        if (user.activity && user.activity.length > 0) {
-        console.log('Sample activity dates:', user.activity.slice(0, 3).map(a => ({
-            timestamp: a.timestamp,
-            type: a.type,
-            points: a.points
-        })));
-        }
+          console.log(`=== DATE FILTERING DEBUG ===`);
+          console.log(`Timeframe: ${timeframe}`);
+          console.log(`Current time: ${now.toISOString()}`);
+          console.log(`Start date: ${startDate.toISOString()}`);
+          console.log(`User: ${user.username}`);
           
-        if (user.activity && Array.isArray(user.activity)) {
+          if (user.activity && Array.isArray(user.activity)) {
+            console.log(`Total activities: ${user.activity.length}`);
+            
             user.activity.forEach(activity => {
+              if (!activity || !activity.timestamp) return;
+              
               const activityDate = new Date(activity.timestamp);
-              if (activityDate >= startDate) {
+              
+              // FIXED: Only include activities AFTER the start date
+              if (activityDate >= startDate && activityDate <= now) {
+                const points = activity.points || 0;
+                
+                console.log(`Including activity: ${activity.type} on ${activityDate.toISOString()} (+${points})`);
+                
                 if (activity.type === 'habit_completed') {
-                  timeBasedHabitPoints += activity.points || 0;
+                  timeBasedHabitPoints += points;
                 } else if (activity.type === 'challenge_completed' || 
                            activity.type === 'challenge_joined' || 
                            activity.type === 'challenge_daily') {
-                  timeBasedChallengePoints += activity.points || 0;
+                  timeBasedChallengePoints += points;
                 }
+              } else {
+                console.log(`Excluding activity: ${activity.type} on ${activityDate.toISOString()} (outside range)`);
               }
             });
+          } else {
+            console.log('No activity array found for user');
           }
+          
+          console.log(`Final timeframe points - Habits: ${timeBasedHabitPoints}, Challenges: ${timeBasedChallengePoints}`);
         }
         
         // Assessment scores are always current state (not time-based)
@@ -204,6 +214,11 @@ router.get('/', async (req, res) => {
       
       // Sort by score and add rankings
       processedUsers.sort((a, b) => b.score - a.score);
+      
+      console.log(`=== FINAL LEADERBOARD FOR ${timeframe.toUpperCase()} ===`);
+      processedUsers.slice(0, 5).forEach((user, index) => {
+        console.log(`#${index + 1}: ${user.username} - ${user.score} points (A:${user.scoreBreakdown.assessment}, H:${user.scoreBreakdown.habits}, C:${user.scoreBreakdown.challenges})`);
+      });
       
       res.json({
         users: processedUsers,
