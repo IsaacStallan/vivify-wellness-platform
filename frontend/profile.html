@@ -572,6 +572,7 @@
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .action-card:hover {
@@ -672,6 +673,9 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
 
             .profile-container {
                 padding: 5rem 1rem 2rem;
@@ -697,342 +701,8 @@
                 grid-template-columns: 1fr;
             }
         }
-    @media (max-width: 768px) {
-            /* FORCE hide all desktop navigation */
-            nav ul,
-            nav li,
-            .left-nav ul,
-            .right-nav ul,
-            .left-nav li,
-            .right-nav li,
-            .left-nav > ul,
-            .right-nav > ul {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            
-            /* Ensure nav container works properly */
-            nav {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                padding: 1rem !important;
-                flex-wrap: nowrap !important;
-            }
-            
-            /* Keep logo visible */
-            .logo,
-            .logo a {
-                display: block !important;
-                visibility: visible !important;
-                font-size: 1.5rem !important;
-                white-space: nowrap !important;
-            }
-            
-            /* Force show mobile button if it exists */
-            .mobile-menu-btn {
-                display: flex !important;
-                visibility: visible !important;
-                flex-direction: column;
-                background: none;
-                border: none;
-                cursor: pointer;
-                padding: 0.5rem;
-                z-index: 1001;
-            }
-            
-            /* Mobile button styles */
-            .mobile-menu-btn .hamburger {
-                width: 25px;
-                height: 3px;
-                background: #ffffff;
-                margin: 3px 0;
-                transition: 0.3s;
-                border-radius: 2px;
-            }
-            
-            /* Ensure right-nav container shows mobile button */
-            .right-nav {
-                display: flex !important;
-                align-items: center !important;
-                visibility: visible !important;
-            }
-        }
-
-        /* If no mobile button exists, add this emergency button */
-        @media (max-width: 768px) {
-            nav:not(:has(.mobile-menu-btn))::after {
-                content: "☰";
-                position: absolute;
-                right: 1rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: white;
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-        }
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(10, 10, 10, 0.98);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .mobile-menu-content {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: 2rem;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 2rem;
-        }
-
-        .mobile-menu-close {
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .mobile-menu-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .mobile-menu-link {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 500;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-link:hover {
-            color: #f39c12;
-            padding-left: 1rem;
-        }
-
-        .mobile-menu-link.mobile-cta {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000 !important;
-            border-radius: 12px;
-            margin-top: 1rem;
-            text-align: center;
-            font-weight: 600;
-            border: none;
-        }
-
-        .mobile-menu-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 1rem 0;
-        }
-
-        .mobile-menu-btn.active .hamburger:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-
-        .mobile-menu-btn.active .hamburger:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active .hamburger:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-
-        /* Add this to your CSS to ensure mobile elements are hidden on desktop */
-        @media (min-width: 769px) {
-            .mobile-menu,
-            .mobile-menu-btn {
-                display: none !important;
-                visibility: hidden !important;
-            }
-        }
     </style>
-    <script>
-        // Authentication-aware mobile menu
-function createMobileMenu() {
-    // Only create mobile menu on mobile devices
-    if (window.innerWidth > 768) {
-        return; // Exit early on desktop
-    }
-    
-    // Check authentication status
-    const authToken = localStorage.getItem('authToken');
-    const userLoggedIn = localStorage.getItem('userLoggedIn');
-    const isLoggedIn = !!(authToken || userLoggedIn === 'true');
-    const username = localStorage.getItem('username') || 'User';
-    
-    console.log('Auth check:', { authToken, userLoggedIn, isLoggedIn, username }); // Debug log
-    
-    // Create mobile menu if it doesn't exist
-    if (!document.getElementById('mobile-menu')) {
-        const header = document.querySelector('header');
-        const mobileMenu = document.createElement('div');
-        mobileMenu.id = 'mobile-menu';
-        mobileMenu.className = 'mobile-menu';
-        
-        // Generate auth-specific menu items
-        let authMenuItems = '';
-        if (isLoggedIn) {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <div class="mobile-user-info">
-                    <span style="color: #f39c12; font-weight: 600; padding: 0.5rem 0;">Welcome, ${username}!</span>
-                </div>
-                <a href="dashboard.html" class="mobile-menu-link mobile-cta">Dashboard</a>
-                <a href="profile.html" class="mobile-menu-link">Profile</a>
-                <a href="#" class="mobile-menu-link" onclick="handleMobileLogout(event)">Logout</a>
-            `;
-        } else {
-            authMenuItems = `
-                <div class="mobile-menu-divider"></div>
-                <a href="login.html" class="mobile-menu-link">Login</a>
-                <a href="signup.html" class="mobile-menu-link mobile-cta">Start Training</a>
-            `;
-        }
-        
-        mobileMenu.innerHTML = `
-            <div class="mobile-menu-content">
-                <div class="mobile-menu-header">
-                    <div class="logo"><a href="index.html">Vivify</a></div>
-                    <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
-                </div>
-                <div class="mobile-menu-links">
-                    <a href="index.html" class="mobile-menu-link">Home</a>
-                    <a href="index.html#training" class="mobile-menu-link">Training Areas</a>
-                    <a href="habits-tracker.html" class="mobile-menu-link">Habits</a>
-                    <a href="challenges.html" class="mobile-menu-link">Challenges</a>
-                    <a href="about.html" class="mobile-menu-link">About</a>
-                    <a href="community.html" class="mobile-menu-link">Community</a>
-                    ${authMenuItems}
-                </div>
-            </div>
-        `;
-        header.appendChild(mobileMenu);
-    }
-    
-    // Create mobile button if it doesn't exist
-    if (!document.getElementById('mobile-menu-btn')) {
-        const nav = document.querySelector('nav');
-        const rightNav = nav.querySelector('.right-nav') || nav;
-        const mobileBtn = document.createElement('button');
-        mobileBtn.id = 'mobile-menu-btn';
-        mobileBtn.className = 'mobile-menu-btn';
-        mobileBtn.onclick = toggleMobileMenu;
-        mobileBtn.innerHTML = `
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-            <span class="hamburger"></span>
-        `;
-        rightNav.appendChild(mobileBtn);
-    }
-}
-
-function handleMobileLogout(event) {
-    event.preventDefault();
-    if (confirm('Are you sure you want to logout?')) {
-        // Clear all auth data
-        localStorage.clear();
-        
-        // Close mobile menu
-        closeMobileMenu();
-        
-        // Refresh the page to update UI
-        window.location.reload();
-    }
-}
-
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.toggle('active');
-    btn.classList.toggle('active');
-    
-    if (menu.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
-}
-
-function closeMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    
-    menu.classList.remove('active');
-    btn.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Function to update mobile menu when auth state changes
-function updateMobileMenuAuth() {
-    const existingMenu = document.getElementById('mobile-menu');
-    if (existingMenu) {
-        existingMenu.remove();
-    }
-    createMobileMenu();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', createMobileMenu);
-
-// Listen for auth state changes (if you have an auth system that fires events)
-window.addEventListener('authStateChanged', updateMobileMenuAuth);
-
-// Export functions for external use
-window.updateMobileMenuAuth = updateMobileMenuAuth;
-window.handleMobileLogout = handleMobileLogout;
-// Add this at the end of your mobile menu script
-window.addEventListener('resize', function() {
-    if (window.innerWidth > 768) {
-        // Remove mobile elements on desktop
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        
-        if (mobileMenu) mobileMenu.remove();
-        if (mobileBtn) mobileBtn.remove();
-        
-        // Reset body overflow
-        document.body.style.overflow = '';
-    } else if (window.innerWidth <= 768) {
-        // Recreate mobile menu if switching to mobile
-        const existingMenu = document.getElementById('mobile-menu');
-        if (!existingMenu) {
-            createMobileMenu();
-        }
-    }
-});
-        </script>
-<script src="js/vivify-stats.js"></script>
-<script src="js/leaderboard-system.js"></script>
-<script src="js/card-system.js"></script>
+    <script src="js/vivify-unified-tracker.js"></script>
 </head>
 <body>
     <header>
@@ -1042,14 +712,12 @@ window.addEventListener('resize', function() {
                     <a href="index.html">Vivify</a>
                 </div>
                 <ul>
-                    <li><a href="index.html#training">Training Areas</a></li>
-                    <li><a href="index.html#habits">Habits & Challenges</a></li>
+                    <li><a href="app.html">Performance Hub</a></li>
                     <li><a href="about.html">About</a></li>
                 </ul>
             </div>
             <div class="right-nav">
                 <ul>
-                    <li><a href="dashboard.html">Performance Hub</a></li>
                     <li><a href="profile.html" class="active">Profile</a></li>
                     <li><a href="#" id="logoutLink">Logout</a></li>
                 </ul>
@@ -1071,7 +739,7 @@ window.addEventListener('resize', function() {
                     <input type="file" id="profilePictureInput" class="profile-picture-input" accept="image/*">
                 </div>
                 <h1 class="profile-name" id="profileName">Elite Performer</h1>
-                <div class="profile-tagline" id="profileTagline">Building championship habits • Unlocking peak potential</div>
+                <div class="profile-tagline" id="profileTagline">Building championship habits</div>
                 
                 <div class="performance-stats">
                     <div class="stat-item">
@@ -1215,7 +883,7 @@ window.addEventListener('resize', function() {
                 <div class="preference-item">
                     <div class="preference-info">
                         <div class="preference-title">Progress Notifications</div>
-                        <div class="preference-description">Get notified about streak milestones and achievements</div>
+                        <div class="preference-description">Get notified about streak milestones</div>
                     </div>
                     <div class="toggle-switch active" id="progressNotifications" onclick="togglePreference('progressNotifications')"></div>
                 </div>
@@ -1225,13 +893,6 @@ window.addEventListener('resize', function() {
                         <div class="preference-description">Show your progress on community leaderboards</div>
                     </div>
                     <div class="toggle-switch" id="communityLeaderboard" onclick="togglePreference('communityLeaderboard')"></div>
-                </div>
-                <div class="preference-item">
-                    <div class="preference-info">
-                        <div class="preference-title">Training Reminders</div>
-                        <div class="preference-description">Gentle reminders to complete daily training</div>
-                    </div>
-                    <div class="toggle-switch active" id="trainingReminders" onclick="togglePreference('trainingReminders')"></div>
                 </div>
             </div>
 
@@ -1244,35 +905,11 @@ window.addEventListener('resize', function() {
                     </h3>
                 </div>
                 <div class="actions-grid">
-                    <a href="dashboard.html" class="action-card">
+                    <a href="app.html" class="action-card">
                         <div class="action-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
-                        <div class="action-label">View Performance Hub</div>
-                    </a>
-                    <a href="fitness.html" class="action-card">
-                        <div class="action-icon">
-                            <i class="fas fa-dumbbell"></i>
-                        </div>
-                        <div class="action-label">Physical Training</div>
-                    </a>
-                    <a href="nutrition.html" class="action-card">
-                        <div class="action-icon">
-                            <i class="fas fa-apple-alt"></i>
-                        </div>
-                        <div class="action-label">Smart Nutrition</div>
-                    </a>
-                    <a href="mental-health.html" class="action-card">
-                        <div class="action-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="action-label">Focus & Resilience</div>
-                    </a>
-                    <a href="life-mastery.html" class="action-card">
-                        <div class="action-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="action-label">Life Mastery</div>
+                        <div class="action-label">Performance Hub</div>
                     </a>
                     <div class="action-card" onclick="shareProgress()">
                         <div class="action-icon">
@@ -1292,7 +929,7 @@ window.addEventListener('resize', function() {
                     </h3>
                 </div>
                 <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">
-                    Your performance data stays with you. Export, backup, or manage your information.
+                    Your performance data stays with you. Export or manage your information.
                 </p>
                 <div class="control-buttons">
                     <button class="btn btn-primary" onclick="exportData()">
@@ -1316,7 +953,7 @@ window.addEventListener('resize', function() {
     </div>
 
     <script>
-        // Profile management for the new performance-focused approach
+        // Profile management integrated with VivifyUnifiedTracker
         let userProfile = {};
         let userPreferences = {
             dailyChallenges: true,
@@ -1324,70 +961,98 @@ window.addEventListener('resize', function() {
             communityLeaderboard: false,
             trainingReminders: true
         };
+        let tracker = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Check authentication
             const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-            if (!isLoggedIn) {
+            const username = localStorage.getItem('username');
+            
+            if (!isLoggedIn || !username) {
                 window.location.href = 'login.html?redirect=profile';
                 return;
             }
 
+            // Initialize unified tracker
+            if (typeof VivifyUnifiedTracker !== 'undefined') {
+                tracker = new VivifyUnifiedTracker();
+                await tracker.initialize();
+                console.log('Profile connected to unified tracker');
+            } else {
+                console.error('VivifyUnifiedTracker not loaded');
+            }
+
             loadProfileData();
             loadPreferences();
-            loadPerformanceStats();
-            loadActiveHabits();
-            loadAchievements();
+            loadRealPerformanceStats();
+            loadRealActiveHabits();
+            loadRealAchievements();
+            loadRealCommunityRank();
 
             // Handle logout
-            document.getElementById('logoutLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (confirm('Are you sure you want to logout?')) {
-                    localStorage.clear();
-                    window.location.href = 'index.html';
-                }
-            });
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
 
             // Profile picture upload
-            document.getElementById('profilePictureInput').addEventListener('change', handleProfilePictureUpload);
+            const pictureInput = document.getElementById('profilePictureInput');
+            if (pictureInput) {
+                pictureInput.addEventListener('change', handleProfilePictureUpload);
+            }
         });
 
         function loadProfileData() {
-            userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const username = localStorage.getItem('username');
+            const email = localStorage.getItem('userEmail') || '';
+            const createdAt = localStorage.getItem('userCreatedAt');
             
-            if (userProfile.name) {
-                document.getElementById('profileName').textContent = userProfile.name;
-                document.getElementById('displayName').textContent = userProfile.name;
-                document.getElementById('displayEmail').textContent = userProfile.email || '-';
-                
-                // Update year level display
-                const yearLevel = userProfile.yearLevel;
-                if (yearLevel && yearLevel !== 'other') {
-                    document.getElementById('displayYearLevel').textContent = yearLevel === 'uni' ? 'University' : `Year ${yearLevel}`;
-                } else {
-                    document.getElementById('displayYearLevel').textContent = userProfile.customYearLevel || '-';
-                }
-                
-                document.getElementById('displayLocation').textContent = userProfile.location || 'Australia';
-                document.getElementById('memberSince').textContent = userProfile.createdAt ? 
-                    new Date(userProfile.createdAt).toLocaleDateString() : 'Recently';
-
-                // Load saved profile picture
-                const savedProfilePicture = localStorage.getItem('profilePicture');
-                if (savedProfilePicture) {
-                    const profilePictureElement = document.getElementById('profilePicture');
-                    profilePictureElement.innerHTML = `<img src="${savedProfilePicture}" alt="Profile Picture">`;
-                }
-
-                // Update tagline based on progress
-                updateProfileTagline();
+            userProfile = {
+                name: username,
+                email: email,
+                yearLevel: localStorage.getItem('yearLevel') || '',
+                location: localStorage.getItem('userLocation') || 'Australia',
+                school: localStorage.getItem('school') || 'Knox Grammar',
+                createdAt: createdAt
+            };
+            
+            document.getElementById('profileName').textContent = username || 'Elite Performer';
+            document.getElementById('displayName').textContent = username || '-';
+            document.getElementById('displayEmail').textContent = email || '-';
+            
+            const yearLevel = userProfile.yearLevel;
+            if (yearLevel && yearLevel !== 'other') {
+                document.getElementById('displayYearLevel').textContent = 
+                    yearLevel === 'uni' ? 'University' : `Year ${yearLevel}`;
+            } else {
+                document.getElementById('displayYearLevel').textContent = '-';
             }
+            
+            document.getElementById('displayLocation').textContent = userProfile.location;
+            document.getElementById('memberSince').textContent = createdAt ? 
+                new Date(createdAt).toLocaleDateString() : 'Recently';
+
+            const savedProfilePicture = localStorage.getItem('profilePicture');
+            if (savedProfilePicture) {
+                document.getElementById('profilePicture').innerHTML = 
+                    `<img src="${savedProfilePicture}" alt="Profile Picture">`;
+            }
+
+            updateProfileTagline();
         }
 
         function updateProfileTagline() {
-            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-            const overallScore = performanceData.scores?.overall || 0;
-            const streak = performanceData.streaks?.currentStreak || 0;
+            if (!tracker) return;
+            
+            const scores = tracker.data.scores || {};
+            const overallScore = scores.overall || 0;
+            const streak = tracker.calculateCurrentStreak();
             
             let tagline = 'Building championship habits • Unlocking peak potential';
             
@@ -1402,36 +1067,150 @@ window.addEventListener('resize', function() {
             document.getElementById('profileTagline').textContent = tagline;
         }
 
-        function loadPerformanceStats() {
-            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
+        function loadRealPerformanceStats() {
+            if (!tracker) {
+                console.warn('Tracker not initialized');
+                return;
+            }
             
-            // Update performance stats
-            document.getElementById('streakCount').textContent = performanceData.streaks?.currentStreak || 0;
-            document.getElementById('performanceScore').textContent = performanceData.scores?.overall || 0;
+            const dashboardData = tracker.getDashboardData();
             
-            // Calculate habits completed (activities in last 30 days)
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const currentStreak = tracker.calculateCurrentStreak();
+            document.getElementById('streakCount').textContent = currentStreak;
             
-            const recentActivities = (performanceData.activities || []).filter(activity => {
-                return new Date(activity.timestamp) >= thirtyDaysAgo;
-            });
+            const overallScore = Math.round(dashboardData.scores.overall || 0);
+            document.getElementById('performanceScore').textContent = overallScore;
             
-            document.getElementById('habitsCompleted').textContent = recentActivities.length;
+            const habitsData = tracker.getHabitsPageData();
+            const totalHabitsCompleted = habitsData.stats.completedToday || 0;
+            document.getElementById('habitsCompleted').textContent = totalHabitsCompleted;
             
-            // Challenges won (placeholder - could be calculated from achievements)
-            const achievements = performanceData.achievements || {};
-            const challengesWon = Object.keys(achievements).filter(key => 
-                key.includes('challenge') || key.includes('streak')
-            ).length;
-            document.getElementById('challengesWon').textContent = challengesWon;
+            const challengesData = tracker.getChallengesData();
+            const challengesCompleted = challengesData.stats.completed || 0;
+            document.getElementById('challengesWon').textContent = challengesCompleted;
 
-            // Update performance tier
-            updatePerformanceTier(performanceData.scores?.overall || 0);
+            updatePerformanceTier(overallScore);
+        }
+
+        function loadRealActiveHabits() {
+            if (!tracker) return;
             
-            // Update community rank (simulated)
-            const rank = Math.max(1, Math.floor(Math.random() * 1000) + 1);
-            document.getElementById('communityRank').textContent = `#${rank}`;
+            const habitsData = tracker.getHabitsPageData();
+            const habits = habitsData.habits || [];
+            
+            const container = document.getElementById('activeHabits');
+            
+            if (habits.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
+                        <p>No active habits yet. <a href="app.html#habits" style="color: #f39c12;">Start tracking habits</a></p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const iconMap = {
+                'Physical Performance': 'fas fa-dumbbell',
+                'Mental Focus': 'fas fa-brain',
+                'Performance Nutrition': 'fas fa-apple-alt',
+                'Excellence Habits': 'fas fa-graduation-cap'
+            };
+            
+            container.innerHTML = habits.slice(0, 8).map(habit => `
+                <div class="habit-item">
+                    <div class="habit-header">
+                        <div class="habit-icon">
+                            <i class="${iconMap[habit.category] || 'fas fa-check'}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="habit-name">${habit.name}</div>
+                            <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">${habit.category}</div>
+                        </div>
+                        <div class="habit-streak">${habit.streak || 0} days</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadRealAchievements() {
+            if (!tracker) return;
+            
+            const streak = tracker.calculateCurrentStreak();
+            const scores = tracker.data.scores || {};
+            const challengesCompleted = Object.values(tracker.data.challenges || {})
+                .filter(c => c.completed).length;
+            
+            const achievementsList = [
+                { 
+                    id: 'first_week', 
+                    name: 'First Week', 
+                    icon: 'fas fa-calendar-week',
+                    earned: streak >= 7 
+                },
+                { 
+                    id: 'fitness_streak', 
+                    name: 'Fitness Focus', 
+                    icon: 'fas fa-dumbbell',
+                    earned: scores.physical >= 70
+                },
+                { 
+                    id: 'brain_power', 
+                    name: 'Brain Power', 
+                    icon: 'fas fa-brain',
+                    earned: scores.mental >= 70
+                },
+                { 
+                    id: 'nutrition_master', 
+                    name: 'Fuel Master', 
+                    icon: 'fas fa-apple-alt',
+                    earned: scores.nutrition >= 70
+                },
+                { 
+                    id: 'life_skills', 
+                    name: 'Life Skills', 
+                    icon: 'fas fa-graduation-cap',
+                    earned: scores.lifeSkills >= 70
+                },
+                { 
+                    id: 'challenge_winner', 
+                    name: 'Challenge Winner', 
+                    icon: 'fas fa-trophy',
+                    earned: challengesCompleted >= 1
+                },
+                { 
+                    id: 'consistency_king', 
+                    name: 'Consistency', 
+                    icon: 'fas fa-fire',
+                    earned: streak >= 21
+                },
+                { 
+                    id: 'elite_performer', 
+                    name: 'Elite Status', 
+                    icon: 'fas fa-crown',
+                    earned: scores.overall >= 90
+                }
+            ];
+
+            const container = document.getElementById('achievementsList');
+            container.innerHTML = achievementsList.map(achievement => `
+                <div class="achievement-badge ${achievement.earned ? 'earned' : ''}">
+                    <i class="${achievement.icon} achievement-icon"></i>
+                    <div class="achievement-name">${achievement.name}</div>
+                </div>
+            `).join('');
+        }
+
+        async function loadRealCommunityRank() {
+            if (!tracker) return;
+            
+            try {
+                const leaderboardData = await tracker.getLeaderboardData('alltime');
+                const rank = leaderboardData.userRank || '?';
+                document.getElementById('communityRank').textContent = `#${rank}`;
+            } catch (error) {
+                console.error('Failed to load community rank:', error);
+                document.getElementById('communityRank').textContent = '#-';
+            }
         }
 
         function updatePerformanceTier(score) {
@@ -1460,64 +1239,10 @@ window.addEventListener('resize', function() {
             tierElement.style.color = color;
         }
 
-        function loadActiveHabits() {
-            // Load current daily habits from dashboard
-            const dailyHabits = [
-                { name: 'Physical Training', icon: 'fas fa-dumbbell', streak: 5, category: 'physical' },
-                { name: 'Focus Sessions', icon: 'fas fa-brain', streak: 3, category: 'mental' },
-                { name: 'Nutrition Goals', icon: 'fas fa-apple-alt', streak: 7, category: 'nutrition' },
-                { name: 'Life Skills', icon: 'fas fa-graduation-cap', streak: 2, category: 'life' }
-            ];
-
-            const container = document.getElementById('activeHabits');
-            container.innerHTML = dailyHabits.map(habit => `
-                <div class="habit-item">
-                    <div class="habit-header">
-                        <div class="habit-icon">
-                            <i class="${habit.icon}"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div class="habit-name">${habit.name}</div>
-                            <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Daily practice</div>
-                        </div>
-                        <div class="habit-streak">${habit.streak} days</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function loadAchievements() {
-            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-            const achievements = performanceData.achievements || {};
-            
-            const achievementsList = [
-                { id: 'first_week', name: 'First Week', icon: 'fas fa-calendar-week', description: 'Complete 7 days of training' },
-                { id: 'fitness_streak', name: 'Fitness Focus', icon: 'fas fa-dumbbell', description: '10 workouts completed' },
-                { id: 'brain_power', name: 'Brain Power', icon: 'fas fa-brain', description: '5 focus sessions' },
-                { id: 'nutrition_master', name: 'Fuel Master', icon: 'fas fa-apple-alt', description: 'Track nutrition for 7 days' },
-                { id: 'life_skills', name: 'Life Skills', icon: 'fas fa-graduation-cap', description: 'Complete 3 life lessons' },
-                { id: 'challenge_winner', name: 'Challenge Winner', icon: 'fas fa-trophy', description: 'Win community challenge' },
-                { id: 'consistency_king', name: 'Consistency', icon: 'fas fa-fire', description: '21 day streak' },
-                { id: 'elite_performer', name: 'Elite Status', icon: 'fas fa-crown', description: '90% performance score' }
-            ];
-
-            const container = document.getElementById('achievementsList');
-            container.innerHTML = achievementsList.map(achievement => {
-                const earned = achievements[achievement.id] || Math.random() > 0.6; // Some random achievements for demo
-                return `
-                    <div class="achievement-badge ${earned ? 'earned' : ''}" title="${achievement.description}">
-                        <i class="${achievement.icon} achievement-icon"></i>
-                        <div class="achievement-name">${achievement.name}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
         function loadPreferences() {
-            const savedPreferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
-            userPreferences = { ...userPreferences, ...savedPreferences };
+            const saved = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            userPreferences = { ...userPreferences, ...saved };
             
-            // Update toggle switches
             Object.keys(userPreferences).forEach(key => {
                 const toggle = document.getElementById(key);
                 if (toggle) {
@@ -1540,7 +1265,6 @@ window.addEventListener('resize', function() {
                 info.style.display = 'none';
                 edit.classList.add('active');
                 
-                // Pre-fill form with current data
                 if (section === 'personal') {
                     document.getElementById('editName').value = userProfile.name || '';
                     document.getElementById('editEmail').value = userProfile.email || '';
@@ -1569,16 +1293,16 @@ window.addEventListener('resize', function() {
                 return;
             }
             
-            // Update user profile
             userProfile.name = name;
             userProfile.email = email;
             userProfile.yearLevel = yearLevel;
             userProfile.location = location;
             
-            // Save to localStorage
-            localStorage.setItem('userProfile', JSON.stringify(userProfile));
+            localStorage.setItem('username', name);
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('yearLevel', yearLevel);
+            localStorage.setItem('userLocation', location);
             
-            // Update display
             loadProfileData();
             cancelEdit('personal');
             
@@ -1597,7 +1321,6 @@ window.addEventListener('resize', function() {
                 userPreferences[preferenceId] = true;
             }
             
-            // Save preferences
             localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
         }
 
@@ -1605,13 +1328,11 @@ window.addEventListener('resize', function() {
             const file = event.target.files[0];
             if (!file) return;
             
-            // Check file type
             if (!file.type.startsWith('image/')) {
                 alert('Please select an image file');
                 return;
             }
             
-            // Check file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 alert('Image must be smaller than 5MB');
                 return;
@@ -1620,44 +1341,34 @@ window.addEventListener('resize', function() {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const imageData = e.target.result;
-                
-                // Update profile picture display
-                const profilePictureElement = document.getElementById('profilePicture');
-                profilePictureElement.innerHTML = `<img src="${imageData}" alt="Profile Picture">`;
-                
-                // Save to localStorage
+                document.getElementById('profilePicture').innerHTML = 
+                    `<img src="${imageData}" alt="Profile Picture">`;
                 localStorage.setItem('profilePicture', imageData);
-                
                 showNotification('Profile picture updated!');
             };
             reader.readAsDataURL(file);
         }
 
         function shareProgress() {
-            const performanceData = JSON.parse(localStorage.getItem('performanceData') || '{}');
-            const stats = {
-                name: userProfile.name || 'Anonymous Performer',
-                streak: performanceData.streaks?.currentStreak || 0,
-                score: performanceData.scores?.overall || 0,
-                habits: (performanceData.activities || []).length
-            };
+            if (!tracker) return;
             
-            const shareText = `I'm building elite habits with Vivify! 🚀\n` +
-                            `📊 Performance Score: ${stats.score}%\n` +
-                            `🔥 Current Streak: ${stats.streak} days\n` +
-                            `✅ Habits Tracked: ${stats.habits}\n\n` +
-                            `Join me in building championship habits! #VivifyPerformance`;
+            const streak = tracker.calculateCurrentStreak();
+            const score = Math.round(tracker.data.scores?.overall || 0);
+            const habits = (tracker.data.activities || []).length;
+            
+            const shareText = `I'm building elite habits with Vivify!\n` +
+                            `Performance Score: ${score}%\n` +
+                            `Current Streak: ${streak} days\n` +
+                            `Habits Tracked: ${habits}`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'My Vivify Performance Progress',
+                    title: 'My Vivify Performance',
                     text: shareText
                 });
             } else {
                 navigator.clipboard.writeText(shareText).then(() => {
-                    showNotification('Progress copied to clipboard! Share it with friends.');
-                }).catch(() => {
-                    alert('Share text: ' + shareText);
+                    showNotification('Progress copied to clipboard!');
                 });
             }
         }
@@ -1665,10 +1376,10 @@ window.addEventListener('resize', function() {
         function exportData() {
             const allData = {
                 profile: userProfile,
-                performanceData: JSON.parse(localStorage.getItem('performanceData') || '{}'),
+                trackerData: tracker ? tracker.data : {},
                 preferences: userPreferences,
                 exportDate: new Date().toISOString(),
-                version: '2.0'
+                version: '3.0-unified'
             };
             
             const dataStr = JSON.stringify(allData, null, 2);
@@ -1677,44 +1388,50 @@ window.addEventListener('resize', function() {
             
             const link = document.createElement('a');
             link.href = url;
-            link.download = `vivify-performance-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.download = `vivify-data-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
             URL.revokeObjectURL(url);
-            showNotification('Performance data exported successfully!');
+            showNotification('Data exported successfully!');
         }
 
         function backupProgress() {
-            // In a real app, this would sync to cloud storage
             const backup = {
                 profile: userProfile,
-                performanceData: JSON.parse(localStorage.getItem('performanceData') || '{}'),
+                trackerData: tracker ? tracker.data : {},
                 preferences: userPreferences,
                 backupDate: new Date().toISOString()
             };
             
             localStorage.setItem('vivifyBackup', JSON.stringify(backup));
-            showNotification('Progress backed up locally! Cloud sync coming soon.');
+            showNotification('Progress backed up locally!');
         }
 
         function resetProgress() {
-            if (confirm('Are you sure you want to reset all your performance progress? This cannot be undone.')) {
-                if (confirm('This will delete all your habits, streaks, and achievements. Are you absolutely sure?')) {
-                    // Keep profile but reset performance data
-                    localStorage.removeItem('performanceData');
-                    
-                    // Reset stats display
-                    document.getElementById('streakCount').textContent = '0';
-                    document.getElementById('performanceScore').textContent = '0';
-                    document.getElementById('habitsCompleted').textContent = '0';
-                    document.getElementById('challengesWon').textContent = '0';
-                    
-                    // Reload achievements
-                    loadAchievements();
-                    
-                    showNotification('Progress reset complete. Time to start your new journey!');
-                }
+            if (!confirm('Reset all progress? This cannot be undone.')) return;
+            if (!confirm('This will delete habits, streaks, and achievements. Sure?')) return;
+            
+            if (tracker) {
+                tracker.data = {
+                    habits: tracker.data.habits.map(h => ({...h, completed: false, streak: 0})),
+                    customHabits: [],
+                    challenges: {},
+                    scores: { physical: 0, mental: 0, nutrition: 0, lifeSkills: 0, overall: 0 },
+                    dailyCompletions: {},
+                    streaks: {},
+                    totalPoints: 0,
+                    totalXP: 0,
+                    activities: [],
+                    achievements: {},
+                    lastActiveDate: new Date().toDateString()
+                };
+                tracker.save();
             }
+            
+            localStorage.removeItem('performanceData');
+            localStorage.removeItem('habitsData');
+            
+            location.reload();
         }
 
         function showNotification(message, type = 'success') {
@@ -1749,5 +1466,5 @@ window.addEventListener('resize', function() {
             }, 4000);
         }
     </script>
-<script src="js/flexible-mobile-nav.js"></script> </body>
+</body>
 </html>
