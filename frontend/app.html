@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- Add PWA status bar styling -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Vivify - Performance Hub</title>
     
     <!-- Fonts & Icons -->
@@ -43,7 +46,6 @@
         header {
             position: fixed;
             top: 0;
-            top: env(safe-area-inset-top); /* iOS safe area */
             left: 0;
             right: 0;
             width: 100%;
@@ -51,12 +53,10 @@
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
+            transition: all 0.3s ease;
+            
+            /* iOS PWA safe area support */
             padding-top: env(safe-area-inset-top);
-        }
-
-        /* Adjust app container to account for header + safe area */
-        .app-container {
-            padding-top: calc(100px + env(safe-area-inset-top));
         }
 
         nav {
@@ -116,7 +116,7 @@
         .app-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 100px 2rem 2rem;
+            padding: calc(100px + env(safe-area-inset-top)) 2rem 2rem;
         }
 
         /* Tab Navigation */
@@ -1412,7 +1412,7 @@
             }
             
             .app-container {
-                padding: 100px 1rem 2rem;
+                padding: calc(80px + env(safe-area-inset-top)) 1rem 2rem;
             }
 
             .app-tabs {
