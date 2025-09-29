@@ -415,20 +415,163 @@ router.get('/leaderboard', async (req, res) => {
     }
 });
 
-// GET /api/users/profile/:username - Get user profile
+// PUT /api/users/profile - Update user profile information
+router.put('/profile', async (req, res) => {
+    try {
+        const { username, updates } = req.body;
+        
+        if (!username) {
+            return res.status(400).json({ error: 'Username required' });
+        }
+        
+        // Validate and sanitize updates
+        const allowedUpdates = {
+            displayName: updates.displayName,
+            email: updates.email,
+            yearLevel: updates.yearLevel,
+            location: updates.location,
+            school: updates.school,
+            bio: updates.bio
+        };
+        
+        // Remove undefined values
+        Object.keys(allowedUpdates).forEach(key => 
+            allowedUpdates[key] === undefined && delete allowedUpdates[key]
+        );
+        
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { $set: allowedUpdates },
+            { new: true, runValidators: true }
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        console.log(`Profile updated for ${username}:`, allowedUpdates);
+        
+        res.json({
+            success: true,
+            user: {
+                username: updatedUser.username,
+                displayName: updatedUser.displayName,
+                email: updatedUser.email,
+                yearLevel: updatedUser.yearLevel,
+                location: updatedUser.location,
+                school: updatedUser.school
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+// PUT /api/users/preferences - Update user preferences
+router.put('/preferences', async (req, res) => {
+    try {
+        const { username, preferences } = req.body;
+        
+        if (!username) {
+            return res.status(400).json({ error: 'Username required' });
+        }
+        
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { $set: { preferences: preferences } },
+            { new: true }
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        console.log(`Preferences updated for ${username}`);
+        
+        res.json({
+            success: true,
+            preferences: updatedUser.preferences
+        });
+        
+    } catch (error) {
+        console.error('Error updating preferences:', error);
+        res.status(500).json({ error: 'Failed to update preferences' });
+    }
+});
+
+// POST /api/users/achievements/unlock - Unlock an achievement permanently
+router.post('/achievements/unlock', async (req, res) => {
+    try {
+        const { username, achievementId } = req.body;
+        
+        if (!username || !achievementId) {
+            return res.status(400).json({ error: 'Username and achievementId required' });
+        }
+        
+        const user = await User.findOne({ username: username });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        // Check if achievement already unlocked
+        const existingAchievements = user.achievements || [];
+        const alreadyUnlocked = existingAchievements.some(a => a.id === achievementId);
+        
+        if (alreadyUnlocked) {
+            return res.json({ success: true, message: 'Achievement already unlocked' });
+        }
+        
+        // Add achievement
+        const achievement = {
+            id: achievementId,
+            unlockedAt: new Date()
+        };
+        
+        await User.findOneAndUpdate(
+            { username: username },
+            { $push: { achievements: achievement } },
+            { new: true }
+        );
+        
+        console.log(`Achievement unlocked for ${username}: ${achievementId}`);
+        
+        res.json({
+            success: true,
+            achievement: achievement
+        });
+        
+    } catch (error) {
+        console.error('Error unlocking achievement:', error);
+        res.status(500).json({ error: 'Failed to unlock achievement' });
+    }
+});
+
+// GET /api/users/profile/:username - Get full profile data
 router.get('/profile/:username', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username })
-            .select('-password'); // Don't send password
+            .select('-password');
             
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        res.json(user);
+        res.json({
+            username: user.username,
+            displayName: user.displayName || user.username,
+            email: user.email,
+            yearLevel: user.yearLevel,
+            location: user.location,
+            school: user.school,
+            preferences: user.preferences || {},
+            achievements: user.achievements || [],
+            createdAt: user.createdAt
+        });
         
     } catch (error) {
-        console.error('Error fetching user profile:', error);
+        console.error('Error fetching profile:', error);
         res.status(500).json({ error: 'Failed to fetch profile' });
     }
 });

@@ -2,8 +2,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const mongoose = require('mongoose');
+
 const userSchema = new mongoose.Schema({
-    // EXISTING AUTHENTICATION FIELDS - KEEP AS IS
+    // AUTHENTICATION FIELDS
     username: {
         type: String,
         required: true,
@@ -39,7 +41,11 @@ const userSchema = new mongoose.Schema({
         default: 'student'
     },
     
-    // EXISTING PROFILE - KEEP AS IS
+    // PROFILE FIELDS (enhanced for profile page)
+    displayName: { type: String },
+    location: { type: String },
+    bio: { type: String },
+    
     profile: {
         firstName: String,
         lastName: String,
@@ -53,7 +59,21 @@ const userSchema = new mongoose.Schema({
         }
     },
     
-    // EXISTING SCORING FIELDS - KEEP AS IS
+    // USER PREFERENCES (for profile page settings)
+    preferences: {
+        dailyChallenges: { type: Boolean, default: true },
+        progressNotifications: { type: Boolean, default: true },
+        communityLeaderboard: { type: Boolean, default: false },
+        trainingReminders: { type: Boolean, default: true }
+    },
+    
+    // ACHIEVEMENTS (permanent unlocks)
+    achievements: [{
+        id: String,
+        unlockedAt: Date
+    }],
+    
+    // SCORING FIELDS
     overallScore: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     habitStreak: { type: Number, default: 0 },
@@ -64,23 +84,16 @@ const userSchema = new mongoose.Schema({
     habitPoints: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
     longestStreak: { type: Number, default: 0 },
-    achievements: [String],
     
-    // NEW: Activity tracking for time-based leaderboards
+    // ACTIVITY TRACKING (for time-based leaderboards)
     activity: [{
         type: {
             type: String,
             required: true,
-            enum: ['habit_completed', 'challenge_joined', 'challenge_completed', 'assessment_completed']
+            enum: ['habit_completed', 'challenge_joined', 'challenge_daily', 'challenge_completed', 'assessment_completed']
         },
-        habitId: {
-            type: String,
-            required: function() { return this.type === 'habit_completed'; }
-        },
-        challengeId: {
-            type: String,
-            required: function() { return this.type.includes('challenge'); }
-        },
+        habitId: String,
+        challengeId: String,
         points: {
             type: Number,
             required: true,
@@ -97,9 +110,8 @@ const userSchema = new mongoose.Schema({
         }
     }],
 
-    // NEW: ENHANCED HABITS DATA for Daily Tracking
+    // HABITS DATA (daily tracking)
     habitsData: {
-        // Daily habit tracking (0-100 scale for progress bars)
         sleep: { 
             value: { type: Number, default: 0, min: 0, max: 100 },
             lastUpdated: Date,
@@ -125,7 +137,6 @@ const userSchema = new mongoose.Schema({
             lastUpdated: Date,
             completedToday: { type: Boolean, default: false }
         },
-        // Track which habits have generated cards
         cardsGenerated: {
             sleep: { type: Boolean, default: false },
             exercise: { type: Boolean, default: false },
@@ -135,7 +146,7 @@ const userSchema = new mongoose.Schema({
         }
     },
     
-    // EXISTING CHALLENGE STATS - KEEP AS IS
+    // CHALLENGE STATS
     userChallenges: { type: Object, default: {} },
     challengeStats: {
         active: { type: Number, default: 0 },
@@ -143,35 +154,23 @@ const userSchema = new mongoose.Schema({
         totalPoints: { type: Number, default: 0 }
     },
     
-    // NEW: ENHANCED CHALLENGE DATA with Card Generation
     challengeData: {
         type: mongoose.Schema.Types.Mixed,
-        default: {},
-        // Structure: {
-        //   challengeId: {
-        //     progress: Number,
-        //     completed: Boolean,
-        //     completedAt: Date,
-        //     cardGenerated: Boolean
-        //   }
-        // }
+        default: {}
     },
 
-    // ENHANCED CARD BATTLE SYSTEM (combining your fields with card storage)
+    // CARD BATTLE SYSTEM
     cardBattleData: {
-        // XP and Battle Level (separate from existing level)
         battleXP: { type: Number, default: 0 },
         battleLevel: { type: Number, default: 1 },
         battleTrophies: { type: Number, default: 0 },
         
-        // Battle Statistics
         totalBattles: { type: Number, default: 0 },
         battlesWon: { type: Number, default: 0 },
         battlesLost: { type: Number, default: 0 },
         winStreak: { type: Number, default: 0 },
         longestWinStreak: { type: Number, default: 0 },
         
-        // NEW: Card Collection (actual cards stored here)
         cards: [{
             id: String,
             name: String,
@@ -188,10 +187,9 @@ const userSchema = new mongoose.Schema({
                 type: String, 
                 enum: ['habit', 'challenge', 'battle', 'special'] 
             },
-            sourceId: String // e.g., 'sleep', 'challenge_7day'
+            sourceId: String
         }],
         
-        // Card Collection Stats
         totalCardsUnlocked: { type: Number, default: 0 },
         cardsByRarity: {
             common: { type: Number, default: 0 },
@@ -201,19 +199,16 @@ const userSchema = new mongoose.Schema({
             legendary: { type: Number, default: 0 }
         },
         
-        // Active Deck (stores card IDs)
         activeDeck: {
             deckName: { type: String, default: 'My Deck' },
             cardIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Card' }],
             lastUpdated: { type: Date, default: Date.now }
         },
         
-        // Season/Ranking Data
         currentSeason: { type: String, default: 'Season_1' },
         seasonRank: { type: Number, default: 0 },
         peakRank: { type: Number, default: 0 },
         
-        // Verification Settings
         verificationLevel: {
             type: String,
             enum: ['basic', 'verified', 'premium'],
@@ -221,12 +216,11 @@ const userSchema = new mongoose.Schema({
         },
         parentVerificationEnabled: { type: Boolean, default: false },
         
-        // Timestamps
         lastBattleDate: Date,
         lastCardGenerated: Date
     },
 
-    // EXISTING FITNESS METRICS - KEEP AS IS
+    // FITNESS METRICS
     fitnessMetrics: {
         totalWorkouts: { type: Number, default: 0 },
         thisWeekWorkouts: { type: Number, default: 0 },
@@ -238,7 +232,7 @@ const userSchema = new mongoose.Schema({
         lastUpdated: Date
     },
     
-    // EXISTING PERFORMANCE DATA - KEEP AS IS
+    // PERFORMANCE DATA
     performanceData: {
         hasCompletedBaseline: {
             type: Boolean,
@@ -311,7 +305,7 @@ const userSchema = new mongoose.Schema({
         badges: [String]
     },
     
-    // EXISTING STATUS FIELDS - KEEP AS IS
+    // STATUS FIELDS
     isActive: {
         type: Boolean,
         default: true
@@ -321,8 +315,17 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     lastLogin: Date,
+    lastActive: Date,
     loginCount: { type: Number, default: 0 }
 }, { timestamps: true });
+
+// Index for faster queries
+userSchema.index({ username: 1 });
+userSchema.index({ email: 1 });
+userSchema.index({ overallScore: -1 });
+userSchema.index({ 'activity.timestamp': -1 });
+
+module.exports = mongoose.model('User', userSchema);
 
 // Virtual for card battle win rate
 userSchema.virtual('battleWinRate').get(function() {

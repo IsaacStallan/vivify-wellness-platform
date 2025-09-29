@@ -964,7 +964,6 @@
         let tracker = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
-            // Check authentication
             const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
             const username = localStorage.getItem('username');
             
@@ -973,20 +972,18 @@
                 return;
             }
 
-            // Initialize unified tracker
             if (typeof VivifyUnifiedTracker !== 'undefined') {
                 tracker = new VivifyUnifiedTracker();
                 await tracker.initialize();
                 console.log('Profile connected to unified tracker');
-            } else {
-                console.error('VivifyUnifiedTracker not loaded');
             }
 
-            loadProfileData();
-            loadPreferences();
+            // Load from backend instead of localStorage
+            await loadProfileData();
+            await loadPreferences();
             loadRealPerformanceStats();
             loadRealActiveHabits();
-            loadRealAchievements();
+            await loadRealAchievements();  // Now loads from backend
             loadRealCommunityRank();
 
             // Handle logout
@@ -1008,43 +1005,248 @@
             }
         });
 
-        function loadProfileData() {
+        async function loadProfileData() {
             const username = localStorage.getItem('username');
-            const email = localStorage.getItem('userEmail') || '';
-            const createdAt = localStorage.getItem('userCreatedAt');
             
-            userProfile = {
-                name: username,
-                email: email,
-                yearLevel: localStorage.getItem('yearLevel') || '',
-                location: localStorage.getItem('userLocation') || 'Australia',
-                school: localStorage.getItem('school') || 'Knox Grammar',
-                createdAt: createdAt
-            };
+            try {
+                // Fetch from backend instead of localStorage
+                const response = await fetch(`https://vivify-backend.onrender.com/api/users/profile/${username}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Failed to load profile:', data.error);
+                    return;
+                }
+                
+                userProfile = data;
+                
+                document.getElementById('profileName').textContent = data.displayName || username;
+                document.getElementById('displayName').textContent = data.displayName || username;
+                document.getElementById('displayEmail').textContent = data.email || '-';
+                
+                const yearLevel = data.yearLevel;
+                if (yearLevel && yearLevel !== 'other') {
+                    document.getElementById('displayYearLevel').textContent = 
+                        yearLevel === 'uni' ? 'University' : `Year ${yearLevel}`;
+                } else {
+                    document.getElementById('displayYearLevel').textContent = '-';
+                }
+                
+                document.getElementById('displayLocation').textContent = data.location || 'Australia';
+                document.getElementById('memberSince').textContent = data.createdAt ? 
+                    new Date(data.createdAt).toLocaleDateString() : 'Recently';
+
+                // Load profile picture from localStorage (since images are too big for MongoDB)
+                const savedProfilePicture = localStorage.getItem('profilePicture');
+                if (savedProfilePicture) {
+                    document.getElementById('profilePicture').innerHTML = 
+                        `<img src="${savedProfilePicture}" alt="Profile Picture">`;
+                }
+
+                updateProfileTagline();
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function savePersonalInfo() {
+            const name = document.getElementById('editName').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const yearLevel = document.getElementById('editYearLevel').value;
+            const location = document.getElementById('editLocation').value.trim();
             
-            document.getElementById('profileName').textContent = username || 'Elite Performer';
-            document.getElementById('displayName').textContent = username || '-';
-            document.getElementById('displayEmail').textContent = email || '-';
+            if (!name) {
+                alert('Display name is required');
+                return;
+            }
             
-            const yearLevel = userProfile.yearLevel;
-            if (yearLevel && yearLevel !== 'other') {
-                document.getElementById('displayYearLevel').textContent = 
-                    yearLevel === 'uni' ? 'University' : `Year ${yearLevel}`;
+            const username = localStorage.getItem('username');
+            
+            try {
+                const response = await fetch('https://vivify-backend.onrender.com/api/users/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        updates: {
+                            displayName: name,
+                            email: email,
+                            yearLevel: yearLevel,
+                            location: location
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update localStorage cache
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('yearLevel', yearLevel);
+                    localStorage.setItem('userLocation', location);
+                    
+                    await loadProfileData();
+                    cancelEdit('personal');
+                    showNotification('Profile updated successfully!');
+                } else {
+                    showNotification('Failed to update profile: ' + data.error, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showNotification('Error saving profile. Please try again.', 'error');
+            }
+        }
+
+        async function togglePreference(preferenceId) {
+            const toggle = document.getElementById(preferenceId);
+            const isActive = toggle.classList.contains('active');
+            
+            // Toggle UI immediately for responsiveness
+            if (isActive) {
+                toggle.classList.remove('active');
+                userPreferences[preferenceId] = false;
             } else {
-                document.getElementById('displayYearLevel').textContent = '-';
+                toggle.classList.add('active');
+                userPreferences[preferenceId] = true;
             }
             
-            document.getElementById('displayLocation').textContent = userProfile.location;
-            document.getElementById('memberSince').textContent = createdAt ? 
-                new Date(createdAt).toLocaleDateString() : 'Recently';
-
-            const savedProfilePicture = localStorage.getItem('profilePicture');
-            if (savedProfilePicture) {
-                document.getElementById('profilePicture').innerHTML = 
-                    `<img src="${savedProfilePicture}" alt="Profile Picture">`;
+            const username = localStorage.getItem('username');
+            
+            try {
+                const response = await fetch('https://vivify-backend.onrender.com/api/users/preferences', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        preferences: userPreferences
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update localStorage cache
+                    localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+                } else {
+                    // Revert UI if save failed
+                    toggle.classList.toggle('active');
+                    showNotification('Failed to save preference', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error saving preference:', error);
+                toggle.classList.toggle('active');
+                showNotification('Error saving preference', 'error');
             }
+        }
 
-            updateProfileTagline();
+        async function loadPreferences() {
+            const username = localStorage.getItem('username');
+            
+            try {
+                const response = await fetch(`https://vivify-backend.onrender.com/api/users/profile/${username}`);
+                const data = await response.json();
+                
+                if (data.preferences) {
+                    userPreferences = data.preferences;
+                    
+                    Object.keys(userPreferences).forEach(key => {
+                        const toggle = document.getElementById(key);
+                        if (toggle) {
+                            if (userPreferences[key]) {
+                                toggle.classList.add('active');
+                            } else {
+                                toggle.classList.remove('active');
+                            }
+                        }
+                    });
+                    
+                    // Cache in localStorage
+                    localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+                }
+                
+            } catch (error) {
+                console.error('Error loading preferences:', error);
+            }
+        }
+
+        async function checkAndUnlockAchievements() {
+            if (!tracker) return;
+            
+            const username = localStorage.getItem('username');
+            const streak = tracker.calculateCurrentStreak();
+            const scores = tracker.data.scores || {};
+            const challengesCompleted = Object.values(tracker.data.challenges || {})
+                .filter(c => c.completed).length;
+            
+            const achievementConditions = [
+                { id: 'first_week', condition: streak >= 7 },
+                { id: 'fitness_streak', condition: scores.physical >= 70 },
+                { id: 'brain_power', condition: scores.mental >= 70 },
+                { id: 'nutrition_master', condition: scores.nutrition >= 70 },
+                { id: 'life_skills', condition: scores.lifeSkills >= 70 },
+                { id: 'challenge_winner', condition: challengesCompleted >= 1 },
+                { id: 'consistency_king', condition: streak >= 21 },
+                { id: 'elite_performer', condition: scores.overall >= 90 }
+            ];
+            
+            for (const achievement of achievementConditions) {
+                if (achievement.condition) {
+                    try {
+                        await fetch('https://vivify-backend.onrender.com/api/users/achievements/unlock', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                username: username,
+                                achievementId: achievement.id
+                            })
+                        });
+                    } catch (error) {
+                        console.error('Error unlocking achievement:', error);
+                    }
+                }
+            }
+        }
+
+        async function loadRealAchievements() {
+            if (!tracker) return;
+            
+            const username = localStorage.getItem('username');
+            
+            try {
+                // Check and unlock any new achievements first
+                await checkAndUnlockAchievements();
+                
+                // Fetch unlocked achievements from backend
+                const response = await fetch(`https://vivify-backend.onrender.com/api/users/profile/${username}`);
+                const data = await response.json();
+                
+                const unlockedIds = (data.achievements || []).map(a => a.id);
+                
+                const achievementsList = [
+                    { id: 'first_week', name: 'First Week', icon: 'fas fa-calendar-week' },
+                    { id: 'fitness_streak', name: 'Fitness Focus', icon: 'fas fa-dumbbell' },
+                    { id: 'brain_power', name: 'Brain Power', icon: 'fas fa-brain' },
+                    { id: 'nutrition_master', name: 'Fuel Master', icon: 'fas fa-apple-alt' },
+                    { id: 'life_skills', name: 'Life Skills', icon: 'fas fa-graduation-cap' },
+                    { id: 'challenge_winner', name: 'Challenge Winner', icon: 'fas fa-trophy' },
+                    { id: 'consistency_king', name: 'Consistency', icon: 'fas fa-fire' },
+                    { id: 'elite_performer', name: 'Elite Status', icon: 'fas fa-crown' }
+                ];
+
+                const container = document.getElementById('achievementsList');
+                container.innerHTML = achievementsList.map(achievement => `
+                    <div class="achievement-badge ${unlockedIds.includes(achievement.id) ? 'earned' : ''}">
+                        <i class="${achievement.icon} achievement-icon"></i>
+                        <div class="achievement-name">${achievement.name}</div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+            }
         }
 
         function updateProfileTagline() {
@@ -1132,74 +1334,6 @@
             `).join('');
         }
 
-        function loadRealAchievements() {
-            if (!tracker) return;
-            
-            const streak = tracker.calculateCurrentStreak();
-            const scores = tracker.data.scores || {};
-            const challengesCompleted = Object.values(tracker.data.challenges || {})
-                .filter(c => c.completed).length;
-            
-            const achievementsList = [
-                { 
-                    id: 'first_week', 
-                    name: 'First Week', 
-                    icon: 'fas fa-calendar-week',
-                    earned: streak >= 7 
-                },
-                { 
-                    id: 'fitness_streak', 
-                    name: 'Fitness Focus', 
-                    icon: 'fas fa-dumbbell',
-                    earned: scores.physical >= 70
-                },
-                { 
-                    id: 'brain_power', 
-                    name: 'Brain Power', 
-                    icon: 'fas fa-brain',
-                    earned: scores.mental >= 70
-                },
-                { 
-                    id: 'nutrition_master', 
-                    name: 'Fuel Master', 
-                    icon: 'fas fa-apple-alt',
-                    earned: scores.nutrition >= 70
-                },
-                { 
-                    id: 'life_skills', 
-                    name: 'Life Skills', 
-                    icon: 'fas fa-graduation-cap',
-                    earned: scores.lifeSkills >= 70
-                },
-                { 
-                    id: 'challenge_winner', 
-                    name: 'Challenge Winner', 
-                    icon: 'fas fa-trophy',
-                    earned: challengesCompleted >= 1
-                },
-                { 
-                    id: 'consistency_king', 
-                    name: 'Consistency', 
-                    icon: 'fas fa-fire',
-                    earned: streak >= 21
-                },
-                { 
-                    id: 'elite_performer', 
-                    name: 'Elite Status', 
-                    icon: 'fas fa-crown',
-                    earned: scores.overall >= 90
-                }
-            ];
-
-            const container = document.getElementById('achievementsList');
-            container.innerHTML = achievementsList.map(achievement => `
-                <div class="achievement-badge ${achievement.earned ? 'earned' : ''}">
-                    <i class="${achievement.icon} achievement-icon"></i>
-                    <div class="achievement-name">${achievement.name}</div>
-                </div>
-            `).join('');
-        }
-
         async function loadRealCommunityRank() {
             if (!tracker) return;
             
@@ -1239,21 +1373,6 @@
             tierElement.style.color = color;
         }
 
-        function loadPreferences() {
-            const saved = JSON.parse(localStorage.getItem('userPreferences') || '{}');
-            userPreferences = { ...userPreferences, ...saved };
-            
-            Object.keys(userPreferences).forEach(key => {
-                const toggle = document.getElementById(key);
-                if (toggle) {
-                    if (userPreferences[key]) {
-                        toggle.classList.add('active');
-                    } else {
-                        toggle.classList.remove('active');
-                    }
-                }
-            });
-        }
 
         function toggleEdit(section) {
             const info = document.getElementById(`${section}Info`);
@@ -1280,48 +1399,6 @@
             
             info.style.display = 'block';
             edit.classList.remove('active');
-        }
-
-        function savePersonalInfo() {
-            const name = document.getElementById('editName').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const yearLevel = document.getElementById('editYearLevel').value;
-            const location = document.getElementById('editLocation').value.trim();
-            
-            if (!name) {
-                alert('Display name is required');
-                return;
-            }
-            
-            userProfile.name = name;
-            userProfile.email = email;
-            userProfile.yearLevel = yearLevel;
-            userProfile.location = location;
-            
-            localStorage.setItem('username', name);
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('yearLevel', yearLevel);
-            localStorage.setItem('userLocation', location);
-            
-            loadProfileData();
-            cancelEdit('personal');
-            
-            showNotification('Profile updated successfully!');
-        }
-
-        function togglePreference(preferenceId) {
-            const toggle = document.getElementById(preferenceId);
-            const isActive = toggle.classList.contains('active');
-            
-            if (isActive) {
-                toggle.classList.remove('active');
-                userPreferences[preferenceId] = false;
-            } else {
-                toggle.classList.add('active');
-                userPreferences[preferenceId] = true;
-            }
-            
-            localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
         }
 
         function handleProfilePictureUpload(event) {
