@@ -140,7 +140,7 @@ router.post('/login', async (req, res) => {
         console.log('Login successful:', user.username);
         
         // FIXED: Check if user has completed baseline assessment
-        const hasCompletedBaseline = user.performanceData?.hasCompletedBaseline || false;
+        const hasCompletedBaseline = user.baselineCompleted || user.performanceData?.hasCompletedBaseline || false;
         console.log('Has completed baseline:', hasCompletedBaseline);
 
         res.json({

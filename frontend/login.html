@@ -551,6 +551,12 @@
                         body: JSON.stringify({ email: email, password: password })
                     });
 
+                    // Check if we got a response
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                    }
+
                     const data = await response.json();
 
                     if (data.success && data.token) {
@@ -637,16 +643,21 @@
                             window.location.href = 'app.html#dashboard';
                         }
                     } else {
-                        const errorMsg = data.message || 'Login failed. Please check your credentials and try again.';
-                        showMessage(errorMsg);
+                        showMessage(data.message || 'Login failed. Please check your credentials.');
                     }
 
                 } catch (error) {
                     console.error('Login error:', error);
-                    if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                        showMessage('Cannot connect to server. Please check your connection.');
+                    
+                    // More specific error messages
+                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                        showMessage('Cannot connect to server. Server may be waking up (30-50 seconds)...');
+                    } else if (error.message.includes('CORS')) {
+                        showMessage('Connection blocked. Please try again in a moment.');
+                    } else if (error.message.includes('Invalid')) {
+                        showMessage('Invalid email or password. Please try again.');
                     } else {
-                        showMessage('Login failed. Please check your credentials and try again.');
+                        showMessage(error.message || 'Login failed. Please try again.');
                     }
                 } finally {
                     loginBtn.innerHTML = 'Continue Training';

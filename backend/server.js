@@ -11,13 +11,25 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [
-    'https://vivifyeducation.netlify.app',  // Make sure this exact URL is here
-    'http://localhost:3000',
-    'http://localhost:5000'
-  ],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow any Netlify domain
+    if (origin.includes('netlify.app')) {
+      return callback(null, true);
+    }
+    
+    // Allow localhost on any port
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
+    }
+    
+    // Block everything else
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
@@ -52,6 +64,17 @@ app.use((req, res, next) => {
 });
 
 // Routes
+
+// Add this route BEFORE your other routes
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    origin: req.headers.origin || 'no-origin',
+    userAgent: req.headers['user-agent'] || 'no-user-agent'
+  });
+});
+
 const authRoutes = require('./routes/auth');
 const fitnessRoutes = require('./routes/fitness');
 
