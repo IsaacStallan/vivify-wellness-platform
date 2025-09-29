@@ -176,7 +176,6 @@ router.get('/', async (req, res) => {
                     console.log(`Using stored challengeStats.totalPoints (${user.challengeStats.totalPoints}) for ${user.username}`);
                     timeBasedChallengePoints = user.challengeStats.totalPoints;
                 }
-            }
             console.log(`No activities found for ${user.username}, using stored fields as fallback`);
             
             // Use stored habit points
