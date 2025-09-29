@@ -115,102 +115,104 @@ router.get('/', async (req, res) => {
       const users = await User.find({}).lean();
       
       // Filter and calculate time-based scores for each user
-      const processedUsers = users.map(user => {
-        let timeBasedHabitPoints = 0;
-        let timeBasedChallengePoints = 0;
-        
-        // For all-time, use stored totals directly
-        if (timeframe === 'alltime') {
-          timeBasedHabitPoints = user.habitPoints || 0;
-          
-          // If habitPoints is 0 but overallScore exists, calculate habit points
-          if (timeBasedHabitPoints === 0 && user.overallScore > 0) {
-            const assessmentScore = (user.fitnessScore || 0) + 
-                                   (user.mentalScore || 0) + 
-                                   (user.nutritionScore || 0) + 
-                                   (user.lifeSkillsScore || 0);
-            const challengePoints = user.challengeStats?.totalPoints || 0;
-            timeBasedHabitPoints = Math.max(0, user.overallScore - assessmentScore - challengePoints);
-          }
-          
-          timeBasedChallengePoints = user.challengeStats?.totalPoints || 0;
-        } else {
-          // FIXED: For weekly/monthly, calculate from activity log with proper date filtering
-          const now = new Date();
-          let startDate;
-          
-          switch (timeframe) {
-            case 'weekly':
-                // FIXED: Calculate proper start of week (7 days ago from now)
+      // FIXED: Consistent calculation logic for backend/routes/users.js
+        // Replace the entire calculation section in your GET /api/users route
+
+        const processedUsers = users.map(user => {
+            let timeBasedHabitPoints = 0;
+            let timeBasedChallengePoints = 0;
+            
+            // ALWAYS use activity log for consistent calculations
+            if (user.activity && Array.isArray(user.activity)) {
+            
+            // For timeframe filtering, set the date boundary
+            let startDate = null;
+            const now = new Date();
+            
+            if (timeframe === 'weekly') {
                 startDate = new Date(now);
                 startDate.setDate(now.getDate() - 7);
                 startDate.setHours(0, 0, 0, 0);
-                break;
-            case 'monthly':
-                // Start of current month
+            } else if (timeframe === 'monthly') {
                 startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                break;
-          }
-
-          console.log(`=== DATE FILTERING DEBUG ===`);
-          console.log(`Timeframe: ${timeframe}`);
-          console.log(`Current time: ${now.toISOString()}`);
-          console.log(`Start date: ${startDate.toISOString()}`);
-          console.log(`User: ${user.username}`);
-          
-          if (user.activity && Array.isArray(user.activity)) {
-            console.log(`Total activities: ${user.activity.length}`);
+            }
+            // For 'alltime', startDate stays null = include everything
+            
+            console.log(`=== ${user.username} - ${timeframe.toUpperCase()} CALCULATION ===`);
+            console.log(`Date filter: ${startDate ? startDate.toISOString() : 'No filter (all-time)'}`);
             
             user.activity.forEach(activity => {
-              if (!activity || !activity.timestamp) return;
-              
-              const activityDate = new Date(activity.timestamp);
-              
-              // FIXED: Only include activities AFTER the start date
-              if (activityDate >= startDate && activityDate <= now) {
+                if (!activity || !activity.timestamp) return;
+                
+                const activityDate = new Date(activity.timestamp);
+                
+                // Apply date filter for weekly/monthly, skip filter for all-time
+                const includeActivity = !startDate || (activityDate >= startDate && activityDate <= now);
+                
+                if (includeActivity) {
                 const points = activity.points || 0;
                 
-                console.log(`Including activity: ${activity.type} on ${activityDate.toISOString()} (+${points})`);
-                
                 if (activity.type === 'habit_completed') {
-                  timeBasedHabitPoints += points;
-                } else if (activity.type === 'challenge_completed' || 
-                           activity.type === 'challenge_joined' || 
-                           activity.type === 'challenge_daily') {
-                  timeBasedChallengePoints += points;
+                    timeBasedHabitPoints += points;
+                } else if (['challenge_completed', 'challenge_joined', 'challenge_daily'].includes(activity.type)) {
+                    timeBasedChallengePoints += points;
                 }
-              } else {
-                console.log(`Excluding activity: ${activity.type} on ${activityDate.toISOString()} (outside range)`);
-              }
+                
+                console.log(`✓ Including: ${activity.type} on ${activityDate.toISOString().split('T')[0]} (+${points})`);
+                } else {
+                console.log(`✗ Excluding: ${activity.type} on ${activityDate.toISOString().split('T')[0]} (outside ${timeframe})`);
+                }
             });
-          } else {
-            console.log('No activity array found for user');
-          }
-          
-          console.log(`Final timeframe points - Habits: ${timeBasedHabitPoints}, Challenges: ${timeBasedChallengePoints}`);
-        }
-        
-        // Assessment scores are always current state (not time-based)
-        const assessmentScore = (user.fitnessScore || 0) + 
-                               (user.mentalScore || 0) + 
-                               (user.nutritionScore || 0) + 
-                               (user.lifeSkillsScore || 0);
-        
-        const totalScore = assessmentScore + timeBasedHabitPoints + timeBasedChallengePoints;
-        
-        return {
-          id: user._id,
-          username: user.username,
-          displayName: user.displayName || user.username,
-          school: user.school || 'Knox Grammar',
-          score: totalScore,
-          scoreBreakdown: {
-            assessment: assessmentScore,
-            habits: timeBasedHabitPoints,
-            challenges: timeBasedChallengePoints
-          }
-        };
-      });
+            }
+            
+            // FALLBACK: If no activities found, use stored fields for all-time only
+            if (timeframe === 'alltime' && timeBasedHabitPoints === 0 && timeBasedChallengePoints === 0) {
+            console.log(`No activities found for ${user.username}, using stored fields as fallback`);
+            
+            // Use stored habit points
+            timeBasedHabitPoints = user.habitPoints || 0;
+            
+            // Use stored challenge points  
+            timeBasedChallengePoints = user.challengeStats?.totalPoints || 0;
+            
+            // If still zero but overallScore exists, calculate from overallScore
+            if (timeBasedHabitPoints === 0 && user.overallScore > 0) {
+                const assessmentScore = (user.fitnessScore || 0) + 
+                                    (user.mentalScore || 0) + 
+                                    (user.nutritionScore || 0) + 
+                                    (user.lifeSkillsScore || 0);
+                const remainingPoints = Math.max(0, user.overallScore - assessmentScore);
+                
+                // Split remaining points between habits and challenges
+                // Assume 70% habits, 30% challenges if we have no other data
+                timeBasedHabitPoints = Math.floor(remainingPoints * 0.7);
+                timeBasedChallengePoints = remainingPoints - timeBasedHabitPoints;
+            }
+            }
+            
+            console.log(`Final ${timeframe} points for ${user.username}: Habits=${timeBasedHabitPoints}, Challenges=${timeBasedChallengePoints}`);
+            
+            // Assessment scores are always current state (not time-based)
+            const assessmentScore = (user.fitnessScore || 0) + 
+                                (user.mentalScore || 0) + 
+                                (user.nutritionScore || 0) + 
+                                (user.lifeSkillsScore || 0);
+            
+            const totalScore = assessmentScore + timeBasedHabitPoints + timeBasedChallengePoints;
+            
+            return {
+            id: user._id,
+            username: user.username,
+            displayName: user.displayName || user.username,
+            school: user.school || 'Knox Grammar',
+            score: totalScore,
+            scoreBreakdown: {
+                assessment: assessmentScore,
+                habits: timeBasedHabitPoints,
+                challenges: timeBasedChallengePoints
+            }
+            };
+        });
       
       // Sort by score and add rankings
       processedUsers.sort((a, b) => b.score - a.score);
