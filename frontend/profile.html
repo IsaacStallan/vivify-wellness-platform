@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Profile - Vivify</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -55,18 +55,24 @@
             left: 0;
             right: 0;
             width: 100%;
-            background: #0a0a0a;  /* Solid color instead of rgba */
-            backdrop-filter: blur(20px);
+            background: #0a0a0a;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
-            transition: all 0.3s ease;
-            padding-top: 0;
+            /* Extend into status bar on iOS */
+            padding-top: env(safe-area-inset-top, 0);
         }
 
-        /* PWA safe area */
+        /* Extend header into status bar area on iOS PWA */
         @media (display-mode: standalone) {
             header {
                 padding-top: env(safe-area-inset-top);
+                /* Extend background into status bar */
+                padding-top: max(env(safe-area-inset-top), 20px);
+            }
+            
+            /* Push nav content down */
+            nav {
+                margin-top: 0;
             }
         }
 
@@ -137,7 +143,11 @@
         .profile-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 80px 2rem 2rem;  /* Increased from 6rem to 80px */
+            /* Add space for header + status bar */
+            padding-top: calc(80px + env(safe-area-inset-top, 0));
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-bottom: 2rem;
         }
 
         /* Profile Header */
