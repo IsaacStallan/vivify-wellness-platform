@@ -165,8 +165,18 @@ router.get('/', async (req, res) => {
             });
             }
             
-            // FALLBACK: If no activities found, use stored fields for all-time only
-            if (timeframe === 'alltime' && timeBasedHabitPoints === 0 && timeBasedChallengePoints === 0) {
+            // FALLBACK: Use stored fields for all-time when activity log is empty for that type
+            if (timeframe === 'alltime') {
+                if (timeBasedHabitPoints === 0 && user.habitPoints > 0) {
+                    console.log(`Using stored habitPoints (${user.habitPoints}) for ${user.username}`);
+                    timeBasedHabitPoints = user.habitPoints;
+                }
+                
+                if (timeBasedChallengePoints === 0 && user.challengeStats?.totalPoints > 0) {
+                    console.log(`Using stored challengeStats.totalPoints (${user.challengeStats.totalPoints}) for ${user.username}`);
+                    timeBasedChallengePoints = user.challengeStats.totalPoints;
+                }
+            }
             console.log(`No activities found for ${user.username}, using stored fields as fallback`);
             
             // Use stored habit points
