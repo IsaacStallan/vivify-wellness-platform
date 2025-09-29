@@ -105,6 +105,42 @@ router.put('/update-score', async (req, res) => {
     }
 });
 
+// POST /api/users/update-scores - Sync performance scores to backend
+router.post('/update-scores', async (req, res) => {
+    try {
+        const { username, scores } = req.body;
+        
+        if (!username || !scores) {
+            return res.status(400).json({ error: 'Username and scores required' });
+        }
+        
+        const updateData = {
+            fitnessScore: Math.round(scores.physical || 0),
+            mentalScore: Math.round(scores.mental || 0),
+            nutritionScore: Math.round(scores.nutrition || 0),
+            lifeSkillsScore: Math.round(scores.lifeSkills || 0)
+        };
+        
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { $set: updateData },
+            { new: true }
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        console.log(`Scores updated for ${username}:`, updateData);
+        
+        res.json({ success: true, scores: updateData });
+        
+    } catch (error) {
+        console.error('Error updating scores:', error);
+        res.status(500).json({ error: 'Failed to update scores' });
+    }
+});
+
 // FIXED date filtering logic in backend/routes/users.js
 // Replace the existing GET /api/users route with this corrected version
 

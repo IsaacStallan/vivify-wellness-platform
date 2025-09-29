@@ -421,7 +421,7 @@ class VivifyUnifiedTracker {
         return true;
     }
 
-    updateScoresFromHabit(habit) {
+    async updateScoresFromHabit(habit) {
         const categoryMap = {
             'Physical Performance': 'physical',
             'Mental Focus': 'mental',
@@ -431,12 +431,11 @@ class VivifyUnifiedTracker {
         
         const scoreCategory = categoryMap[habit.category];
         if (scoreCategory && this.data.scores[scoreCategory] !== undefined) {
-            // Increase score based on habit points (smaller increments for gradual progress)
             const increment = habit.points * 0.1;
             this.data.scores[scoreCategory] = Math.min(100, this.data.scores[scoreCategory] + increment);
         }
         
-        // Recalculate overall score
+        // Recalculate overall
         const categoryScores = [
             this.data.scores.physical,
             this.data.scores.mental,
@@ -447,6 +446,21 @@ class VivifyUnifiedTracker {
         this.data.scores.overall = Math.round(
             categoryScores.reduce((sum, score) => sum + score, 0) / categoryScores.length
         );
+        
+        // SYNC TO BACKEND
+        try {
+            await fetch(`${this.baseURL}/users/update-scores`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: this.username,
+                    scores: this.data.scores
+                })
+            });
+            console.log('Scores synced to backend');
+        } catch (error) {
+            console.error('Failed to sync scores:', error);
+        }
     }
 
     calculateScores() {
