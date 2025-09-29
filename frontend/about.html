@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Vivify</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #f39c12;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.05));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Content Sections */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Story Section */
+        .story-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .story-content p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #000;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .value-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        /* Approach Section */
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .approach-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .approach-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .approach-item h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .approach-item p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            background: rgba(243, 156, 18, 0.05);
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3));
+            border: 4px solid #f39c12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 3rem;
+            color: #f39c12;
+        }
+
+        .team-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .team-card .role {
+            color: #f39c12;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .team-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.2);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin: 5rem auto;
+            max-width: 1000px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f39c12;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .approach-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-section {
+                padding: 3rem 1rem;
+            }
+
+            .story-content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Vivify</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="app.html">Performance Hub</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Start Training</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <h1>Building Champions, One Habit at a Time</h1>
+            <p>Vivify helps Australian students in Years 7-12 develop the daily habits and resilience skills that separate high performers from everyone else.</p>
+        </section>
+
+        <!-- Our Story -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>Our Story</h2>
+                <p>From Knox Grammar classrooms to a performance training platform</p>
+            </div>
+            <div class="story-content">
+                <p>Vivify started with a simple observation: the most successful students weren't just smarter—they had better systems. They trained their minds and bodies like athletes train for competition.</p>
+                
+                <p>After conversations with students at Knox Grammar School, we realized there was a gap. Students wanted to improve but didn't have a structured way to build the daily habits that drive performance. They needed a system that made excellence measurable and achievable.</p>
+                
+                <p>So we built Vivify—not as a therapy app, but as a performance training platform. Think of it as Strava for your entire life: track habits, compete in challenges, and build the routines that elite performers use every day.</p>
+                
+                <p>We're focused on one thing: helping ambitious Australian students develop championship habits during their most formative years.</p>
+            </div>
+        </section>
+
+        <!-- Our Values -->
+        <section class="content-section" style="background: rgba(255, 255, 255, 0.02);">
+            <div class="section-header">
+                <h2>What We Stand For</h2>
+                <p>The principles that guide everything we build</p>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Performance Over Perfection</h3>
+                    <p>We focus on consistent progress, not impossible standards. Small daily improvements compound into extraordinary results.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Student-Centered Design</h3>
+                    <p>Built by listening to real students. Every feature is designed to solve actual problems faced by Australian secondary school students.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Privacy & Safety First</h3>
+                    <p>Your data is yours. We never sell student information, and parents can always review what their children are tracking.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Make It Engaging</h3>
+                    <p>Building habits shouldn't feel like homework. We use gamification, challenges, and competition to make self-improvement actually enjoyable.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Evidence-Based</h3>
+                    <p>We track what matters. Every metric we measure has been shown to correlate with academic performance, physical health, or mental resilience.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Community Support</h3>
+                    <p>You're not alone. Connect with other students building the same habits, share strategies, and motivate each other.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Approach -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>How Vivify Works</h2>
+                <p>A systematic approach to building championship habits</p>
+            </div>
+            <div class="approach-grid">
+                <div class="approach-item">
+                    <div class="approach-number">01</div>
+                    <h3>Baseline Assessment</h3>
+                    <p>Understand where you are across four key areas: physical performance, mental focus, smart nutrition, and life skills. No judgment, just data.</p>
+                </div>
+                <div class="approach-item">
+                    <div class="approach-number">02</div>
+                    <h3>Daily Habit Tracking</h3>
+                    <p>Choose from proven habits or create your own. Track progress daily and watch your performance scores improve as consistency builds.</p>
+                </div>
+                <div class="approach-item">
+                    <div class="approach-number">03</div>
+                    <h3>Structured Challenges</h3>
+                    <p>Join 7-30 day challenges that push you to new levels. From morning routines to focus sprints, compete with peers and unlock achievements.</p>
+                </div>
+                <div class="approach-item">
+                    <div class="approach-number">04</div>
+                    <h3>Community Leaderboards</h3>
+                    <p>See how you stack up. Compete on weekly, monthly, and all-time leaderboards. Learn from top performers and motivate each other.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team -->
+        <section class="content-section" style="background: rgba(255, 255, 255, 0.02);">
+            <div class="section-header">
+                <h2>The Team</h2>
+                <p>Students building for students</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Isaac Stallan</h3>
+                    <div class="role">Founder & Developer</div>
+                    <p>Year 12 student at UTS, building Vivify to help students develop the habits that drive long-term success.</p>
+                </div>
+                <!-- Add more team members as your team grows -->
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="content-section">
+            <div class="cta-section">
+                <h2>Ready to Start Training?</h2>
+                <p>Join students at Knox Grammar and other schools who are building championship habits</p>
+                <a href="signup.html" class="cta-button">Start Your Journey</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="app.html">Performance Hub</a>
+                <a href="mailto:contact@vivify.com">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Vivify. Building elite habits, one day at a time.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
