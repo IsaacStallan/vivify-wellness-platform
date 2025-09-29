@@ -374,15 +374,16 @@
             overflow: hidden;
         }
 
-            .progress-fill {
-            height: 100%;             /* ← the missing piece */
-            background: rgba(255,255,255,0.25);  /* or your gradient */
-            transition: width 0.3s ease, transform 0.3s ease;
-            transform-origin: left;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+            transition: width 0.3s ease;
+            border-radius: 4px;
         }
 
         .habit-card.completed .progress-fill {
             background: linear-gradient(135deg, #27ae60, #2ecc71);
+            width: 100%; /* Force full width when completed */
         }
 
         /* Habits Styles */
@@ -1438,6 +1439,40 @@
                 gap: 1.5rem;
             }
         }
+        @media (max-width: 768px) {
+            .habits-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .habit-card {
+                padding: 1.5rem;
+            }
+            
+            .habit-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .habit-streak {
+                align-self: flex-start;
+            }
+            
+            .week-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 0.5rem;
+            }
+            
+            .habit-dot {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .day-label {
+                font-size: 0.75rem;
+            }
+        }
 
         .hidden {
             display: none !important;
@@ -2336,7 +2371,6 @@
             const today = new Date();
             const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-            // Get clean daily completions data
             let dailyCompletions = {};
             if (appTracker?.data?.dailyCompletions) {
                 dailyCompletions = appTracker.data.dailyCompletions;
@@ -2349,23 +2383,15 @@
                 const date = new Date(today);
                 date.setDate(today.getDate() - i);
                 const ds = date.toDateString();
-                
-                // FIXED: Only show completions that actually exist
                 const dayCompletions = dailyCompletions[ds] || [];
-                
-                // Debug logging
-                console.log(`Date: ${ds}, Completions:`, dayCompletions);
 
                 html += `
-                <div class="day-column" style="text-align:center;">
-                    <div class="day-label" style="opacity:.8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${days[date.getDay()]}</div>
-                    <div class="day-habits" style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                <div class="day-column">
+                    <div class="day-label">${days[date.getDay()]}</div>
+                    <div class="day-habits">
                     ${habits.map(h => {
                         const completed = dayCompletions.includes(h.id);
-                        return `<div class="habit-dot ${completed ? 'completed' : ''}" 
-                                    title="${h.name}" 
-                                    style="width:24px;height:24px;border-radius:50%;background:${completed ? '#27ae60' : 'rgba(255,255,255,0.1)'};box-shadow:${completed ? '0 0 15px rgba(39,174,96,0.5)' : 'none'};">
-                                </div>`;
+                        return `<div class="habit-dot ${completed ? 'completed' : ''}" title="${h.name}"></div>`;
                     }).join('')}
                     </div>
                 </div>`;

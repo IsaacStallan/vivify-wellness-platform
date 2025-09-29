@@ -374,51 +374,66 @@ class VivifyUnifiedTracker {
         const habit = this.getAllHabits().find(h => h.id === habitId);
         
         if (!habit || habit.completed) {
-            console.log('Habit already completed or not found');
             return false;
         }
         
-        // Mark as completed
         habit.completed = true;
         const today = new Date().toDateString();
         
-        // Update daily completions
         if (!this.data.dailyCompletions[today]) {
             this.data.dailyCompletions[today] = [];
         }
         this.data.dailyCompletions[today].push(habitId);
         
-        // Update streak
         habit.streak = (habit.streak || 0) + 1;
         this.data.streaks[habitId] = habit.streak;
         
-        // Add points
         this.data.totalPoints += habit.points;
         this.data.totalXP += habit.points;
         
-        // Update performance scores
         this.updateScoresFromHabit(habit);
-        
-        // Log activity - FIXED: Add proper activity logging
         this.logActivity(habit.name, habit.points, 'habit_completed', habitId);
         
-        // Sync to backend - FIXED: Include activity data
+        // CRITICAL: Sync to backend immediately
         await this.syncToBackend(habitId, habit.points, 'habit_completed');
         
-        // Add to unified leaderboard
-        if (window.VivifyLeaderboard) {
-            window.VivifyLeaderboard.addPoints(habit.points, 'habit_complete', {
-                habitId: habitId,
-                habitName: habit.name
-            });
-        }
-        
+        // NEW: Sync the entire unified data to backend
+        await this.syncUnifiedDataToBackend();
         
         this.save();
-        this.notifyCompletion(`✅ ${habit.name} +${habit.points} XP — nice work!`, 'success');
+        this.notifyCompletion(`✅ ${habit.name} +${habit.points} XP`, 'success');
         
-        console.log(`Completed habit: ${habit.name} (+${habit.points} points)`);
         return true;
+    }
+    
+    // Add this new method to sync everything
+    async syncUnifiedDataToBackend() {
+        try {
+            const response = await fetch(`${this.baseURL}/users/sync-unified-data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: this.username,
+                    unifiedData: {
+                        habits: this.data.habits,
+                        customHabits: this.data.customHabits,
+                        challenges: this.data.challenges,
+                        dailyCompletions: this.data.dailyCompletions,
+                        streaks: this.data.streaks,
+                        scores: this.data.scores,
+                        totalPoints: this.data.totalPoints,
+                        totalXP: this.data.totalXP,
+                        lastActiveDate: this.data.lastActiveDate
+                    }
+                })
+            });
+            
+            if (response.ok) {
+                console.log('Unified data synced to backend');
+            }
+        } catch (error) {
+            console.error('Failed to sync unified data:', error);
+        }
     }
 
     async updateScoresFromHabit(habit) {

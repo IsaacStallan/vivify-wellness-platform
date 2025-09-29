@@ -158,6 +158,11 @@ const userSchema = new mongoose.Schema({
         default: {}
     },
 
+    unifiedTrackerData: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    },
+
     // CARD BATTLE SYSTEM
     cardBattleData: {
         battleXP: { type: Number, default: 0 },

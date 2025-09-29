@@ -698,6 +698,33 @@ router.get('/debug/:username', async (req, res) => {
     }
 });
 
+router.post('/sync-unified-data', async (req, res) => {
+    try {
+        const { username, unifiedData } = req.body;
+        
+        if (!username || !unifiedData) {
+            return res.status(400).json({ error: 'Username and data required' });
+        }
+        
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        // Store unified data in a new field
+        user.unifiedTrackerData = unifiedData;
+        user.lastActive = new Date();
+        
+        await user.save();
+        
+        res.json({ success: true });
+        
+    } catch (error) {
+        console.error('Error syncing unified data:', error);
+        res.status(500).json({ error: 'Failed to sync data' });
+    }
+});
+
 // GET /api/users/export-emails - Export user emails for manual sending
 router.get('/export-emails', async (req, res) => {
     try {
