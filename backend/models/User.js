@@ -1,6 +1,6 @@
-// models/User.js - Enhanced version with card battle fields
+// models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     // AUTHENTICATION FIELDS
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
         default: 'student'
     },
     
-    // PROFILE FIELDS (enhanced for profile page)
+    // PROFILE FIELDS
     displayName: { type: String },
     location: { type: String },
     bio: { type: String },
@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
         }
     },
     
-    // USER PREFERENCES (for profile page settings)
+    // USER PREFERENCES
     preferences: {
         dailyChallenges: { type: Boolean, default: true },
         progressNotifications: { type: Boolean, default: true },
@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema({
         trainingReminders: { type: Boolean, default: true }
     },
     
-    // ACHIEVEMENTS (permanent unlocks)
+    // ACHIEVEMENTS
     achievements: [{
         id: String,
         unlockedAt: Date
@@ -82,8 +82,9 @@ const userSchema = new mongoose.Schema({
     habitPoints: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
     longestStreak: { type: Number, default: 0 },
+    baselineCompleted: { type: Boolean, default: false },
     
-    // ACTIVITY TRACKING (for time-based leaderboards)
+    // ACTIVITY TRACKING
     activity: [{
         type: {
             type: String,
@@ -108,7 +109,7 @@ const userSchema = new mongoose.Schema({
         }
     }],
 
-    // HABITS DATA (daily tracking)
+    // HABITS DATA
     habitsData: {
         sleep: { 
             value: { type: Number, default: 0, min: 0, max: 100 },
@@ -317,43 +318,51 @@ const userSchema = new mongoose.Schema({
     loginCount: { type: Number, default: 0 }
 }, { timestamps: true });
 
-// Index for faster queries
+// INDEXES
 userSchema.index({ username: 1 });
 userSchema.index({ email: 1 });
 userSchema.index({ overallScore: -1 });
 userSchema.index({ 'activity.timestamp': -1 });
 
-module.exports = mongoose.model('User', userSchema);
-
-// Virtual for card battle win rate
-userSchema.virtual('battleWinRate').get(function() {
-    const battleData = this.cardBattleData;
-    if (!battleData || battleData.totalBattles === 0) return 0;
-    return Math.round((battleData.battlesWon / battleData.totalBattles) * 100);
+// PASSWORD HASHING
+userSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+    
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
-// Virtual for battle rank calculation
-userSchema.virtual('battleRank').get(function() {
-    const trophies = this.cardBattleData?.battleTrophies || 0;
-    if (trophies >= 3000) return 'Champion';
-    if (trophies >= 2000) return 'Master';
-    if (trophies >= 1200) return 'Expert';
-    if (trophies >= 600) return 'Advanced';
-    if (trophies >= 200) return 'Intermediate';
-    return 'Novice';
-});
+// INSTANCE METHODS
+userSchema.methods.comparePassword = async function(candidatePassword) {
+    try {
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (error) {
+        console.error('Password comparison error:', error);
+        return false;
+    }
+};
 
-// Method to calculate card generation eligibility
+userSchema.methods.updateLoginInfo = async function() {
+    this.lastLogin = new Date();
+    this.loginCount = (this.loginCount || 0) + 1;
+    return this.save();
+};
+
 userSchema.methods.canGenerateCard = function() {
     const lastGenerated = this.cardBattleData?.lastCardGenerated;
     if (!lastGenerated) return true;
     
-    // Allow 1 card generation per hour maximum
     const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
     return new Date(lastGenerated) < hourAgo;
 };
 
-// Method to update battle stats after a battle
 userSchema.methods.updateBattleStats = function(won, trophiesGained, xpGained) {
     if (!this.cardBattleData) {
         this.cardBattleData = {};
@@ -376,14 +385,22 @@ userSchema.methods.updateBattleStats = function(won, trophiesGained, xpGained) {
         this.cardBattleData.winStreak = 0;
     }
     
-    // Update battle level based on XP
     const newLevel = Math.floor(this.cardBattleData.battleXP / 100) + 1;
     this.cardBattleData.battleLevel = newLevel;
     
     return this.save();
 };
 
-// Keep all your existing methods
+userSchema.methods.updateFitnessScore = function(metrics) {
+    this.fitnessMetrics = {
+        ...this.fitnessMetrics,
+        ...metrics,
+        lastUpdated: new Date()
+    };
+    return this.save();
+};
+
+// VIRTUALS
 userSchema.virtual('fullName').get(function() {
     if (this.profile.firstName && this.profile.lastName) {
         return `${this.profile.firstName} ${this.profile.lastName}`;
@@ -398,36 +415,21 @@ userSchema.virtual('avatarInitials').get(function() {
     return this.username.substring(0, 2).toUpperCase();
 });
 
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    
-    try {
-        const salt = await bcrypt.genSalt(12);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
-    }
+userSchema.virtual('battleWinRate').get(function() {
+    const battleData = this.cardBattleData;
+    if (!battleData || battleData.totalBattles === 0) return 0;
+    return Math.round((battleData.battlesWon / battleData.totalBattles) * 100);
 });
 
-userSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
-};
-
-userSchema.methods.updateLoginInfo = function() {
-    this.lastLogin = new Date();
-    this.loginCount += 1;
-    return this.save();
-};
-
-userSchema.methods.updateFitnessScore = function(metrics) {
-    this.fitnessMetrics = {
-        ...this.fitnessMetrics,
-        ...metrics,
-        lastUpdated: new Date()
-    };
-    return this.save();
-};
+userSchema.virtual('battleRank').get(function() {
+    const trophies = this.cardBattleData?.battleTrophies || 0;
+    if (trophies >= 3000) return 'Champion';
+    if (trophies >= 2000) return 'Master';
+    if (trophies >= 1200) return 'Expert';
+    if (trophies >= 600) return 'Advanced';
+    if (trophies >= 200) return 'Intermediate';
+    return 'Novice';
+});
 
 userSchema.virtual('currentLevel').get(function() {
     const totalXP = this.performanceData.totalXP || 0;
@@ -445,6 +447,7 @@ userSchema.virtual('levelProgress').get(function() {
     };
 });
 
+// STATIC METHODS
 userSchema.statics.getFitnessLeaderboard = async function(limit = 50) {
     return await this.find({ isActive: true })
         .select('username school yearLevel fitnessMetrics')
@@ -456,7 +459,6 @@ userSchema.statics.findBySchool = function(school) {
     return this.find({ school: school, isActive: true });
 };
 
-// NEW: Get battle leaderboard
 userSchema.statics.getBattleLeaderboard = async function(limit = 50) {
     return await this.find({ 
         isActive: true,
