@@ -38,7 +38,7 @@
 
         /* Header */
         header {
-            position: fixed;
+            position: sticky;
             top: 0;
             width: 100%;
             background: rgba(10, 10, 10, 0.95);
@@ -46,6 +46,15 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
             transition: all 0.3s ease;
+
+            /* iOS PWA safe area - ONLY add padding in standalone mode */
+            padding-top: 0;
+        }
+
+        @media (display-mode: standalone) {
+            header {
+                padding-top: env(safe-area-inset-top);
+            }
         }
 
         nav {
