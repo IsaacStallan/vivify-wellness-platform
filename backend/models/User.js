@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema({
         type: {
             type: String,
             required: true,
-            enum: ['habit_completed', 'challenge_joined', 'challenge_daily', 'challenge_completed', 'assessment_completed']
+            
         },
         habitId: String,
         challengeId: String,
