@@ -7,6 +7,19 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#f39c12">
+
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Vivify">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+    <!-- Android Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
     
     <style>
         * {
@@ -1541,6 +1554,15 @@
                 notification.style.transform = 'translateY(-20px)';
                 setTimeout(() => document.body.removeChild(notification), 300);
             }, 4000);
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+              .then(reg => console.log('Service Worker registered:', reg.scope))
+              .catch(err => console.log('Service Worker registration failed:', err));
+          });
         }
     </script>
 </body>
