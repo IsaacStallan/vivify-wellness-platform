@@ -45,6 +45,7 @@
 
         /* Header */
         header {
+            position: sticky;  /* Changed from fixed - allows natural scroll on desktop */
             top: 0;
             left: 0;
             right: 0;
@@ -55,8 +56,14 @@
             z-index: 1000;
             transition: all 0.3s ease;
             
-            /* iOS PWA safe area support */
-            padding-top: env(safe-area-inset-top);
+            /* iOS PWA safe area - ONLY add padding in standalone mode */
+            padding-top: 0;
+        }
+
+        @media (display-mode: standalone) {
+            header {
+                padding-top: env(safe-area-inset-top);
+            }
         }
 
         nav {
@@ -116,7 +123,7 @@
         .app-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;  /* Remove the calc() with header height */
+            padding: 2rem;  /* Simple padding, no calc() */
         }
 
         /* Tab Navigation */

@@ -685,25 +685,13 @@ router.put('/challenges/join', async (req, res) => {
     }
 });
 
-router.get('/debug/:username', async (req, res) => {
-    try {
-        const user = await User.findOne({ username: req.params.username });
-        res.json({
-        username: user.username,
-        challengeData: user.challengeData,
-        hasData: !!user.challengeData
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
+// POST /api/users/sync-unified-data - Sync all tracker data
 router.post('/sync-unified-data', async (req, res) => {
     try {
         const { username, unifiedData } = req.body;
         
         if (!username || !unifiedData) {
-            return res.status(400).json({ error: 'Username and data required' });
+            return res.status(400).json({ error: 'Username and unifiedData required' });
         }
         
         const user = await User.findOne({ username });
@@ -711,17 +699,63 @@ router.post('/sync-unified-data', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        // Store unified data in a new field
-        user.unifiedTrackerData = unifiedData;
-        user.lastActive = new Date();
+        // Store the entire unified tracker state
+        user.unifiedTrackerData = {
+            habits: unifiedData.habits,
+            customHabits: unifiedData.customHabits,
+            challenges: unifiedData.challenges,
+            dailyCompletions: unifiedData.dailyCompletions,
+            streaks: unifiedData.streaks,
+            scores: unifiedData.scores,
+            totalPoints: unifiedData.totalPoints,
+            totalXP: unifiedData.totalXP,
+            activities: unifiedData.activities,
+            achievements: unifiedData.achievements,
+            lastActiveDate: unifiedData.lastActiveDate,
+            lastSynced: new Date()
+        };
         
+        user.lastActive = new Date();
         await user.save();
         
-        res.json({ success: true });
+        console.log(`Synced unified data for ${username}`);
+        res.json({ success: true, message: 'Data synced successfully' });
         
     } catch (error) {
         console.error('Error syncing unified data:', error);
         res.status(500).json({ error: 'Failed to sync data' });
+    }
+});
+
+// GET /api/user/:username - Get user with unified data
+router.get('/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username })
+            .select('-password');
+        
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        res.json({
+            username: user.username,
+            email: user.email,
+            school: user.school,
+            yearLevel: user.yearLevel,
+            unifiedTrackerData: user.unifiedTrackerData,
+            fitnessScore: user.fitnessScore,
+            mentalScore: user.mentalScore,
+            nutritionScore: user.nutritionScore,
+            lifeSkillsScore: user.lifeSkillsScore,
+            overallScore: user.overallScore,
+            totalPoints: user.totalPoints || 0,
+            habitPoints: user.habitPoints || 0,
+            challengeData: user.challengeData
+        });
+        
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Failed to fetch user data' });
     }
 });
 

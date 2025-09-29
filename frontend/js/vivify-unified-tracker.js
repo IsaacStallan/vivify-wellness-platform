@@ -156,55 +156,119 @@ class VivifyUnifiedTracker {
       
       
 
+    // UPDATED loadData method
     async loadData() {
-        // 1) Load local cache FIRST - but filter old challenges
+        // 1. Load from localStorage first (instant, works offline)
         const localData = localStorage.getItem('vivifyUnifiedData');
         if (localData) {
-        try {
-            const parsed = JSON.parse(localData);
-            
-            // Filter out old challenges from localStorage too
-            if (parsed.challenges) {
-            const newChallengeIds = [
-                'morning-momentum', 'focus-sprint', 'consistency-master',
-                'performance-edge', 'elite-performer', 'exam-domination'
-            ];
-            
-            const filteredChallenges = {};
-            Object.keys(parsed.challenges).forEach(challengeId => {
-                if (newChallengeIds.includes(challengeId)) {
-                filteredChallenges[challengeId] = parsed.challenges[challengeId];
-                }
-            });
-            parsed.challenges = filteredChallenges;
-            
-            console.log('Filtered old challenges from localStorage');
+            try {
+                this.data = { ...this.data, ...JSON.parse(localData) };
+            } catch (e) {
+                console.warn('Invalid localStorage data');
             }
-            
-            this.data = { ...this.data, ...parsed };
-        } catch (e) {
-            console.warn('Bad vivifyUnifiedData JSON, ignoring.');
         }
-        }
-      
-        // 2) THEN fetch server and override what we got locally
+        
+        // 2. Then fetch from backend (may have newer data from other devices)
         try {
-          const token = localStorage.getItem('authToken');
-          const res = await fetch(`${this.baseURL}/user/${this.username}`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {}
-          });
-          const serverData = await res.json();
-          if (!serverData.error) {
-            this.mergeServerData(serverData); // sets this._scoresFromServer if scores present
-          } else {
-            console.warn('Server error on user fetch:', serverData.error);
-          }
-        } catch (err) {
-          console.warn('Backend fetch failed; using local only.', err);
+            const response = await fetch(`${this.baseURL}/user/${this.username}`);
+            if (response.ok) {
+                const serverData = await response.json();
+                
+                // Merge server data (prefer server if it has data)
+                if (serverData.unifiedTrackerData && Object.keys(serverData.unifiedTrackerData).length > 0) {
+                    const serverTrackerData = serverData.unifiedTrackerData;
+                    
+                    // Compare timestamps to use most recent
+                    const localTimestamp = new Date(this.data.lastActiveDate).getTime();
+                    const serverTimestamp = new Date(serverTrackerData.lastActiveDate || 0).getTime();
+                    
+                    if (serverTimestamp > localTimestamp) {
+                        console.log('Using server data (more recent)');
+                        this.data = { ...this.data, ...serverTrackerData };
+                    } else {
+                        console.log('Using local data (more recent)');
+                    }
+                }
+                
+                // Always sync assessment scores from server
+                if (serverData.fitnessScore !== undefined) {
+                    this.data.scores.physical = serverData.fitnessScore;
+                    this.data.scores.mental = serverData.mentalScore;
+                    this.data.scores.nutrition = serverData.nutritionScore;
+                    this.data.scores.lifeSkills = serverData.lifeSkillsScore;
+                    this.data.scores.overall = Math.round((
+                        this.data.scores.physical + 
+                        this.data.scores.mental + 
+                        this.data.scores.nutrition + 
+                        this.data.scores.lifeSkills
+                    ) / 4);
+                    this._scoresFromServer = true;
+                }
+            }
+        } catch (error) {
+            console.warn('Backend fetch failed, using local data only:', error);
         }
-      
-        // 3) Persist merged state
-        this.save();
+        
+        this.save(); // Save merged state locally
+    }
+
+    // NEW: Sync to backend after state changes
+    async syncUnifiedDataToBackend() {
+        if (!this.username) {
+            console.warn('Cannot sync: no username');
+            return false;
+        }
+        
+        try {
+            const response = await fetch(`${this.baseURL}/users/sync-unified-data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: this.username,
+                    unifiedData: {
+                        habits: this.data.habits,
+                        customHabits: this.data.customHabits,
+                        challenges: this.data.challenges,
+                        dailyCompletions: this.data.dailyCompletions,
+                        streaks: this.data.streaks,
+                        scores: this.data.scores,
+                        totalPoints: this.data.totalPoints,
+                        totalXP: this.data.totalXP,
+                        activities: this.data.activities.slice(0, 50), // Only sync last 50
+                        achievements: this.data.achievements,
+                        lastActiveDate: this.data.lastActiveDate
+                    }
+                })
+            });
+            
+            if (response.ok) {
+                console.log('✅ Data synced to backend');
+                return true;
+            } else {
+                const error = await response.text();
+                console.error('Sync failed:', error);
+                return false;
+            }
+        } catch (error) {
+            console.error('Sync request failed:', error);
+            return false;
+        }
+    }
+
+    // UPDATED: Save method now syncs to backend
+    save() {
+        // Always save to localStorage (instant, works offline)
+        localStorage.setItem('vivifyUnifiedData', JSON.stringify(this.data));
+        
+        // Sync to backend (async, may fail if offline - that's OK)
+        this.syncUnifiedDataToBackend().catch(err => {
+            console.warn('Background sync failed:', err);
+        });
+        
+        // Clear old data stores
+        localStorage.removeItem('habitsData');
+        localStorage.removeItem('performanceData');
+        localStorage.removeItem(`vivify_challenges_${this.username}`);
     }
             
 
@@ -394,13 +458,9 @@ class VivifyUnifiedTracker {
         this.updateScoresFromHabit(habit);
         this.logActivity(habit.name, habit.points, 'habit_completed', habitId);
         
-        // CRITICAL: Sync to backend immediately
         await this.syncToBackend(habitId, habit.points, 'habit_completed');
         
-        // NEW: Sync the entire unified data to backend
-        await this.syncUnifiedDataToBackend();
-        
-        this.save();
+        this.save(); // This now triggers syncUnifiedDataToBackend()
         this.notifyCompletion(`✅ ${habit.name} +${habit.points} XP`, 'success');
         
         return true;
@@ -1320,15 +1380,6 @@ class VivifyUnifiedTracker {
         }
 
         return totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-    }
-
-    save() {
-        localStorage.setItem('vivifyUnifiedData', JSON.stringify(this.data));
-        
-        // Clear old data stores to prevent conflicts
-        localStorage.removeItem('habitsData');
-        localStorage.removeItem('performanceData');
-        localStorage.removeItem(`vivify_challenges_${this.username}`);
     }
 
     notifyCompletion(message, type = 'success') {
