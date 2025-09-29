@@ -293,7 +293,9 @@ router.post('/sync-assessment', async (req, res) => {
     }
 });
 
-// POST /api/users/update-habit-points - Update user's habit points
+// FIXED: Replace the update-habit-points route in backend/routes/users.js
+// This route needs to route points to the correct field based on activity type
+
 router.post('/update-habit-points', async (req, res) => {
     try {
         const { username, pointsToAdd, habitId, activityType, timestamp } = req.body;
@@ -310,24 +312,40 @@ router.post('/update-habit-points', async (req, res) => {
             timestamp: timestamp || new Date().toISOString()
         };
         
+        // FIXED: Route points to correct field based on activity type
+        let updateFields = {
+            $push: {
+                activity: {
+                    $each: [activityEntry],
+                    $slice: -100  // Keep only last 100 activities
+                }
+            },
+            $set: {
+                lastActive: new Date()
+            }
+        };
+        
+        // Route points based on activity type
+        if (['challenge_joined', 'challenge_daily', 'challenge_completed'].includes(activityType)) {
+            // CHALLENGE ACTIVITIES: Add to challengeStats.totalPoints
+            updateFields.$inc = {
+                'challengeStats.totalPoints': pointsToAdd,
+                overallScore: pointsToAdd
+            };
+            console.log(`Adding ${pointsToAdd} CHALLENGE points for ${username} (${activityType})`);
+        } else {
+            // HABIT ACTIVITIES: Add to habitPoints
+            updateFields.$inc = {
+                habitPoints: pointsToAdd,
+                overallScore: pointsToAdd
+            };
+            console.log(`Adding ${pointsToAdd} HABIT points for ${username} (${activityType})`);
+        }
+        
         // Find and update user
         const updatedUser = await User.findOneAndUpdate(
             { username: username },
-            { 
-                $inc: { 
-                    habitPoints: pointsToAdd,
-                    overallScore: pointsToAdd
-                },
-                $push: {
-                    activity: {
-                        $each: [activityEntry],
-                        $slice: -100  // Keep only last 100 activities
-                    }
-                },
-                $set: {
-                    lastActive: new Date()
-                }
-            },
+            updateFields,
             { new: true }
         );
         
@@ -335,18 +353,28 @@ router.post('/update-habit-points', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        console.log(`Added ${pointsToAdd} habit points to ${username} with activity log`);
-        
-        res.json({
+        const responseData = {
             success: true,
-            habitPoints: updatedUser.habitPoints,
+            activityType: activityType,
+            pointsAdded: pointsToAdd,
             overallScore: updatedUser.overallScore,
             activityLogged: true
-        });
+        };
+        
+        // Add type-specific data to response
+        if (['challenge_joined', 'challenge_daily', 'challenge_completed'].includes(activityType)) {
+            responseData.challengePoints = updatedUser.challengeStats?.totalPoints || 0;
+        } else {
+            responseData.habitPoints = updatedUser.habitPoints || 0;
+        }
+        
+        console.log(`Updated ${username}: Total=${updatedUser.overallScore}, Habits=${updatedUser.habitPoints}, Challenges=${updatedUser.challengeStats?.totalPoints || 0}`);
+        
+        res.json(responseData);
         
     } catch (error) {
-        console.error('Error updating habit points:', error);
-        res.status(500).json({ error: 'Failed to update habit points' });
+        console.error('Error updating user points:', error);
+        res.status(500).json({ error: 'Failed to update points' });
     }
 });
 
