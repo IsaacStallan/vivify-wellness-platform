@@ -34,23 +34,25 @@
             color: #ffffff;
             line-height: 1.6;
             overflow-x: hidden;
+            padding-top: 0;  /* Will be adjusted by JS */
         }
 
         /* Header */
         header {
-            position: sticky;
+            position: fixed;  /* Changed from sticky */
             top: 0;
+            left: 0;
+            right: 0;
             width: 100%;
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
             transition: all 0.3s ease;
-
-            /* iOS PWA safe area - ONLY add padding in standalone mode */
             padding-top: 0;
         }
 
+        /* PWA safe area */
         @media (display-mode: standalone) {
             header {
                 padding-top: env(safe-area-inset-top);
@@ -1830,6 +1832,23 @@
               .catch(err => console.log('Service Worker registration failed:', err));
           });
         }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('header');
+            if (header) {
+                const headerHeight = header.offsetHeight;
+                document.body.style.paddingTop = headerHeight + 'px';
+            }
+        });
+
+        // Recalculate on window resize
+        window.addEventListener('resize', function() {
+            const header = document.querySelector('header');
+            if (header) {
+                const headerHeight = header.offsetHeight;
+                document.body.style.paddingTop = headerHeight + 'px';
+            }
+        });
     </script>
 </body>
 </html>
