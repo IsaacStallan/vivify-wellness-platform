@@ -299,40 +299,6 @@
             font-size: 0.9rem;
         }
 
-        .demo-section {
-            text-align: center;
-            margin: 1.5rem 0;
-            padding: 1.5rem;
-            background: rgba(243, 156, 18, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(243, 156, 18, 0.2);
-        }
-
-        .demo-section p {
-            color: #f39c12;
-            margin: 0 0 1rem 0;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .demo-btn {
-            background: transparent;
-            border: 1px solid #f39c12;
-            color: #f39c12;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .demo-btn:hover {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #000;
-            transform: translateY(-2px);
-        }
-
         .form-footer {
             text-align: center;
             margin-top: 2rem;
@@ -437,11 +403,6 @@
 
             <div id="message" style="display:none;"></div>
             
-            <div class="demo-section">
-                <p>Try the Demo</p>
-                <button type="button" class="demo-btn" onclick="loginAsDemo()">Experience the Platform</button>
-            </div>
-            
             <div class="form-footer">
                 <p>Don't have an account? <a href="signup.html">Start your journey</a></p>
                 <p><a href="#" id="forgotPassword">Forgot your password?</a></p>
@@ -465,35 +426,6 @@
             setTimeout(() => {
                 messageElement.style.display = 'none';
             }, 5000);
-        }
-
-        function loginAsDemo() {
-            const demoBtn = document.querySelector('.demo-btn');
-            demoBtn.textContent = 'Creating demo account...';
-            demoBtn.disabled = true;
-            
-            setTimeout(() => {
-                const demoUser = {
-                    id: 'demo_' + Date.now(),
-                    name: 'Demo Student',
-                    email: 'demo@vivify.com',
-                    school: 'Demo School',
-                    yearLevel: '10',
-                    username: 'Demo Student'
-                };
-                
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('authToken', 'demo_token_' + Date.now());
-                localStorage.setItem('username', demoUser.name);
-                localStorage.setItem('userProfile', JSON.stringify(demoUser));
-                localStorage.setItem('needsBaselineAssessment', 'true');
-                
-                showMessage('Demo account created! Starting your assessment...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = 'performance-baseline-assessment.html';
-                }, 1500);
-            }, 1500);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -560,11 +492,17 @@
                     const data = await response.json();
 
                     if (data.success && data.token) {
-                        // Store authentication data
+                        // Store authentication data with timestamp
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('authToken', data.token);
                         localStorage.setItem('username', data.user.username);
                         localStorage.setItem('vivifyUserId', data.user.id);
+                        localStorage.setItem('loginTimestamp', Date.now().toString());
+                        
+                        // ALSO store in sessionStorage as backup for PWA
+                        sessionStorage.setItem('userLoggedIn', 'true');
+                        sessionStorage.setItem('username', data.user.username);
+                        sessionStorage.setItem('authToken', data.token);
                         
                         const userProfile = {
                             id: data.user.id,

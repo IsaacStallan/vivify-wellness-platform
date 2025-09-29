@@ -3207,14 +3207,28 @@
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('App initializing...');
             
-            // Check authentication first
-            const userLoggedIn = localStorage.getItem('userLoggedIn');
-            const username = localStorage.getItem('username');
+            // IMPROVED AUTH CHECK - Less aggressive
+            const userLoggedIn = localStorage.getItem('userLoggedIn') || sessionStorage.getItem('userLoggedIn');
+            const username = localStorage.getItem('username') || sessionStorage.getItem('username');
+            const authToken = localStorage.getItem('authToken');
             
-            if (userLoggedIn !== 'true' || !username) {
-                console.log('User not logged in, redirecting...');
+            // Only redirect if BOTH flags are missing (not just one)
+            if (!userLoggedIn || !username) {
+                console.log('No auth found, redirecting to login');
                 window.location.href = 'login.html';
                 return;
+            }
+            
+            // Check if token is expired (optional, but good practice)
+            const loginTimestamp = localStorage.getItem('loginTimestamp');
+            if (loginTimestamp) {
+                const daysSinceLogin = (Date.now() - parseInt(loginTimestamp)) / (1000 * 60 * 60 * 24);
+                if (daysSinceLogin > 30) {
+                    console.log('Token expired (>30 days), please re-login');
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
             }
             
             console.log('User authenticated:', username);
@@ -3286,6 +3300,33 @@
             } catch (error) {
                 console.error('Error during initialization:', error);
                 showNotification('Error initializing app. Please refresh the page.', 'error');
+            }
+        });
+
+        // Restore session when app comes to foreground
+        window.addEventListener('focus', () => {
+            console.log('App focused, checking auth...');
+            
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const username = localStorage.getItem('username');
+            
+            if (userLoggedIn && username && appTracker) {
+                console.log('Session valid, refreshing data');
+                appTracker.loadData(); // Sync latest data
+            } else if (!userLoggedIn || !username) {
+                console.log('Session lost, redirecting to login');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Also check on page visibility change (iOS PWA specific)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                console.log('App visible again');
+                const userLoggedIn = localStorage.getItem('userLoggedIn');
+                if (userLoggedIn && appTracker) {
+                    appTracker.loadData();
+                }
             }
         });
 
