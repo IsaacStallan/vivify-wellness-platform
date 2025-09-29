@@ -158,58 +158,85 @@ class VivifyUnifiedTracker {
 
     // UPDATED loadData method
     async loadData() {
-        // 1. Load from localStorage first (instant, works offline)
+        // 1. Load local cache first
         const localData = localStorage.getItem('vivifyUnifiedData');
         if (localData) {
             try {
-                this.data = { ...this.data, ...JSON.parse(localData) };
+                const parsed = JSON.parse(localData);
+                this.data = { ...this.data, ...parsed };
             } catch (e) {
-                console.warn('Invalid localStorage data');
+                console.warn('Bad vivifyUnifiedData JSON, ignoring.');
             }
         }
         
-        // 2. Then fetch from backend (may have newer data from other devices)
+        // 2. Fetch from server and merge
         try {
             const response = await fetch(`${this.baseURL}/user/${this.username}`);
-            if (response.ok) {
-                const serverData = await response.json();
-                
-                // Merge server data (prefer server if it has data)
-                if (serverData.unifiedTrackerData && Object.keys(serverData.unifiedTrackerData).length > 0) {
-                    const serverTrackerData = serverData.unifiedTrackerData;
-                    
-                    // Compare timestamps to use most recent
-                    const localTimestamp = new Date(this.data.lastActiveDate).getTime();
-                    const serverTimestamp = new Date(serverTrackerData.lastActiveDate || 0).getTime();
-                    
-                    if (serverTimestamp > localTimestamp) {
-                        console.log('Using server data (more recent)');
-                        this.data = { ...this.data, ...serverTrackerData };
-                    } else {
-                        console.log('Using local data (more recent)');
-                    }
-                }
-                
-                // Always sync assessment scores from server
-                if (serverData.fitnessScore !== undefined) {
-                    this.data.scores.physical = serverData.fitnessScore;
-                    this.data.scores.mental = serverData.mentalScore;
-                    this.data.scores.nutrition = serverData.nutritionScore;
-                    this.data.scores.lifeSkills = serverData.lifeSkillsScore;
-                    this.data.scores.overall = Math.round((
-                        this.data.scores.physical + 
-                        this.data.scores.mental + 
-                        this.data.scores.nutrition + 
-                        this.data.scores.lifeSkills
-                    ) / 4);
-                    this._scoresFromServer = true;
-                }
+            if (!response.ok) {
+                throw new Error('Server fetch failed');
             }
+            
+            const serverData = await response.json();
+            
+            if (serverData.unifiedTrackerData && Object.keys(serverData.unifiedTrackerData).length > 0) {
+                const serverTrackerData = serverData.unifiedTrackerData;
+                
+                // Merge core data
+                this.data.challenges = serverTrackerData.challenges || this.data.challenges;
+                this.data.dailyCompletions = serverTrackerData.dailyCompletions || this.data.dailyCompletions;
+                this.data.streaks = serverTrackerData.streaks || this.data.streaks;
+                this.data.totalPoints = serverTrackerData.totalPoints || this.data.totalPoints;
+                this.data.totalXP = serverTrackerData.totalXP || this.data.totalXP;
+                this.data.activities = serverTrackerData.activities || this.data.activities;
+                this.data.achievements = serverTrackerData.achievements || this.data.achievements;
+                this.data.lastActiveDate = serverTrackerData.lastActiveDate || this.data.lastActiveDate;
+                
+                // CRITICAL: Restore habit completion status from dailyCompletions
+                const today = new Date().toDateString();
+                const todayCompletions = this.data.dailyCompletions[today] || [];
+                
+                console.log('Today\'s completions from server:', todayCompletions);
+                
+                // Update default habits
+                this.data.habits.forEach(habit => {
+                    habit.completed = todayCompletions.includes(habit.id);
+                    habit.streak = this.data.streaks[habit.id] || 0;
+                });
+                
+                // Update custom habits
+                if (serverTrackerData.customHabits) {
+                    this.data.customHabits = serverTrackerData.customHabits.map(habit => ({
+                        ...habit,
+                        completed: todayCompletions.includes(habit.id),
+                        streak: this.data.streaks[habit.id] || 0
+                    }));
+                }
+                
+                console.log('Restored completion status for habits:', 
+                    this.data.habits.filter(h => h.completed).map(h => h.name)
+                );
+            }
+            
+            // Sync assessment scores
+            if (serverData.fitnessScore !== undefined) {
+                this.data.scores.physical = serverData.fitnessScore;
+                this.data.scores.mental = serverData.mentalScore;
+                this.data.scores.nutrition = serverData.nutritionScore;
+                this.data.scores.lifeSkills = serverData.lifeSkillsScore;
+                this.data.scores.overall = Math.round((
+                    this.data.scores.physical + 
+                    this.data.scores.mental + 
+                    this.data.scores.nutrition + 
+                    this.data.scores.lifeSkills
+                ) / 4);
+                this._scoresFromServer = true;
+            }
+            
         } catch (error) {
-            console.warn('Backend fetch failed, using local data only:', error);
+            console.warn('Backend fetch failed, using local only:', error);
         }
         
-        this.save(); // Save merged state locally
+        this.save();
     }
 
     // NEW: Sync to backend after state changes
