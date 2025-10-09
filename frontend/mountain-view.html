@@ -23,7 +23,7 @@
     <script type="text/babel">
         const { useState } = React;
     
-        // Icons (keeping same)
+        // Icons
         const Mountain = (props) => (
             <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
@@ -75,41 +75,41 @@
     
             const [mountainScroll, setMountainScroll] = useState(0);
             const [isClimbing, setIsClimbing] = useState(false);
-            const [stepPhase, setStepPhase] = useState(0); // 0=neutral, 1=left forward, 2=right forward
+            const [stepPhase, setStepPhase] = useState(0);
     
             const progressPercent = (userData.altitude / userData.targetAltitude) * 100;
     
             const getEnvironment = (alt) => {
                 if (alt < 1000) return {
                     name: 'Forest Base',
-                    skyTop: '#5BA3D0',
-                    skyBot: '#87CEEB',
-                    slopeColor: '#7a6f5d',
-                    slopeDark: '#5d513f',
+                    skyTop: '#4A90C8',
+                    skyBot: '#7BB8E8',
+                    slopeColor: '#6b5d4f',
+                    slopeDark: '#4a3d2f',
                     hasForest: true
                 };
                 if (alt < 2000) return {
                     name: 'Mountain Trail',
-                    skyTop: '#4A7BA8',
-                    skyBot: '#6BA3D4',
-                    slopeColor: '#8b8680',
-                    slopeDark: '#6b6660',
+                    skyTop: '#3A7FB8',
+                    skyBot: '#5BA3D8',
+                    slopeColor: '#7a7268',
+                    slopeDark: '#5a5248',
                     hasForest: true
                 };
                 if (alt < 3000) return {
                     name: 'Alpine Zone',
-                    skyTop: '#2E5F8A',
-                    skyBot: '#4A8AB8',
-                    slopeColor: '#9098a0',
-                    slopeDark: '#707880',
+                    skyTop: '#2E6FA8',
+                    skyBot: '#4A8AC8',
+                    slopeColor: '#8a8a82',
+                    slopeDark: '#6a6a62',
                     hasForest: false
                 };
                 return {
                     name: 'Summit Ridge',
-                    skyTop: '#1E4F7A',
-                    skyBot: '#2E5F8A',
-                    slopeColor: '#e8f0f8',
-                    slopeDark: '#c8d8e8',
+                    skyTop: '#1E5F98',
+                    skyBot: '#2E6FA8',
+                    slopeColor: '#dce8f0',
+                    slopeDark: '#bcd0e0',
                     hasForest: false
                 };
             };
@@ -129,7 +129,6 @@
                     frame++;
                     setMountainScroll(prev => prev + 2.8);
                     
-                    // Step every 8 frames for smooth natural gait
                     if (frame % 8 === 0) {
                         setStepPhase(prev => prev === 1 ? 2 : 1);
                     }
@@ -171,8 +170,9 @@
                         id: i,
                         x: x,
                         y: y,
-                        type: env.hasForest && Math.random() > 0.3 ? 'tree' : 'rock',
-                        size: 1.2 + Math.random() * 0.8
+                        type: env.hasForest && Math.random() > 0.25 ? 'tree' : 'rock',
+                        size: 1.1 + Math.random() * 0.9,
+                        variant: Math.floor(Math.random() * 3)
                     });
                 }
                 return elements;
@@ -185,13 +185,13 @@
                     background: `linear-gradient(to bottom, ${env.skyTop} 0%, ${env.skyBot} 100%)`
                 }}>
                     
-                    {/* Sun */}
-                    <div className="absolute w-56 h-56 rounded-full" style={{
-                        top: '6%',
-                        right: '10%',
-                        background: 'radial-gradient(circle, #fffff8 0%, #fffacd 20%, #ffeb3b 50%, #ffa726 100%)',
-                        boxShadow: '0 0 150px rgba(255, 235, 59, 0.5)',
-                        opacity: 0.9
+                    {/* Sun with realistic glow */}
+                    <div className="absolute w-48 h-48 rounded-full" style={{
+                        top: '8%',
+                        right: '12%',
+                        background: 'radial-gradient(circle, #fffef5 0%, #fff9e0 15%, #ffeb3b 40%, #ffa726 80%, transparent 100%)',
+                        boxShadow: '0 0 120px rgba(255, 235, 59, 0.4), 0 0 60px rgba(255, 235, 59, 0.6)',
+                        opacity: 0.95
                     }} />
     
                     {/* Mountain slope */}
@@ -204,95 +204,175 @@
                     >
                         <svg width="100%" height="200%" className="absolute" style={{ top: '-50%' }} preserveAspectRatio="none">
                             <defs>
-                                <pattern id="terrain" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                                    <rect width="100" height="100" fill={env.slopeColor} />
-                                    <circle cx="20" cy="20" r="8" fill={env.slopeDark} opacity="0.25" />
-                                    <circle cx="65" cy="35" r="10" fill={env.slopeDark} opacity="0.2" />
-                                    <circle cx="40" cy="70" r="7" fill={env.slopeDark} opacity="0.3" />
-                                    <circle cx="80" cy="80" r="9" fill={env.slopeDark} opacity="0.22" />
-                                    <ellipse cx="30" cy="50" rx="10" ry="5" fill={env.slopeDark} opacity="0.18" />
+                                <pattern id="terrain" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                                    <rect width="120" height="120" fill={env.slopeColor} />
+                                    <circle cx="25" cy="25" r="10" fill={env.slopeDark} opacity="0.2" />
+                                    <circle cx="70" cy="40" r="12" fill={env.slopeDark} opacity="0.18" />
+                                    <circle cx="45" cy="75" r="9" fill={env.slopeDark} opacity="0.25" />
+                                    <circle cx="90" cy="85" r="11" fill={env.slopeDark} opacity="0.19" />
+                                    <ellipse cx="35" cy="55" rx="12" ry="6" fill={env.slopeDark} opacity="0.15" />
+                                    <path d="M10,10 Q15,12 20,10 T30,10" stroke={env.slopeDark} strokeWidth="2" fill="none" opacity="0.12" />
+                                    <path d="M60,60 Q65,58 70,60 T80,60" stroke={env.slopeDark} strokeWidth="1.5" fill="none" opacity="0.1" />
                                 </pattern>
+                                
+                                <filter id="terrainNoise">
+                                    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" />
+                                    <feColorMatrix type="saturate" values="0" />
+                                    <feBlend mode="overlay" in="SourceGraphic" />
+                                </filter>
                             </defs>
-                            <rect width="100%" height="100%" fill="url(#terrain)" />
+                            <rect width="100%" height="100%" fill="url(#terrain)" filter="url(#terrainNoise)" />
                             
-                            {[...Array(20)].map((_, i) => (
+                            {[...Array(18)].map((_, i) => (
                                 <line 
                                     key={i}
                                     x1="0" 
-                                    y1={i * 150} 
+                                    y1={i * 160} 
                                     x2="100%" 
-                                    y2={i * 150}
+                                    y2={i * 160}
                                     stroke={env.slopeDark}
-                                    strokeWidth="2"
-                                    opacity="0.12"
-                                    strokeDasharray="20,15"
+                                    strokeWidth="1.5"
+                                    opacity="0.15"
+                                    strokeDasharray="25,12"
                                 />
                             ))}
                         </svg>
     
-                        {/* BIGGER, MORE REALISTIC TERRAIN */}
+                        {/* Enhanced terrain objects */}
                         {terrain.map((obj) => {
-                            const scale = Math.max(0.6, 1 - ((obj.y - mountainScroll) / 3500));
+                            const scale = Math.max(0.5, 1 - ((obj.y - mountainScroll) / 3800));
                             
                             let element = null;
     
                             if (obj.type === 'tree') {
-                                element = (
-                                    <svg width={80 * obj.size} height={110 * obj.size} viewBox="0 0 80 110">
-                                        {/* Trunk - realistic bark */}
-                                        <rect x="32" y="80" width="16" height="30" fill="#3e2723" />
-                                        <rect x="33" y="81" width="14" height="28" fill="#4a3728" />
-                                        <rect x="34" y="82" width="12" height="26" fill="#5d4037" />
-                                        <line x1="35" y1="84" x2="35" y2="106" stroke="#2d1b14" strokeWidth="1" opacity="0.7" />
-                                        <line x1="38" y1="83" x2="38" y2="107" stroke="#2d1b14" strokeWidth="0.8" opacity="0.6" />
-                                        <line x1="42" y1="84" x2="42" y2="105" stroke="#2d1b14" strokeWidth="0.9" opacity="0.65" />
-                                        <ellipse cx="37" cy="92" rx="2" ry="3" fill="#2d1b14" opacity="0.8" />
-                                        <ellipse cx="41" cy="98" rx="1.8" ry="2.5" fill="#2d1b14" opacity="0.7" />
+                                const treeVariants = [
+                                    // Variant 1: Classic pine
+                                    <svg width={90} height={120} viewBox="0 0 90 120">
+                                        <rect x="38" y="88" width="14" height="32" fill="#2d1810" />
+                                        <rect x="39" y="89" width="12" height="30" fill="#3e2415" />
+                                        <rect x="40" y="90" width="10" height="28" fill="#4a2f1a" />
+                                        <line x1="41" y1="92" x2="41" y2="116" stroke="#1a0f08" strokeWidth="0.8" opacity="0.5" />
+                                        <line x1="44" y1="93" x2="44" y2="115" stroke="#1a0f08" strokeWidth="0.7" opacity="0.4" />
+                                        <line x1="47" y1="92" x2="47" y2="114" stroke="#1a0f08" strokeWidth="0.8" opacity="0.45" />
                                         
-                                        {/* Foliage - layered and dense */}
-                                        <ellipse cx="40" cy="70" rx="34" ry="28" fill="#0f3d0f" />
-                                        <ellipse cx="40" cy="62" rx="31" ry="25" fill="#143d14" />
-                                        <ellipse cx="40" cy="55" rx="28" ry="23" fill="#1a4d1a" />
-                                        <ellipse cx="40" cy="48" rx="25" ry="21" fill="#1e5a1e" />
-                                        <ellipse cx="40" cy="42" rx="22" ry="19" fill="#256b25" />
-                                        <ellipse cx="40" cy="36" rx="19" ry="17" fill="#2d7a2d" />
-                                        <ellipse cx="40" cy="31" rx="16" ry="14" fill="#358a35" />
-                                        <ellipse cx="40" cy="26" rx="13" ry="12" fill="#3d9a3d" />
-                                        <ellipse cx="40" cy="22" rx="10" ry="10" fill="#45aa45" />
+                                        <ellipse cx="45" cy="78" rx="38" ry="32" fill="#0a2d0a" />
+                                        <ellipse cx="45" cy="70" rx="35" ry="28" fill="#0f3d0f" />
+                                        <ellipse cx="45" cy="63" rx="32" ry="25" fill="#14481a" />
+                                        <ellipse cx="45" cy="56" rx="29" ry="23" fill="#195520" />
+                                        <ellipse cx="45" cy="50" rx="26" ry="21" fill="#1e6025" />
+                                        <ellipse cx="45" cy="44" rx="23" ry="19" fill="#246b2a" />
+                                        <ellipse cx="45" cy="38" rx="20" ry="17" fill="#2a7630" />
+                                        <ellipse cx="45" cy="33" rx="17" ry="15" fill="#308135" />
+                                        <ellipse cx="45" cy="28" rx="14" ry="13" fill="#368c3a" />
+                                        <ellipse cx="45" cy="24" rx="11" ry="11" fill="#3c9740" />
                                         
-                                        {/* Highlights */}
-                                        <ellipse cx="34" cy="50" rx="10" ry="8" fill="#5dba5d" opacity="0.6" />
-                                        <ellipse cx="47" cy="58" rx="11" ry="9" fill="#5dba5d" opacity="0.5" />
-                                        <ellipse cx="37" cy="35" rx="7" ry="6" fill="#6dca6d" opacity="0.7" />
-                                        <ellipse cx="44" cy="42" rx="8" ry="7" fill="#6dca6d" opacity="0.55" />
+                                        <ellipse cx="38" cy="58" rx="12" ry="10" fill="#4daa4d" opacity="0.5" />
+                                        <ellipse cx="53" cy="65" rx="13" ry="11" fill="#4daa4d" opacity="0.45" />
+                                        <ellipse cx="41" cy="42" rx="9" ry="8" fill="#5dba5d" opacity="0.6" />
+                                        <ellipse cx="50" cy="48" rx="10" ry="9" fill="#5dba5d" opacity="0.5" />
                                         
-                                        {/* Dark shadows */}
-                                        <ellipse cx="30" cy="63" rx="9" ry="7" fill="#0a2d0a" opacity="0.5" />
-                                        <ellipse cx="50" cy="66" rx="10" ry="8" fill="#0a2d0a" opacity="0.45" />
+                                        <ellipse cx="33" cy="70" rx="11" ry="9" fill="#061a06" opacity="0.4" />
+                                        <ellipse cx="57" cy="73" rx="12" ry="10" fill="#061a06" opacity="0.35" />
+                                    </svg>,
+                                    
+                                    // Variant 2: Broader tree
+                                    <svg width={95} height={115} viewBox="0 0 95 115">
+                                        <rect x="40" y="85" width="15" height="30" fill="#2d1810" />
+                                        <rect x="41" y="86" width="13" height="28" fill="#3e2415" />
+                                        <rect x="42" y="87" width="11" height="26" fill="#4a2f1a" />
+                                        
+                                        <ellipse cx="47" cy="76" rx="40" ry="30" fill="#0a2d0a" />
+                                        <ellipse cx="47" cy="69" rx="37" ry="27" fill="#0f3d0f" />
+                                        <ellipse cx="47" cy="62" rx="34" ry="24" fill="#14481a" />
+                                        <ellipse cx="47" cy="56" rx="31" ry="22" fill="#195520" />
+                                        <ellipse cx="47" cy="50" rx="28" ry="20" fill="#1e6025" />
+                                        <ellipse cx="47" cy="45" rx="25" ry="18" fill="#246b2a" />
+                                        <ellipse cx="47" cy="40" rx="22" ry="16" fill="#2a7630" />
+                                        <ellipse cx="47" cy="35" rx="19" ry="14" fill="#308135" />
+                                        <ellipse cx="47" cy="31" rx="16" ry="12" fill="#368c3a" />
+                                        
+                                        <ellipse cx="40" cy="60" rx="13" ry="11" fill="#4daa4d" opacity="0.5" />
+                                        <ellipse cx="56" cy="67" rx="14" ry="12" fill="#4daa4d" opacity="0.45" />
+                                    </svg>,
+                                    
+                                    // Variant 3: Tall slender tree
+                                    <svg width={85} height={125} viewBox="0 0 85 125">
+                                        <rect x="37" y="92" width="13" height="33" fill="#2d1810" />
+                                        <rect x="38" y="93" width="11" height="31" fill="#3e2415" />
+                                        <rect x="39" y="94" width="9" height="29" fill="#4a2f1a" />
+                                        
+                                        <ellipse cx="43" cy="82" rx="36" ry="34" fill="#0a2d0a" />
+                                        <ellipse cx="43" cy="73" rx="33" ry="30" fill="#0f3d0f" />
+                                        <ellipse cx="43" cy="65" rx="30" ry="27" fill="#14481a" />
+                                        <ellipse cx="43" cy="57" rx="27" ry="24" fill="#195520" />
+                                        <ellipse cx="43" cy="50" rx="24" ry="22" fill="#1e6025" />
+                                        <ellipse cx="43" cy="43" rx="21" ry="20" fill="#246b2a" />
+                                        <ellipse cx="43" cy="37" rx="18" ry="18" fill="#2a7630" />
+                                        <ellipse cx="43" cy="31" rx="15" ry="16" fill="#308135" />
+                                        <ellipse cx="43" cy="26" rx="12" ry="14" fill="#368c3a" />
+                                        <ellipse cx="43" cy="21" rx="9" ry="11" fill="#3c9740" />
+                                        
+                                        <ellipse cx="37" cy="55" rx="11" ry="9" fill="#4daa4d" opacity="0.5" />
+                                        <ellipse cx="50" cy="62" rx="12" ry="10" fill="#4daa4d" opacity="0.45" />
                                     </svg>
-                                );
+                                ];
+                                
+                                element = treeVariants[obj.variant];
                             } else {
-                                element = (
-                                    <svg width={55 * obj.size} height={38 * obj.size} viewBox="0 0 55 38">
-                                        <ellipse cx="27" cy="36" rx="24" ry="6" fill="#000000" opacity="0.3" />
-                                        <path d="M27,6 L45,28 L43,34 L11,34 L9,28 Z" fill="#3f3f3f" />
-                                        <path d="M27,6 L38,23 L36,30 L18,30 L16,23 Z" fill="#5a5a5a" />
-                                        <path d="M27,8 L33,20 L31,26 L23,26 L21,20 Z" fill="#7a7a7a" />
-                                        <path d="M27,10 L30,18 L29,22 L25,22 L24,18 Z" fill="#9a9a9a" />
-                                        <ellipse cx="27" cy="14" rx="5" ry="4" fill="#b5b5b5" opacity="0.7" />
+                                const rockVariants = [
+                                    // Variant 1: Angular rock
+                                    <svg width={60} height={42} viewBox="0 0 60 42">
+                                        <ellipse cx="30" cy="40" rx="26" ry="7" fill="#000000" opacity="0.25" />
+                                        <path d="M30,4 L50,30 L48,37 L12,37 L10,30 Z" fill="#2a2a2a" />
+                                        <path d="M30,4 L42,26 L40,34 L20,34 L18,26 Z" fill="#3d3d3d" />
+                                        <path d="M30,6 L37,22 L35,30 L25,30 L23,22 Z" fill="#5a5a5a" />
+                                        <path d="M30,8 L34,19 L32,26 L28,26 L26,19 Z" fill="#7a7a7a" />
+                                        <ellipse cx="30" cy="13" rx="6" ry="5" fill="#9a9a9a" opacity="0.6" />
                                         
-                                        {/* Cracks */}
-                                        <line x1="18" y1="29" x2="22" y2="20" stroke="#2a2a2a" strokeWidth="1.5" opacity="0.7" />
-                                        <line x1="36" y1="30" x2="32" y2="21" stroke="#2a2a2a" strokeWidth="1.5" opacity="0.7" />
-                                        <line x1="27" y1="9" x2="27" y2="25" stroke="#2a2a2a" strokeWidth="1.2" opacity="0.6" />
-                                        <path d="M24,22 Q25,21 26,22" stroke="#3a3a3a" strokeWidth="0.8" fill="none" opacity="0.6" />
-                                        <path d="M29,24 Q30,23 31,24" stroke="#3a3a3a" strokeWidth="0.8" fill="none" opacity="0.6" />
+                                        <line x1="20" y1="33" x2="24" y2="22" stroke="#1a1a1a" strokeWidth="1.2" opacity="0.6" />
+                                        <line x1="40" y1="34" x2="36" y2="23" stroke="#1a1a1a" strokeWidth="1.2" opacity="0.6" />
+                                        <line x1="30" y1="7" x2="30" y2="29" stroke="#1a1a1a" strokeWidth="1" opacity="0.5" />
                                         
-                                        {/* Moss */}
-                                        <ellipse cx="21" cy="26" rx="4" ry="3" fill="#4a6b4a" opacity="0.5" />
-                                        <ellipse cx="34" cy="28" rx="3.5" ry="2.5" fill="#4a6b4a" opacity="0.45" />
+                                        <ellipse cx="23" cy="28" rx="5" ry="4" fill="#3a5a3a" opacity="0.4" />
+                                        <ellipse cx="38" cy="30" rx="4" ry="3" fill="#3a5a3a" opacity="0.35" />
+                                    </svg>,
+                                    
+                                    // Variant 2: Round boulder
+                                    <svg width={65} height={45} viewBox="0 0 65 45">
+                                        <ellipse cx="32" cy="42" rx="28" ry="8" fill="#000000" opacity="0.25" />
+                                        <ellipse cx="32" cy="26" rx="30" ry="24" fill="#2a2a2a" />
+                                        <ellipse cx="32" cy="24" rx="28" ry="22" fill="#3d3d3d" />
+                                        <ellipse cx="32" cy="22" rx="26" ry="20" fill="#5a5a5a" />
+                                        <ellipse cx="32" cy="20" rx="24" ry="18" fill="#7a7a7a" />
+                                        <ellipse cx="32" cy="18" rx="20" ry="15" fill="#909090" />
+                                        <ellipse cx="28" cy="16" rx="12" ry="10" fill="#a5a5a5" opacity="0.7" />
+                                        
+                                        <path d="M20,28 Q22,26 24,28" stroke="#1a1a1a" strokeWidth="1" fill="none" opacity="0.5" />
+                                        <path d="M40,30 Q42,28 44,30" stroke="#1a1a1a" strokeWidth="1" fill="none" opacity="0.5" />
+                                        
+                                        <ellipse cx="25" cy="32" rx="6" ry="5" fill="#3a5a3a" opacity="0.4" />
+                                        <ellipse cx="40" cy="34" rx="5" ry="4" fill="#3a5a3a" opacity="0.35" />
+                                    </svg>,
+                                    
+                                    // Variant 3: Flat layered rock
+                                    <svg width={70} height={38} viewBox="0 0 70 38">
+                                        <ellipse cx="35" cy="36" rx="30" ry="6" fill="#000000" opacity="0.25" />
+                                        <path d="M10,30 L15,20 L55,20 L60,30 Z" fill="#2a2a2a" />
+                                        <path d="M12,28 L17,22 L53,22 L58,28 Z" fill="#3d3d3d" />
+                                        <path d="M15,16 L20,10 L50,10 L55,16 Z" fill="#4a4a4a" />
+                                        <path d="M17,14 L22,12 L48,12 L53,14 Z" fill="#5a5a5a" />
+                                        <path d="M20,8 L25,5 L45,5 L50,8 Z" fill="#7a7a7a" />
+                                        
+                                        <line x1="12" y1="28" x2="58" y2="28" stroke="#1a1a1a" strokeWidth="1.5" opacity="0.5" />
+                                        <line x1="15" y1="16" x2="55" y2="16" stroke="#1a1a1a" strokeWidth="1.5" opacity="0.5" />
+                                        <line x1="20" y1="8" x2="50" y2="8" stroke="#1a1a1a" strokeWidth="1" opacity="0.5" />
+                                        
+                                        <ellipse cx="22" cy="26" rx="5" ry="3" fill="#3a5a3a" opacity="0.4" />
+                                        <ellipse cx="48" cy="27" rx="6" ry="4" fill="#3a5a3a" opacity="0.35" />
                                     </svg>
-                                );
+                                ];
+                                
+                                element = rockVariants[obj.variant];
                             }
     
                             return (
@@ -302,9 +382,9 @@
                                     style={{
                                         left: `calc(50% + ${obj.x}px)`,
                                         top: `${obj.y}px`,
-                                        transform: `scale(${scale})`,
-                                        opacity: scale > 0.7 ? 1 : scale * 1.3,
-                                        filter: scale < 0.75 ? 'blur(1.2px)' : 'none'
+                                        transform: `scale(${scale * obj.size})`,
+                                        opacity: scale > 0.65 ? 1 : scale * 1.4,
+                                        filter: scale < 0.7 ? 'blur(1px)' : 'none'
                                     }}
                                 >
                                     {element}
@@ -313,282 +393,260 @@
                         })}
                     </div>
     
-                    {/* GRAND MOUNTAIN ADVENTURE STYLE CHARACTER */}
+                    {/* REFINED CHARACTER - Grand Mountain Adventure style */}
                     <div className="absolute left-1/2 -translate-x-1/2 z-40" style={{ top: '46%' }}>
-                        <svg width="140" height="180" viewBox="0 0 140 180">
-                            {/* BACKPACK - realistic hiking pack */}
-                            <ellipse cx="70" cy="68" rx="32" ry="38" fill="#1a4d80" />
-                            <ellipse cx="70" cy="66" rx="30" ry="36" fill="#2563a8" />
-                            <ellipse cx="70" cy="64" rx="28" ry="34" fill="#2d72b8" />
+                        <svg width="120" height="160" viewBox="0 0 120 160">
+                            {/* BACKPACK - more structured */}
+                            <ellipse cx="60" cy="60" rx="28" ry="34" fill="#1e4d7a" />
+                            <ellipse cx="60" cy="58" rx="26" ry="32" fill="#2563a8" />
+                            <ellipse cx="60" cy="56" rx="24" ry="30" fill="#2d72b8" />
                             
-                            {/* Main compartment */}
-                            <rect x="56" y="52" width="28" height="20" rx="4" fill="#3d82c8" />
-                            <rect x="58" y="54" width="24" height="16" rx="3" fill="#4a8fd8" />
+                            <rect x="48" y="46" width="24" height="18" rx="3" fill="#3d82c8" />
+                            <rect x="50" y="48" width="20" height="14" rx="2" fill="#4a8fd8" />
                             
-                            {/* Side pockets */}
-                            <ellipse cx="48" cy="70" rx="8" ry="16" fill="#2563a8" />
-                            <ellipse cx="92" cy="70" rx="8" ry="16" fill="#2563a8" />
+                            <ellipse cx="42" cy="62" rx="7" ry="14" fill="#2563a8" />
+                            <ellipse cx="78" cy="62" rx="7" ry="14" fill="#2563a8" />
                             
-                            {/* Straps detail */}
-                            <path d="M48,58 Q44,64 44,82" stroke="#1a3d60" strokeWidth="5" fill="none" />
-                            <path d="M92,58 Q96,64 96,82" stroke="#1a3d60" strokeWidth="5" fill="none" />
-                            <path d="M49,60 Q46,66 46,82" stroke="#2563a8" strokeWidth="3.5" fill="none" />
-                            <path d="M91,60 Q94,66 94,82" stroke="#2563a8" strokeWidth="3.5" fill="none" />
+                            <path d="M42,52 Q38,58 38,74" stroke="#1a3d60" strokeWidth="4" fill="none" />
+                            <path d="M78,52 Q82,58 82,74" stroke="#1a3d60" strokeWidth="4" fill="none" />
+                            <path d="M43,54 Q40,60 40,74" stroke="#2563a8" strokeWidth="3" fill="none" />
+                            <path d="M77,54 Q80,60 80,74" stroke="#2563a8" strokeWidth="3" fill="none" />
                             
-                            {/* Buckles */}
-                            <rect x="56" y="74" width="6" height="4" rx="1" fill="#505050" />
-                            <rect x="78" y="74" width="6" height="4" rx="1" fill="#505050" />
+                            <rect x="50" y="66" width="5" height="3" rx="1" fill="#404040" />
+                            <rect x="65" y="66" width="5" height="3" rx="1" fill="#404040" />
                             
-                            {/* Sleeping pad on top */}
-                            <ellipse cx="70" cy="42" rx="18" ry="12" fill="#c84848" />
-                            <ellipse cx="70" cy="40" rx="16" ry="10" fill="#d85858" />
+                            <ellipse cx="60" cy="38" rx="16" ry="10" fill="#b83838" />
+                            <ellipse cx="60" cy="36" rx="14" ry="8" fill="#c84848" />
                             
-                            {/* BEANIE/CAP - realistic winter hat */}
-                            <ellipse cx="70" cy="28" rx="20" ry="22" fill="#8b2828" />
-                            <ellipse cx="70" cy="26" rx="18" ry="20" fill="#a83838" />
-                            <ellipse cx="70" cy="24" rx="17" ry="19" fill="#c84848" />
-                            <ellipse cx="70" cy="18" rx="18" ry="12" fill="#d85858" />
-                            <circle cx="70" cy="14" r="6" fill="#e86868" />
-                            <circle cx="68" cy="13" r="3" fill="#f88888" opacity="0.8" />
+                            {/* HEAD & BEANIE */}
+                            <ellipse cx="60" cy="24" rx="17" ry="19" fill="#7a2020" />
+                            <ellipse cx="60" cy="22" rx="15" ry="17" fill="#9a2828" />
+                            <ellipse cx="60" cy="20" rx="14" ry="16" fill="#b83838" />
+                            <ellipse cx="60" cy="15" rx="15" ry="10" fill="#c84848" />
+                            <circle cx="60" cy="11" r="5" fill="#d85858" />
+                            <circle cx="58" cy="10" r="2.5" fill="#e86868" opacity="0.8" />
                             
-                            {/* Back of head/neck */}
-                            <ellipse cx="70" cy="42" rx="15" ry="12" fill="#d4a574" />
-                            <rect x="62" y="50" width="16" height="10" fill="#c99565" />
+                            <ellipse cx="60" cy="38" rx="13" ry="10" fill="#d4a574" />
+                            <rect x="54" y="45" width="12" height="8" fill="#c99565" />
                             
-                            {/* GOGGLE STRAP visible on back of head */}
-                            <ellipse cx="70" cy="32" rx="19" ry="4" fill="#2a2a2a" opacity="0.8" />
-                            <ellipse cx="70" cy="32" rx="18" ry="3" fill="#3a3a3a" />
+                            <ellipse cx="60" cy="28" rx="16" ry="3" fill="#202020" opacity="0.9" />
+                            <ellipse cx="60" cy="28" rx="15" ry="2.5" fill="#303030" />
                             
-                            {/* RAIN JACKET - realistic outdoor gear */}
-                            <path d="M46,82 L42,88 L42,118 L48,124 L48,142 L46,156 L52,160 L70,158 L70,82 Z" fill="#1a5c8a" />
-                            <path d="M94,82 L98,88 L98,118 L92,124 L92,142 L94,156 L88,160 L70,158 L70,82 Z" fill="#1a5c8a" />
-                            <rect x="48" y="82" width="44" height="76" fill="#2d72b8" />
+                            {/* JACKET - cleaner structure */}
+                            <path d="M40,74 L36,80 L36,106 L42,112 L42,130 L40,142 L46,146 L60,144 L60,74 Z" fill="#1e5c8a" />
+                            <path d="M80,74 L84,80 L84,106 L78,112 L78,130 L80,142 L74,146 L60,144 L60,74 Z" fill="#1e5c8a" />
+                            <rect x="42" y="74" width="36" height="70" fill="#2d72b8" />
                             
-                            {/* Jacket seams and details */}
-                            <line x1="70" y1="86" x2="70" y2="152" stroke="#1a5c8a" strokeWidth="3" />
-                            <line x1="56" y1="88" x2="56" y2="148" stroke="#1a5c8a" strokeWidth="2" opacity="0.7" />
-                            <line x1="84" y1="88" x2="84" y2="148" stroke="#1a5c8a" strokeWidth="2" opacity="0.7" />
+                            <line x1="60" y1="78" x2="60" y2="140" stroke="#1a5c8a" strokeWidth="2.5" />
+                            <line x1="50" y1="80" x2="50" y2="136" stroke="#1a5c8a" strokeWidth="1.5" opacity="0.6" />
+                            <line x1="70" y1="80" x2="70" y2="136" stroke="#1a5c8a" strokeWidth="1.5" opacity="0.6" />
                             
-                            {/* Waterproof panels */}
-                            <rect x="56" y="92" width="12" height="54" fill="#3d82c8" opacity="0.4" />
-                            <rect x="72" y="92" width="12" height="54" fill="#3d82c8" opacity="0.4" />
+                            <rect x="50" y="84" width="10" height="48" fill="#3d82c8" opacity="0.35" />
+                            <rect x="62" y="84" width="10" height="48" fill="#3d82c8" opacity="0.35" />
                             
-                            {/* Pockets on jacket */}
-                            <rect x="54" y="100" width="14" height="18" rx="2" fill="#1a5c8a" />
-                            <rect x="72" y="100" width="14" height="18" rx="2" fill="#1a5c8a" />
+                            <rect x="48" y="90" width="12" height="16" rx="2" fill="#1a5c8a" />
+                            <rect x="64" y="90" width="12" height="16" rx="2" fill="#1a5c8a" />
                             
-                            {/* Left arm with hiking pole */}
-                            <g transform={`rotate(${stepPhase === 1 ? -18 : stepPhase === 2 ? -8 : -12} 48 96)`}>
-                                <ellipse cx="48" cy="106" rx="8" ry="26" fill="#1a5c8a" />
-                                <ellipse cx="47" cy="128" rx="7.5" ry="22" fill="#2d72b8" />
-                                <ellipse cx="46" cy="148" rx="7" ry="12" fill="#d4a574" />
-                                <ellipse cx="46" cy="152" rx="8" ry="8" fill="#2a2a2a" />
-                                <ellipse cx="46" cy="152" rx="7" ry="7" fill="#3a3a3a" />
+                            {/* LEFT ARM with pole */}
+                            <g transform={`rotate(${stepPhase === 1 ? -16 : stepPhase === 2 ? -6 : -10} 42 86)`}>
+                                <ellipse cx="42" cy="95" rx="7" ry="23" fill="#1a5c8a" />
+                                <ellipse cx="41" cy="115" rx="6.5" ry="19" fill="#2d72b8" />
+                                <ellipse cx="40" cy="132" rx="6" ry="10" fill="#d4a574" />
+                                <ellipse cx="40" cy="136" rx="7" ry="7" fill="#202020" />
+                                <ellipse cx="40" cy="136" rx="6" ry="6" fill="#303030" />
                             </g>
                             
-                            {/* Hiking pole - LEFT */}
                             {stepPhase === 1 && (
                                 <>
-                                    <line x1="47" y1="152" x2="42" y2="178" stroke="#505050" strokeWidth="4" />
-                                    <line x1="47" y1="152" x2="42" y2="178" stroke="#6a6a6a" strokeWidth="3.5" />
-                                    <circle cx="42" cy="178" r="5" fill="#3a3a3a" />
-                                    <circle cx="47" cy="154" r="4" fill="#7a7a7a" />
+                                    <line x1="41" y1="136" x2="36" y2="158" stroke="#404040" strokeWidth="3.5" />
+                                    <line x1="41" y1="136" x2="36" y2="158" stroke="#606060" strokeWidth="3" />
+                                    <circle cx="36" cy="158" r="4" fill="#303030" />
+                                    <circle cx="41" cy="138" r="3.5" fill="#707070" />
                                 </>
                             )}
                             
-                            {/* Right arm with hiking pole */}
-                            <g transform={`rotate(${stepPhase === 2 ? 18 : stepPhase === 1 ? 8 : 12} 92 96)`}>
-                                <ellipse cx="92" cy="106" rx="8" ry="26" fill="#1a5c8a" />
-                                <ellipse cx="93" cy="128" rx="7.5" ry="22" fill="#2d72b8" />
-                                <ellipse cx="94" cy="148" rx="7" ry="12" fill="#d4a574" />
-                                <ellipse cx="94" cy="152" rx="8" ry="8" fill="#2a2a2a" />
-                                <ellipse cx="94" cy="152" rx="7" ry="7" fill="#3a3a3a" />
+                            {/* RIGHT ARM with pole */}
+                            <g transform={`rotate(${stepPhase === 2 ? 16 : stepPhase === 1 ? 6 : 10} 78 86)`}>
+                                <ellipse cx="78" cy="95" rx="7" ry="23" fill="#1a5c8a" />
+                                <ellipse cx="79" cy="115" rx="6.5" ry="19" fill="#2d72b8" />
+                                <ellipse cx="80" cy="132" rx="6" ry="10" fill="#d4a574" />
+                                <ellipse cx="80" cy="136" rx="7" ry="7" fill="#202020" />
+                                <ellipse cx="80" cy="136" rx="6" ry="6" fill="#303030" />
                             </g>
                             
-                            {/* Hiking pole - RIGHT */}
                             {stepPhase === 2 && (
                                 <>
-                                    <line x1="93" y1="152" x2="98" y2="178" stroke="#505050" strokeWidth="4" />
-                                    <line x1="93" y1="152" x2="98" y2="178" stroke="#6a6a6a" strokeWidth="3.5" />
-                                    <circle cx="98" cy="178" r="5" fill="#3a3a3a" />
-                                    <circle cx="93" cy="154" r="4" fill="#7a7a7a" />
+                                    <line x1="79" y1="136" x2="84" y2="158" stroke="#404040" strokeWidth="3.5" />
+                                    <line x1="79" y1="136" x2="84" y2="158" stroke="#606060" strokeWidth="3" />
+                                    <circle cx="84" cy="158" r="4" fill="#303030" />
+                                    <circle cx="79" cy="138" r="3.5" fill="#707070" />
                                 </>
                             )}
                             
-                            {/* WATERPROOF PANTS - realistic hiking pants */}
-                            <g transform={`translate(${stepPhase === 1 ? -3 : 0} ${stepPhase === 1 ? 6 : 0})`}>
-                                <rect x="56" y="158" width="14" height="22" rx="2" fill="#2a3a4a" />
-                                <rect x="57" y="159" width="12" height="20" rx="1.5" fill="#3a4a5a" />
-                                <rect x="58" y="160" width="10" height="18" rx="1" fill="#4a5a6a" />
+                            {/* PANTS - better proportions */}
+                            <g transform={`translate(${stepPhase === 1 ? -2 : 0} ${stepPhase === 1 ? 4 : 0})`}>
+                                <rect x="50" y="144" width="12" height="18" rx="2" fill="#2a3a48" />
+                                <rect x="51" y="145" width="10" height="16" rx="1.5" fill="#3a4a58" />
+                                <rect x="52" y="146" width="8" height="14" rx="1" fill="#4a5a68" />
                             </g>
                             
-                            <g transform={`translate(${stepPhase === 2 ? 3 : 0} ${stepPhase === 2 ? 6 : 0})`}>
-                                <rect x="70" y="158" width="14" height="22" rx="2" fill="#2a3a4a" />
-                                <rect x="71" y="159" width="12" height="20" rx="1.5" fill="#3a4a5a" />
-                                <rect x="72" y="160" width="10" height="18" rx="1" fill="#4a5a6a" />
+                            <g transform={`translate(${stepPhase === 2 ? 2 : 0} ${stepPhase === 2 ? 4 : 0})`}>
+                                <rect x="60" y="144" width="12" height="18" rx="2" fill="#2a3a48" />
+                                <rect x="61" y="145" width="10" height="16" rx="1.5" fill="#3a4a58" />
+                                <rect x="62" y="146" width="8" height="14" rx="1" fill="#4a5a68" />
                             </g>
                             
-                            {/* HIKING SHOES - realistic boots */}
-                            <ellipse cx="63" cy="180" rx="10" ry="5" fill="#1a1a1a" />
-                            <ellipse cx="63" cy="179" rx="9" ry="4.5" fill="#2a2a2a" />
-                            <ellipse cx="63" cy="178" rx="8" ry="4" fill="#3a3a3a" />
-                            <line x1="58" y1="179" x2="68" y2="179" stroke="#0a0a0a" strokeWidth="1.2" />
-                            <line x1="60" y1="177" x2="66" y2="177" stroke="#4a4a4a" strokeWidth="0.8" opacity="0.6" />
+                            {/* BOOTS - refined */}
+                            <ellipse cx="56" cy="162" rx="9" ry="4.5" fill="#1a1a1a" />
+                            <ellipse cx="56" cy="161" rx="8" ry="4" fill="#252525" />
+                            <ellipse cx="56" cy="160" rx="7" ry="3.5" fill="#303030" />
+                            <line x1="51" y1="161" x2="61" y2="161" stroke="#0a0a0a" strokeWidth="1" />
+                            <line x1="53" y1="159" x2="59" y2="159" stroke="#404040" strokeWidth="0.7" opacity="0.5" />
                             
-                            <ellipse cx="77" cy="180" rx="10" ry="5" fill="#1a1a1a" />
-                            <ellipse cx="77" cy="179" rx="9" ry="4.5" fill="#2a2a2a" />
-                            <ellipse cx="77" cy="178" rx="8" ry="4" fill="#3a3a3a" />
-                            <line x1="72" y1="179" x2="82" y2="179" stroke="#0a0a0a" strokeWidth="1.2" />
-                            <line x1="74" y1="177" x2="80" y2="177" stroke="#4a4a4a" strokeWidth="0.8" opacity="0.6" />
+                            <ellipse cx="64" cy="162" rx="9" ry="4.5" fill="#1a1a1a" />
+                            <ellipse cx="64" cy="161" rx="8" ry="4" fill="#252525" />
+                            <ellipse cx="64" cy="160" rx="7" ry="3.5" fill="#303030" />
+                            <line x1="59" y1="161" x2="69" y2="161" stroke="#0a0a0a" strokeWidth="1" />
+                            <line x1="61" y1="159" x2="67" y2="159" stroke="#404040" strokeWidth="0.7" opacity="0.5" />
                         </svg>
                         
                         <div 
-                            className="absolute left-1/2 -translate-x-1/2 rounded-full blur-2xl"
+                            className="absolute left-1/2 -translate-x-1/2 rounded-full blur-xl"
                             style={{ 
-                                top: '175px',
-                                width: '95px',
-                                height: '24px',
-                                background: 'radial-gradient(ellipse, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.35) 50%, transparent 100%)'
+                                top: '155px',
+                                width: '80px',
+                                height: '20px',
+                                background: 'radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)'
                             }}
                         />
                     </div>
     
-                    {/* HUD - same as before */}
+                    {/* HUD */}
                     <div className="absolute top-4 left-4 right-4 z-50 flex justify-between items-start gap-3">
                         <div className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
                             <div className="flex items-center gap-2 mb-1">
-                            <Mountain className="w-4 h-4 text-emerald-400" />
-                            <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">{env.name}</span>
+                                <Mountain className="w-4 h-4 text-emerald-400" />
+                                <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">{env.name}</span>
+                            </div>
+                            <div className="text-3xl font-bold text-white">
+                                {userData.altitude.toLocaleString()}
+                                <span className="text-base text-slate-400 ml-1">m</span>
+                            </div>
+                            <div className="mt-2 w-32 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                                <div 
+                                    className="h-full bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 transition-all duration-500 shadow-lg shadow-emerald-500/50"
+                                    style={{ width: `${progressPercent}%` }}
+                                />
+                            </div>
+                            <div className="text-xs text-slate-400 mt-1">
+                                {Math.round(progressPercent)}% to summit
+                            </div>
                         </div>
-                        <div className="text-3xl font-bold text-white">
-                            {userData.altitude.toLocaleString()}
-                            <span className="text-base text-slate-400 ml-1">m</span>
-                        </div>
-                        <div className="mt-2 w-32 h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                            <div 
-                                className="h-full bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 transition-all duration-500 shadow-lg shadow-emerald-500/50"
-                                style={{ width: `${progressPercent}%` }}
-                            />
-                        </div>
-                        <div className="text-xs text-slate-400 mt-1">
-                            {Math.round(progressPercent)}% to summit
-                        </div>
-                    </div>
 
-                    <div className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: getOxygenColor(userData.oxygen) }} />
-                            <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">Oxygen</span>
-                        </div>
-                        <div 
-                            className="text-3xl font-bold transition-colors duration-500"
-                            style={{ color: getOxygenColor(userData.oxygen) }}
-                        >
-                            {userData.oxygen}
-                            <span className="text-base text-slate-400">%</span>
-                        </div>
-                        <div className="mt-2 w-32 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                        <div className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
+                            <div className="flex items-center gap-2 mb-1">
+                                <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: getOxygenColor(userData.oxygen) }} />
+                                <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">Oxygen</span>
+                            </div>
                             <div 
-                                className="h-full transition-all duration-500"
-                                style={{ 
-                                    width: `${userData.oxygen}%`,
-                                    backgroundColor: getOxygenColor(userData.oxygen),
-                                    boxShadow: `0 0 10px ${getOxygenColor(userData.oxygen)}80`
-                                }}
-                            />
-                        </div>
-                        <div className="text-xs text-slate-400 mt-1">
-                            {userData.oxygen >= 70 ? 'Strong' : userData.oxygen >= 50 ? 'Moderate' : userData.oxygen >= 30 ? 'Weak' : 'Critical'}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Habit Buttons */}
-                <div className="absolute left-4 right-4 z-50" style={{ bottom: '80px' }}>
-                    <div className="bg-white/98 backdrop-blur-xl rounded-3xl shadow-2xl p-5 border border-slate-200">
-                        <div className="grid grid-cols-4 gap-3">
-                            {habits.map((habit, index) => {
-                                const Icon = habit.icon;
-                                const colors = [
-                                    { from: 'from-blue-500', to: 'to-cyan-500', glow: 'shadow-blue-500/50' },
-                                    { from: 'from-indigo-500', to: 'to-purple-500', glow: 'shadow-indigo-500/50' },
-                                    { from: 'from-green-500', to: 'to-emerald-500', glow: 'shadow-green-500/50' },
-                                    { from: 'from-purple-500', to: 'to-pink-500', glow: 'shadow-purple-500/50' }
-                                ];
-                                const color = colors[index];
-                                
-                                return (
-                                    <button
-                                        key={habit.id}
-                                        onClick={() => completeHabit(habit.id)}
-                                        disabled={habit.completed || isClimbing}
-                                        className={`
-                                            relative aspect-square rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-2
-                                            ${habit.completed 
-                                                ? 'bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-emerald-400 scale-95' 
-                                                : `bg-gradient-to-br ${color.from} ${color.to} hover:scale-105 active:scale-95 shadow-xl ${color.glow}`
-                                            }
-                                            ${isClimbing && !habit.completed ? 'opacity-50 cursor-not-allowed' : ''}
-                                        `}
-                                    >
-                                        {!habit.completed && (
-                                            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
-                                        )}
-                                        
-                                        <Icon 
-                                            className={`w-7 h-7 ${habit.completed ? 'text-emerald-600' : 'text-white drop-shadow-lg'}`}
-                                            strokeWidth={2.5}
-                                        />
-                                        <span className={`text-xs font-bold ${habit.completed ? 'text-emerald-700' : 'text-white drop-shadow'}`}>
-                                            {habit.completed ? '✓ Done' : `+${habit.oxygen}%`}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                        
-                        <div className="text-center mt-4 pt-3 border-t border-slate-200">
-                            <div className="flex items-center justify-center gap-2">
-                                <div className="flex gap-1">
-                                    {habits.map((h, i) => (
-                                        <div 
-                                            key={i} 
-                                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                                h.completed ? 'bg-emerald-500 scale-125' : 'bg-slate-300'
-                                            }`}
-                                        />
-                                    ))}
-                                </div>
-                                <span className="text-sm text-slate-600 font-medium ml-2">
-                                    {habits.filter(h => h.completed).length} / 4 completed
-                                </span>
+                                className="text-3xl font-bold transition-colors duration-500"
+                                style={{ color: getOxygenColor(userData.oxygen) }}
+                            >
+                                {userData.oxygen}
+                                <span className="text-base text-slate-400">%</span>
+                            </div>
+                            <div className="mt-2 w-32 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                                <div 
+                                    className="h-full transition-all duration-500"
+                                    style={{ 
+                                        width: `${userData.oxygen}%`,
+                                        backgroundColor: getOxygenColor(userData.oxygen),
+                                        boxShadow: `0 0 10px ${getOxygenColor(userData.oxygen)}80`
+                                    }}
+                                />
+                            </div>
+                            <div className="text-xs text-slate-400 mt-1">
+                                {userData.oxygen >= 70 ? 'Strong' : userData.oxygen >= 50 ? 'Moderate' : userData.oxygen >= 30 ? 'Weak' : 'Critical'}
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Milestone notification */}
-                {userData.altitude >= 2000 && userData.altitude < 2270 && (
-                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 z-50 animate-bounce">
-                        <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-2xl border-2 border-white/50">
-                            🎯 2,000m Milestone!
+                    {/* Habit Buttons */}
+                    <div className="absolute left-4 right-4 z-50" style={{ bottom: '80px' }}>
+                        <div className="bg-white/98 backdrop-blur-xl rounded-3xl shadow-2xl p-5 border border-slate-200">
+                            <div className="grid grid-cols-4 gap-3">
+                                {habits.map((habit, index) => {
+                                    const Icon = habit.icon;
+                                    const colors = [
+                                        { from: 'from-blue-500', to: 'to-cyan-500', glow: 'shadow-blue-500/50' },
+                                        { from: 'from-indigo-500', to: 'to-purple-500', glow: 'shadow-indigo-500/50' },
+                                        { from: 'from-green-500', to: 'to-emerald-500', glow: 'shadow-green-500/50' },
+                                        { from: 'from-purple-500', to: 'to-pink-500', glow: 'shadow-purple-500/50' }
+                                    ];
+                                    const color = colors[index];
+                                    
+                                    return (
+                                        <button
+                                            key={habit.id}
+                                            onClick={() => completeHabit(habit.id)}
+                                            disabled={habit.completed || isClimbing}
+                                            className={`
+                                                relative aspect-square rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-2
+                                                ${habit.completed 
+                                                    ? 'bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-emerald-400 scale-95' 
+                                                    : `bg-gradient-to-br ${color.from} ${color.to} hover:scale-105 active:scale-95 shadow-xl ${color.glow}`
+                                                }
+                                                ${isClimbing && !habit.completed ? 'opacity-50 cursor-not-allowed' : ''}
+                                            `}
+                                        >
+                                            {!habit.completed && (
+                                                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
+                                            )}
+                                            
+                                            <Icon 
+                                                className={`w-7 h-7 ${habit.completed ? 'text-emerald-600' : 'text-white drop-shadow-lg'}`}
+                                                strokeWidth={2.5}
+                                            />
+                                            <span className={`text-xs font-bold ${habit.completed ? 'text-emerald-700' : 'text-white drop-shadow'}`}>
+                                                {habit.completed ? '✓ Done' : `+${habit.oxygen}%`}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            
+                            <div className="text-center mt-4 pt-3 border-t border-slate-200">
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="flex gap-1">
+                                        {habits.map((h, i) => (
+                                            <div 
+                                                key={i} 
+                                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                                    h.completed ? 'bg-emerald-500 scale-125' : 'bg-slate-300'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="text-sm text-slate-600 font-medium ml-2">
+                                        {habits.filter(h => h.completed).length} / 4 completed
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                )}
 
-                <style>{`
-                    @keyframes cloudFloat {
-                        0%, 100% { transform: translateY(0px) translateX(0px); }
-                        25% { transform: translateY(-18px) translateX(12px); }
-                        50% { transform: translateY(-10px) translateX(-12px); }
-                        75% { transform: translateY(-22px) translateX(10px); }
-                    }
-                `}</style>
-            </div>
-        );
-    };
+                    {userData.altitude >= 2000 && userData.altitude < 2270 && (
+                        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 z-50 animate-bounce">
+                            <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-2xl border-2 border-white/50">
+                                🎯 2,000m Milestone!
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
 
-    ReactDOM.render(<MountainView />, document.getElementById('root'));
-</script>
+        ReactDOM.render(<MountainView />, document.getElementById('root'));
+    </script>
 </body>
 </html>
