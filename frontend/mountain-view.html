@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivify - Mountain View</title>
+    
+    <!-- Load React from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Define icon components manually
+        const Mountain = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+            </svg>
+        );
+
+        const Droplets = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
+                <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>
+            </svg>
+        );
+
+        const Moon = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+        );
+
+        const Footprints = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/>
+                <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/>
+            </svg>
+        );
+
+        const Target = (props) => (
+            <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+            </svg>
+        );
+
+        const MountainView = () => {
+        const [userData, setUserData] = useState({
+            altitude: 1200,
+            targetAltitude: 3776,
+            oxygen: 78,
+            mountainName: 'Mt. Fuji'
+        });
+
+        const [habits, setHabits] = useState([
+            { id: 'hydration', name: 'Water', icon: Droplets, completed: false, oxygen: 15 },
+            { id: 'sleep', name: 'Sleep', icon: Moon, completed: false, oxygen: 20 },
+            { id: 'movement', name: 'Move', icon: Footprints, completed: false, oxygen: 15 },
+            { id: 'focus', name: 'Focus', icon: Target, completed: false, oxygen: 20 }
+        ]);
+
+        const [trailProgress, setTrailProgress] = useState(30);
+        const [isClimbing, setIsClimbing] = useState(false);
+        const [legCycle, setLegCycle] = useState(0);
+
+        const progressPercent = (userData.altitude / userData.targetAltitude) * 100;
+
+        const getZone = (alt) => {
+            if (alt < 1500) return { 
+            name: 'Forest Trail', 
+            skyTop: '#5BA3D0',
+            skyMid: '#87CEEB',
+            skyBot: '#B0E0E6',
+            ground: '#3d5a3d',
+            groundDark: '#2d4a2d',
+            groundLight: '#4d6a4d',
+            trail: '#8b7355',
+            trailEdge: '#6b5335',
+            fogColor: '#c8d5c8'
+            };
+            if (alt < 2500) return { 
+            name: 'Alpine Ridge', 
+            skyTop: '#4A7BA8',
+            skyMid: '#6BA3D4',
+            skyBot: '#89B5D6',
+            ground: '#5a5a5a',
+            groundDark: '#3a3a3a',
+            groundLight: '#7a7a7a',
+            trail: '#756f6f',
+            trailEdge: '#554f4f',
+            fogColor: '#b8c0c8'
+            };
+            if (alt < 3500) return { 
+            name: 'High Summit', 
+            skyTop: '#2E5F8A',
+            skyMid: '#4A8AB8',
+            skyBot: '#6BA3D4',
+            ground: '#808890',
+            groundDark: '#606870',
+            groundLight: '#a0a8b0',
+            trail: '#a8b0b8',
+            trailEdge: '#888f97',
+            fogColor: '#d0d8e0'
+            };
+            return { 
+            name: 'Peak Ridge', 
+            skyTop: '#1E4F7A',
+            skyMid: '#2E5F8A',
+            skyBot: '#4A8AB8',
+            ground: '#e0e8f0',
+            groundDark: '#c0c8d0',
+            groundLight: '#f0f8ff',
+            trail: '#d8e8f8',
+            trailEdge: '#b8c8d8',
+            fogColor: '#e8f0f8'
+            };
+        };
+
+        const zone = getZone(userData.altitude);
+
+        const completeHabit = (habitId) => {
+            const habit = habits.find(h => h.id === habitId);
+            if (habit.completed) return;
+
+            setIsClimbing(true);
+            setTrailProgress(prev => prev + 12);
+            setLegCycle(prev => (prev + 1) % 4);
+
+            setTimeout(() => {
+            setUserData(prev => ({
+                ...prev,
+                altitude: Math.min(prev.altitude + 270, prev.targetAltitude),
+                oxygen: Math.min(prev.oxygen + habit.oxygen, 100)
+            }));
+
+            setHabits(prev => prev.map(h => 
+                h.id === habitId ? { ...h, completed: true } : h
+            ));
+
+            setIsClimbing(false);
+            }, 800);
+        };
+
+        const getOxygenColor = (oxygen) => {
+            if (oxygen >= 70) return '#10b981';
+            if (oxygen >= 50) return '#f59e0b';
+            if (oxygen >= 30) return '#f97316';
+            return '#ef4444';
+        };
+
+        // Generate rich terrain
+        const generateTerrain = () => {
+            const elements = [];
+            for (let i = 0; i < 40; i++) {
+            const side = Math.random() > 0.5 ? 1 : -1;
+            const distance = 80 + i * 60;
+            const spread = 60 + Math.random() * 150;
+            const type = Math.random();
+            
+            let element = { id: i, x: side * spread, y: distance, size: 0.5 + Math.random() * 1 };
+            
+            if (userData.altitude < 1500) {
+                if (type < 0.4) element.type = 'pine';
+                else if (type < 0.6) element.type = 'oak';
+                else if (type < 0.8) element.type = 'bush';
+                else element.type = 'grass';
+            } else if (userData.altitude < 2500) {
+                if (type < 0.3) element.type = 'rock';
+                else if (type < 0.6) element.type = 'boulder';
+                else if (type < 0.8) element.type = 'shrub';
+                else element.type = 'stone';
+            } else if (userData.altitude < 3500) {
+                if (type < 0.5) element.type = 'snow';
+                else if (type < 0.7) element.type = 'ice';
+                else element.type = 'rock';
+            } else {
+                if (type < 0.6) element.type = 'snow';
+                else if (type < 0.8) element.type = 'ice';
+                else element.type = 'frost';
+            }
+            
+            elements.push(element);
+            }
+            return elements;
+        };
+
+        const [terrainElements] = useState(generateTerrain());
+
+        const renderElement = (type, size) => {
+            switch(type) {
+            case 'pine':
+                return (
+                <svg width={30 * size} height={40 * size} viewBox="0 0 30 40">
+                    <polygon points="15,2 5,18 10,18 3,30 12,30 8,40 22,40 18,30 27,30 20,18 25,18" fill="#1a5f1a" />
+                    <polygon points="15,5 8,16 12,16 7,26 14,26 11,34 19,34 16,26 23,26 18,16 22,16" fill="#2d7a2d" />
+                    <rect x="12" y="36" width="6" height="4" fill="#5d4037" />
+                </svg>
+                );
+            case 'oak':
+                return (
+                <svg width={35 * size} height={38 * size} viewBox="0 0 35 38">
+                    <ellipse cx="17" cy="14" rx="14" ry="12" fill="#3d6b3d" />
+                    <ellipse cx="12" cy="10" rx="10" ry="9" fill="#4d7a4d" />
+                    <ellipse cx="22" cy="11" rx="11" ry="10" fill="#4d7a4d" />
+                    <ellipse cx="17" cy="8" rx="9" ry="8" fill="#5d8a5d" />
+                    <rect x="14" y="24" width="6" height="14" fill="#6d4c41" />
+                </svg>
+                );
+            case 'bush':
+                return (
+                <svg width={20 * size} height={15 * size} viewBox="0 0 20 15">
+                    <ellipse cx="10" cy="10" rx="9" ry="7" fill="#4a6b4a" />
+                    <ellipse cx="6" cy="8" rx="6" ry="5" fill="#5a7a5a" />
+                    <ellipse cx="14" cy="9" rx="7" ry="6" fill="#5a7a5a" />
+                </svg>
+                );
+            case 'grass':
+                return (
+                <svg width={12 * size} height={18 * size} viewBox="0 0 12 18">
+                    <path d="M2,18 Q2,10 1,2" stroke="#4a7a4a" strokeWidth="1.5" fill="none" />
+                    <path d="M6,18 Q6,8 5,0" stroke="#3a6a3a" strokeWidth="1.5" fill="none" />
+                    <path d="M10,18 Q10,12 11,3" stroke="#5a8a5a" strokeWidth="1.5" fill="none" />
+                </svg>
+                );
+            case 'rock':
+                return (
+                <svg width={22 * size} height={18 * size} viewBox="0 0 22 18">
+                    <polygon points="11,2 20,14 18,18 4,18 2,14" fill="#6b7280" />
+                    <polygon points="11,2 16,10 14,14 8,14 6,10" fill="#9ca3af" />
+                    <polygon points="11,4 14,10 10,12 8,10" fill="#d1d5db" />
+                </svg>
+                );
+            case 'boulder':
+                return (
+                <svg width={35 * size} height={28 * size} viewBox="0 0 35 28">
+                    <ellipse cx="17" cy="20" rx="16" ry="11" fill="#4b5563" />
+                    <ellipse cx="15" cy="16" rx="13" ry="9" fill="#6b7280" />
+                    <ellipse cx="20" cy="18" rx="11" ry="8" fill="#6b7280" />
+                    <ellipse cx="17" cy="12" rx="9" ry="6" fill="#9ca3af" />
+                    <path d="M8,18 L12,14" stroke="#374151" strokeWidth="1" />
+                    <path d="M24,20 L20,16" stroke="#374151" strokeWidth="1" />
+                </svg>
+                );
+            case 'shrub':
+                return (
+                <svg width={16 * size} height={12 * size} viewBox="0 0 16 12">
+                    <ellipse cx="8" cy="8" rx="7" ry="5" fill="#6b8b6b" />
+                    <ellipse cx="5" cy="7" rx="4" ry="3" fill="#7b9b7b" />
+                    <ellipse cx="11" cy="7" rx="5" ry="4" fill="#7b9b7b" />
+                </svg>
+                );
+            case 'stone':
+                return (
+                <svg width={14 * size} height={10 * size} viewBox="0 0 14 10">
+                    <ellipse cx="7" cy="7" rx="6" ry="4" fill="#8b9198" />
+                    <ellipse cx="7" cy="5" rx="5" ry="3" fill="#abaeb3" />
+                </svg>
+                );
+            case 'snow':
+                return (
+                <svg width={28 * size} height={18 * size} viewBox="0 0 28 18">
+                    <ellipse cx="14" cy="14" rx="13" ry="8" fill="#ffffff" opacity="0.9" />
+                    <ellipse cx="12" cy="11" rx="10" ry="6" fill="#f0f8ff" />
+                    <ellipse cx="16" cy="12" rx="11" ry="7" fill="#f8fcff" />
+                    <circle cx="10" cy="10" r="2" fill="#e0f0ff" opacity="0.6" />
+                    <circle cx="18" cy="11" r="1.5" fill="#e0f0ff" opacity="0.6" />
+                </svg>
+                );
+            case 'ice':
+                return (
+                <svg width={20 * size} height={16 * size} viewBox="0 0 20 16">
+                    <polygon points="10,2 18,12 16,16 4,16 2,12" fill="#b8e0f8" opacity="0.8" />
+                    <polygon points="10,4 15,10 12,13 8,13 5,10" fill="#d0e8f8" opacity="0.9" />
+                    <line x1="10" y1="4" x2="10" y2="13" stroke="#ffffff" strokeWidth="1" opacity="0.5" />
+                    <line x1="6" y1="8" x2="14" y2="8" stroke="#ffffff" strokeWidth="1" opacity="0.5" />
+                </svg>
+                );
+            case 'frost':
+                return (
+                <svg width={16 * size} height={16 * size} viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="6" fill="#e8f4f8" opacity="0.7" />
+                    <line x1="8" y1="2" x2="8" y2="14" stroke="#d0e8f8" strokeWidth="1.5" />
+                    <line x1="2" y1="8" x2="14" y2="8" stroke="#d0e8f8" strokeWidth="1.5" />
+                    <line x1="4" y1="4" x2="12" y2="12" stroke="#d0e8f8" strokeWidth="1" />
+                    <line x1="12" y1="4" x2="4" y2="12" stroke="#d0e8f8" strokeWidth="1" />
+                </svg>
+                );
+            default:
+                return null;
+            }
+        };
+
+        return (
+            <div className="relative w-full h-screen overflow-hidden">
+            
+            {/* Dynamic Sky */}
+            <div 
+                className="absolute inset-0 transition-all duration-1000"
+                style={{
+                background: `linear-gradient(to bottom, ${zone.skyTop} 0%, ${zone.skyMid} 50%, ${zone.skyBot} 100%)`
+                }}
+            >
+                {/* Sun/Moon */}
+                <div 
+                className="absolute w-24 h-24 rounded-full transition-all duration-1000"
+                style={{
+                    top: '10%',
+                    right: '15%',
+                    background: `radial-gradient(circle, ${userData.altitude > 3000 ? '#fffacd' : '#ffeb3b'} 0%, ${userData.altitude > 3000 ? '#ffd700' : '#ffa726'} 100%)`,
+                    boxShadow: `0 0 60px ${userData.altitude > 3000 ? '#ffeb3b' : '#ffa726'}`,
+                    opacity: 0.9
+                }}
+                />
+
+                {/* Clouds - Multiple layers */}
+                {[...Array(8)].map((_, i) => (
+                <div
+                    key={`cloud-${i}`}
+                    className="absolute rounded-full blur-2xl transition-all duration-1000"
+                    style={{
+                    left: `${5 + i * 12}%`,
+                    top: `${8 + (i % 4) * 8}%`,
+                    width: `${100 + i * 15}px`,
+                    height: `${50 + i * 8}px`,
+                    background: 'rgba(255, 255, 255, 0.4)',
+                    animation: `float ${20 + i * 3}s ease-in-out infinite`,
+                    animationDelay: `${i * 2}s`
+                    }}
+                />
+                ))}
+
+                {/* Birds (only in lower altitudes) */}
+                {userData.altitude < 2000 && [...Array(5)].map((_, i) => (
+                <div
+                    key={`bird-${i}`}
+                    className="absolute text-xs opacity-40"
+                    style={{
+                    left: `${20 + i * 15}%`,
+                    top: `${15 + i * 5}%`,
+                    animation: `fly ${15 + i * 5}s linear infinite`,
+                    animationDelay: `${i * 3}s`
+                    }}
+                >
+                    <svg width="20" height="12" viewBox="0 0 20 12">
+                    <path d="M0,6 Q5,2 10,6 Q15,2 20,6" stroke="#333" strokeWidth="1.5" fill="none" />
+                    </svg>
+                </div>
+                ))}
+            </div>
+
+            {/* Mountain Background - Detailed peaks */}
+            <div className="absolute inset-0 pointer-events-none">
+                <svg className="w-full h-full">
+                {/* Far distant range */}
+                <defs>
+                    <linearGradient id="mountainGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#1e293b', stopOpacity: 0.3 }} />
+                    <stop offset="100%" style={{ stopColor: '#334155', stopOpacity: 0.2 }} />
+                    </linearGradient>
+                    <linearGradient id="mountainGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#334155', stopOpacity: 0.4 }} />
+                    <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.3 }} />
+                    </linearGradient>
+                    <linearGradient id="mountainGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#475569', stopOpacity: 0.6 }} />
+                    <stop offset="100%" style={{ stopColor: '#64748b', stopOpacity: 0.4 }} />
+                    </linearGradient>
+                    <linearGradient id="peakSnow" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.9 }} />
+                    <stop offset="100%" style={{ stopColor: '#e0f2fe', stopOpacity: 0.6 }} />
+                    </linearGradient>
+                </defs>
+                
+                {/* Layer 1 - Furthest */}
+                <polygon
+                    points="0,550 80,420 160,460 240,380 320,430 400,350 480,400 560,320 640,380 720,300 800,360 880,280 960,340 1040,260 1120,320 1200,280 1280,340 1360,300 1440,380 1600,450"
+                    fill="url(#mountainGrad1)"
+                />
+                
+                {/* Layer 2 */}
+                <polygon
+                    points="0,600 60,500 140,540 220,460 300,510 380,430 460,480 540,400 620,460 700,380 780,440 860,360 940,420 1020,340 1100,400 1180,360 1260,420 1340,380 1420,460 1600,540"
+                    fill="url(#mountainGrad2)"
+                />
+                
+                {/* Layer 3 - Closest background mountains */}
+                <polygon
+                    points="0,650 50,560 120,590 200,520 280,570 360,500 440,550 520,480 600,540 680,470 760,530 840,460 920,520 1000,450 1080,510 1160,470 1240,530 1320,490 1400,560 1600,630"
+                    fill="url(#mountainGrad3)"
+                />
+                
+                {/* Main Summit Peak (Mt. Fuji) */}
+                <polygon
+                    points="650,180 700,280 720,260 760,320 800,280 820,300 860,360 900,320 920,340 980,420 720,420 700,360 660,320 680,300 640,240"
+                    fill="url(#mountainGrad3)"
+                    opacity="0.7"
+                />
+                
+                {/* Snow cap on summit */}
+                <polygon
+                    points="650,180 680,240 700,220 740,270 780,230 820,260 860,200 820,200 780,180 740,200 700,180"
+                    fill="url(#peakSnow)"
+                />
+                </svg>
+            </div>
+
+            {/* Climbing Trail */}
+            <div 
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 transition-transform duration-800 ease-out"
+                style={{ transform: `translateX(-50%) translateY(${trailProgress}%)` }}
+            >
+                {/* Trail with texture */}
+                <svg width="600" height="1600" className="absolute" style={{ bottom: '-400px', left: '50%', transform: 'translateX(-50%)' }}>
+                <defs>
+                    <linearGradient id="trailGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: zone.trail, stopOpacity: 0.2 }} />
+                    <stop offset="50%" style={{ stopColor: zone.trail, stopOpacity: 0.6 }} />
+                    <stop offset="100%" style={{ stopColor: zone.trail, stopOpacity: 0.9 }} />
+                    </linearGradient>
+                    <pattern id="trailTexture" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <circle cx="5" cy="5" r="1" fill={zone.trailEdge} opacity="0.3" />
+                    <circle cx="15" cy="12" r="1.5" fill={zone.trailEdge} opacity="0.2" />
+                    <circle cx="10" cy="15" r="1" fill={zone.trailEdge} opacity="0.25" />
+                    </pattern>
+                </defs>
+                
+                {/* Main trail surface */}
+                <path
+                    d="M 180 1600 L 200 1200 L 220 800 L 230 400 L 240 100 L 250 0 L 350 0 L 360 100 L 370 400 L 380 800 L 400 1200 L 420 1600 Z"
+                    fill="url(#trailGrad)"
+                />
+                <path
+                    d="M 180 1600 L 200 1200 L 220 800 L 230 400 L 240 100 L 250 0 L 350 0 L 360 100 L 370 400 L 380 800 L 400 1200 L 420 1600 Z"
+                    fill="url(#trailTexture)"
+                />
+                
+                {/* Trail edges with detail */}
+                <path d="M 180 1600 L 200 1200 L 220 800 L 230 400 L 240 100 L 250 0" 
+                        stroke={zone.trailEdge} strokeWidth="4" fill="none" opacity="0.8" />
+                <path d="M 420 1600 L 400 1200 L 380 800 L 370 400 L 360 100 L 350 0" 
+                        stroke={zone.trailEdge} strokeWidth="4" fill="none" opacity="0.8" />
+                
+                {/* Inner trail worn path */}
+                <path d="M 240 1600 L 250 1200 L 260 800 L 265 400 L 270 0" 
+                        stroke={zone.groundDark} strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="15,10" />
+                <path d="M 360 1600 L 350 1200 L 340 800 L 335 400 L 330 0" 
+                        stroke={zone.groundDark} strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="15,10" />
+
+                {/* Trail markers and signs */}
+                {[...Array(12)].map((_, i) => {
+                    const y = 130 + i * 130;
+                    const leftX = 180 + (12 - i) * 4;
+                    const rightX = 420 - (12 - i) * 4;
+                    const centerX = (leftX + rightX) / 2;
+                    return (
+                    <g key={i}>
+                        {/* Switchback line */}
+                        <line x1={leftX} y1={y} x2={rightX} y2={y}
+                            stroke={zone.trailEdge} strokeWidth="2" strokeDasharray="12,8" opacity="0.5" />
+                        
+                        {/* Distance marker post every other switchback */}
+                        {i % 2 === 0 && (
+                        <g>
+                            <rect x={leftX - 25} y={y - 15} width="4" height="30" fill={zone.trailEdge} opacity="0.6" />
+                            <rect x={leftX - 32} y={y - 15} width="18" height="12" fill={zone.trail} stroke={zone.trailEdge} strokeWidth="1" opacity="0.7" />
+                        </g>
+                        )}
+                    </g>
+                    );
+                })}
+                </svg>
+
+                {/* Ground texture patches */}
+                {[...Array(30)].map((_, i) => {
+                const side = i % 3 === 0 ? -1 : i % 3 === 1 ? 1 : 0;
+                const spread = 120 + Math.random() * 100;
+                return (
+                    <div
+                    key={`ground-${i}`}
+                    className="absolute transition-all duration-300"
+                    style={{
+                        left: `calc(50% + ${side * spread}px)`,
+                        bottom: `${i * 55}px`,
+                        width: `${40 + Math.random() * 50}px`,
+                        height: `${25 + Math.random() * 35}px`,
+                        background: i % 2 === 0 ? zone.groundDark : zone.groundLight,
+                        borderRadius: '50%',
+                        opacity: 0.25,
+                        transform: `scale(${1 - i / 35})`
+                    }}
+                    />
+                );
+                })}
+
+                {/* Rich terrain elements */}
+                {terrainElements.map((element) => {
+                const scale = Math.max(0.3, 1 - (element.y / 2400));
+                return (
+                    <div
+                    key={element.id}
+                    className="absolute transition-all duration-300"
+                    style={{
+                        left: `calc(50% + ${element.x}px)`,
+                        bottom: `${element.y}px`,
+                        transform: `scale(${scale})`,
+                        opacity: scale > 0.4 ? scale * 0.95 : 0.4,
+                        filter: element.y > 1500 ? 'blur(0.5px)' : 'none'
+                    }}
+                    >
+                    {renderElement(element.type, element.size)}
+                    </div>
+                );
+                })}
+            </div>
+
+            {/* Detailed Character */}
+            <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-30">
+                <div 
+                className={`relative transition-all duration-300`}
+                style={{ 
+                    transform: `scale(${isClimbing ? 1.1 : 1})`,
+                    filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.4))'
+                }}
+                >
+                <svg width="80" height="110" viewBox="0 0 80 110">
+                    {/* Backpack */}
+                    <rect x="28" y="20" width="24" height="32" rx="4" fill="#c62828" />
+                    <rect x="30" y="22" width="20" height="28" rx="3" fill="#d32f2f" />
+                    <rect x="33" y="25" width="14" height="6" rx="2" fill="#ef5350" />
+                    <circle cx="35" cy="42" r="2" fill="#ffcdd2" />
+                    <circle cx="45" cy="42" r="2" fill="#ffcdd2" />
+                    <path d="M28,35 L25,40 L25,50 L28,48" stroke="#b71c1c" strokeWidth="2" fill="none" />
+                    <path d="M52,35 L55,40 L55,50 L52,48" stroke="#b71c1c" strokeWidth="2" fill="none" />
+                    
+                    {/* Head with hat */}
+                    <ellipse cx="40" cy="15" rx="11" ry="12" fill="#d4a574" />
+                    <ellipse cx="40" cy="8" rx="13" ry="6" fill="#5d4037" />
+                    <ellipse cx="40" cy="7" rx="15" ry="5" fill="#6d4c41" />
+                    <circle cx="36" cy="14" r="1.5" fill="#3e2723" />
+                    <circle cx="44" cy="14" r="1.5" fill="#3e2723" />
+                    <path d="M38,18 Q40,20 42,18" stroke="#3e2723" strokeWidth="1.5" fill="none" />
+                    
+                    {/* Jacket */}
+                    <path d="M30,26 L25,30 L25,60 L30,65 L35,63 L35,80 L30,95 L35,100 L40,98 L40,26 Z" fill="#1565c0" />
+                    <path d="M50,26 L55,30 L55,60 L50,65 L45,63 L45,80 L50,95 L45,100 L40,98 L40,26 Z" fill="#1565c0" />
+                    <rect x="35" y="26" width="10" height="72" fill="#1976d2" />
+                    <path d="M37,30 L37,50" stroke="#0d47a1" strokeWidth="1.5" />
+                    <circle cx="37" cy="35" r="1.5" fill="#42a5f5" />
+                    <circle cx="37" cy="43" r="1.5" fill="#42a5f5" />
+                    
+                    {/* Collar */}
+                    <path d="M35,26 Q40,28 45,26" stroke="#0d47a1" strokeWidth="2" fill="none" />
+                    
+                    {/* Arms */}
+                    <g transform={`rotate(${isClimbing ? -10 : 0} 25 40)`}>
+                    <ellipse cx="25" cy="45" rx="4" ry="16" fill="#1565c0" />
+                    <ellipse cx="24" cy="58" rx="3.5" ry="12" fill="#0d47a1" />
+                    <ellipse cx="23" cy="68" rx="3" ry="6" fill="#d4a574" />
+                    </g>
+                    <g transform={`rotate(${isClimbing ? 10 : 0} 55 40)`}>
+                    <ellipse cx="55" cy="45" rx="4" ry="16" fill="#1565c0" />
+                    <ellipse cx="56" cy="58" rx="3.5" ry="12" fill="#0d47a1" />
+                    <ellipse cx="57" cy="68" rx="3" ry="6" fill="#d4a574" />
+                    </g>
+                    
+                    {/* Pants/Legs */}
+                    <g transform={`translate(0 ${legCycle % 2 === 0 && isClimbing ? 2 : 0})`}>
+                    <rect x="32" y="98" width="7" height="12" rx="2" fill="#424242" />
+                    <rect x="33" y="98" width="5" height="12" rx="1" fill="#616161" />
+                    <ellipse cx="35" cy="110" rx="5" ry="3" fill="#212121" />
+                    </g>
+                    <g transform={`translate(0 ${legCycle % 2 === 1 && isClimbing ? 2 : 0})`}>
+                    <rect x="41" y="98" width="7" height="12" rx="2" fill="#424242" />
+                    <rect x="42" y="98" width="5" height="12" rx="1" fill="#616161" />
+                    <ellipse cx="44" cy="110" rx="5" ry="3" fill="#212121" />
+                    </g>
+                    
+                    {/* Hiking pole */}
+                    <line x1="58" y1="68" x2="62" y2="105" stroke="#795548" strokeWidth="2.5" />
+                    <circle cx="62" cy="106" r="3" fill="#5d4037" />
+                    <circle cx="58" cy="70" r="2" fill="#8d6e63" />
+                    
+                    {/* Gloves detail */}
+                    <circle cx="23" cy="68" r="3.5" fill="#ff6f00" />
+                    <circle cx="57" cy="68" r="3.5" fill="#ff6f00" />
+                </svg>
+                </div>
+                
+                {/* Dynamic shadow */}
+                <div 
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full blur-lg transition-all duration-300"
+                style={{ 
+                    width: '50px',
+                    height: '12px',
+                    background: 'radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%)',
+                    transform: `translateX(-50%) scale(${isClimbing ? 1.3 : 1})`
+                }}
+                />
+            </div>
+
+            {/* Weather Effects */}
+            {userData.altitude > 2500 && (
+                <div className="absolute inset-0 pointer-events-none z-20">
+                {[...Array(30)].map((_, i) => (
+                    <div
+                    key={`snow-${i}`}
+                    className="absolute"
+                    style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `-5%`,
+                        animation: `snowfall ${4 + Math.random() * 4}s linear infinite`,
+                        animationDelay: `${Math.random() * 8}s`,
+                        opacity: 0.7
+                    }}
+                    >
+                    <svg width="8" height="8" viewBox="0 0 8 8">
+                        <circle cx="4" cy="4" r="3" fill="white" opacity="0.8" />
+                        <line x1="4" y1="1" x2="4" y2="7" stroke="white" strokeWidth="0.5" />
+                        <line x1="1" y1="4" x2="7" y2="4" stroke="white" strokeWidth="0.5" />
+                        <line x1="2" y1="2" x2="6" y2="6" stroke="white" strokeWidth="0.5" />
+                        <line x1="6" y1="2" x2="2" y2="6" stroke="white" strokeWidth="0.5" />
+                    </svg>
+                    </div>
+                ))}
+                </div>
+            )}
+
+            {/* Wind effect (high altitude) */}
+            {userData.altitude > 3000 && (
+                <div className="absolute inset-0 pointer-events-none z-20">
+                {[...Array(8)].map((_, i) => (
+                    <div
+                    key={`wind-${i}`}
+                    className="absolute"
+                    style={{
+                        left: `-10%`,
+                        top: `${20 + i * 10}%`,
+                        animation: `wind ${2 + Math.random() * 2}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.3}s`
+                    }}
+                    >
+                    <svg width="60" height="2" viewBox="0 0 60 2">
+                        <line x1="0" y1="1" x2="60" y2="1" stroke="white" strokeWidth="2" opacity="0.3" strokeDasharray="8,4" />
+                    </svg>
+                    </div>
+                ))}
+                </div>
+            )}
+
+            {/* Atmospheric fog layers */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div 
+                className="absolute bottom-0 left-0 right-0 transition-all duration-1000"
+                style={{
+                    height: '40%',
+                    background: `linear-gradient(to top, ${zone.fogColor}60 0%, ${zone.fogColor}20 50%, transparent 100%)`
+                }}
+                />
+                <div 
+                className="absolute bottom-0 left-0 right-0 transition-all duration-1000"
+                style={{
+                    height: '25%',
+                    background: `linear-gradient(to top, ${zone.fogColor}40 0%, transparent 100%)`
+                }}
+                />
+            </div>
+
+            {/* Compact HUD */}
+            <div className="absolute top-4 left-4 right-4 z-40 flex justify-between items-start gap-3">
+                <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-2xl border border-white/10">
+                <div className="flex items-center gap-2 mb-1">
+                    <Mountain className="w-4 h-4 text-emerald-400" />
+                    <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">{zone.name}</span>
+                </div>
+                <div className="text-3xl font-bold text-white">
+                    {userData.altitude.toLocaleString()}
+                    <span className="text-base text-slate-400 ml-1">m</span>
+                </div>
+                <div className="mt-2 w-32 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                    <div 
+                    className="h-full bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 transition-all duration-500 shadow-lg shadow-emerald-500/50"
+                    style={{ width: `${progressPercent}%` }}
+                    />
+                </div>
+                <div className="text-xs text-slate-400 mt-1">
+                    {Math.round(progressPercent)}% to summit
+                </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-2xl border border-white/10">
+                <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: getOxygenColor(userData.oxygen) }} />
+                    <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">Oxygen</span>
+                </div>
+                <div 
+                    className="text-3xl font-bold transition-colors duration-500"
+                    style={{ color: getOxygenColor(userData.oxygen) }}
+                >
+                    {userData.oxygen}
+                    <span className="text-base text-slate-400">%</span>
+                </div>
+                <div className="mt-2 w-32 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                    <div 
+                    className="h-full transition-all duration-500"
+                    style={{ 
+                        width: `${userData.oxygen}%`,
+                        backgroundColor: getOxygenColor(userData.oxygen),
+                        boxShadow: `0 0 10px ${getOxygenColor(userData.oxygen)}80`
+                    }}
+                    />
+                </div>
+                <div className="text-xs text-slate-400 mt-1">
+                    {userData.oxygen >= 70 ? 'Strong' : userData.oxygen >= 50 ? 'Moderate' : userData.oxygen >= 30 ? 'Weak' : 'Critical'}
+                </div>
+                </div>
+            </div>
+
+            {/* Enhanced Habit Buttons */}
+            <div className="absolute bottom-6 left-4 right-4 z-40">
+                <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-4 border border-slate-200">
+                <div className="grid grid-cols-4 gap-3">
+                    {habits.map((habit) => {
+                    const Icon = habit.icon;
+                    const colors = {
+                        0: { from: 'from-blue-500', to: 'to-cyan-500', glow: 'shadow-blue-500/50' },
+                        1: { from: 'from-indigo-500', to: 'to-purple-500', glow: 'shadow-indigo-500/50' },
+                        2: { from: 'from-green-500', to: 'to-emerald-500', glow: 'shadow-green-500/50' },
+                        3: { from: 'from-purple-500', to: 'to-pink-500', glow: 'shadow-purple-500/50' }
+                    };
+                    const colorIndex = habits.indexOf(habit);
+                    const color = colors[colorIndex];
+                    
+                    return (
+                        <button
+                        key={habit.id}
+                        onClick={() => completeHabit(habit.id)}
+                        disabled={habit.completed}
+                        className={`
+                            relative aspect-square rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-2
+                            ${habit.completed 
+                            ? 'bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-emerald-400 scale-95' 
+                            : `bg-gradient-to-br ${color.from} ${color.to} hover:scale-110 active:scale-95 shadow-xl ${color.glow}`
+                            }
+                        `}
+                        >
+                        {!habit.completed && (
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
+                        )}
+                        
+                        <Icon 
+                            className={`w-7 h-7 ${habit.completed ? 'text-emerald-600' : 'text-white drop-shadow-lg'}`}
+                            strokeWidth={2.5}
+                        />
+                        <span className={`text-xs font-bold ${habit.completed ? 'text-emerald-700' : 'text-white drop-shadow'}`}>
+                            {habit.completed ? '✓ Done' : `+${habit.oxygen}%`}
+                        </span>
+                        </button>
+                    );
+                    })}
+                </div>
+                
+                <div className="text-center mt-4 pt-3 border-t border-slate-200">
+                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex gap-1">
+                        {habits.map((h, i) => (
+                        <div 
+                            key={i} 
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                            h.completed ? 'bg-emerald-500 scale-125' : 'bg-slate-300'
+                            }`}
+                        />
+                        ))}
+                    </div>
+                    <span className="text-sm text-slate-600 font-medium ml-2">
+                        {habits.filter(h => h.completed).length} / 4 completed
+                    </span>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            {/* Altitude milestone notification */}
+            {userData.altitude >= 2000 && userData.altitude < 2270 && (
+                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 z-40 animate-bounce">
+                <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-2xl border-2 border-white/50">
+                    🎯 2,000m Milestone Reached!
+                </div>
+                </div>
+            )}
+
+            <style jsx>{`
+                @keyframes float {
+                0%, 100% { transform: translateY(0px) translateX(0px); }
+                25% { transform: translateY(-15px) translateX(5px); }
+                50% { transform: translateY(-8px) translateX(-5px); }
+                75% { transform: translateY(-20px) translateX(3px); }
+                }
+                @keyframes fly {
+                0% { transform: translateX(0px) translateY(0px); }
+                100% { transform: translateX(-100vw) translateY(20px); }
+                }
+                @keyframes snowfall {
+                0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+                100% { transform: translateY(110vh) translateX(30px) rotate(360deg); }
+                }
+                @keyframes wind {
+                0% { transform: translateX(0px); opacity: 0; }
+                10% { opacity: 0.6; }
+                90% { opacity: 0.6; }
+                100% { transform: translateX(120vw); opacity: 0; }
+                }
+            `}</style>
+            </div>
+        );
+        };
+
+        ReactDOM.render(<MountainView />, document.getElementById('root'));
+    </script>
+</body>
+</html>
