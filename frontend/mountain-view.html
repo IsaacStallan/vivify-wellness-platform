@@ -201,8 +201,17 @@
       let currentTop = '#4b8ccb', currentBot = '#78b6e7';
       let sky, sun, clouds;
 
-      const hex = (h) => PIXI.utils.string2hex(h);
+      // put this near the top of the PIXI block, before it's used
+      const hex = (c) => {
+        if (typeof c === 'number') return c;
+        if (!c) return 0x000000;
+        let s = String(c).trim();
+         if (s[0] === '#') s = s.slice(1);
+        if (s.length === 3) s = s.split('').map(ch => ch + ch).join(''); // #abc support
+        return parseInt(s, 16);
+      };
 
+      
       function gradientSprite(w,h,top,bottom){
         const cont = new PIXI.Container();
         const r1 = new PIXI.Graphics(); r1.beginFill(hex(top)).drawRect(0,0,w,h).endFill();
