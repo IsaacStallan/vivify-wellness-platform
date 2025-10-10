@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Vivify Mountain</title>
 
-  <!-- Dev-only CDNs; fine while prototyping -->
+  <!-- Dev-only CDNs (fine while prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -26,7 +26,7 @@
   <div id="hud"></div>
 
   <script type="text/babel">
-    /* ============== ENV / THEMES ============== */
+    /* ---------------- ENV / THEME ---------------- */
     function envFromAltitude(alt){
       if (alt < 1000) return { name:'Forest Base',   top:'#6ea8da', bot:'#9fd0f1', snow:false };
       if (alt < 2000) return { name:'Mountain Trail', top:'#4b8ccb', bot:'#78b6e7', snow:false };
@@ -34,7 +34,7 @@
       return              { name:'Summit Ridge',      top:'#2d68ab', bot:'#4a86c1', snow:true  };
     }
 
-    /* ============== HUD ============== */
+    /* ---------------- HUD ---------------- */
     const IconMountain=(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>);
     const Drop =(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3.1S6 9.1 6 12.6a6 6 0 0 0 12 0C18 9.1 12 3.1 12 3.1z"/></svg>);
     const Moon =(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a9 9 0 1 0 9 9 6 6 0 0 1-9-9Z"/></svg>);
@@ -73,7 +73,7 @@
         setClimbing(true);
 
         const altitudeGain = 270;
-        const pixels = 180; // world scroll per habit
+        const pixels = 140; // world scroll per habit
 
         window.MountainAPI?.climbBy(pixels, 1.05);
 
@@ -167,28 +167,28 @@
       );
     }
 
-    /* ============== PIXI v8 SCENE ============== */
+    /* ---------------- PIXI v8 SCENE ---------------- */
     (async () => {
       const sceneEl = document.getElementById('scene');
       const DPR = Math.max(1, window.devicePixelRatio || 1);
       const hex = h => parseInt(h.replace('#',''),16);
 
-      // App
       const app = new PIXI.Application();
       await app.init({ resizeTo: sceneEl, antialias:true, backgroundAlpha:1, powerPreference:'high-performance', autoDensity:true });
       sceneEl.appendChild(app.canvas);
       app.stage.sortableChildren = true;
 
-      // Layers: world scrolls, avatar fixed
-    const skyLayer   = new PIXI.Container();
-    const worldLayer = new PIXI.Container();
-    const actorLayer = new PIXI.Container(); // fixed avatar lives here
-    const fxLayer    = new PIXI.Container();
+      // Layers
+      const skyLayer   = new PIXI.Container();
+      const worldLayer = new PIXI.Container();
+      const actorLayer = new PIXI.Container(); // fixed avatar
+      const fxLayer    = new PIXI.Container();
+      app.stage.addChild(skyLayer, worldLayer, actorLayer, fxLayer);
 
-    app.stage.addChild(skyLayer, worldLayer, actorLayer, fxLayer);
-    app.stage.sortableChildren = true; // keep zIndex working
+      /* ---------- SKY (rebuildable) ---------- */
+      let currentTop = '#4b8ccb', currentBot = '#78b6e7';
+      let sky, sun, clouds, horizonHaze;
 
-      // Gradient sky
       function gradientSprite(w,h,top,bottom){
         const cont = new PIXI.Container();
         const r1 = new PIXI.Graphics(); r1.beginFill(hex(top)).drawRect(0,0,w,h).endFill();
@@ -197,11 +197,7 @@
         const tex = app.renderer.generateTexture(cont,{resolution:DPR,region:new PIXI.Rectangle(0,0,w,h)});
         return new PIXI.Sprite(tex);
       }
-      let currentTop='#4b8ccb', currentBot='#78b6e7';
-      let sky = gradientSprite(app.renderer.width, app.renderer.height, currentTop, currentBot);
-      skyLayer.addChild(sky);
 
-      // Distant silhouettes (depth-of-field)
       function addSilhouette(color, y, width, height, offset=0, alpha=0.35){
         const g = new PIXI.Graphics();
         g.beginFill(hex(color));
@@ -217,14 +213,76 @@
         g.filters = [new PIXI.BlurFilter({strength:1.2})];
         skyLayer.addChild(g);
       }
-      const W=app.renderer.width,H=app.renderer.height;
-      addSilhouette('#2b4f75', H*0.18, W*0.9, H*0.35, -140, 0.32);
-      addSilhouette('#35608d', H*0.22, W,      H*0.40,   90, 0.28);
 
-      /* ----- Slope: textured + contour lines (masked to trapezoid) ----- */
+      function makeCloudTex() {
+        const c = new PIXI.Container();
+        const puff = (x, y, r, a=1) => {
+          const g = new PIXI.Graphics();
+          g.beginFill(0xffffff, a).drawCircle(x, y, r).endFill();
+          c.addChild(g);
+        };
+        puff(0,0,26,0.9); puff(20,-6,20,0.85); puff(-20,-4,18,0.85); puff(40,2,16,0.8); puff(-36,2,14,0.8);
+        return app.renderer.generateTexture(c, { resolution: DPR });
+      }
+      const cloudTex = makeCloudTex();
+
+      function spawnCloud(y, scale, speed) {
+        const s = new PIXI.Sprite(cloudTex);
+        s.anchor.set(0.5);
+        s.y = y; s.x = -120;
+        s.scale.set(scale);
+        s.alpha = 0.35;
+        clouds.addChild(s);
+        gsap.to(s, {
+          x: app.renderer.width + 120,
+          duration: (app.renderer.width + 240) / speed,
+          ease: "none",
+          onComplete: () => { clouds.removeChild(s); s.destroy(); spawnCloud(y, scale, speed); }
+        });
+      }
+
+      function rebuildSky(w, h){
+        // clear and rebuild
+        gsap.killTweensOf('*'); // stop cloud tweens on resize
+        skyLayer.removeChildren();
+
+        sky = gradientSprite(w,h,currentTop,currentBot);
+        skyLayer.addChild(sky);
+
+        // distant ridges
+        addSilhouette('#2b4f75', h*0.18, w*0.9,  h*0.35, -140, 0.32);
+        addSilhouette('#35608d', h*0.22, w,      h*0.40,   90,  0.28);
+        addSilhouette('#24415f', h*0.15, w*0.95, h*0.30,  -80,  0.22);
+        addSilhouette('#1c3450', h*0.12, w*1.05, h*0.28,   40,  0.18);
+
+        // sun
+        sun = new PIXI.Graphics();
+        sun.beginFill(0xfff2b2, 0.9).drawCircle(0, 0, 58).endFill();
+        sun.position.set(w*0.82, h*0.18);
+        sun.alpha = 0.8;
+        sun.filters = [new PIXI.BlurFilter({ strength: 2 })];
+        skyLayer.addChild(sun);
+
+        // clouds
+        clouds = new PIXI.Container();
+        skyLayer.addChild(clouds);
+        spawnCloud(h * 0.18, 1.2, 22);
+        spawnCloud(h * 0.28, 1.0, 28);
+        spawnCloud(h * 0.36, 0.85, 34);
+
+        // horizon haze
+        horizonHaze = new PIXI.Graphics();
+        const hazeH = Math.round(h * 0.25);
+        horizonHaze.beginFill(0x9fd0f1, 0.25).drawRect(0, h * 0.38, w, hazeH).endFill();
+        horizonHaze.filters = [new PIXI.BlurFilter({ strength: 6 })];
+        skyLayer.addChild(horizonHaze);
+      }
+
+      rebuildSky(app.renderer.width, app.renderer.height);
+
+      /* ---------- SLOPE / TEXTURES ---------- */
       const slopeContainer = new PIXI.Container(); slopeContainer.zIndex=1; worldLayer.addChild(slopeContainer);
 
-      // Slope shape (mask)
       const slopeShape = new PIXI.Graphics();
       function drawSlopeShape(){
         const w=app.renderer.width,h=app.renderer.height;
@@ -234,7 +292,6 @@
       drawSlopeShape();
       slopeContainer.addChild(slopeShape);
 
-      // Noise tile (dirt/rock speckle)
       function makeNoiseTex(){
         const g = new PIXI.Graphics();
         for(let i=0;i<70;i++){
@@ -246,11 +303,10 @@
         return app.renderer.generateTexture(g,{resolution:DPR,region:new PIXI.Rectangle(0,0,64,64)});
       }
       const noiseTex = makeNoiseTex();
-      const noiseTS = new PIXI.TilingSprite({ texture: noiseTex, width: W*2, height: H*2 });
+      const noiseTS = new PIXI.TilingSprite({ texture: noiseTex, width: app.renderer.width*2, height: app.renderer.height*2 });
       noiseTS.alpha = 0.15; noiseTS.blendMode = 'multiply';
       slopeContainer.addChild(noiseTS);
 
-      // Contour lines tile
       function makeContourTex(){
         const g = new PIXI.Graphics();
         g.lineStyle(1,0xffffff,0.08);
@@ -258,66 +314,77 @@
         return app.renderer.generateTexture(g,{resolution:DPR,region:new PIXI.Rectangle(0,0,64,64)});
       }
       const contourTex = makeContourTex();
-      const contourTS = new PIXI.TilingSprite({ texture: contourTex, width: W*2, height: H*2 });
+      const contourTS = new PIXI.TilingSprite({ texture: contourTex, width: app.renderer.width*2, height: app.renderer.height*2 });
       contourTS.alpha = 0.25; contourTS.tint = 0x000000;
       slopeContainer.addChild(contourTS);
 
-      // Mask texture layers to the slope shape
       noiseTS.mask = slopeShape;
       contourTS.mask = slopeShape;
 
-      // Subtle parallax bands above the slope
       function band(w,h,color,angle,y,alpha,z){
         const g=new PIXI.Graphics(); g.beginFill(hex(color)).drawRect(0,0,w,h).endFill();
         g.angle=angle; g.y=y; g.alpha=alpha; g.zIndex=z; worldLayer.addChild(g); return g;
       }
-      const farBand   = band(4000,200,'#9a9185',-4,H*0.20,0.35,0);
-      const midBand   = band(4000,260,'#887a6b',-6,H*0.30,0.45,1);
-      const nearBand  = band(4000,340,'#76695c',-8,H*0.42,0.55,2);
+      const farBand   = band(4000,200,'#9a9185',-4,app.renderer.height*0.20,0.35,0);
+      const midBand   = band(4000,260,'#887a6b',-6,app.renderer.height*0.30,0.45,1);
+      const nearBand  = band(4000,340,'#76695c',-8,app.renderer.height*0.42,0.55,2);
 
       // Fog & Godrays
-      const fog = new PIXI.Graphics(); fog.beginFill(0xFFFFFF,0.10).drawRect(0,0,W,H).endFill(); fog.blendMode='screen'; fxLayer.addChild(fog);
-      const rays = new PIXI.Graphics(); rays.beginFill(0xffffff,0.05)
-        .moveTo(-200,-50).lineTo(250, -50).lineTo(W+200,H*0.5).lineTo(W-250,H*0.5).closePath().endFill();
-      rays.blendMode='screen'; fxLayer.addChild(rays); gsap.to(rays,{alpha:0.02, duration:6, yoyo:true, repeat:-1, ease:'sine.inOut'});
+      const fog = new PIXI.Graphics(); fxLayer.addChild(fog);
+      const rays = new PIXI.Graphics(); rays.blendMode='screen'; fxLayer.addChild(rays);
+      function layoutFX(){
+        const w=app.renderer.width,h=app.renderer.height;
+        fog.clear().beginFill(0xFFFFFF,0.10).drawRect(0,0,w,h).endFill();
+        rays.clear().beginFill(0xffffff,0.05)
+          .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
+      }
+      layoutFX();
+      gsap.to(rays,{alpha:0.02, duration:6, yoyo:true, repeat:-1, ease:'sine.inOut'});
 
-      // Snow (v8 ParticleContainer)
+      // Snow
       const snow = new PIXI.ParticleContainer(300, { scale:true, alpha:true, position:true }); fxLayer.addChild(snow);
       const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white"/></svg>');
       const flakes=[];
       for(let i=0;i<180;i++){
-        const s=new PIXI.Sprite(snowTex); s.x=Math.random()*W; s.y=Math.random()*H; s.alpha=0.5+Math.random()*0.5; s.scale.set(0.4+Math.random()*0.9);
+        const s=new PIXI.Sprite(snowTex); s.x=Math.random()*app.renderer.width; s.y=Math.random()*app.renderer.height; s.alpha=0.5+Math.random()*0.5; s.scale.set(0.4+Math.random()*0.9);
         snow.addParticle(s); flakes.push({spr:s, vy:0.4+Math.random()*0.8, sway:Math.random()*1.2});
       }
 
-      /* ----- AVATAR (fixed; actorLayer) ----- */
+      /* ---------- AVATAR (fixed) ---------- */
       const avatar = new PIXI.Container(); avatar.zIndex=5; actorLayer.addChild(avatar);
       function placeAvatar(){
         const w=app.renderer.width,h=app.renderer.height;
         avatar.x = w*0.5;
         avatar.y = (w<420||h<740)? h*0.50 : h*0.58;
       }
-      // Shadow (separate, under actor, so it stays with avatar)
+      // Shadow
       const sh = new PIXI.Graphics(); sh.beginFill(0x000000,0.25).drawEllipse(0,32,22,7).endFill(); sh.y+=6; avatar.addChild(sh);
 
-      // Backpack w/ side pockets + pad
+      // Backpack
       const pack = new PIXI.Graphics();
       pack.beginFill(0x1e4d7a).drawRoundedRect(-15,-22,30,44,8).endFill();
       pack.beginFill(0x245a8f).drawRoundedRect(-12,-20,24,32,6).endFill();
-      // side pockets
       pack.beginFill(0x1e4d7a).drawRoundedRect(-18,-6,10,16,4).endFill();
-      pack.beginFill(0x1e4d7a).drawRoundedRect(8,-6,10,16,4).endFill();
-      // sleeping pad roll
+      pack.beginFill(0x1e4d7a).drawRoundedRect(  8,-6,10,16,4).endFill();
       pack.beginFill(0x6aa7d6).drawRoundedRect(-18,-30,36,10,5).endFill();
       pack.lineStyle(2,0x184469,1).moveTo(-12,-14).lineTo(-12,12).moveTo(12,-14).lineTo(12,12);
       avatar.addChild(pack);
 
-      // Jacket w/ seams & chest panel
+      // Jacket + outline/seams
       const jacket = new PIXI.Graphics();
       jacket.beginFill(0x2d72b8).drawRoundedRect(-20,-28,40,56,10).endFill();
       jacket.lineStyle(2,0x1a5c8a,1).moveTo(0,-26).lineTo(0,26).moveTo(-10,-5).lineTo(-10,10).moveTo(10,-5).lineTo(10,10);
       jacket.beginFill(0x3d82c8,0.25).drawRoundedRect(-20,-10,40,20,6).endFill();
+      jacket.lineStyle(2.5,0x123e63,0.9).drawRoundedRect(-20,-28,40,56,10);
+      jacket.lineStyle(1.6,0x1a5c8a,0.8).moveTo(-12,-10).lineTo(-20,6).moveTo(12,-10).lineTo(20,6);
       avatar.addChild(jacket);
+
+      // Webbing + shading
+      const web = new PIXI.Graphics();
+      web.lineStyle(2,0x173a5c,0.9).moveTo(-10,-18).lineTo(-16,0).moveTo(10,-18).lineTo(16,0).moveTo(-6,4).lineTo(6,4);
+      avatar.addChild(web);
+      const shade = new PIXI.Graphics(); shade.beginFill(0x000000,0.12).drawRoundedRect(-20,-6,40,18,6).endFill();
+      shade.filters=[new PIXI.BlurFilter({strength:1})]; avatar.addChild(shade);
 
       // Arms + gloves
       const armL = new PIXI.Graphics(); armL.beginFill(0x2d72b8).drawEllipse(-22,2,6,16).endFill();
@@ -334,7 +401,7 @@
       const pom=new PIXI.Graphics(); pom.beginFill(0xe84848).drawCircle(0,-50,3.5).endFill();
       avatar.addChild(head,beanieBase,beanieBand,strap,pom);
 
-      // Legs + boots (animated)
+      // Legs + boots
       const legL = new PIXI.Graphics(); legL.beginFill(0x2a3a48).drawRoundedRect(-16,26,12,16,2).endFill();
       const legR = new PIXI.Graphics(); legR.beginFill(0x2a3a48).drawRoundedRect(4,26,12,16,2).endFill();
       const bootL=new PIXI.Graphics(); bootL.beginFill(0x353535).drawEllipse(-10,42,8,3).endFill();
@@ -348,73 +415,58 @@
 
       placeAvatar();
 
-      /* ----- Terrain objects with perspective (trees + rocks) ----- */
+      /* ---------- Terrain objects ---------- */
       const objects = new PIXI.Container(); objects.zIndex=3; worldLayer.addChild(objects);
       const worldHeight = 9000;
 
       function treeTexture(){
         const c=new PIXI.Container();
-        // trunk with bark lines
         const trunk=new PIXI.Graphics();
         trunk.beginFill(0x5c3d2e).drawRoundedRect(-6,18,12,34,3).endFill();
-        trunk.lineStyle(1,0x4a2f24,0.6).moveTo(-3,20).lineTo(-3,48).moveTo(3,20).lineTo(3,48);
-        c.addChild(trunk);
-        // foliage 7 layers with highlight
+        trunk.lineStyle(1,0x4a2f24,0.6).moveTo(-3,20).lineTo(-3,48).moveTo(3,20).lineTo(3,48); c.addChild(trunk);
         const greens=[0x0f6a3b,0x147a45,0x199951,0x25a35c,0x30b168,0x3bc174,0x45cf80];
         let y=18,r=30;
         greens.forEach((col,i)=>{
           const g=new PIXI.Graphics();
           g.beginFill(col).drawEllipse(0,y-(i*9), r-(i*3), 12).endFill();
-          // highlight
           g.beginFill(0xffffff,0.06).drawEllipse(-6,y-(i*9)-2, (r-(i*3))*0.7, 6).endFill();
           c.addChild(g);
         });
-        // moss
-        const moss=new PIXI.Graphics();
-        moss.beginFill(0x6bbf59,0.5).drawCircle(-8,32,3).drawCircle(6,26,2.5).endFill();
-        c.addChild(moss);
+        const moss=new PIXI.Graphics(); moss.beginFill(0x6bbf59,0.5).drawCircle(-8,32,3).drawCircle(6,26,2.5).endFill(); c.addChild(moss);
         return app.renderer.generateTexture(c,{resolution:DPR});
       }
-
       function rockTexture(){
         const g=new PIXI.Graphics();
         g.beginFill(0x776a60).drawRoundedRect(-24,-12,48,24,10).endFill();
         g.beginFill(0x8a7e73,0.75).drawRoundedRect(-18,-10,36,20,8).endFill();
-        // cracks
         g.lineStyle(2,0x5f544b,0.6).moveTo(-10,-4).lineTo(2,-1).lineTo(14,-6);
         g.lineStyle(2,0x5f544b,0.4).moveTo(-14,6).lineTo(6,4);
-        // lichen
         g.beginFill(0xa1c36d,0.45).drawCircle(-8,-2,2).drawCircle(10,0,1.8).endFill();
         return app.renderer.generateTexture(g,{resolution:DPR});
       }
-
       const treeTex = treeTexture();
       const rockTex = rockTexture();
 
       const terrainObjects=[];
       function rebuildObjects(){
-        objects.removeChildren();
-        terrainObjects.length = 0;
+        objects.removeChildren(); terrainObjects.length = 0;
         for(let i=0;i<40;i++){
           const isTree=Math.random()>0.35;
           const spr=new PIXI.Sprite(isTree?treeTex:rockTex);
           spr.anchor.set(0.5,1);
-          const wy=(i/40)*worldHeight + Math.random()*200; // world Y (up the mountain)
-          const baseX = app.renderer.width*0.5 + (Math.random()*320 - 160);
-          spr.position.set(baseX, (H*0.46 - wy)); // relative to world origin (0 at avatar line)
+          const wy=(i/40)*worldHeight + Math.random()*200;
+          const baseX = app.renderer.width * 0.5 + (Math.random() * 320 - 160);
+          spr.position.set(baseX, (app.renderer.height * 0.46 - wy));
           objects.addChild(spr);
-          terrainObjects.push({spr, wy, baseX});
+          terrainObjects.push({ spr, wy, baseX, side: (Math.random() - 0.5) * 2 });
         }
       }
       rebuildObjects();
 
-      /* ----- World scroll & parallax ----- */
-      let worldOffset = 0;            // increases downward (world moves down)
-      function applyWorldOffset(){    // move everything except avatar
-        worldLayer.y = worldOffset;
-      }
+      /* ---------- World scroll & parallax ---------- */
+      let worldOffset = 0;
+      function applyWorldOffset(){ worldLayer.y = worldOffset; }
 
-      // Subtle idle motion + perspective adjust
       let t=0;
       app.ticker.add((delta)=>{
         t += delta/60;
@@ -430,34 +482,31 @@
           if (f.spr.y > app.renderer.height) { f.spr.y=-10; f.spr.x=Math.random()*app.renderer.width; }
         }
 
-        // Update tiling offsets for texture motion
+        // texture motion
         noiseTS.tilePosition.x -= 0.08*delta;
         noiseTS.tilePosition.y += 0.04*delta;
         contourTS.tilePosition.y += 0.06*delta;
 
-        // Scale/fade terrain by depth (based on screen Y after world offset)
+        // perspective (stable X, no “flying objects”)
         const h = app.renderer.height;
-        for(const o of terrainObjects){
-          const screenY = (H*0.46 - o.wy) + worldOffset; // where it lands on screen
-          const depth = Math.min(1, Math.max(0, (screenY - h*0.25) / (h*0.65))); // 0 top -> 1 bottom
-          const s = 0.55 + depth*0.85;      // grow as it nears the camera
+        for (const o of terrainObjects) {
+          const screenY = (h * 0.46 - o.wy) + worldOffset;
+          const depth = Math.min(1, Math.max(0, (screenY - h*0.25) / (h*0.65)));
+          const s = 0.6 + depth * 0.7;
           o.spr.scale.set(s);
-          o.spr.alpha = 0.25 + depth*0.9;   // fade far, solid near
-          o.spr.x = app.renderer.width*0.5 + (o.baseX - app.renderer.width*0.5) * (0.9 + depth*0.2);
+          o.spr.alpha = 0.35 + depth * 0.65;
+          o.spr.x = o.baseX + o.side * depth * 18;
         }
       });
 
-      /* ----- Step / Pole cycle per climb ----- */
       function stepCycle(duration=1.05){
         const tl=gsap.timeline({defaults:{ease:'power2.inOut'}});
-        // Left forward (right pole down)
         tl.to(legL,{y:22,duration:duration*0.25},0)
           .to(legR,{y:30,duration:duration*0.25},0)
           .to(bootL,{y:38,duration:duration*0.25},0)
           .to(bootR,{y:44,duration:duration*0.25},0)
           .to(poleR,{alpha:1,duration:duration*0.20},0)
           .to(poleL,{alpha:0,duration:duration*0.20},0)
-        // Right forward (left pole down)
           .to(legL,{y:30,duration:duration*0.25},duration*0.25)
           .to(legR,{y:22,duration:duration*0.25},duration*0.25)
           .to(bootL,{y:44,duration:duration*0.25},duration*0.25)
@@ -466,46 +515,40 @@
           .to(poleL,{alpha:1,duration:duration*0.20},duration*0.25);
       }
 
-      /* ----- Layout / Resize ----- */
+      /* ---------- Layout / Resize ---------- */
       function layout(){
         const w=app.renderer.width,h=app.renderer.height;
-        // rebuild sky + fog sizes
-        skyLayer.removeChild(sky); sky = gradientSprite(w,h,currentTop,currentBot); skyLayer.addChildAt(sky,0);
-        fog.clear().beginFill(0xFFFFFF,0.10).drawRect(0,0,w,h).endFill();
-        rays.clear().beginFill(0xffffff,0.05)
-          .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
 
-        // slope + textures sizing/mask
+        rebuildSky(w,h);
+
         drawSlopeShape();
-        noiseTS.width = w*2; noiseTS.height = h*2; contourTS.width = w*2; contourTS.height = h*2;
-        noiseTS.mask = slopeShape; contourTS.mask = slopeShape;
+        noiseTS.width=w*2; noiseTS.height=h*2;
+        contourTS.width=w*2; contourTS.height=h*2;
+        noiseTS.mask=slopeShape; contourTS.mask=slopeShape;
 
-        // parallax bands
-        farBand.y = h*0.20; midBand.y = h*0.30; nearBand.y = h*0.42;
+        farBand.y=h*0.20; midBand.y=h*0.30; nearBand.y=h*0.42;
 
+        layoutFX();
         placeAvatar();
-
-        // rebuild terrain positions for new height
         rebuildObjects();
         applyWorldOffset();
       }
       window.addEventListener('resize', layout);
       layout();
 
-      /* ----- Public API for HUD ----- */
+      /* ---------- Public API ---------- */
       const MountainAPI = {
         climbBy(pixels, duration=1.05){
           stepCycle(duration);
-          // Move world DOWN (so avatar appears to go up)
           gsap.to({off:worldOffset}, {
             off: worldOffset + pixels,
             duration,
             ease:'power2.out',
-            onUpdate:function(){ worldOffset = this.targets()[0].off; applyWorldOffset(); }
+            onUpdate(){ worldOffset = this.targets()[0].off; applyWorldOffset(); }
           });
           gsap.fromTo(avatar,{y:avatar.y+4},{y:avatar.y,duration:0.35,ease:'power1.out'});
         },
-        setSkyGradient(top,bottom){ currentTop=top; currentBot=bottom; layout(); },
+        setSkyGradient(top,bottom){ currentTop=top; currentBot=bottom; rebuildSky(app.renderer.width, app.renderer.height); },
         setSnowVisible(v){ snow.visible = !!v; },
       };
       window.MountainAPI = MountainAPI;
