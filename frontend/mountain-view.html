@@ -254,11 +254,11 @@
       function rebuildSky(w,h){
         skyLayer.removeChildren();
 
-        // gradient only on upper half-ish
+        // gradient only upper half-ish
         skySprite = gradientSprite(w, h*0.52, currentTop, currentBot);
         skyLayer.addChild(skySprite);
 
-        // sun / moon
+        // sun
         sun = new PIXI.Graphics();
         sun.beginFill(0xfff1b8, 0.9).drawCircle(0,0,60).endFill();
         sun.position.set(w*0.82, h*0.18);
@@ -266,20 +266,26 @@
         sun.alpha = 0.85;
         skyLayer.addChild(sun);
 
-        // light clouds
+        // clouds (subtle)
         clouds = new PIXI.Container();
         skyLayer.addChild(clouds);
         spawnCloud(h * 0.18, 1.1, 22);
         spawnCloud(h * 0.28, 0.95, 28);
         spawnCloud(h * 0.36, 0.8, 34);
 
-        // thin horizon haze
-        haze = new PIXI.Graphics();
-        haze.beginFill(0xffffff, 0.12)
-            .drawRect(0, h*0.40, w, h*0.16).endFill();
-        haze.filters = [new PIXI.BlurFilter({strength:6})];
-        skyLayer.addChild(haze);
-      }
+        // horizon haze, masked so it never tints the ground
+        const hz = new PIXI.Graphics();
+        hz.beginFill(0xffffff, 0.12).drawRect(0, h*0.40, w, h*0.16).endFill();
+        hz.filters = [new PIXI.BlurFilter({strength:6})];
+
+        const hazeMask = new PIXI.Graphics();
+        const cut = Math.floor(h * 0.48) - 2; // stop right at the horizon
+        hazeMask.beginFill(0xffffff).drawRect(0, 0, w, cut).endFill();
+
+        hz.mask = hazeMask;
+        skyLayer.addChild(hz, hazeMask);
+        }
+
 
       /* ---------- GROUND + TRAIL ---------- */
       // Colors (updated by API)
@@ -330,15 +336,15 @@
         const w = app.renderer.width, h = app.renderer.height;
         const {x1,y1,x2,y2} = edgePoints();
 
-        // Ground polygon (single sloped plane)
+        // Ground polygon: meet the slope edge exactly (no extra +300)
         slopeShape.clear()
-          .beginFill(hex(groundBase))
-          .moveTo(-1000, h+1000)
-          .lineTo(w+1000, h+1000)
-          .lineTo(x2, y2 + 300)
-          .lineTo(x1, y1 + 300)
-          .closePath()
-          .endFill();
+            .beginFill(hex(groundBase))
+            .moveTo(-1000, h+1000)
+            .lineTo(w+1000, h+1000)
+            .lineTo(x2, y2)      // <-- was y2 + 300
+            .lineTo(x1, y1)      // <-- was y1 + 300
+            .closePath()
+            .endFill();
 
         // Rebuild tiling textures
         ground.removeChild(noiseTS); ground.removeChild(contourTS);
@@ -354,67 +360,69 @@
         noiseTS.mask = slopeShape;
         contourTS.mask = slopeShape;
 
-        // Draw the current trail band
+        // Draw the current trail band & the approaching segments
         drawTrailBand();
-
-        // Rebuild approaching trail segments
         buildApproachSegments(3);
-      }
 
-      function drawTrailBand(){
-        trail.removeChildren();
-
-        const w = app.renderer.width, h = app.renderer.height;
-        const {x1,y1,x2,y2} = edgePoints();
-
-        // vectors
-        const dx = (x2 - x1), dy = (y2 - y1);
-        const len = Math.hypot(dx, dy);
-        const ux = dx / len, uy = dy / len;   // along edge
-        const nx = -uy, ny = ux;              // downhill normal
-
-        const baseOffset = 120;               // distance from top edge to trail center
-        const bandWidth  = 150;               // width of current trail
-
-        // trim ends so band stays inside the screen nicely
-        const trim = 260;
-        const cx1 = x1 + ux * trim + nx * baseOffset;
-        const cy1 = y1 + uy * trim + ny * baseOffset;
-        const cx2 = x2 - ux * trim + nx * baseOffset;
-        const cy2 = y2 - uy * trim + ny * baseOffset;
-
-        const half = bandWidth/2;
-
-        const leftA = cx1 - nx*half, leftB = cy1 - ny*half;
-        const leftC = cx2 - nx*half, leftD = cy2 - ny*half;
-        const rightA= cx1 + nx*half, rightB= cy1 + ny*half;
-        const rightC= cx2 + nx*half, rightD= cy2 + ny*half;
-
-        const g = new PIXI.Graphics();
-        g.beginFill(hex(trailColor), 0.9)
-         .moveTo(leftA,leftB).lineTo(leftC,leftD).lineTo(rightC,rightD).lineTo(rightA,rightB).closePath().endFill();
-
-        // edge lines
-        g.lineStyle(3, hex(trailEdge), 0.35)
-         .moveTo(leftA,leftB).lineTo(leftC,leftD)
-         .moveTo(rightA,rightB).lineTo(rightC,rightD);
-
-        // very light grain on trail only
-        const grain = new PIXI.Graphics();
-        for(let i=0;i<60;i++){
-          grain.beginFill(0x000000, 0.06).drawCircle(
-            leftA + (rightA-leftA)*Math.random() + ux*(cx2-cx1)*Math.random(),
-            leftB + (rightB-leftB)*Math.random() + uy*(cy2-cy1)*Math.random(),
-            0.8 + Math.random()*1.4
-          ).endFill();
+        // Thin ridge on the slope edge for separation
+        if (!drawGroundAndTrail._ridge) {
+            drawGroundAndTrail._ridge = new PIXI.Graphics();
+            worldLayer.addChild(drawGroundAndTrail._ridge);
         }
-        const tex = app.renderer.generateTexture(grain,{resolution:DPR});
-        const tiler = new PIXI.TilingSprite({ texture: tex, width: app.renderer.width, height: app.renderer.height });
-        tiler.alpha = 0.25;
-        tiler.mask = g;
+        const ridge = drawGroundAndTrail._ridge;
+        ridge.clear()
+            .lineStyle(4, hex(groundDark), 0.30)
+            .moveTo(x1, y1).lineTo(x2, y2)
+            .lineStyle(1, 0x000000, 0.08)
+            .moveTo(x1, y1+1.5).lineTo(x2, y2+1.5);
+        }
 
-        trail.addChild(g, tiler);
-      }
+
+        function drawTrailBand(){
+            trail.removeChildren();
+
+            const w = app.renderer.width, h = app.renderer.height;
+            const {x1,y1,x2,y2} = edgePoints();
+
+            const dx = (x2 - x1), dy = (y2 - y1);
+            const len = Math.hypot(dx, dy);
+            const ux = dx / len, uy = dy / len;   // along-edge
+            const nx = -uy, ny = ux;              // downhill normal
+
+            // Puts the band right where feet *look* natural across phones/tablets
+            const baseOffset = Math.max(110, Math.min(150, h * 0.16));
+            const bandWidth  = Math.max(130, Math.min(170, h * 0.12));
+
+            const trim = 220;
+            const cx1 = x1 + ux * trim + nx * baseOffset;
+            const cy1 = y1 + uy * trim + ny * baseOffset;
+            const cx2 = x2 - ux * trim + nx * baseOffset;
+            const cy2 = y2 - uy * trim + ny * baseOffset;
+
+            const half = bandWidth/2;
+            const leftA = cx1 - nx*half, leftB = cy1 - ny*half;
+            const leftC = cx2 - nx*half, leftD = cy2 - ny*half;
+            const rightA= cx1 + nx*half, rightB= cy1 + ny*half;
+            const rightC= cx2 + nx*half, rightD= cy2 + ny*half;
+
+            const g = new PIXI.Graphics();
+            // Slightly darker, more opaque so it can’t be mistaken for sky
+            g.beginFill(hex(trailColor), 0.96)
+            .moveTo(leftA,leftB).lineTo(leftC,leftD).lineTo(rightC,rightD).lineTo(rightA,rightB).closePath().endFill();
+
+            // Edge lines + soft inner shadow for depth
+            g.lineStyle(3, hex(trailEdge), 0.45)
+            .moveTo(leftA,leftB).lineTo(leftC,leftD)
+            .moveTo(rightA,rightB).lineTo(rightC,rightD);
+            g.lineStyle(0);
+            g.beginFill(0x000000, 0.06)
+            .drawPolygon(leftA,leftB, leftC,leftD, rightC,rightD, rightA,rightB)
+            .endFill();
+            g.filters = [new PIXI.BlurFilter({ strength: 0.6 })];
+
+            trail.addChild(g);
+        }
+
 
       function buildApproachSegments(N = 3){
         approach.removeChildren();
