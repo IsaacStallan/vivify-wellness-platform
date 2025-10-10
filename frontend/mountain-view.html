@@ -273,7 +273,7 @@
         // horizon haze
         horizonHaze = new PIXI.Graphics();
         const hazeH = Math.round(h * 0.25);
-        horizonHaze.beginFill(0x9fd0f1, 0.25).drawRect(0, h * 0.38, w, hazeH).endFill();
+        horizonHaze.beginFill(0x9fd0f1, 0.18).drawRect(0, h * 0.38, w, hazeH).endFill(); 
         horizonHaze.filters = [new PIXI.BlurFilter({ strength: 6 })];
         skyLayer.addChild(horizonHaze);
       }
@@ -321,20 +321,40 @@
       noiseTS.mask = slopeShape;
       contourTS.mask = slopeShape;
 
-      function band(w,h,color,angle,y,alpha,z){
-        const g=new PIXI.Graphics(); g.beginFill(hex(color)).drawRect(0,0,w,h).endFill();
-        g.angle=angle; g.y=y; g.alpha=alpha; g.zIndex=z; worldLayer.addChild(g); return g;
-      }
-      const farBand   = band(4000,200,'#9a9185',-4,app.renderer.height*0.20,0.35,0);
-      const midBand   = band(4000,260,'#887a6b',-6,app.renderer.height*0.30,0.45,1);
-      const nearBand  = band(4000,340,'#76695c',-8,app.renderer.height*0.42,0.55,2);
+    function band(w,h,color,angle,y,alpha,z){
+        const g = new PIXI.Graphics();
+        g.beginFill(hex(color)).drawRect(-1000, -h/2, w, h).endFill();
+        g.angle = angle;
+        g.y = y;
+        g.alpha = alpha;
+        g.zIndex = z;
+        slopeContainer.addChild(g);     // <— on the slope container
+        g.mask = slopeShape;            // <— MASKED to ground
+        return g;
+    }
+    
+    const farBand  = band(4000,200,'#8a7e73',-4, H*0.20,0.35,0);
+    const midBand  = band(4000,260,'#7a6e64',-6, H*0.30,0.45,1);
+    const nearBand = band(4000,340,'#6b5f55',-8, H*0.42,0.55,2);
+      
+    const ridge = new PIXI.Graphics(); 
+    slopeContainer.addChild(ridge);
 
-      // Fog & Godrays
+    function drawRidgeLine(){
+    const w = app.renderer.width, h = app.renderer.height;
+    ridge.clear()
+        .lineStyle(4, 0x5a4f46, 0.25)
+        .moveTo(-600, h*0.65)
+        .lineTo(w+600, h*0.45);
+    ridge.filters = [new PIXI.BlurFilter({ strength: 1 })];
+    }
+
+    // Fog & Godrays
       const fog = new PIXI.Graphics(); fxLayer.addChild(fog);
       const rays = new PIXI.Graphics(); rays.blendMode='screen'; fxLayer.addChild(rays);
       function layoutFX(){
         const w=app.renderer.width,h=app.renderer.height;
-        fog.clear().beginFill(0xFFFFFF,0.10).drawRect(0,0,w,h).endFill();
+        fog.clear().beginFill(0xFFFFFF, 0.06).drawRect(0,0,w,h).endFill();
         rays.clear().beginFill(0xffffff,0.05)
           .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
       }
@@ -527,6 +547,10 @@
         noiseTS.mask=slopeShape; contourTS.mask=slopeShape;
 
         farBand.y=h*0.20; midBand.y=h*0.30; nearBand.y=h*0.42;
+
+        // after drawSlopeShape() in both initial setup and layout():
+        drawSlopeLine?.(); // ignore if old
+        drawRidgeLine();
 
         layoutFX();
         placeAvatar();
