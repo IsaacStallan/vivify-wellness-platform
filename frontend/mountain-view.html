@@ -364,31 +364,30 @@
       rockTex = makeRockTexture();
       const rockTS = new PIXI.TilingSprite({ texture: rockTex, width: app.renderer.width*2, height: app.renderer.height*2 });
       rockTS.alpha = 0.3;
-      rockTS.blendMode = 'multiply';
+      // rockTS.blendMode = 'multiply';
       slopeContainer.addChild(rockTS);
       rockTS.mask = slopeShape;
 
       // Directional shading (creates 3D depth)
       const shadingGrad = new PIXI.Graphics();
-      shadingGrad.blendMode = 'multiply';
+      // shadingGrad.blendMode = 'multiply';
       slopeContainer.addChild(shadingGrad);
       
-      function drawShading(){
-        const w=app.renderer.width, h=app.renderer.height;
-        shadingGrad.clear();
-        
-        // Gradient from top-left (light) to bottom-right (dark)
-        const steps = 20;
-        for(let i=0; i<steps; i++){
-          const alpha = 0.05 + (i/steps) * 0.25;
-          const y = (h*0.45) + (i/steps) * (h*0.20);
-          shadingGrad.beginFill(0x000000, alpha)
-            .drawRect(-600, y, w+1200, (h*0.20)/steps)
-            .endFill();
-        }
-      }
-      drawShading();
-      shadingGrad.mask = slopeShape;
+    // function drawShading(){
+    //   const w=app.renderer.width, h=app.renderer.height;
+    //   shadingGrad.clear();
+    //   
+    //   const steps = 20;
+    //   for(let i=0; i<steps; i++){
+    //     const alpha = 0.05 + (i/steps) * 0.25;
+    //     const y = (h*0.45) + (i/steps) * (h*0.20);
+    //     shadingGrad.beginFill(0x000000, alpha)
+    //       .drawRect(-600, y, w+1200, (h*0.20)/steps)
+    //       .endFill();
+    //   }
+    // }
+    // drawShading();
+    // shadingGrad.mask = slopeShape;
 
       // Contour lines - MORE VISIBLE
       function makeContourTex(){
