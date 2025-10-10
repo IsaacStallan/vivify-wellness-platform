@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Vivify Mountain</title>
 
-  <!-- Dev-only CDNs (fine for prototyping) -->
+  <!-- Dev CDNs (fine for prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Pixi v8 + GSAP -->
   <script src="https://unpkg.com/pixi.js@8/dist/pixi.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
 
@@ -26,25 +28,25 @@
   <script type="text/babel">
     /* ---------------- ENV / THEME ---------------- */
     function envFromAltitude(alt){
-      if (alt < 1000) return { 
+      if (alt < 1000) return {
         name:'Forest Base', top:'#6ea8da', bot:'#9fd0f1', snow:false,
-        groundBase:'#8b7355', groundDark:'#6b5845', groundLight:'#b29f8b',
-        trail:'#b8a58f', trailEdge:'#5a4f46'
+        groundBase:'#8b7355', groundDark:'#6b5845', groundLight:'#a58f7a',
+        trail:'#a3907c', trailEdge:'#5c5147'
       };
-      if (alt < 2000) return { 
+      if (alt < 2000) return {
         name:'Mountain Trail', top:'#4b8ccb', bot:'#78b6e7', snow:false,
-        groundBase:'#95887a', groundDark:'#75685a', groundLight:'#c2b7aa',
-        trail:'#cdbba6', trailEdge:'#675c50'
+        groundBase:'#95887a', groundDark:'#75685a', groundLight:'#b5a89a',
+        trail:'#ada193', trailEdge:'#5e564d'
       };
-      if (alt < 3000) return { 
+      if (alt < 3000) return {
         name:'Alpine Zone', top:'#3c79bb', bot:'#5b9ad4', snow:true,
         groundBase:'#a5a59d', groundDark:'#85857d', groundLight:'#cfcfc7',
-        trail:'#d9d7d1', trailEdge:'#6f7376'
+        trail:'#b9bab3', trailEdge:'#6b6d66'
       };
-      return { 
+      return {
         name:'Summit Ridge', top:'#2d68ab', bot:'#4a86c1', snow:true,
-        groundBase:'#cfd4d9', groundDark:'#9aa2aa', groundLight:'#eef2f5',
-        trail:'#f2f4f7', trailEdge:'#8a949e'
+        groundBase:'#d8dce0', groundDark:'#b8bcc0', groundLight:'#f2f5f7',
+        trail:'#e6eaee', trailEdge:'#aab0b6'
       };
     }
 
@@ -80,11 +82,6 @@
         }
       }, [env]);
 
-      // seed progress at mount
-      useLayoutEffect(()=>{
-        window.MountainAPI?.setProgress(0);
-      }, []);
-
       const progress = Math.min(100, (data.altitude / data.target) * 100);
       const oxyColor = data.oxygen >= 70 ? '#10b981' : data.oxygen >= 50 ? '#f59e0b' : data.oxygen >= 30 ? '#f97316' : '#ef4444';
 
@@ -97,15 +94,11 @@
 
         window.MountainAPI?.climbBy(pixels, 1.05);
 
-        const tmp = { alt: data.altitude, p: window.__vivifyProgress || 0 };
+        const tmp = { alt: data.altitude };
         gsap.to(tmp, {
           alt: Math.min(data.altitude + altitudeGain, data.target),
-          p:   Math.min(1, (data.altitude + altitudeGain - 1200) / (3776 - 1200)),
           duration: 1.05, ease:'power2.out',
-          onUpdate: () => {
-            setData(prev => ({...prev, altitude: tmp.alt}));
-            window.MountainAPI?.setProgress(tmp.p);
-          },
+          onUpdate: () => setData(prev => ({...prev, altitude: tmp.alt})),
           onComplete: () => setClimbing(false)
         });
 
@@ -196,7 +189,7 @@
       const sceneEl = document.getElementById('scene');
       const DPR = Math.max(1, window.devicePixelRatio || 1);
 
-      // robust hex helper
+      // Safe hex helper
       const hex = (c) => {
         if (typeof c === 'number') return c;
         if (!c) return 0x000000;
@@ -206,36 +199,30 @@
         return parseInt(s, 16);
       };
 
-      window.__vivifyProgress = 0;
-
       const app = new PIXI.Application();
       await app.init({ resizeTo: sceneEl, antialias:true, backgroundAlpha:1, powerPreference:'high-performance', autoDensity:true });
       sceneEl.appendChild(app.canvas);
       app.stage.sortableChildren = true;
 
       // Layers
-      const skyLayer   = new PIXI.Container(); skyLayer.zIndex = 0;
-      const groundLayer= new PIXI.Container(); groundLayer.zIndex = 1; // static ground background (below world items)
-      const worldLayer = new PIXI.Container(); worldLayer.zIndex = 2;  // scrolls (trail/rocks/trees)
-      const actorLayer = new PIXI.Container(); actorLayer.zIndex = 3;  // avatar
-      const fxLayer    = new PIXI.Container(); fxLayer.zIndex = 4;
-      app.stage.addChild(skyLayer, groundLayer, worldLayer, actorLayer, fxLayer);
+      const skyLayer   = new PIXI.Container();
+      const worldLayer = new PIXI.Container();
+      const actorLayer = new PIXI.Container();
+      const fxLayer    = new PIXI.Container();
+      app.stage.addChild(skyLayer, worldLayer, actorLayer, fxLayer);
 
-      /* ---------- SKY (never covers ground) ---------- */
+      /* ---------- SKY (quiet) ---------- */
       let currentTop = '#4b8ccb', currentBot = '#78b6e7';
-      let sky, clouds;
+      let skySprite, sun, clouds, haze;
 
       function gradientSprite(w,h,top,bottom){
         const cont = new PIXI.Container();
         const r1 = new PIXI.Graphics(); r1.beginFill(hex(top)).drawRect(0,0,w,h).endFill();
         const r2 = new PIXI.Graphics(); r2.beginFill(hex(bottom)).drawRect(0,h*0.35,w,h).endFill(); r2.alpha=0.9;
         cont.addChild(r1,r2);
-        const tex = app.renderer.generateTexture(cont,{resolution:DPR,region:new PIXI.Rectangle(0,0,w,h)});
+        const tex = app.renderer.generateTexture(cont,{resolution:DPR});
         return new PIXI.Sprite(tex);
       }
-
-      // horizon split
-      function horizonY(){ return app.renderer.height * 0.52; }
 
       function makeCloudTex() {
         const c = new PIXI.Container();
@@ -254,7 +241,7 @@
         s.anchor.set(0.5);
         s.y = y; s.x = -120;
         s.scale.set(scale);
-        s.alpha = 0.35;
+        s.alpha = 0.22; // subtle
         clouds.addChild(s);
         gsap.to(s, {
           x: app.renderer.width + 120,
@@ -264,281 +251,307 @@
         });
       }
 
-      function rebuildSky(){
+      function rebuildSky(w,h){
         skyLayer.removeChildren();
 
-        const w=app.renderer.width, h=app.renderer.height;
-        const skyHeight = Math.floor(horizonY()); // only to horizon
-        sky = gradientSprite(w, skyHeight, currentTop, currentBot);
-        skyLayer.addChild(sky);
+        // gradient only on upper half-ish
+        skySprite = gradientSprite(w, h*0.52, currentTop, currentBot);
+        skyLayer.addChild(skySprite);
 
-        // distant silhouettes (clipped to sky)
-        const mask = new PIXI.Graphics(); mask.beginFill(0xffffff).drawRect(0,0,w,skyHeight).endFill();
-        const silhouettes = new PIXI.Container(); silhouettes.mask = mask;
-        skyLayer.addChild(silhouettes, mask);
-
-        const addSilhouette=(color, yy, width, height, offset=0, alpha=0.35)=>{
-          const g = new PIXI.Graphics();
-          g.beginFill(hex(color));
-          g.moveTo(-200+offset, yy + height*0.85);
-          g.lineTo( width*0.15+offset, yy + height*0.55);
-          g.lineTo( width*0.30+offset, yy + height*0.35);
-          g.lineTo( width*0.45+offset, yy + height*0.60);
-          g.lineTo( width*0.70+offset, yy + height*0.30);
-          g.lineTo( width*0.90+offset, yy + height*0.55);
-          g.lineTo( width*1.10+offset, yy + height*0.85);
-          g.closePath().endFill();
-          g.alpha = alpha;
-          g.filters = [new PIXI.BlurFilter({strength:1.2})];
-          silhouettes.addChild(g);
-        };
-        addSilhouette('#2b4f75', skyHeight*0.35, w*0.9,  skyHeight*0.50, -140, 0.32);
-        addSilhouette('#35608d', skyHeight*0.40, w,      skyHeight*0.55,   90,  0.28);
-
-        // sun (in sky only)
-        const sun = new PIXI.Graphics();
-        sun.beginFill(0xfff2b2, 0.9).drawCircle(0, 0, 58).endFill();
-        sun.position.set(w*0.82, skyHeight*0.42);
-        sun.alpha = 0.8;
+        // sun / moon
+        sun = new PIXI.Graphics();
+        sun.beginFill(0xfff1b8, 0.9).drawCircle(0,0,60).endFill();
+        sun.position.set(w*0.82, h*0.18);
         sun.filters = [new PIXI.BlurFilter({ strength: 2 })];
-        silhouettes.addChild(sun);
+        sun.alpha = 0.85;
+        skyLayer.addChild(sun);
 
-        // clouds
-        clouds = new PIXI.Container(); silhouettes.addChild(clouds);
-        spawnCloud(skyHeight*0.35, 1.2, 22);
-        spawnCloud(skyHeight*0.50, 1.0, 28);
-        spawnCloud(skyHeight*0.65, 0.85, 34);
+        // light clouds
+        clouds = new PIXI.Container();
+        skyLayer.addChild(clouds);
+        spawnCloud(h * 0.18, 1.1, 22);
+        spawnCloud(h * 0.28, 0.95, 28);
+        spawnCloud(h * 0.36, 0.8, 34);
+
+        // thin horizon haze
+        haze = new PIXI.Graphics();
+        haze.beginFill(0xffffff, 0.12)
+            .drawRect(0, h*0.40, w, h*0.16).endFill();
+        haze.filters = [new PIXI.BlurFilter({strength:6})];
+        skyLayer.addChild(haze);
       }
 
-      /* ---------- GROUND & TRAIL (static base) ---------- */
-      let currentGroundBase='#95887a', currentGroundDark='#75685a', currentGroundLight='#c2b7aa';
-      let currentTrail='#cdbba6', currentTrailEdge='#675c50';
+      /* ---------- GROUND + TRAIL ---------- */
+      // Colors (updated by API)
+      let groundBase='#95887a', groundDark='#75685a', groundLight='#b5a89a';
+      let trailColor='#ada193', trailEdge='#5e564d';
 
-      const ground = new PIXI.Graphics(); groundLayer.addChild(ground);
+      // Containers
+      const ground = new PIXI.Container();   // slope & textures
+      const trail  = new PIXI.Container();   // current band
+      const approach = new PIXI.Container(); // approaching segments
+      worldLayer.addChild(ground, trail, approach);
 
-      const trailContainer = new PIXI.Container(); worldLayer.addChild(trailContainer);
-      const trailShape = new PIXI.Graphics(); trailContainer.addChild(trailShape);
-      const trailEdge  = new PIXI.Graphics(); trailContainer.addChild(trailEdge);
-      const trailNoiseTS = new PIXI.TilingSprite({ texture: PIXI.Texture.WHITE, width: 64, height: 64 }); 
-      trailNoiseTS.alpha = 0.08; trailContainer.addChild(trailNoiseTS);
+      // Shapes/tiles
+      const slopeShape = new PIXI.Graphics(); ground.addChild(slopeShape);
+      let noiseTS, contourTS;
 
-      // ground textures (noise + contours), masked to ground polygon
-      const groundMask = new PIXI.Graphics(); groundLayer.addChild(groundMask);
-      const groundNoiseTS = new PIXI.TilingSprite({ texture: PIXI.Texture.WHITE, width: 64, height: 64 }); groundLayer.addChild(groundNoiseTS);
-      const groundContourTS = new PIXI.TilingSprite({ texture: PIXI.Texture.WHITE, width: 64, height: 64 }); groundLayer.addChild(groundContourTS);
-      groundNoiseTS.alpha = 0.15; groundNoiseTS.blendMode = 'multiply';
-      groundContourTS.alpha = 0.25; groundContourTS.tint = 0x000000;
-      groundNoiseTS.mask = groundMask; groundContourTS.mask = groundMask;
+      function horizonY(){ return app.renderer.height * 0.48; }
 
-      function makeNoiseTex(size=64, dots=70){
+      function edgePoints(){
+        const w = app.renderer.width, h = app.renderer.height;
+        return { x1: -600, y1: h*0.64, x2: w+600, y2: h*0.46 };
+      }
+
+      function makeNoiseTex(){
         const g = new PIXI.Graphics();
-        for(let i=0;i<dots;i++){
-          const a = 0.04 + Math.random()*0.06;
+        // darker specks
+        for(let i=0;i<80;i++){
+          const a = 0.08 + Math.random()*0.12;
           const r = 0.8 + Math.random()*1.6;
-          const x = Math.random()*size, y = Math.random()*size;
-          g.beginFill(0x000000,a).drawCircle(x,y,r).endFill();
+          g.beginFill(hex(groundDark), a).drawCircle(Math.random()*128, Math.random()*128, r).endFill();
         }
-        return app.renderer.generateTexture(g,{resolution:DPR,region:new PIXI.Rectangle(0,0,size,size)});
-      }
-      function makeContourTex(size=64, step=8){
-        const g = new PIXI.Graphics();
-        g.lineStyle(1,0xffffff,0.08);
-        for(let y=0;y<size;y+=step){ g.moveTo(0,y); g.lineTo(size,y); }
-        return app.renderer.generateTexture(g,{resolution:DPR,region:new PIXI.Rectangle(0,0,size,size)});
-      }
-      const groundNoiseTex = makeNoiseTex(64,70);
-      const groundContourTex = makeContourTex(64,8);
-      groundNoiseTS.texture = groundNoiseTex;
-      groundContourTS.texture = groundContourTex;
-
-      // compute slope top line and draw ground polygon
-      function drawGroundAndTrail(){
-        const w=app.renderer.width, h=app.renderer.height;
-        const H = horizonY();
-
-        // --- ground base ---
-        const x1 = -600, y1 = H + 70;        // top-left of ground band
-        const x2 = w + 600, y2 = H - 70;     // top-right of ground band
-        ground.clear().beginFill(hex(currentGroundBase))
-              .moveTo(x1,y1).lineTo(x2,y2).lineTo(x2,h+600).lineTo(x1,h+600)
-              .closePath().endFill();
-
-        groundMask.clear().beginFill(0xffffff)
-              .moveTo(x1,y1).lineTo(x2,y2).lineTo(x2,h+600).lineTo(x1,h+600)
-              .closePath().endFill();
-
-        groundNoiseTS.width = w*2; groundNoiseTS.height = h*2;
-        groundContourTS.width = w*2; groundContourTS.height = h*2;
-
-        // --- trail band (diagonal, on top of ground) ---
-        // vector along top edge
-        const dx = (x2-x1), dy = (y2-y1); 
-        const len = Math.hypot(dx,dy); 
-        const ux = dx/len, uy = dy/len;               // unit along
-        const nx = -uy, ny = ux;                      // unit normal (downhill)
-        const offset = 110;                           // distance below the top edge
-        const width  = 140;                           // trail thickness
-
-        // start & end of trail centerline (trim a bit so it stays on screen)
-        const trim = 220;
-        const cx1 = x1 + ux*trim + nx*offset;
-        const cy1 = y1 + uy*trim + ny*offset;
-        const cx2 = x2 - ux*trim + nx*offset;
-        const cy2 = y2 - uy*trim + ny*offset;
-
-        // polygon points (left/right edges are ± width/2 along the normal)
-        const lw = -width/2, rw = width/2;
-        const p1x = cx1 + nx*lw, p1y = cy1 + ny*lw;
-        const p2x = cx2 + nx*lw, p2y = cy2 + ny*lw;
-        const p3x = cx2 + nx*rw, p3y = cy2 + ny*rw;
-        const p4x = cx1 + nx*rw, p4y = cy1 + ny*rw;
-
-        trailShape.clear()
-          .beginFill(hex(currentTrail), 0.95)
-          .drawPolygon([p1x,p1y, p2x,p2y, p3x,p3y, p4x,p4y])
-          .endFill();
-
-        // edges for readability
-        trailEdge.clear()
-          .lineStyle(3, hex(currentTrailEdge), 0.35)
-          .moveTo(p1x,p1y).lineTo(p2x,p2y)
-          .moveTo(p4x,p4y).lineTo(p3x,p3y);
-
-        // subtle trail grain
-        const trailNoiseTex = makeNoiseTex(64, 40);
-        trailNoiseTS.texture = trailNoiseTex;
-        trailNoiseTS.width = w*2; trailNoiseTS.height = h*2;
-
-        // keep trail with world scroll (it lives in worldLayer already)
-      }
-
-      /* ---------- WORLD OBJECTS (biased off the trail) ---------- */
-      const objects = new PIXI.Container(); worldLayer.addChild(objects);
-      const worldHeight = 9000;
-
-      function treeTexture(){
-        const c=new PIXI.Container();
-        const trunk=new PIXI.Graphics();
-        trunk.beginFill(0x5c3d2e).drawRoundedRect(-6,18,12,34,3).endFill();
-        trunk.lineStyle(1,0x4a2f24,0.6).moveTo(-3,20).lineTo(-3,48).moveTo(3,20).lineTo(3,48); c.addChild(trunk);
-        const greens=[0x0f6a3b,0x147a45,0x199951,0x25a35c,0x30b168,0x3bc174,0x45cf80];
-        let y=18,r=30;
-        greens.forEach((col,i)=>{
-          const g=new PIXI.Graphics();
-          g.beginFill(col).drawEllipse(0,y-(i*9), r-(i*3), 12).endFill();
-          g.beginFill(0xffffff,0.06).drawEllipse(-6,y-(i*9)-2, (r-(i*3))*0.7, 6).endFill();
-          c.addChild(g);
-        });
-        const moss=new PIXI.Graphics(); moss.beginFill(0x6bbf59,0.5).drawCircle(-8,32,3).drawCircle(6,26,2.5).endFill(); c.addChild(moss);
-        return app.renderer.generateTexture(c,{resolution:DPR});
-      }
-      function rockTexture(){
-        const g=new PIXI.Graphics();
-        g.beginFill(hex(currentGroundDark)).drawRoundedRect(-24,-12,48,24,10).endFill();
-        g.beginFill(hex(currentGroundBase),0.85).drawRoundedRect(-18,-10,36,20,8).endFill();
-        g.beginFill(hex(currentGroundLight),0.6).drawRoundedRect(-14,-8,28,16,6).endFill();
-        g.lineStyle(2,hex(currentGroundDark),0.6).moveTo(-10,-4).lineTo(2,-1).lineTo(14,-6);
-        g.lineStyle(2,hex(currentGroundDark),0.4).moveTo(-14,6).lineTo(6,4);
-        g.beginFill(0xa1c36d,0.45).drawCircle(-8,-2,2).drawCircle(10,0,1.8).endFill();
+        // light grain
+        for(let i=0;i<60;i++){
+          const a = 0.05 + Math.random()*0.08;
+          g.beginFill(hex(groundLight), a).drawRect(Math.random()*128, Math.random()*128, 1+Math.random()*2, 1).endFill();
+        }
         return app.renderer.generateTexture(g,{resolution:DPR});
       }
-      let treeTex = treeTexture();
-      let rockTex = rockTexture();
 
-      const terrainObjects=[];
-      function rebuildObjects(){
-        objects.removeChildren(); terrainObjects.length = 0;
-        const w=app.renderer.width, h=app.renderer.height;
-        const H=horizonY();
+      function makeContourTex(){
+        const g = new PIXI.Graphics();
+        g.lineStyle(1.25, hex(groundDark), 0.22);
+        for(let y=0; y<128; y+=12){ g.moveTo(0,y); g.lineTo(128,y); }
+        return app.renderer.generateTexture(g,{resolution:DPR});
+      }
 
-        for(let i=0;i<40;i++){
-          const isTree=Math.random()>0.35;
-          const spr=new PIXI.Sprite(isTree?treeTex:rockTex);
-          spr.anchor.set(0.5,1);
+      function drawGroundAndTrail(){
+        const w = app.renderer.width, h = app.renderer.height;
+        const {x1,y1,x2,y2} = edgePoints();
 
-          const wy=(i/40)*worldHeight + Math.random()*200;
+        // Ground polygon (single sloped plane)
+        slopeShape.clear()
+          .beginFill(hex(groundBase))
+          .moveTo(-1000, h+1000)
+          .lineTo(w+1000, h+1000)
+          .lineTo(x2, y2 + 300)
+          .lineTo(x1, y1 + 300)
+          .closePath()
+          .endFill();
 
-          // bias X away from the trail band: pick left or right side cluster
-          const left  = w*0.18 + Math.random()*w*0.18;
-          const right = w*0.64 + Math.random()*w*0.18;
-          const baseX = Math.random()<0.5 ? left : right;
+        // Rebuild tiling textures
+        ground.removeChild(noiseTS); ground.removeChild(contourTS);
+        const noiseTex = makeNoiseTex();
+        const contourTex = makeContourTex();
 
-          spr.position.set(baseX, (h*0.46 - wy)); // same vertical mapping as before
-          objects.addChild(spr);
-          terrainObjects.push({ spr, wy, baseX, side: (Math.random() - 0.5) * 2 });
+        noiseTS = new PIXI.TilingSprite({ texture: noiseTex, width: w*2, height: h*2 });
+        contourTS = new PIXI.TilingSprite({ texture: contourTex, width: w*2, height: h*2 });
+
+        noiseTS.alpha = 0.18;
+        contourTS.alpha = 0.32;
+        ground.addChild(noiseTS, contourTS);
+        noiseTS.mask = slopeShape;
+        contourTS.mask = slopeShape;
+
+        // Draw the current trail band
+        drawTrailBand();
+
+        // Rebuild approaching trail segments
+        buildApproachSegments(3);
+      }
+
+      function drawTrailBand(){
+        trail.removeChildren();
+
+        const w = app.renderer.width, h = app.renderer.height;
+        const {x1,y1,x2,y2} = edgePoints();
+
+        // vectors
+        const dx = (x2 - x1), dy = (y2 - y1);
+        const len = Math.hypot(dx, dy);
+        const ux = dx / len, uy = dy / len;   // along edge
+        const nx = -uy, ny = ux;              // downhill normal
+
+        const baseOffset = 120;               // distance from top edge to trail center
+        const bandWidth  = 150;               // width of current trail
+
+        // trim ends so band stays inside the screen nicely
+        const trim = 260;
+        const cx1 = x1 + ux * trim + nx * baseOffset;
+        const cy1 = y1 + uy * trim + ny * baseOffset;
+        const cx2 = x2 - ux * trim + nx * baseOffset;
+        const cy2 = y2 - uy * trim + ny * baseOffset;
+
+        const half = bandWidth/2;
+
+        const leftA = cx1 - nx*half, leftB = cy1 - ny*half;
+        const leftC = cx2 - nx*half, leftD = cy2 - ny*half;
+        const rightA= cx1 + nx*half, rightB= cy1 + ny*half;
+        const rightC= cx2 + nx*half, rightD= cy2 + ny*half;
+
+        const g = new PIXI.Graphics();
+        g.beginFill(hex(trailColor), 0.9)
+         .moveTo(leftA,leftB).lineTo(leftC,leftD).lineTo(rightC,rightD).lineTo(rightA,rightB).closePath().endFill();
+
+        // edge lines
+        g.lineStyle(3, hex(trailEdge), 0.35)
+         .moveTo(leftA,leftB).lineTo(leftC,leftD)
+         .moveTo(rightA,rightB).lineTo(rightC,rightD);
+
+        // very light grain on trail only
+        const grain = new PIXI.Graphics();
+        for(let i=0;i<60;i++){
+          grain.beginFill(0x000000, 0.06).drawCircle(
+            leftA + (rightA-leftA)*Math.random() + ux*(cx2-cx1)*Math.random(),
+            leftB + (rightB-leftB)*Math.random() + uy*(cy2-cy1)*Math.random(),
+            0.8 + Math.random()*1.4
+          ).endFill();
+        }
+        const tex = app.renderer.generateTexture(grain,{resolution:DPR});
+        const tiler = new PIXI.TilingSprite({ texture: tex, width: app.renderer.width, height: app.renderer.height });
+        tiler.alpha = 0.25;
+        tiler.mask = g;
+
+        trail.addChild(g, tiler);
+      }
+
+      function buildApproachSegments(N = 3){
+        approach.removeChildren();
+
+        const w = app.renderer.width, h = app.renderer.height;
+        const {x1,y1,x2,y2} = edgePoints();
+        const dx = (x2 - x1), dy = (y2 - y1);
+        const len = Math.hypot(dx, dy);
+        const ux = dx / len, uy = dy / len;
+        const nx = -uy, ny = ux;
+
+        const baseOffset = 120;
+        const baseWidth  = 150;
+        const trim = 260;
+
+        for (let i = 1; i <= N; i++) {
+          const t = i / (N + 1);                // far → near
+          const width = baseWidth * (0.45 + 0.35 * t);
+          const offset = baseOffset - 40 * (1 - t);
+
+          const cx1 = x1 + ux * trim + nx * offset;
+          const cy1 = y1 + uy * trim + ny * offset;
+          const cx2 = x2 - ux * trim + nx * offset;
+          const cy2 = y2 - uy * trim + ny * offset;
+
+          // tiny curvature for life
+          const midx = (cx1 + cx2) * 0.5 + nx * (i * 6);
+          const midy = (cy1 + cy2) * 0.5 + ny * (i * 6);
+
+          const pts = [];
+          const steps = 8;
+          for (let s = 0; s <= steps; s++) {
+            const k = s/steps;
+            const bx = (1-k)*(1-k)*cx1 + 2*(1-k)*k*midx + k*k*cx2;
+            const by = (1-k)*(1-k)*cy1 + 2*(1-k)*k*midy + k*k*cy2;
+            pts.push({x:bx,y:by});
+          }
+
+          const half = width/2;
+          const left=[], right=[];
+          for (const p of pts){ left.push(p.x - nx*half, p.y - ny*half); }
+          for (let j=pts.length-1;j>=0;j--){ const p=pts[j]; right.push(p.x + nx*half, p.y + ny*half); }
+
+          const g = new PIXI.Graphics(); approach.addChild(g);
+          const fillA = 0.28 + 0.12 * t;
+          const edgeA = 0.18 + 0.10 * t;
+
+          g.beginFill(hex(trailColor), fillA).drawPolygon([...left, ...right]).endFill();
+          g.lineStyle(2, hex(trailEdge), edgeA)
+           .moveTo(left[0], left[1]).lineTo(left[left.length-2], left[left.length-1])
+           .moveTo(right[0], right[1]).lineTo(right[right.length-2], right[right.length-1]);
         }
       }
 
-      /* ---------- AVATAR ---------- */
-      const avatar = new PIXI.Container(); actorLayer.addChild(avatar);
+      /* ---------- Snow (toggle by env) ---------- */
+      const snow = new PIXI.ParticleContainer(300, { scale:true, alpha:true, position:true });
+      fxLayer.addChild(snow);
+      const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white"/></svg>');
+      const flakes=[];
+      for(let i=0;i<160;i++){
+        const s=new PIXI.Sprite(snowTex); s.x=Math.random()*app.renderer.width; s.y=Math.random()*app.renderer.height; s.alpha=0.45+Math.random()*0.4; s.scale.set(0.4+Math.random()*0.9);
+        snow.addParticle(s); flakes.push({spr:s, vy:0.35+Math.random()*0.7, sway:Math.random()*1.2});
+      }
+
+      /* ---------- Avatar (fixed) ---------- */
+      const avatar = new PIXI.Container(); avatar.zIndex=5; actorLayer.addChild(avatar);
       function placeAvatar(){
         const w=app.renderer.width,h=app.renderer.height;
         avatar.x = w*0.5;
         avatar.y = (w<420||h<740)? h*0.50 : h*0.58;
       }
-      const sh = new PIXI.Graphics(); sh.beginFill(0x000000,0.28).drawEllipse(0,32,22,7).endFill(); sh.y+=6; avatar.addChild(sh);
-      const pack = new PIXI.Graphics();
-      pack.beginFill(0x1e4d7a).drawRoundedRect(-15,-22,30,44,8).endFill();
-      pack.beginFill(0x245a8f).drawRoundedRect(-12,-20,24,32,6).endFill();
-      pack.beginFill(0x1e4d7a).drawRoundedRect(-18,-6,10,16,4).endFill();
-      pack.beginFill(0x1e4d7a).drawRoundedRect(  8,-6,10,16,4).endFill();
-      pack.beginFill(0x6aa7d6).drawRoundedRect(-18,-30,36,10,5).endFill();
-      pack.lineStyle(2,0x184469,1).moveTo(-12,-14).lineTo(-12,12).moveTo(12,-14).lineTo(12,12);
-      avatar.addChild(pack);
-
-      const jacket = new PIXI.Graphics();
-      jacket.beginFill(0x2d72b8).drawRoundedRect(-20,-28,40,56,10).endFill();
-      jacket.lineStyle(2,0x1a5c8a,1).moveTo(0,-26).lineTo(0,26).moveTo(-10,-5).lineTo(-10,10).moveTo(10,-5).lineTo(10,10);
-      jacket.beginFill(0x3d82c8,0.25).drawRoundedRect(-20,-10,40,20,6).endFill();
-      jacket.lineStyle(2.5,0x123e63,0.9).drawRoundedRect(-20,-28,40,56,10);
-      jacket.lineStyle(1.6,0x1a5c8a,0.8).moveTo(-12,-10).lineTo(-20,6).moveTo(12,-10).lineTo(20,6);
-      avatar.addChild(jacket);
-
-      const web = new PIXI.Graphics();
-      web.lineStyle(2,0x173a5c,0.9).moveTo(-10,-18).lineTo(-16,0).moveTo(10,-18).lineTo(16,0).moveTo(-6,4).lineTo(6,4);
-      avatar.addChild(web);
-
-      const shade = new PIXI.Graphics(); shade.beginFill(0x000000,0.12).drawRoundedRect(-20,-6,40,18,6).endFill();
-      shade.filters=[new PIXI.BlurFilter({strength:1})]; avatar.addChild(shade);
-
+      const sh = new PIXI.Graphics(); sh.beginFill(0x000000,0.28).drawEllipse(0,34,24,8).endFill(); sh.y+=6; avatar.addChild(sh);
+      const pack = new PIXI.Graphics(); pack.beginFill(0x1e4d7a).drawRoundedRect(-15,-22,30,44,8).endFill(); pack.beginFill(0x245a8f).drawRoundedRect(-12,-20,24,32,6).endFill(); pack.beginFill(0x1e4d7a).drawRoundedRect(-18,-6,10,16,4).endFill(); pack.beginFill(0x1e4d7a).drawRoundedRect(8,-6,10,16,4).endFill(); pack.beginFill(0x6aa7d6).drawRoundedRect(-18,-30,36,10,5).endFill(); pack.lineStyle(2,0x184469,1).moveTo(-12,-14).lineTo(-12,12).moveTo(12,-14).lineTo(12,12); avatar.addChild(pack);
+      const jacket = new PIXI.Graphics(); jacket.beginFill(0x2d72b8).drawRoundedRect(-20,-28,40,56,10).endFill(); jacket.lineStyle(2,0x1a5c8a,1).moveTo(0,-26).lineTo(0,26).moveTo(-10,-5).lineTo(-10,10).moveTo(10,-5).lineTo(10,10); jacket.beginFill(0x3d82c8,0.25).drawRoundedRect(-20,-10,40,20,6).endFill(); jacket.lineStyle(2.5,0x123e63,0.9).drawRoundedRect(-20,-28,40,56,10); jacket.lineStyle(1.6,0x1a5c8a,0.8).moveTo(-12,-10).lineTo(-20,6).moveTo(12,-10).lineTo(20,6); avatar.addChild(jacket);
+      const web = new PIXI.Graphics(); web.lineStyle(2,0x173a5c,0.9).moveTo(-10,-18).lineTo(-16,0).moveTo(10,-18).lineTo(16,0).moveTo(-6,4).lineTo(6,4); avatar.addChild(web);
+      const shade = new PIXI.Graphics(); shade.beginFill(0x000000,0.12).drawRoundedRect(-20,-6,40,18,6).endFill(); shade.filters=[new PIXI.BlurFilter({strength:1})]; avatar.addChild(shade);
       const armL = new PIXI.Graphics(); armL.beginFill(0x2d72b8).drawEllipse(-22,2,6,16).endFill();
       const armR = new PIXI.Graphics(); armR.beginFill(0x2d72b8).drawEllipse( 22,2,6,16).endFill();
       const gloveL=new PIXI.Graphics(); gloveL.beginFill(0x222222).drawCircle(-22,15,5).endFill();
       const gloveR=new PIXI.Graphics(); gloveR.beginFill(0x222222).drawCircle( 22,15,5).endFill();
       avatar.addChild(armL,armR,gloveL,gloveR);
-
       const head = new PIXI.Graphics(); head.beginFill(0xe0b080).drawEllipse(0,-38,11,9).endFill();
       const beanieBase=new PIXI.Graphics(); beanieBase.beginFill(0xc83838).drawEllipse(0,-42,14,10).endFill();
       const beanieBand=new PIXI.Graphics(); beanieBand.beginFill(0xe84848).drawRoundedRect(-14,-39,28,6,3).endFill();
       const strap=new PIXI.Graphics(); strap.beginFill(0x111111,0.9).drawEllipse(0,-38,10,3).endFill();
       const pom=new PIXI.Graphics(); pom.beginFill(0xe84848).drawCircle(0,-50,3.5).endFill();
       avatar.addChild(head,beanieBase,beanieBand,strap,pom);
-
       const legL = new PIXI.Graphics(); legL.beginFill(0x2a3a48).drawRoundedRect(-16,26,12,16,2).endFill();
       const legR = new PIXI.Graphics(); legR.beginFill(0x2a3a48).drawRoundedRect(4,26,12,16,2).endFill();
       const bootL=new PIXI.Graphics(); bootL.beginFill(0x353535).drawEllipse(-10,42,8,3).endFill();
       const bootR=new PIXI.Graphics(); bootR.beginFill(0x353535).drawEllipse(10,42,8,3).endFill();
       avatar.addChild(legL,legR,bootL,bootR);
-
       const poleL=new PIXI.Graphics(); poleL.lineStyle(3,0x444444).moveTo(-28,6).lineTo(-28,36); poleL.beginFill(0x222222).drawCircle(-28,36,4).endFill();
       const poleR=new PIXI.Graphics(); poleR.lineStyle(3,0x444444).moveTo( 28,6).lineTo( 28,36); poleR.beginFill(0x222222).drawCircle( 28,36,4).endFill();
       poleL.alpha=0; poleR.alpha=0; avatar.addChild(poleL,poleR);
 
-      placeAvatar();
+      /* ---------- Terrain props (minimal, off trail) ---------- */
+      const props = new PIXI.Container(); worldLayer.addChild(props);
+      function buildProps(){
+        props.removeChildren();
+        const w=app.renderer.width, h=app.renderer.height;
+        const {x1,y1,x2,y2} = edgePoints();
+        const dx=x2-x1, dy=y2-y1, len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
 
-      /* ---------- World scroll & animation ---------- */
+        for(let i=0;i<12;i++){
+          const t=i/12; // along edge
+          const baseX = x1 + ux*(200 + t*(w-400));
+          const baseY = y1 + uy*(200 + t*(w-400));
+          const side = (Math.random()<0.5?-1:1);
+          const off  = 180 + Math.random()*120;
+          const px = baseX + nx*off*side;
+          const py = baseY + ny*off*side;
+
+          const marker = new PIXI.Graphics();
+          marker.beginFill(hex(groundDark),0.95).drawRoundedRect(-3,-28,6,28,2).endFill();
+          marker.beginFill(0x000000,0.18).drawEllipse(0,2,8,3).endFill();
+          marker.position.set(px,py);
+          props.addChild(marker);
+        }
+      }
+
+      /* ---------- World scroll & ticker ---------- */
       let worldOffset = 0;
       function applyWorldOffset(){ worldLayer.y = worldOffset; }
 
-      // snow (optional; toggled by env)
-      const snow = new PIXI.ParticleContainer(300, { scale:true, alpha:true, position:true }); fxLayer.addChild(snow);
-      const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white"/></svg>');
-      const flakes=[];
-      for(let i=0;i<160;i++){
-        const s=new PIXI.Sprite(snowTex); s.x=Math.random()*app.renderer.width; s.y=Math.random()*app.renderer.height; s.alpha=0.5+Math.random()*0.5; s.scale.set(0.4+Math.random()*0.9);
-        snow.addParticle(s); flakes.push({spr:s, vy:0.4+Math.random()*0.8, sway:Math.random()*1.2});
-      }
+      app.ticker.add((delta)=>{
+        // snow drift
+        for(const f of flakes){
+          f.spr.y += f.vy * delta;
+          f.spr.x += Math.sin((f.spr.y + app.ticker.lastTime*0.02) * 0.01) * f.sway * 0.3;
+          if (f.spr.y > app.renderer.height) { f.spr.y=-10; f.spr.x=Math.random()*app.renderer.width; }
+        }
+        if (noiseTS){ noiseTS.tilePosition.x -= 0.06*delta; noiseTS.tilePosition.y += 0.03*delta; }
+        if (contourTS){ contourTS.tilePosition.y += 0.05*delta; }
+      });
 
+      /* ---------- Step cycle ---------- */
       function stepCycle(duration=1.05){
         const tl=gsap.timeline({defaults:{ease:'power2.inOut'}});
         tl.to(legL,{y:22,duration:duration*0.25},0)
@@ -555,46 +568,15 @@
           .to(poleL,{alpha:1,duration:duration*0.20},duration*0.25);
       }
 
-      let t=0;
-      app.ticker.add((delta)=>{
-        t += delta/60;
-
-        // snow drift
-        for(const f of flakes){
-          f.spr.y += f.vy * delta;
-          f.spr.x += Math.sin((f.spr.y + t*20) * 0.01) * f.sway * 0.3;
-          if (f.spr.y > app.renderer.height) { f.spr.y=-10; f.spr.x=Math.random()*app.renderer.width; }
-        }
-
-        // slight texture drift
-        groundNoiseTS.tilePosition.x -= 0.08*delta;
-        groundNoiseTS.tilePosition.y += 0.04*delta;
-        groundContourTS.tilePosition.y += 0.06*delta;
-        trailNoiseTS.tilePosition.x -= 0.06*delta;
-
-        // perspective for objects
-        const h = app.renderer.height;
-        for (const o of terrainObjects) {
-          const screenY = (h * 0.46 - o.wy) + worldOffset;
-          const depth = Math.min(1, Math.max(0, (screenY - h*0.25) / (h*0.65)));
-          const s = 0.6 + depth * 0.7;
-          o.spr.scale.set(s);
-          o.spr.alpha = 0.35 + depth * 0.65;
-          o.spr.x = o.baseX + o.side * depth * 18;
-          o.spr.y = screenY;
-        }
-      });
-
       /* ---------- Layout / Resize ---------- */
       function layout(){
-        rebuildSky();
+        rebuildSky(app.renderer.width, app.renderer.height);
         drawGroundAndTrail();
         placeAvatar();
-        rebuildObjects();
+        buildProps();
         applyWorldOffset();
       }
       window.addEventListener('resize', layout);
-      layout();
 
       /* ---------- Public API ---------- */
       const MountainAPI = {
@@ -606,21 +588,23 @@
             ease:'power2.out',
             onUpdate(){ worldOffset = this.targets()[0].off; applyWorldOffset(); }
           });
-          gsap.fromTo(avatar,{y:avatar.y+4, skewY:-0.06},{y:avatar.y, skewY:0, duration:duration*0.5, ease:'power2.out'});
+          gsap.fromTo(avatar,{y:avatar.y+4},{y:avatar.y,duration:0.35,ease:'power1.out'});
         },
-        setSkyGradient(top,bottom){ currentTop=top; currentBot=bottom; rebuildSky(); },
+        setSkyGradient(top,bottom){ currentTop=top; currentBot=bottom; rebuildSky(app.renderer.width, app.renderer.height); },
         setSnowVisible(v){ snow.visible = !!v; },
-        setGroundColors(base,dark,light,trail,trailEdge){
-          currentGroundBase=base; currentGroundDark=dark; currentGroundLight=light;
-          currentTrail=trail; currentTrailEdge=trailEdge;
-          drawGroundAndTrail();
-          treeTex.destroy(true); rockTex.destroy(true);
-          treeTex = treeTexture(); rockTex = rockTexture();
-          rebuildObjects();
+        setGroundColors(base,dark,light,trailCol,trailEdg){
+          groundBase=base; groundDark=dark; groundLight=light;
+          trailColor=trailCol ?? trailColor; trailEdge=trailEdg ?? trailEdge;
+          drawGroundAndTrail(); buildProps();
         },
-        setProgress(p){ window.__vivifyProgress = Math.max(0, Math.min(1, p)); }
       };
       window.MountainAPI = MountainAPI;
+
+      // boot
+      rebuildSky(app.renderer.width, app.renderer.height);
+      drawGroundAndTrail();
+      buildProps();
+      placeAvatar();
 
       // Mount HUD after API is ready
       ReactDOM.createRoot(document.getElementById('hud')).render(React.createElement(Hud));
