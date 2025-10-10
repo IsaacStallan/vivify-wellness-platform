@@ -227,14 +227,19 @@
 
       function addSilhouette(color, y, width, height, offset=0, alpha=0.35){
         const g = new PIXI.Graphics();
+        g.lineStyle(0);  // No stroke
         g.beginFill(hex(color));
-        g.moveTo(-200+offset, y + height);
+        
+        // Draw mountain peaks only - don't extend to bottom
+        g.moveTo(-200+offset, y + height * 0.8);  // Start higher
         g.lineTo( width*0.15+offset, y + height*0.55);
         g.lineTo( width*0.30+offset, y + height*0.35);
         g.lineTo( width*0.45+offset, y + height*0.60);
         g.lineTo( width*0.70+offset, y + height*0.30);
         g.lineTo( width*0.90+offset, y + height*0.55);
-        g.lineTo( width*1.10+offset, y + height);
+        g.lineTo( width*1.10+offset, y + height * 0.8);  // End higher
+        g.lineTo( width*1.10+offset, y);  // Go up to horizon
+        g.lineTo(-200+offset, y);  // Back to start at horizon
         g.closePath().endFill();
         g.alpha = alpha;
         g.filters = [new PIXI.BlurFilter({strength:1.2})];
@@ -272,8 +277,8 @@
         gsap.killTweensOf('*');
         skyLayer.removeChildren();
 
-        // sky = gradientSprite(w, h * 0.50, currentTop, currentBot);  // ← Only cover HALF the screen!
-        // skyLayer.addChild(sky);
+        sky = gradientSprite(w, h * 0.50, currentTop, currentBot);  // ← Only cover HALF the screen!
+        skyLayer.addChild(sky);
 
         addSilhouette('#2b4f75', h*0.18, w*0.9,  h*0.35, -140, 0.32);
         addSilhouette('#35608d', h*0.22, w,      h*0.40,   90,  0.28);
