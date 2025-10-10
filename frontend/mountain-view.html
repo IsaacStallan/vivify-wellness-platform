@@ -5,212 +5,39 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Vivify Mountain</title>
 
-  <!-- Tailwind (CDN) -->
+  <!-- Tailwind (CDN) - fine for dev -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- React (for HUD/UI) -->
+  <!-- React (HUD/UI) -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- PixiJS (GPU canvas) + GSAP for sweet easing -->
+  <!-- PixiJS v8 + GSAP -->
   <script src="https://unpkg.com/pixi.js@8/dist/pixi.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
 
   <style>
     html,body { height:100%; background:#0b1220; }
     body { margin:0; overflow:hidden; -webkit-tap-highlight-color: transparent; }
-    /* Mobile safe area */
     .safe { padding-bottom: env(safe-area-inset-bottom); }
   </style>
 </head>
 <body>
-  <!-- PIXI scene lives here -->
+  <!-- Pixi canvas target -->
   <div id="scene" class="w-screen h-screen"></div>
-
-  <!-- React HUD -->
-  <div id="hud" class="pointer-events-none"></div>
+  <!-- React HUD target -->
+  <div id="hud"></div>
 
   <script type="text/babel">
-    // -----------------------------
-    // PIXI SCENE (GPU-accelerated)
-    // -----------------------------
-    const DPR = Math.max(1, window.devicePixelRatio || 1);
-    const sceneEl = document.getElementById('scene');
-
-    const app = new PIXI.Application({
-      resizeTo: sceneEl,    // handle responsive sizing
-      antialias: true,
-      backgroundAlpha: 1,
-      powerPreference: 'high-performance',
-      autoDensity: true
-    });
-    sceneEl.appendChild(app.view);
-
-    // Root layers
-    const skyLayer   = new PIXI.Container(); app.stage.addChild(skyLayer);
-    const worldLayer = new PIXI.Container(); app.stage.addChild(worldLayer);
-    const fxLayer    = new PIXI.Container(); app.stage.addChild(fxLayer);
-
-    // Gradients via Graphics → toTexture for speed
-    function makeVerticalGradient(w,h,top,bottom) {
-      const g = new PIXI.Graphics();
-      const mat = new PIXI.Matrix();
-      mat.createGradient(0,0,0,h);
-      const grad = g.beginTextureFill({
-        texture: PIXI.Texture.WHITE,
-        color: 0xFFFFFF,
-        matrix: mat
-      });
-      // fallback: draw rect, then apply a gradient filter shader is overkill.
-      // We'll fake with two rects + alpha ramp
-      g.clear();
-      const topC = PIXI.Color.shared.setValue(top).toNumber();
-      const botC = PIXI.Color.shared.setValue(bottom).toNumber();
-      // top
-      const topRect = new PIXI.Graphics(); topRect.beginFill(topC).drawRect(0,0,w,h).endFill();
-      // overlay a black->transparent to "mix" into bottom tone
-      const botOverlay = new PIXI.Graphics(); botOverlay.beginFill(botC).drawRect(0,h*0.35,w,h).endFill(); botOverlay.alpha=0.9;
-      const cont = new PIXI.Container();
-      cont.addChild(topRect, botOverlay);
-      const tex = app.renderer.generateTexture(cont, {resolution: DPR, region: new PIXI.Rectangle(0,0,w,h)});
-      const spr = new PIXI.Sprite(tex);
-      return spr;
-    }
-
-    // Sky
-    const sky = makeVerticalGradient(app.renderer.width, app.renderer.height,
-      '#3A7FB8', '#5BA3D8');
-    skyLayer.addChild(sky);
-
-    // Parallax ground strips
-    function makeGroundStrip(width, height, colorHex) {
-      const g = new PIXI.Graphics();
-      g.beginFill(PIXI.Color.shared.setValue(colorHex).toNumber());
-      g.drawRect(0, 0, width, height).endFill();
-
-      // subtle texture noise
-      const noise = new PIXI.Graphics();
-      noise.beginFill(0x000000, 0.06); noise.drawRect(0,0,width,height).endFill();
-      noise.blendMode = 'overlay';
-
-      const c = new PIXI.Container();
-      c.addChild(g, noise);
-      return c;
-    }
-
-    // Create 3 parallax bands (near/mid/far)
-    const groundFar  = makeGroundStrip(4000, 1400, '#9a9185');
-    const groundMid  = makeGroundStrip(4000, 1600, '#887a6b');
-    const groundNear = makeGroundStrip(4000, 2000, '#76695c');
-
-    // Tilt for depth
-    groundFar.angle = -6;  groundFar.y = app.renderer.height * 0.05;
-    groundMid.angle = -8;  groundMid.y = app.renderer.height * 0.15;
-    groundNear.angle = -10; groundNear.y = app.renderer.height * 0.28;
-
-    worldLayer.addChild(groundFar, groundMid, groundNear);
-
-    // Soft fog overlay
-    const fog = new PIXI.Graphics();
-    fog.beginFill(0xFFFFFF, 0.12).drawRect(0,0,app.renderer.width,app.renderer.height).endFill();
-    fog.blendMode = 'screen';
-    fxLayer.addChild(fog);
-
-    // Snow particles (very light)
-    const snow = new PIXI.ParticleContainer(300, {scale:true, alpha:true, position:true});
-    fxLayer.addChild(snow);
-    const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,\
-      <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white" /></svg>');
-    const flakes = [];
-    for (let i=0;i<180;i++){
-      const s = new PIXI.Sprite(snowTex);
-      s.x = Math.random() * app.renderer.width;
-      s.y = Math.random() * app.renderer.height;
-      s.alpha = 0.5 + Math.random()*0.5;
-      s.scale.set(0.4 + Math.random()*0.9);
-      snow.addChild(s);
-      flakes.push({spr:s, vy: 0.4 + Math.random()*0.8, sway: Math.random()*1.2});
-    }
-
-    // Avatar (placeholder crisp sprite)
-    const avatarG = new PIXI.Graphics();
-    avatarG.beginFill(0x2d72b8).drawRoundedRect(-18,-26,36,52,10).endFill(); // body
-    avatarG.beginFill(0xc83838).drawCircle(0,-38,12).endFill(); // beanie
-    avatarG.beginFill(0x222222).drawEllipse(0, -24, 10, 4).endFill(); // strap
-    avatarG.beginFill(0x333333).drawEllipse(0, 28, 18, 6).endFill(); // shadow
-    const avatarTex = app.renderer.generateTexture(avatarG, {resolution:DPR});
-    const avatar = new PIXI.Sprite(avatarTex);
-    avatar.anchor.set(0.5);
-    avatar.x = app.renderer.width * 0.5;
-    avatar.y = app.renderer.height * 0.58;
-    avatar.zIndex = 10;
-    worldLayer.addChild(avatar);
-
-    // Depth blur filter for distant ground (cheap)
-    const blurFar = new PIXI.filters.BlurFilter({strength:2, quality:2, resolution:1});
-    const blurMid = new PIXI.filters.BlurFilter({strength:1.2, quality:2, resolution:1});
-    groundFar.filters = [blurFar];
-    groundMid.filters = [blurMid];
-
-    // Resize handling
-    function onResize() {
-      sky.width  = app.renderer.width;  sky.height  = app.renderer.height;
-      fog.clear().beginFill(0xFFFFFF, 0.12).drawRect(0,0,app.renderer.width,app.renderer.height).endFill();
-      avatar.x = app.renderer.width * 0.5;
-      avatar.y = app.renderer.height * 0.58;
-    }
-    window.addEventListener('resize', onResize);
-
-    // Scene tick — snow + subtle light drift
-    let t = 0;
-    app.ticker.add((delta) => {
-      t += delta/60;
-
-      // snow
-      for (const f of flakes) {
-        f.spr.y += f.vy * delta;
-        f.spr.x += Math.sin((f.spr.y + t*20) * 0.01) * f.sway * 0.3;
-        if (f.spr.y > app.renderer.height) { f.spr.y = -10; f.spr.x = Math.random()*app.renderer.width; }
-      }
-
-      // parallax idle drift for life
-      groundFar.x  = (Math.sin(t*0.07) * 40);
-      groundMid.x  = (Math.sin(t*0.11) * 70);
-      groundNear.x = (Math.sin(t*0.16) * 110);
-    });
-
-    // Public API for the HUD to call:
-    const VivifyMountainAPI = {
-      climbBy: (pixels, duration=1.05) => {
-        // Move world downward to simulate ascent
-        gsap.to(groundFar,  { y: groundFar.y  + pixels*0.22, duration, ease:'power2.out' });
-        gsap.to(groundMid,  { y: groundMid.y  + pixels*0.42, duration, ease:'power2.out' });
-        gsap.to(groundNear, { y: groundNear.y + pixels*0.72, duration, ease:'power2.out' });
-        gsap.fromTo(avatar, { y: avatar.y+4 }, { y: avatar.y, duration:0.35, ease:'power1.out' });
-      },
-      setSkyGradient: (top, bottom) => {
-        skyLayer.removeChild(sky);
-        const s = makeVerticalGradient(app.renderer.width, app.renderer.height, top, bottom);
-        skyLayer.addChildAt(s,0);
-      },
-      setSnowVisible: (visible) => {
-        snow.visible = !!visible;
-      }
-    };
-    window.VivifyMountainAPI = VivifyMountainAPI;
-
-    // -----------------------------
-    // REACT HUD + LOGIC
-    // -----------------------------
-    const {useState, useMemo} = React;
-
-    const IconMountain = (props)=>(<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>);
-    const Drop = (props)=>(<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3.1S6 9.1 6 12.6a6 6 0 0 0 12 0C18 9.1 12 3.1 12 3.1z"/></svg>);
+    // ===== HUD ICONS =====
+    const IconMountain = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>);
+    const Drop = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3.1S6 9.1 6 12.6a6 6 0 0 0 12 0C18 9.1 12 3.1 12 3.1z"/></svg>);
     const Moon = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a9 9 0 1 0 9 9 6 6 0 0 1-9-9Z"/></svg>);
     const Steps = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="7" cy="14" r="3"/><circle cx="17" cy="10" r="3"/></svg>);
     const Target = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
 
+    // ===== ENV LOGIC =====
     function envFromAltitude(alt){
       if (alt < 1000) return { name:'Forest Base', top:'#4A90C8', bot:'#7BB8E8', snow:false };
       if (alt < 2000) return { name:'Mountain Trail', top:'#3A7FB8', bot:'#5BA3D8', snow:false };
@@ -218,7 +45,9 @@
       return { name:'Summit Ridge', top:'#1E5F98', bot:'#2E6FA8', snow:true };
     }
 
+    // We'll define HUD component now (rendered later, after Pixi init)
     function Hud(){
+      const {useState, useMemo, useLayoutEffect} = React;
       const [data, setData] = useState({ altitude:1200, target:3776, oxygen:78 });
       const [climbing, setClimbing] = useState(false);
       const [habits, setHabits] = useState([
@@ -228,11 +57,13 @@
         { id:'focus',  name:'Focus',  icon:Target, oxygen:20, done:false },
       ]);
 
-      // Environment binding
       const env = useMemo(()=>envFromAltitude(data.altitude), [data.altitude]);
-      React.useLayoutEffect(()=>{
-        window.VivifyMountainAPI.setSkyGradient(env.top, env.bot);
-        window.VivifyMountainAPI.setSnowVisible(env.snow);
+      useLayoutEffect(()=>{
+        // guard if API not ready (should be ready)
+        if (window.VivifyMountainAPI){
+          window.VivifyMountainAPI.setSkyGradient(env.top, env.bot);
+          window.VivifyMountainAPI.setSnowVisible(env.snow);
+        }
       }, [env]);
 
       const progress = Math.min(100, (data.altitude / data.target) * 100);
@@ -242,18 +73,21 @@
         if (h.done || climbing) return;
         setClimbing(true);
 
-        // Animate world & stats
         const altitudeGain = 270;
         const pixels = 120;        // visual scroll amount
 
-        window.VivifyMountainAPI.climbBy(pixels, 1.05);
-        // Number easing (no re-render storm)
-        gsap.to(data, {
-          altitude: Math.min(data.altitude + altitudeGain, data.target),
+        if (window.VivifyMountainAPI) {
+          window.VivifyMountainAPI.climbBy(pixels, 1.05);
+        }
+        // Smooth number update with gsap without thrashing renders
+        const tmp = { alt: data.altitude };
+        gsap.to(tmp, {
+          alt: Math.min(data.altitude + altitudeGain, data.target),
           duration: 1.05, ease:'power2.out',
-          onUpdate: () => setData(prev => ({...prev, altitude: gsap.getProperty(data,'altitude')})),
+          onUpdate: () => setData(prev => ({...prev, altitude: tmp.alt})),
           onComplete: () => setClimbing(false)
         });
+
         setData(prev=>({...prev, oxygen: Math.min(prev.oxygen + h.oxygen, 100)}));
         setHabits(prev => prev.map(x => x.id===h.id ? {...x, done:true} : x));
       }
@@ -338,7 +172,7 @@
             </div>
           </div>
 
-          {/* Milestone */}
+          {/* Example milestone */}
           {(Math.round(progress) >= 53 && Math.round(progress) < 60) && (
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 animate-bounce">
               <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-2xl border-2 border-white/50">
@@ -350,7 +184,162 @@
       );
     }
 
-    ReactDOM.createRoot(document.getElementById('hud')).render(<Hud />);
+    // =============================
+    // PIXI v8 SCENE (async init)
+    // =============================
+    (async () => {
+      const DPR = Math.max(1, window.devicePixelRatio || 1);
+      const sceneEl = document.getElementById('scene');
+
+      const app = new PIXI.Application();
+      await app.init({
+        resizeTo: sceneEl,
+        antialias: true,
+        backgroundAlpha: 1,
+        powerPreference: 'high-performance',
+        autoDensity: true
+      });
+      sceneEl.appendChild(app.canvas);
+
+      // Layers
+      const skyLayer   = new PIXI.Container(); app.stage.addChild(skyLayer);
+      const worldLayer = new PIXI.Container(); app.stage.addChild(worldLayer);
+      const fxLayer    = new PIXI.Container(); app.stage.addChild(fxLayer);
+
+      // Helpers
+      function makeVerticalGradient(w,h,top,bottom) {
+        // Simple two-rect blend (fast to texture)
+        const topC = PIXI.Color.shared.setValue(top).toNumber();
+        const botC = PIXI.Color.shared.setValue(bottom).toNumber();
+        const cont = new PIXI.Container();
+        const r1 = new PIXI.Graphics(); r1.beginFill(topC).drawRect(0,0,w,h).endFill();
+        const r2 = new PIXI.Graphics(); r2.beginFill(botC).drawRect(0,h*0.35,w,h).endFill(); r2.alpha=0.9;
+        cont.addChild(r1,r2);
+        const tex = app.renderer.generateTexture(cont, {resolution: DPR, region: new PIXI.Rectangle(0,0,w,h)});
+        return new PIXI.Sprite(tex);
+      }
+
+      // Sky
+      let sky = makeVerticalGradient(app.renderer.width, app.renderer.height, '#3A7FB8', '#5BA3D8');
+      skyLayer.addChild(sky);
+
+      // Parallax ground strips
+      function makeGroundStrip(width, height, colorHex) {
+        const g = new PIXI.Graphics();
+        g.beginFill(PIXI.Color.shared.setValue(colorHex).toNumber());
+        g.drawRect(0, 0, width, height).endFill();
+
+        const noise = new PIXI.Graphics();
+        noise.beginFill(0x000000, 0.06).drawRect(0,0,width,height).endFill();
+        noise.blendMode = 'overlay';
+
+        const c = new PIXI.Container();
+        c.addChild(g, noise);
+        return c;
+      }
+
+      const groundFar  = makeGroundStrip(4000, 1400, '#9a9185');
+      const groundMid  = makeGroundStrip(4000, 1600, '#887a6b');
+      const groundNear = makeGroundStrip(4000, 2000, '#76695c');
+
+      groundFar.angle = -6;  groundFar.y = app.renderer.height * 0.05;
+      groundMid.angle = -8;  groundMid.y = app.renderer.height * 0.15;
+      groundNear.angle = -10; groundNear.y = app.renderer.height * 0.28;
+
+      worldLayer.addChild(groundFar, groundMid, groundNear);
+
+      // Fog overlay
+      const fog = new PIXI.Graphics();
+      fog.beginFill(0xFFFFFF, 0.12).drawRect(0,0,app.renderer.width,app.renderer.height).endFill();
+      fog.blendMode = 'screen';
+      fxLayer.addChild(fog);
+
+      // Snow particles
+      const snow = new PIXI.ParticleContainer(300, {scale:true, alpha:true, position:true});
+      fxLayer.addChild(snow);
+      const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,\
+        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white" /></svg>');
+      const flakes = [];
+      for (let i=0;i<180;i++){
+        const s = new PIXI.Sprite(snowTex);
+        s.x = Math.random() * app.renderer.width;
+        s.y = Math.random() * app.renderer.height;
+        s.alpha = 0.5 + Math.random()*0.5;
+        s.scale.set(0.4 + Math.random()*0.9);
+        snow.addChild(s);
+        flakes.push({spr:s, vy: 0.4 + Math.random()*0.8, sway: Math.random()*1.2});
+      }
+
+      // Avatar (placeholder sprite baked from vector)
+      const avatarG = new PIXI.Graphics();
+      avatarG.beginFill(0x2d72b8).drawRoundedRect(-18,-26,36,52,10).endFill(); // body
+      avatarG.beginFill(0xc83838).drawCircle(0,-38,12).endFill();              // beanie
+      avatarG.beginFill(0x222222).drawEllipse(0, -24, 10, 4).endFill();        // strap
+      avatarG.beginFill(0x000000,0.35).drawEllipse(0, 30, 18, 6).endFill();    // shadow
+      const avatarTex = app.renderer.generateTexture(avatarG, {resolution:DPR});
+      const avatar = new PIXI.Sprite(avatarTex);
+      avatar.anchor.set(0.5);
+      avatar.x = app.renderer.width * 0.5;
+      avatar.y = app.renderer.height * 0.58;
+      avatar.zIndex = 10;
+      worldLayer.addChild(avatar);
+
+      // Depth blur for far layers
+      const blurFar = new PIXI.filters.BlurFilter({strength:2, quality:2, resolution:1});
+      const blurMid = new PIXI.filters.BlurFilter({strength:1.2, quality:2, resolution:1});
+      groundFar.filters = [blurFar];
+      groundMid.filters = [blurMid];
+
+      // Resize
+      function onResize(){
+        // rebuild sky & fog
+        skyLayer.removeChild(sky);
+        sky = makeVerticalGradient(app.renderer.width, app.renderer.height, '#3A7FB8', '#5BA3D8');
+        skyLayer.addChildAt(sky, 0);
+
+        fog.clear().beginFill(0xFFFFFF, 0.12).drawRect(0,0,app.renderer.width,app.renderer.height).endFill();
+
+        avatar.x = app.renderer.width * 0.5;
+        avatar.y = app.renderer.height * 0.58;
+      }
+      window.addEventListener('resize', onResize);
+
+      // Idle scene tick
+      let t = 0;
+      app.ticker.add((delta) => {
+        t += delta/60;
+
+        for (const f of flakes) {
+          f.spr.y += f.vy * delta;
+          f.spr.x += Math.sin((f.spr.y + t*20) * 0.01) * f.sway * 0.3;
+          if (f.spr.y > app.renderer.height) { f.spr.y = -10; f.spr.x = Math.random()*app.renderer.width; }
+        }
+
+        groundFar.x  = (Math.sin(t*0.07) * 40);
+        groundMid.x  = (Math.sin(t*0.11) * 70);
+        groundNear.x = (Math.sin(t*0.16) * 110);
+      });
+
+      // Public API for HUD
+      const VivifyMountainAPI = {
+        climbBy: (pixels, duration=1.05) => {
+          gsap.to(groundFar,  { y: groundFar.y  + pixels*0.22, duration, ease:'power2.out' });
+          gsap.to(groundMid,  { y: groundMid.y  + pixels*0.42, duration, ease:'power2.out' });
+          gsap.to(groundNear, { y: groundNear.y + pixels*0.72, duration, ease:'power2.out' });
+          gsap.fromTo(avatar, { y: avatar.y+4 }, { y: avatar.y, duration:0.35, ease:'power1.out' });
+        },
+        setSkyGradient: (top, bottom) => {
+          skyLayer.removeChild(sky);
+          sky = makeVerticalGradient(app.renderer.width, app.renderer.height, top, bottom);
+          skyLayer.addChildAt(sky,0);
+        },
+        setSnowVisible: (visible) => { snow.visible = !!visible; }
+      };
+      window.VivifyMountainAPI = VivifyMountainAPI;
+
+      // Mount HUD only after Pixi is ready & API exposed
+      ReactDOM.createRoot(document.getElementById('hud')).render(<Hud />);
+    })();
   </script>
 </body>
 </html>
