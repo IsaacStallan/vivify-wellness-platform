@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Vivify Mountain</title>
 
+  <!-- Dev-only CDNs (fine while prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- PixiJS v8 + GSAP -->
   <script src="https://unpkg.com/pixi.js@8/dist/pixi.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
 
@@ -26,44 +29,24 @@
     /* ---------------- ENV / THEME ---------------- */
     function envFromAltitude(alt){
       if (alt < 1000) return { 
-        name:'Forest Base',   
-        top:'#6ea8da', 
-        bot:'#9fd0f1', 
-        snow:false,
-        groundBase: '#8b7355',      // warm brown
-        groundDark: '#6b5845',      // darker brown
-        groundLight: '#a58f7a'      // lighter brown/tan
+        name:'Forest Base', top:'#6ea8da', bot:'#9fd0f1', snow:false,
+        groundBase:'#8b7355', groundDark:'#6b5845', groundLight:'#a58f7a'
       };
       if (alt < 2000) return { 
-        name:'Mountain Trail', 
-        top:'#4b8ccb', 
-        bot:'#78b6e7', 
-        snow:false,
-        groundBase: '#95887a',
-        groundDark: '#75685a',
-        groundLight: '#b5a89a'
+        name:'Mountain Trail', top:'#4b8ccb', bot:'#78b6e7', snow:false,
+        groundBase:'#95887a', groundDark:'#75685a', groundLight:'#b5a89a'
       };
       if (alt < 3000) return { 
-        name:'Alpine Zone',    
-        top:'#3c79bb', 
-        bot:'#5b9ad4', 
-        snow:true,
-        groundBase: '#a5a59d',
-        groundDark: '#85857d',
-        groundLight: '#c5c5bd'
+        name:'Alpine Zone', top:'#3c79bb', bot:'#5b9ad4', snow:true,
+        groundBase:'#a5a59d', groundDark:'#85857d', groundLight:'#c5c5bd'
       };
       return { 
-        name:'Summit Ridge',      
-        top:'#2d68ab', 
-        bot:'#4a86c1', 
-        snow:true,
-        groundBase: '#d8dce0',      // snowy white-gray
-        groundDark: '#b8bcc0',
-        groundLight: '#f0f4f8'
+        name:'Summit Ridge', top:'#2d68ab', bot:'#4a86c1', snow:true,
+        groundBase:'#d8dce0', groundDark:'#b8bcc0', groundLight:'#f0f4f8'
       };
     }
 
-    /* ---------------- HUD (unchanged) ---------------- */
+    /* ---------------- HUD ---------------- */
     const IconMountain=(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>);
     const Drop =(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3.1S6 9.1 6 12.6a6 6 0 0 0 12 0C18 9.1 12 3.1 12 3.1z"/></svg>);
     const Moon =(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a9 9 0 1 0 9 9 6 6 0 0 1-9-9Z"/></svg>);
@@ -103,7 +86,7 @@
         setClimbing(true);
 
         const altitudeGain = 270;
-        const pixels = 140;
+        const pixels = 140; // world scroll per habit
 
         window.MountainAPI?.climbBy(pixels, 1.05);
 
@@ -121,6 +104,7 @@
 
       return (
         <div className="pointer-events-none safe">
+          {/* Top HUD */}
           <div className="absolute top-4 left-4 right-4 flex justify-between gap-3">
             <div className="pointer-events-auto bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
               <div className="flex items-center gap-2 mb-1">
@@ -153,6 +137,7 @@
             </div>
           </div>
 
+          {/* Habit tray */}
           <div className="absolute left-4 right-4"
                style={{bottom: isPhone ? '16px' : '72px', transform: isPhone?'scale(0.92)':'scale(1)', transformOrigin:'center bottom'}}>
             <div className="pointer-events-auto bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-5 border border-slate-200">
@@ -195,26 +180,28 @@
       );
     }
 
-    /* ---------------- PIXI SCENE - FIXED GROUND ---------------- */
+    /* ---------------- PIXI v8 SCENE ---------------- */
     (async () => {
       const sceneEl = document.getElementById('scene');
       const DPR = Math.max(1, window.devicePixelRatio || 1);
-      const hex = h => parseInt(h.replace('#',''),16);
 
       const app = new PIXI.Application();
       await app.init({ resizeTo: sceneEl, antialias:true, backgroundAlpha:1, powerPreference:'high-performance', autoDensity:true });
       sceneEl.appendChild(app.canvas);
+
+      // Layers + z-order
+      const skyLayer   = new PIXI.Container(); skyLayer.zIndex = 0;
+      const worldLayer = new PIXI.Container(); worldLayer.zIndex = 1;
+      const actorLayer = new PIXI.Container(); actorLayer.zIndex = 2;
+      const fxLayer    = new PIXI.Container(); fxLayer.zIndex    = 3;
+      app.stage.addChild(skyLayer, worldLayer, actorLayer, fxLayer);
       app.stage.sortableChildren = true;
 
-      const skyLayer   = new PIXI.Container();
-      const worldLayer = new PIXI.Container();
-      const actorLayer = new PIXI.Container();
-      const fxLayer    = new PIXI.Container();
-      app.stage.addChild(skyLayer, worldLayer, actorLayer, fxLayer);
-
-      /* ---------- SKY ---------- */
+      /* ---------- SKY (rebuildable) ---------- */
       let currentTop = '#4b8ccb', currentBot = '#78b6e7';
-      let sky, sun, clouds, horizonHaze;
+      let sky, sun, clouds;
+
+      const hex = (h) => PIXI.utils.string2hex(h);
 
       function gradientSprite(w,h,top,bottom){
         const cont = new PIXI.Container();
@@ -227,19 +214,16 @@
 
       function addSilhouette(color, y, width, height, offset=0, alpha=0.35){
         const g = new PIXI.Graphics();
-        g.lineStyle(0);  // No stroke
         g.beginFill(hex(color));
-        
-        // Draw mountain peaks only - don't extend to bottom
-        g.moveTo(-200+offset, y + height * 0.8);  // Start higher
+        g.moveTo(-200+offset, y + height*0.8);
         g.lineTo( width*0.15+offset, y + height*0.55);
         g.lineTo( width*0.30+offset, y + height*0.35);
         g.lineTo( width*0.45+offset, y + height*0.60);
         g.lineTo( width*0.70+offset, y + height*0.30);
         g.lineTo( width*0.90+offset, y + height*0.55);
-        g.lineTo( width*1.10+offset, y + height * 0.8);  // End higher
-        g.lineTo( width*1.10+offset, y);  // Go up to horizon
-        g.lineTo(-200+offset, y);  // Back to start at horizon
+        g.lineTo( width*1.10+offset, y + height*0.8);
+        g.lineTo( width*1.10+offset, y);
+        g.lineTo(-200+offset, y);
         g.closePath().endFill();
         g.alpha = alpha;
         g.filters = [new PIXI.BlurFilter({strength:1.2})];
@@ -260,10 +244,8 @@
 
       function spawnCloud(y, scale, speed) {
         const s = new PIXI.Sprite(cloudTex);
-        s.anchor.set(0.5);
-        s.y = y; s.x = -120;
-        s.scale.set(scale);
-        s.alpha = 0.35;
+        s.anchor.set(0.5); s.y = y; s.x = -120;
+        s.scale.set(scale); s.alpha = 0.35;
         clouds.addChild(s);
         gsap.to(s, {
           x: app.renderer.width + 120,
@@ -274,10 +256,11 @@
       }
 
       function rebuildSky(w, h){
-        gsap.killTweensOf('*');
+        // clear and rebuild (only cloud tweens)
+        if (clouds) gsap.killTweensOf(clouds.children);
         skyLayer.removeChildren();
 
-        sky = gradientSprite(w, h * 0.50, currentTop, currentBot);  // ← Only cover HALF the screen!
+        sky = gradientSprite(w,h,currentTop,currentBot);
         skyLayer.addChild(sky);
 
         addSilhouette('#2b4f75', h*0.18, w*0.9,  h*0.35, -140, 0.32);
@@ -287,189 +270,122 @@
 
         sun = new PIXI.Graphics();
         sun.beginFill(0xfff2b2, 0.9).drawCircle(0, 0, 58).endFill();
-        sun.position.set(w*0.82, h*0.18);
-        sun.alpha = 0.8;
+        sun.position.set(w*0.82, h*0.18); sun.alpha = 0.8;
         sun.filters = [new PIXI.BlurFilter({ strength: 2 })];
         skyLayer.addChild(sun);
 
-        clouds = new PIXI.Container();
-        gsap.killTweensOf(clouds.children);
-        skyLayer.addChild(clouds);
+        clouds = new PIXI.Container(); skyLayer.addChild(clouds);
         spawnCloud(h * 0.18, 1.2, 22);
         spawnCloud(h * 0.28, 1.0, 28);
         spawnCloud(h * 0.36, 0.85, 34);
-
-        // horizonHaze = new PIXI.Graphics();
-        // const hazeH = Math.round(h * 0.25);
-        // horizonHaze.beginFill(0x9fd0f1, 0.18).drawRect(0, h * 0.38, w, hazeH).endFill(); 
-        // horizonHaze.filters = [new PIXI.BlurFilter({ strength: 6 })];
-        // skyLayer.addChild(horizonHaze);
       }
-
       rebuildSky(app.renderer.width, app.renderer.height);
 
-      /* ---------- SLOPE - PROPER GROUND COLORS ---------- */
+      // Fog & godrays in the sky (not over ground)
+      const fog = new PIXI.Graphics(); skyLayer.addChild(fog);
+      const rays = new PIXI.Graphics(); rays.blendMode='screen'; skyLayer.addChild(rays);
+      function layoutFX(){
+        const w=app.renderer.width,h=app.renderer.height;
+        fog.clear().beginFill(0xFFFFFF, 0.06).drawRect(0,0,w,h).endFill();
+        rays.clear().beginFill(0xffffff,0.05)
+          .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
+      }
+      layoutFX();
+      gsap.to(rays,{alpha:0.02, duration:6, yoyo:true, repeat:-1, ease:'sine.inOut'});
+
+      /* ---------- GROUND (fill + mask) ---------- */
       let currentGroundBase = '#8b7355';
       let currentGroundDark = '#6b5845';
       let currentGroundLight = '#a58f7a';
 
-      const slopeContainer = new PIXI.Container(); 
-      slopeContainer.zIndex=10; 
-      worldLayer.addChild(slopeContainer);
+      const slopeContainer = new PIXI.Container(); slopeContainer.zIndex=10; worldLayer.addChild(slopeContainer);
 
-      const slopeShape = new PIXI.Graphics();
-      
-      function drawSlopeShape(){
+      const slopeFill = new PIXI.Graphics();   // visible color
+      const slopeMask = new PIXI.Graphics();   // mask only
+      slopeContainer.addChild(slopeFill, slopeMask);
+
+      function drawSlopePolys(fillColor = hex(currentGroundBase)){
         const w=app.renderer.width, h=app.renderer.height;
-        slopeShape.clear()
-            .beginFill(0xFF0000)  // ← FORCE BRIGHT RED to test if slope is even visible
-            .moveTo(-600,h*0.65)
-            .lineTo(w+600,h*0.45)
-            .lineTo(w+600,h+600)
-            .lineTo(-600,h+600)
-            .closePath()
-            .endFill();
-        
-        // Add a strong border to make it visible
-        slopeShape.lineStyle(3, 0x00FF00, 1);  // ← BRIGHT GREEN BORDER
-        slopeShape.moveTo(-600,h*0.65).lineTo(w+600,h*0.45);
-    }
-      
-      drawSlopeShape();
-      slopeContainer.addChild(slopeShape);
 
-      // Enhanced rock texture with proper colors
-      function makeRockTexture(){
-        const g = new PIXI.Graphics();
-        // Angular rock fragments in earth tones
-        for(let i=0;i<50;i++){
-          const a = 0.15 + Math.random()*0.25;
-          const size = 1.5 + Math.random()*3;
-          const x = Math.random()*128;
-          const y = Math.random()*128;
-          
-          // Draw angular rocks
-          g.beginFill(hex(currentGroundDark), a);
-          g.drawRect(x, y, size*2, size);
-          g.endFill();
-        }
-        
-        // Add some lighter highlights
-        for(let i=0;i<30;i++){
-          const a = 0.08 + Math.random()*0.15;
-          const r = 0.8 + Math.random()*2;
-          const x = Math.random()*128;
-          const y = Math.random()*128;
-          g.beginFill(hex(currentGroundLight), a).drawCircle(x,y,r).endFill();
-        }
-        
-        return app.renderer.generateTexture(g,{resolution:DPR,region:new PIXI.Rectangle(0,0,128,128)});
+        // base fill (VISIBLE)
+        slopeFill.clear()
+          .beginFill(fillColor, 1)
+          .moveTo(-600,h*0.65).lineTo(w+600,h*0.45).lineTo(w+600,h+600).lineTo(-600,h+600).closePath()
+          .endFill();
+
+        // mask shape (NOT drawn)
+        slopeMask.clear()
+          .beginFill(0xffffff,1)
+          .moveTo(-600,h*0.65).lineTo(w+600,h*0.45).lineTo(w+600,h+600).lineTo(-600,h+600).closePath()
+          .endFill();
       }
+      drawSlopePolys();
 
-      rockTex = makeRockTexture();
+      // rock/soil texture tile
+      function rockTexture(){
+        const g=new PIXI.Graphics();
+        g.beginFill(hex(currentGroundDark)).drawRoundedRect(-24,-12,48,24,10).endFill();
+        g.beginFill(hex(currentGroundBase),0.85).drawRoundedRect(-18,-10,36,20,8).endFill();
+        g.beginFill(hex(currentGroundLight),0.6).drawRoundedRect(-14,-8,28,16,6).endFill();
+        g.lineStyle(2,hex(currentGroundDark),0.28).moveTo(-16,6).lineTo(12,4).moveTo(-12,-4).lineTo(6,-2);
+        return app.renderer.generateTexture(g,{resolution:DPR});
+      }
+      let rockTex = rockTexture();
       const rockTS = new PIXI.TilingSprite({ texture: rockTex, width: app.renderer.width*2, height: app.renderer.height*2 });
-      rockTS.alpha = 0.3;
-      // rockTS.blendMode = 'multiply';
-      slopeContainer.addChild(rockTS);
-      rockTS.mask = slopeShape;
+      rockTS.alpha = 0.30; slopeContainer.addChild(rockTS); rockTS.mask = slopeMask;
 
-      // Directional shading (creates 3D depth)
-      const shadingGrad = new PIXI.Graphics();
-      // shadingGrad.blendMode = 'multiply';
-      slopeContainer.addChild(shadingGrad);
-      
-    // function drawShading(){
-    //   const w=app.renderer.width, h=app.renderer.height;
-    //   shadingGrad.clear();
-    //   
-    //   const steps = 20;
-    //   for(let i=0; i<steps; i++){
-    //     const alpha = 0.05 + (i/steps) * 0.25;
-    //     const y = (h*0.45) + (i/steps) * (h*0.20);
-    //     shadingGrad.beginFill(0x000000, alpha)
-    //       .drawRect(-600, y, w+1200, (h*0.20)/steps)
-    //       .endFill();
-    //   }
-    // }
-    // drawShading();
-    // shadingGrad.mask = slopeShape;
-
-      // Contour lines - MORE VISIBLE
+      // contour lines tile
       function makeContourTex(){
         const g = new PIXI.Graphics();
-        g.lineStyle(1.5, hex(currentGroundDark), 0.35);  // THICKER, MORE OPAQUE
-        for(let y=0; y<128; y+=12){  // CLOSER SPACING
-          g.moveTo(0,y);
-          g.lineTo(128,y);
-        }
+        g.lineStyle(1.5, hex(currentGroundDark), 0.35);
+        for(let y=0; y<128; y+=12){ g.moveTo(0,y); g.lineTo(128,y); }
         return app.renderer.generateTexture(g,{resolution:DPR,region:new PIXI.Rectangle(0,0,128,128)});
       }
-      
       let contourTex = makeContourTex();
       const contourTS = new PIXI.TilingSprite({ texture: contourTex, width: app.renderer.width*2, height: app.renderer.height*2 });
-      contourTS.alpha = 0.7;  // MORE VISIBLE
-      slopeContainer.addChild(contourTS);
-      contourTS.mask = slopeShape;
+      contourTS.alpha = 0.50; slopeContainer.addChild(contourTS); contourTS.mask = slopeMask;
 
-      // Ridge line along top edge
-      const ridge = new PIXI.Graphics(); 
-      slopeContainer.addChild(ridge);
+      // ground shading bands (masked to slope)
+      function band(w,h,color,angle,y,alpha,z){
+        const g = new PIXI.Graphics();
+        g.beginFill(hex(color)).drawRect(-1000, -h/2, w, h).endFill();
+        g.angle = angle; g.y = y; g.alpha = alpha; g.zIndex = z;
+        slopeContainer.addChild(g); g.mask = slopeMask; return g;
+      }
+      let farBand  = band(4000,200,'#8a7e73',-4, app.renderer.height*0.20,0.30,0);
+      let midBand  = band(4000,260,'#7a6e64',-6, app.renderer.height*0.30,0.42,1);
+      let nearBand = band(4000,340,'#6b5f55',-8, app.renderer.height*0.42,0.52,2);
 
+      // ridge line (little AO at slope top)
+      const ridge = new PIXI.Graphics(); slopeContainer.addChild(ridge);
       function drawRidgeLine(){
         const w = app.renderer.width, h = app.renderer.height;
         ridge.clear()
           .lineStyle(5, hex(currentGroundDark), 0.45)
           .moveTo(-600, h*0.65)
           .lineTo(w+600, h*0.45);
-        ridge.filters = [new PIXI.BlurFilter({ strength: 1.5 })];
+        ridge.filters = [new PIXI.BlurFilter({ strength: 1.4 })];
       }
       drawRidgeLine();
 
-      // Fog & Godrays
-      const fog = new PIXI.Graphics(); skyLayer.addChild(fog);
-      const rays = new PIXI.Graphics(); rays.blendMode='screen'; skyLayer.addChild(rays);
-
-      function layoutFX(){
-        const w=app.renderer.width,h=app.renderer.height;
-        fog.clear();  // ← Don't draw fog over everything!
-        rays.clear().beginFill(0xffffff,0.05)
-            .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
-      }
-      layoutFX();
-      gsap.to(rays,{alpha:0.02, duration:6, yoyo:true, repeat:-1, ease:'sine.inOut'});
-
-      // Snow
-      const snow = new PIXI.ParticleContainer(300, { scale:true, alpha:true, position:true }); 
-      fxLayer.addChild(snow);
+      /* ---------- Snow (fx) ---------- */
+      const snow = new PIXI.ParticleContainer(300, { scale:true, alpha:true, position:true }); fxLayer.addChild(snow);
       const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white"/></svg>');
       const flakes=[];
       for(let i=0;i<180;i++){
-        const s=new PIXI.Sprite(snowTex); 
-        s.x=Math.random()*app.renderer.width; 
-        s.y=Math.random()*app.renderer.height; 
-        s.alpha=0.5+Math.random()*0.5; 
-        s.scale.set(0.4+Math.random()*0.9);
-        snow.addParticle(s);  // ← CORRECT!
-        flakes.push({spr:s, vy:0.4+Math.random()*0.8, sway:Math.random()*1.2});
+        const s=new PIXI.Sprite(snowTex); s.x=Math.random()*app.renderer.width; s.y=Math.random()*app.renderer.height; s.alpha=0.5+Math.random()*0.5; s.scale.set(0.4+Math.random()*0.9);
+        snow.addParticle(s); flakes.push({spr:s, vy:0.4+Math.random()*0.8, sway:Math.random()*1.2});
       }
 
-      /* ---------- AVATAR ---------- */
-      const avatar = new PIXI.Container(); 
-      avatar.zIndex=5; 
-      actorLayer.addChild(avatar);
-      
+      /* ---------- AVATAR (fixed) ---------- */
+      const avatar = new PIXI.Container(); avatar.zIndex=5; actorLayer.addChild(avatar);
       function placeAvatar(){
         const w=app.renderer.width,h=app.renderer.height;
         avatar.x = w*0.5;
         avatar.y = (w<420||h<740)? h*0.50 : h*0.58;
       }
-
       // Shadow
-      const sh = new PIXI.Graphics();
-      sh.beginFill(0x000000,0.35).drawEllipse(0,34,26,8).endFill();
-      sh.y += 6;
-      avatar.addChild(sh);
-
+      const sh = new PIXI.Graphics(); sh.beginFill(0x000000,0.35).drawEllipse(0,34,26,8).endFill(); sh.y += 6; avatar.addChild(sh);
       // Backpack
       const pack = new PIXI.Graphics();
       pack.beginFill(0x1e4d7a).drawRoundedRect(-15,-22,30,44,8).endFill();
@@ -479,7 +395,6 @@
       pack.beginFill(0x6aa7d6).drawRoundedRect(-18,-30,36,10,5).endFill();
       pack.lineStyle(2,0x184469,1).moveTo(-12,-14).lineTo(-12,12).moveTo(12,-14).lineTo(12,12);
       avatar.addChild(pack);
-
       // Jacket
       const jacket = new PIXI.Graphics();
       jacket.beginFill(0x2d72b8).drawRoundedRect(-20,-28,40,56,10).endFill();
@@ -488,39 +403,28 @@
       jacket.lineStyle(2.5,0x123e63,0.9).drawRoundedRect(-20,-28,40,56,10);
       jacket.lineStyle(1.6,0x1a5c8a,0.8).moveTo(-12,-10).lineTo(-20,6).moveTo(12,-10).lineTo(20,6);
       avatar.addChild(jacket);
-
-      // Webbing
-      const web = new PIXI.Graphics();
-      web.lineStyle(2,0x173a5c,0.9).moveTo(-10,-18).lineTo(-16,0).moveTo(10,-18).lineTo(16,0).moveTo(-6,4).lineTo(6,4);
-      avatar.addChild(web);
-      
-      const shade = new PIXI.Graphics(); 
-      shade.beginFill(0x000000,0.12).drawRoundedRect(-20,-6,40,18,6).endFill();
-      shade.filters=[new PIXI.BlurFilter({strength:1})]; 
-      avatar.addChild(shade);
-
+      // Webbing + chest shade
+      const web = new PIXI.Graphics(); web.lineStyle(2,0x173a5c,0.9).moveTo(-10,-18).lineTo(-16,0).moveTo(10,-18).lineTo(16,0).moveTo(-6,4).lineTo(6,4); avatar.addChild(web);
+      const shade = new PIXI.Graphics(); shade.beginFill(0x000000,0.12).drawRoundedRect(-20,-6,40,18,6).endFill(); shade.filters=[new PIXI.BlurFilter({strength:1})]; avatar.addChild(shade);
       // Arms + gloves
       const armL = new PIXI.Graphics(); armL.beginFill(0x2d72b8).drawEllipse(-22,2,6,16).endFill();
       const armR = new PIXI.Graphics(); armR.beginFill(0x2d72b8).drawEllipse( 22,2,6,16).endFill();
       const gloveL=new PIXI.Graphics(); gloveL.beginFill(0x222222).drawCircle(-22,15,5).endFill();
       const gloveR=new PIXI.Graphics(); gloveR.beginFill(0x222222).drawCircle( 22,15,5).endFill();
       avatar.addChild(armL,armR,gloveL,gloveR);
-
-      // Head + beanie + strap + pom
+      // Head + beanie
       const head = new PIXI.Graphics(); head.beginFill(0xe0b080).drawEllipse(0,-38,11,9).endFill();
       const beanieBase=new PIXI.Graphics(); beanieBase.beginFill(0xc83838).drawEllipse(0,-42,14,10).endFill();
       const beanieBand=new PIXI.Graphics(); beanieBand.beginFill(0xe84848).drawRoundedRect(-14,-39,28,6,3).endFill();
       const strap=new PIXI.Graphics(); strap.beginFill(0x111111,0.9).drawEllipse(0,-38,10,3).endFill();
       const pom=new PIXI.Graphics(); pom.beginFill(0xe84848).drawCircle(0,-50,3.5).endFill();
       avatar.addChild(head,beanieBase,beanieBand,strap,pom);
-
       // Legs + boots
       const legL = new PIXI.Graphics(); legL.beginFill(0x2a3a48).drawRoundedRect(-16,26,12,16,2).endFill();
       const legR = new PIXI.Graphics(); legR.beginFill(0x2a3a48).drawRoundedRect(4,26,12,16,2).endFill();
       const bootL=new PIXI.Graphics(); bootL.beginFill(0x353535).drawEllipse(-10,42,8,3).endFill();
       const bootR=new PIXI.Graphics(); bootR.beginFill(0x353535).drawEllipse(10,42,8,3).endFill();
       avatar.addChild(legL,legR,bootL,bootR);
-
       // Poles
       const poleL=new PIXI.Graphics(); poleL.lineStyle(3,0x444444).moveTo(-28,6).lineTo(-28,36); poleL.beginFill(0x222222).drawCircle(-28,36,4).endFill();
       const poleR=new PIXI.Graphics(); poleR.lineStyle(3,0x444444).moveTo( 28,6).lineTo( 28,36); poleR.beginFill(0x222222).drawCircle( 28,36,4).endFill();
@@ -548,20 +452,7 @@
         const moss=new PIXI.Graphics(); moss.beginFill(0x6bbf59,0.5).drawCircle(-8,32,3).drawCircle(6,26,2.5).endFill(); c.addChild(moss);
         return app.renderer.generateTexture(c,{resolution:DPR});
       }
-      
-      function rockTexture(){
-        const g=new PIXI.Graphics();
-        g.beginFill(hex(currentGroundDark)).drawRoundedRect(-24,-12,48,24,10).endFill();
-        g.beginFill(hex(currentGroundBase),0.85).drawRoundedRect(-18,-10,36,20,8).endFill();
-        g.beginFill(hex(currentGroundLight),0.6).drawRoundedRect(-14,-8,28,16,6).endFill();
-        g.lineStyle(2,hex(currentGroundDark),0.6).moveTo(-10,-4).lineTo(2,-1).lineTo(14,-6);
-        g.lineStyle(2,hex(currentGroundDark),0.4).moveTo(-14,6).lineTo(6,4);
-        g.beginFill(0xa1c36d,0.45).drawCircle(-8,-2,2).drawCircle(10,0,1.8).endFill();
-        return app.renderer.generateTexture(g,{resolution:DPR});
-      }
-      
       let treeTex = treeTexture();
-      let rockTex = rockTexture();
 
       const terrainObjects=[];
       function rebuildObjects(){
@@ -587,6 +478,11 @@
       app.ticker.add((delta)=>{
         t += delta/60;
 
+        // gentle ground band drift
+        farBand.x   = Math.sin(t*0.07)*40;
+        midBand.x   = Math.sin(t*0.11)*70;
+        nearBand.x  = Math.sin(t*0.16)*110;
+
         // snow drift
         for(const f of flakes){
           f.spr.y += f.vy * delta;
@@ -597,9 +493,9 @@
         // texture motion
         rockTS.tilePosition.x -= 0.05*delta;
         rockTS.tilePosition.y += 0.03*delta;
-        contourTS.tilePosition.y += 0.08*delta;
+        contourTS.tilePosition.y += 0.06*delta;
 
-        // perspective
+        // perspective / alpha
         const h = app.renderer.height;
         for (const o of terrainObjects) {
           const screenY = (h * 0.46 - o.wy) + worldOffset;
@@ -607,7 +503,7 @@
           const s = 0.6 + depth * 0.7;
           o.spr.scale.set(s);
           o.spr.alpha = 0.35 + depth * 0.65;
-          o.spr.x = o.baseX + o.side * depth * 18;
+          o.spr.x = o.baseX + o.side * depth * 18; // stable X
         }
       });
 
@@ -633,17 +529,15 @@
 
         rebuildSky(w,h);
 
-        drawSlopeShape();
+        drawSlopePolys(); // rebuild fill+mask with current color
         rockTS.width=w*2; rockTS.height=h*2;
         contourTS.width=w*2; contourTS.height=h*2;
-        rockTS.mask=slopeShape; 
-        contourTS.mask=slopeShape;
-        
-        // drawShading();
-        // shadingGrad.mask=slopeShape;
-        
-        drawRidgeLine();
+        rockTS.mask=slopeMask; contourTS.mask=slopeMask;
 
+        // position bands
+        farBand.y=h*0.20; midBand.y=h*0.30; nearBand.y=h*0.42;
+
+        drawRidgeLine();
         layoutFX();
         placeAvatar();
         rebuildObjects();
@@ -664,43 +558,22 @@
           });
           gsap.fromTo(avatar,{y:avatar.y+4},{y:avatar.y,duration:0.35,ease:'power1.out'});
         },
-        
-        setSkyGradient(top,bottom){ 
-          currentTop=top; 
-          currentBot=bottom; 
-          rebuildSky(app.renderer.width, app.renderer.height); 
-        },
-        
-        setSnowVisible(v){ 
-          snow.visible = !!v; 
-        },
-        
+        setSkyGradient(top,bottom){ currentTop=top; currentBot=bottom; rebuildSky(app.renderer.width, app.renderer.height); },
+        setSnowVisible(v){ snow.visible = !!v; },
         setGroundColors(base, dark, light){
-            currentGroundBase = base;
-            currentGroundDark = dark;
-            currentGroundLight = light;
-            
-            // Rebuild all ground-related textures
-            drawSlopeShape();
-            
-            rockTex.destroy();
-            rockTex = makeRockTexture();
-            rockTS.texture = rockTex;
-            
-            contourTex.destroy();
-            contourTex = makeContourTex();
-            contourTS.texture = contourTex;
-            
-            // drawShading();
-            drawRidgeLine();
-            
-            // Rebuild terrain objects with new tree texture
-            treeTex.destroy();
-            treeTex = treeTexture();
-            // rockTex already rebuilt above, so just rebuild objects
-            rebuildObjects();
-            }
-        };
+          currentGroundBase = base; currentGroundDark = dark; currentGroundLight = light;
+
+          drawSlopePolys(hex(currentGroundBase));
+
+          rockTex.destroy(true); rockTex = rockTexture(); rockTS.texture = rockTex;
+          contourTex.destroy(true); contourTex = makeContourTex(); contourTS.texture = contourTex;
+
+          drawRidgeLine();
+
+          treeTex.destroy(true); treeTex = treeTexture();
+          rebuildObjects();
+        }
+      };
       window.MountainAPI = MountainAPI;
 
       // Mount HUD after API is ready
