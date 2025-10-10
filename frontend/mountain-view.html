@@ -186,6 +186,9 @@ function Hud(){
 /* =========================================================
    PIXI Scene – Side scroller with approach segments
    ========================================================= */
+let trailOffset = 120;
+let bandWidth = 150;
+
 (async () => {
   const sceneEl = document.getElementById('scene');
   const app = new PIXI.Application();
@@ -222,7 +225,7 @@ function Hud(){
     const w = app.renderer.width, h = app.renderer.height;
     skyLayer.removeChildren();
 
-    skySprite = gradientSprite(w, h*0.55, currentTop, currentBot);
+    skySprite = gradientSprite(w, h, currentTop, currentBot);
     skyLayer.addChild(skySprite);
 
     // sun
@@ -274,15 +277,17 @@ function Hud(){
     const g = new PIXI.Graphics();
 
     // Base ground fill (below trail)
-    g.beginFill(hex(groundCol)).drawRect(-200, h*0.70, w+400, h).endFill();
+    g.beginFill(hex(groundCol)).drawRect(-200, h*0.62, w+400, h).endFill();
 
     // Trail ribbon (top surface)
     const {x1,y1,x2,y2} = edgePoints();
-    const bandW = Math.max(130, Math.min(170, h*0.12)); // thickness
+    const bandW = Math.max(130, Math.min(170, h*0.12));
+    bandWidth = bandW; // thickness
     trailBand = new PIXI.Graphics();
     const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy), ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
 
-    const off = Math.max(100, h*0.14); // vertical offset from edge
+    const off = Math.max(100, h*0.14); // how far the band is from the edge
+    trailOffset = off; // vertical offset from edge
     const trim = 200;                  // trim ends so it doesn't touch edges
 
     const ax = x1 + ux*trim + nx*off;
@@ -306,6 +311,13 @@ function Hud(){
 
     ground.addChild(g, trailBand);
   }
+
+  function placeActorOnTrail(){
+  const w = app.renderer.width;
+  actor.x = Math.floor(w * 0.28);
+  // stand on the center of the trail band (a little -10 to account for feet)
+  actor.y = Math.floor(trackY(actor.x) + trailOffset - 10);
+}
 
   /* Approach segments (repeating trapezoids riding along trail) */
   const SEG_LEN = 280;
@@ -381,7 +393,8 @@ function Hud(){
     rebuildGround();
     buildSegments();
     buildActor();
-    world.x = 0;           // keep deterministic when resizing
+    placeActorOnTrail();   // <— add this
+    world.x = 0;
   }
   window.addEventListener('resize', layout);
   layout();
