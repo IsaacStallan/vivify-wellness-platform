@@ -308,6 +308,16 @@
       noiseTS.alpha = 0.15; noiseTS.blendMode = 'multiply';
       slopeContainer.addChild(noiseTS);
 
+      const groundTint = new PIXI.Graphics();
+        groundTint.blendMode = 'multiply';
+        slopeContainer.addChild(groundTint);
+        groundTint.mask = slopeShape;
+
+        const slopeAO = new PIXI.Graphics();
+        slopeAO.blendMode = 'multiply';
+        slopeContainer.addChild(slopeAO);
+        slopeAO.mask = slopeShape;
+
       function makeContourTex(){
         const g = new PIXI.Graphics();
         g.lineStyle(1,0xffffff,0.08);
@@ -353,8 +363,11 @@
     }
 
     // Fog & Godrays
-      const fog = new PIXI.Graphics(); fxLayer.addChild(fog);
-      const rays = new PIXI.Graphics(); rays.blendMode='screen'; fxLayer.addChild(rays);
+    // make atmospheric effects live in the sky only
+    const fog = new PIXI.Graphics(); skyLayer.addChild(fog);
+    const rays = new PIXI.Graphics(); rays.blendMode='screen'; skyLayer.addChild(rays);
+
+
       function layoutFX(){
         const w=app.renderer.width,h=app.renderer.height;
         fog.clear().beginFill(0xFFFFFF, 0.06).drawRect(0,0,w,h).endFill();
@@ -381,7 +394,10 @@
         avatar.y = (w<420||h<740)? h*0.50 : h*0.58;
       }
       // Shadow
-      const sh = new PIXI.Graphics(); sh.beginFill(0x000000,0.25).drawEllipse(0,32,22,7).endFill(); sh.y+=6; avatar.addChild(sh);
+      const sh = new PIXI.Graphics();
+        sh.beginFill(0x000000,0.35).drawEllipse(0,34,26,8).endFill();
+        sh.y += 6;
+        avatar.addChild(sh);
 
       // Backpack
       const pack = new PIXI.Graphics();
@@ -548,6 +564,23 @@
         noiseTS.width=w*2; noiseTS.height=h*2;
         contourTS.width=w*2; contourTS.height=h*2;
         noiseTS.mask=slopeShape; contourTS.mask=slopeShape;
+
+        // cover whole screen with a warm multiply tint so ground isn't blue-ish
+        groundTint
+        .clear()
+        .beginFill(0x6f6359, 0.22)               // warm grey-brown
+        .drawRect(-2000, -2000, w + 4000, h + 4000)
+        .endFill();
+
+        // horizon AO along the slope top edge (darkens the “crease”)
+        slopeAO
+        .clear()
+        .beginFill(0x000000, 0.16)
+        .drawRect(-2000, -120, w + 4000, 240)    // thin band
+        .endFill();
+        slopeAO.y = h * 0.45;                      // aligns with your slope’s top edge
+        slopeAO.angle = -8;                        // matches the slope tilt
+
 
         farBand.y=h*0.20; midBand.y=h*0.30; nearBand.y=h*0.42;
 
