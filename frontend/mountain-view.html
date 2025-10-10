@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Vivify Mountain</title>
 
-  <!-- Tailwind (CDN) – fine for dev; we’ll switch to CLI for prod -->
+  <!-- Tailwind (dev only) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- React (HUD/UI) -->
@@ -24,45 +24,30 @@
   </style>
 </head>
 <body>
-  <!-- Pixi canvas target -->
   <div id="scene" class="w-screen h-screen"></div>
-  <!-- React HUD target -->
   <div id="hud"></div>
 
   <script type="text/babel">
-    /******************************
-     *        HUD ICONS
-     ******************************/
-    const IconMountain = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>);
-    const Drop = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3.1S6 9.1 6 12.6a6 6 0 0 0 12 0C18 9.1 12 3.1 12 3.1z"/></svg>);
-    const Moon = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a9 9 0 1 0 9 9 6 6 0 0 1-9-9Z"/></svg>);
-    const Steps = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="7" cy="14" r="3"/><circle cx="17" cy="10" r="3"/></svg>);
-    const Target = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
-
-    /******************************
-     *       ENV / THEMES
-     ******************************/
+    /* ---------------- ENV / THEME ---------------- */
     function envFromAltitude(alt){
-      if (alt < 1000) return { name:'Forest Base',   top:'#4A90C8', bot:'#7BB8E8', snow:false };
-      if (alt < 2000) return { name:'Mountain Trail', top:'#3A7FB8', bot:'#5BA3D8', snow:false };
-      if (alt < 3000) return { name:'Alpine Zone',    top:'#2E6FA8', bot:'#4A8AC8', snow:true  };
-      return              { name:'Summit Ridge',   top:'#1E5F98', bot:'#2E6FA8', snow:true  };
+      if (alt < 1000) return { name:'Forest Base',   top:'#6ea8da', bot:'#9fd0f1', snow:false };
+      if (alt < 2000) return { name:'Mountain Trail', top:'#4b8ccb', bot:'#78b6e7', snow:false };
+      if (alt < 3000) return { name:'Alpine Zone',    top:'#3c79bb', bot:'#5b9ad4', snow:true  };
+      return              { name:'Summit Ridge',   top:'#2d68ab', bot:'#4a86c1', snow:true  };
     }
 
-    /******************************
-     *            HUD
-     ******************************/
+    /* ---------------- HUD ---------------- */
+    const IconMountain = (p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>);
+    const Drop =(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3.1S6 9.1 6 12.6a6 6 0 0 0 12 0C18 9.1 12 3.1 12 3.1z"/></svg>);
+    const Moon =(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a9 9 0 1 0 9 9 6 6 0 0 1-9-9Z"/></svg>);
+    const Steps=(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="7" cy="14" r="3"/><circle cx="17" cy="10" r="3"/></svg>);
+    const Target=(p)=>(<svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
+
     function Hud(){
       const {useState, useMemo, useLayoutEffect, useEffect} = React;
-
-      // viewport watcher for responsive tray
-      const [vw, setVw] = useState(window.innerWidth);
-      const [vh, setVh] = useState(window.innerHeight);
-      useEffect(() => {
-        const onR = () => { setVw(window.innerWidth); setVh(window.innerHeight); };
-        window.addEventListener('resize', onR);
-        return () => window.removeEventListener('resize', onR);
-      }, []);
+      const [vw, setVw] = React.useState(window.innerWidth);
+      const [vh, setVh] = React.useState(window.innerHeight);
+      useEffect(()=>{ const onR=()=>{setVw(window.innerWidth);setVh(window.innerHeight)}; window.addEventListener('resize',onR); return()=>window.removeEventListener('resize',onR)},[]);
       const isPhone = (vw < 420) || (vh < 740);
 
       const [data, setData] = useState({ altitude:1200, target:3776, oxygen:78 });
@@ -76,11 +61,11 @@
 
       const env = useMemo(()=>envFromAltitude(data.altitude), [data.altitude]);
       useLayoutEffect(()=>{
-        if (window.VivifyMountainAPI){
-          window.VivifyMountainAPI.setSkyGradient(env.top, env.bot);
-          window.VivifyMountainAPI.setSnowVisible(env.snow);
+        if (window.MountainAPI){
+          window.MountainAPI.setSkyGradient(env.top, env.bot);
+          window.MountainAPI.setSnowVisible(env.snow);
         }
-      }, [env]);
+      },[env]);
 
       const progress = Math.min(100, (data.altitude / data.target) * 100);
       const oxyColor = data.oxygen >= 70 ? '#10b981' : data.oxygen >= 50 ? '#f59e0b' : data.oxygen >= 30 ? '#f97316' : '#ef4444';
@@ -90,12 +75,10 @@
         setClimbing(true);
 
         const altitudeGain = 270;
-        const pixels = 120; // visual scroll amount
+        const pixels = 160; // world scroll amount
 
-        if (window.VivifyMountainAPI) {
-          window.VivifyMountainAPI.climbBy(pixels, 1.05);
-        }
-        // Smooth number update
+        window.MountainAPI?.climbBy(pixels, 1.05);
+
         const tmp = { alt: data.altitude };
         gsap.to(tmp, {
           alt: Math.min(data.altitude + altitudeGain, data.target),
@@ -194,25 +177,14 @@
               </div>
             </div>
           </div>
-
-          {/* Example milestone */}
-          {(Math.round(progress) >= 53 && Math.round(progress) < 60) && (
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 animate-bounce">
-              <div className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-2xl border-2 border-white/50">
-                🎯 2,000m Milestone!
-              </div>
-            </div>
-          )}
         </div>
       );
     }
 
-    /******************************
-     *         PIXI v8 SCENE
-     ******************************/
+    /* --------------- PIXI v8 SCENE --------------- */
     (async () => {
-      const DPR = Math.max(1, window.devicePixelRatio || 1);
       const sceneEl = document.getElementById('scene');
+      const DPR = Math.max(1, window.devicePixelRatio || 1);
 
       const app = new PIXI.Application();
       await app.init({
@@ -220,64 +192,35 @@
         antialias: true,
         backgroundAlpha: 1,
         powerPreference: 'high-performance',
-        autoDensity: true
+        autoDensity: true,
       });
       sceneEl.appendChild(app.canvas);
+      app.stage.sortableChildren = true;
+
+      // Helpers
+      const hex = (h)=>parseInt(h.replace('#',''),16);
+      function gradientSprite(w,h,top,bottom){
+        const cont = new PIXI.Container();
+        const r1 = new PIXI.Graphics(); r1.beginFill(hex(top)).drawRect(0,0,w,h).endFill();
+        const r2 = new PIXI.Graphics(); r2.beginFill(hex(bottom)).drawRect(0,h*0.35,w,h).endFill(); r2.alpha=0.9;
+        cont.addChild(r1,r2);
+        const tex = app.renderer.generateTexture(cont,{resolution:DPR,region:new PIXI.Rectangle(0,0,w,h)});
+        return new PIXI.Sprite(tex);
+      }
 
       // Layers
       const skyLayer   = new PIXI.Container(); app.stage.addChild(skyLayer);
       const worldLayer = new PIXI.Container(); app.stage.addChild(worldLayer);
       const fxLayer    = new PIXI.Container(); app.stage.addChild(fxLayer);
 
-      // Track current gradient so we can rebuild on resize
-      let currentTop = '#3A7FB8', currentBot = '#5BA3D8';
-
-      // Helpers
-      function makeVerticalGradient(w,h,top,bottom) {
-        const topC = PIXI.Color.shared.setValue(top).toNumber();
-        const botC = PIXI.Color.shared.setValue(bottom).toNumber();
-        const cont = new PIXI.Container();
-        const r1 = new PIXI.Graphics(); r1.beginFill(topC).drawRect(0,0,w,h).endFill();
-        const r2 = new PIXI.Graphics(); r2.beginFill(botC).drawRect(0,h*0.35,w,h).endFill(); r2.alpha=0.9;
-        cont.addChild(r1,r2);
-        const tex = app.renderer.generateTexture(cont, {resolution: DPR, region: new PIXI.Rectangle(0,0,w,h)});
-        return new PIXI.Sprite(tex);
-      }
-
-      // Sky
-      let sky = makeVerticalGradient(app.renderer.width, app.renderer.height, currentTop, currentBot);
+      // Sky + silhouettes
+      let currentTop='#4b8ccb', currentBot='#78b6e7';
+      let sky = gradientSprite(app.renderer.width, app.renderer.height, currentTop, currentBot);
       skyLayer.addChild(sky);
 
-      // Parallax ground strips
-      function makeGroundStrip(width, height, colorHex) {
+      function addSilhouette(color, y, width, height, offset=0, alpha=0.35){
         const g = new PIXI.Graphics();
-        g.beginFill(PIXI.Color.shared.setValue(colorHex).toNumber());
-        g.drawRect(0, 0, width, height).endFill();
-
-        const noise = new PIXI.Graphics();
-        noise.beginFill(0x000000, 0.06).drawRect(0,0,width,height).endFill();
-        noise.blendMode = 'overlay';
-
-        const c = new PIXI.Container();
-        c.addChild(g, noise);
-        return c;
-      }
-
-      const groundFar  = makeGroundStrip(4000, 1400, '#9a9185');
-      const groundMid  = makeGroundStrip(4000, 1600, '#887a6b');
-      const groundNear = makeGroundStrip(4000, 2000, '#76695c');
-
-      // Angles first; y-positions handled by layout()
-      groundFar.angle  = -4;
-      groundMid.angle  = -6;
-      groundNear.angle = -8;
-
-      worldLayer.addChild(groundFar, groundMid, groundNear);
-
-      // Distant mountain silhouettes (depth)
-      function addSilhouette(color, y, width, height, offset=0) {
-        const g = new PIXI.Graphics();
-        g.beginFill(PIXI.Color.shared.setValue(color).toNumber());
+        g.beginFill(hex(color));
         g.moveTo(-200+offset, y + height);
         g.lineTo( width*0.15+offset, y + height*0.55);
         g.lineTo( width*0.30+offset, y + height*0.35);
@@ -285,142 +228,238 @@
         g.lineTo( width*0.70+offset, y + height*0.30);
         g.lineTo( width*0.90+offset, y + height*0.55);
         g.lineTo( width*1.10+offset, y + height);
-        g.closePath();
-        g.endFill();
-        g.alpha = 0.35;
-        g.filters = [new PIXI.BlurFilter({ strength: 1.2 })];
+        g.closePath().endFill();
+        g.alpha = alpha;
+        g.filters = [new PIXI.BlurFilter({strength:1.2})];
         skyLayer.addChild(g);
         return g;
       }
-      const W = app.renderer.width, H = app.renderer.height;
-      addSilhouette('#2b4f75', H*0.18, W*0.9, H*0.35, -120);
-      addSilhouette('#35608d', H*0.22, W,      H*0.40,  80);
+      const W=app.renderer.width,H=app.renderer.height;
+      addSilhouette('#2b4f75', H*0.18, W*0.9, H*0.35, -140, 0.32);
+      addSilhouette('#35608d', H*0.22, W,      H*0.40,   90, 0.28);
 
-      // Fog overlay
-      const fog = new PIXI.Graphics();
-      fog.beginFill(0xFFFFFF, 0.12).drawRect(0,0,app.renderer.width,app.renderer.height).endFill();
-      fog.blendMode = 'screen';
-      fxLayer.addChild(fog);
+      // Slope (what you stand on)
+      const slope = new PIXI.Graphics();
+      slope.beginFill(hex('#8c8075')).moveTo(-600,H*0.65).lineTo(W+600,H*0.45).lineTo(W+600,H+600).lineTo(-600,H+600).closePath().endFill();
+      slope.alpha=0.9; slope.zIndex=1;
+      worldLayer.addChild(slope);
 
-      // Snow particles (Pixi v8: addParticle)
+      // Parallax ground strips (subtle layers above slope)
+      function groundStrip(w,h,color){ const g=new PIXI.Graphics(); g.beginFill(hex(color)).drawRect(0,0,w,h).endFill(); return g; }
+      const far = groundStrip(4000, 200, '#9a9185'); far.y=H*0.20; far.angle=-4; far.alpha=0.35; far.zIndex=0; worldLayer.addChild(far);
+      const mid = groundStrip(4000, 260, '#887a6b'); mid.y=H*0.30; mid.angle=-6; mid.alpha=0.45; mid.zIndex=1; worldLayer.addChild(mid);
+      const close = groundStrip(4000, 340, '#76695c'); close.y=H*0.42; close.angle=-8; close.alpha=0.55; close.zIndex=2; worldLayer.addChild(close);
+
+      // Fog
+      const fog = new PIXI.Graphics(); fog.beginFill(0xFFFFFF, 0.10).drawRect(0,0,W,H).endFill(); fog.blendMode='screen'; fxLayer.addChild(fog);
+
+      // Snow
       const snow = new PIXI.ParticleContainer(300, { scale:true, alpha:true, position:true });
       fxLayer.addChild(snow);
-      const snowTex = PIXI.Texture.from(
-        'data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white" /></svg>'
-      );
-      const flakes = [];
+      const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white" /></svg>');
+      const flakes=[];
       for (let i=0;i<180;i++){
         const s = new PIXI.Sprite(snowTex);
-        s.x = Math.random() * app.renderer.width;
-        s.y = Math.random() * app.renderer.height;
-        s.alpha = 0.5 + Math.random()*0.5;
-        s.scale.set(0.4 + Math.random()*0.9);
-        snow.addParticle(s); // v8 API
-        flakes.push({spr:s, vy: 0.4 + Math.random()*0.8, sway: Math.random()*1.2});
+        s.x = Math.random()*W; s.y=Math.random()*H; s.alpha=0.5+Math.random()*0.5; s.scale.set(0.4+Math.random()*0.9);
+        snow.addParticle(s);
+        flakes.push({spr:s, vy:0.4+Math.random()*0.8, sway:Math.random()*1.2});
       }
 
-      // Avatar (richer placeholder, still GPU-cheap)
-      function makeAvatarTexture() {
-        const g = new PIXI.Graphics();
+      // ---------- Avatar (detailed placeholder, back view) ----------
+      const avatar = new PIXI.Container(); avatar.zIndex=5; worldLayer.addChild(avatar);
 
-        // shadow
-        g.beginFill(0x000000, 0.28).drawEllipse(0, 32, 22, 7).endFill();
+      // shadow
+      const sh = new PIXI.Graphics(); sh.beginFill(0x000000,0.25).drawEllipse(0,32,22,7).endFill(); sh.y+=6; avatar.addChild(sh);
 
-        // jacket
-        g.beginFill(0x2d72b8).drawRoundedRect(-20, -28, 40, 56, 10).endFill();
-        g.lineStyle(2, 0x1a5c8a, 1).moveTo(0, -26).lineTo(0, 26); // center seam
-        g.beginFill(0x3d82c8, 0.25).drawRoundedRect(-20, -10, 40, 20, 6).endFill(); // panel
+      // backpack
+      const pack = new PIXI.Graphics();
+      pack.beginFill(0x1e4d7a).drawRoundedRect(-14,-20,28,40,8).endFill();
+      pack.beginFill(0x245a8f).drawRoundedRect(-12,-18,24,30,6).endFill();
+      // sleeping pad roll
+      pack.beginFill(0x6aa7d6).drawRoundedRect(-16,-26,32,8,4).endFill();
+      pack.lineStyle(2,0x184469).moveTo(-12,-14).lineTo(-12,10).moveTo(12,-14).lineTo(12,10);
+      avatar.addChild(pack);
 
-        // arms
-        g.beginFill(0x2d72b8).drawEllipse(-22, 2, 6, 16).endFill();
-        g.beginFill(0x2d72b8).drawEllipse( 22, 2, 6, 16).endFill();
-        // gloves
-        g.beginFill(0x222222).drawCircle(-22, 15, 5).drawCircle(22, 15, 5).endFill();
+      // jacket
+      const jacket = new PIXI.Graphics();
+      jacket.beginFill(0x2d72b8).drawRoundedRect(-20,-28,40,56,10).endFill();
+      jacket.lineStyle(2,0x1a5c8a).moveTo(0,-26).lineTo(0,26); // center seam
+      jacket.beginFill(0x3d82c8,0.25).drawRoundedRect(-20,-10,40,20,6).endFill(); // mid panel
+      avatar.addChild(jacket);
 
-        // head + beanie
-        g.beginFill(0xe0b080).drawEllipse(0, -38, 11, 9).endFill();
-        g.beginFill(0xc83838).drawEllipse(0, -42, 14, 10).endFill();
-        g.beginFill(0xe84848).drawRoundedRect(-14, -39, 28, 6, 3).endFill();
-        g.beginFill(0x111111, 0.9).drawEllipse(0, -38, 10, 3).endFill(); // goggle strap
+      // arms
+      const armL = new PIXI.Graphics(); armL.beginFill(0x2d72b8).drawEllipse(-22,2,6,16).endFill();
+      const armR = new PIXI.Graphics(); armR.beginFill(0x2d72b8).drawEllipse( 22,2,6,16).endFill();
+      const gloveL=new PIXI.Graphics(); gloveL.beginFill(0x222222).drawCircle(-22,15,5).endFill();
+      const gloveR=new PIXI.Graphics(); gloveR.beginFill(0x222222).drawCircle( 22,15,5).endFill();
+      avatar.addChild(armL,armR,gloveL,gloveR);
 
-        // pants + boots
-        g.beginFill(0x2a3a48).drawRoundedRect(-16, 26, 12, 16, 2).drawRoundedRect(4, 26, 12, 16, 2).endFill();
-        g.beginFill(0x353535).drawEllipse(-10, 42, 8, 3).drawEllipse(10, 42, 8, 3).endFill();
+      // head + beanie + strap/goggles
+      const head = new PIXI.Graphics(); head.beginFill(0xe0b080).drawEllipse(0,-38,11,9).endFill();
+      const beanieBase=new PIXI.Graphics(); beanieBase.beginFill(0xc83838).drawEllipse(0,-42,14,10).endFill();
+      const beanieBand=new PIXI.Graphics(); beanieBand.beginFill(0xe84848).drawRoundedRect(-14,-39,28,6,3).endFill();
+      const strap=new PIXI.Graphics(); strap.beginFill(0x111111,0.9).drawEllipse(0,-38,10,3).endFill();
+      // tiny pom-pom
+      const pom=new PIXI.Graphics(); pom.beginFill(0xe84848).drawCircle(0,-49,3).endFill();
+      avatar.addChild(head,beanieBase,beanieBand,strap,pom);
 
-        return app.renderer.generateTexture(g, { resolution: DPR });
+      // legs + boots (animated)
+      const legL = new PIXI.Graphics(); legL.beginFill(0x2a3a48).drawRoundedRect(-16,26,12,16,2).endFill();
+      const legR = new PIXI.Graphics(); legR.beginFill(0x2a3a48).drawRoundedRect(4,26,12,16,2).endFill();
+      const bootL=new PIXI.Graphics(); bootL.beginFill(0x353535).drawEllipse(-10,42,8,3).endFill();
+      const bootR=new PIXI.Graphics(); bootR.beginFill(0x353535).drawEllipse(10,42,8,3).endFill();
+      avatar.addChild(legL,legR,bootL,bootR);
+
+      // poles (appear alternating with steps)
+      const poleL=new PIXI.Graphics(); poleL.lineStyle(3,0x444444).moveTo(-28,6).lineTo(-28,36); poleL.beginFill(0x222222).drawCircle(-28,36,4).endFill();
+      const poleR=new PIXI.Graphics(); poleR.lineStyle(3,0x444444).moveTo( 28,6).lineTo( 28,36); poleR.beginFill(0x222222).drawCircle( 28,36,4).endFill();
+      poleL.alpha=0; poleR.alpha=0;
+      avatar.addChild(poleL,poleR);
+
+      // position avatar on screen; world will scroll beneath
+      function placeAvatar(){
+        const w=app.renderer.width,h=app.renderer.height;
+        avatar.x = w*0.5;
+        avatar.y = (w<420||h<740)? h*0.50 : h*0.58;
       }
-      const avatarTex = makeAvatarTexture();
-      const avatar = new PIXI.Sprite(avatarTex);
-      avatar.anchor.set(0.5);
-      avatar.zIndex = 10;
-      worldLayer.addChild(avatar);
+      placeAvatar();
 
-      // Depth blur for far layers
-      const blurFar = new PIXI.BlurFilter({ strength:2, quality:2 });
-      const blurMid = new PIXI.BlurFilter({ strength:1.2, quality:2 });
-      groundFar.filters = [blurFar];
-      groundMid.filters = [blurMid];
+      // --------- Terrain objects with perspective ---------
+      const worldHeight = 8000; // enough runway to climb
+      const objects = new PIXI.Container(); objects.zIndex=3; worldLayer.addChild(objects);
 
-      // Layout keeps everything nicely framed on all screens
-      function layout() {
-        const w = app.renderer.width;
-        const h = app.renderer.height;
-
-        groundFar.y  = h * 0.10;
-        groundMid.y  = h * 0.22;
-        groundNear.y = h * 0.36;
-
-        // center avatar; HUD also shifts on phone via React
-        const isPhone = (w < 420) || (h < 740);
-        avatar.x = w * 0.5;
-        avatar.y = isPhone ? h * 0.50 : h * 0.58;
-
-        // overlays
-        fog.clear().beginFill(0xFFFFFF, 0.12).drawRect(0,0,w,h).endFill();
-
-        skyLayer.removeChild(sky);
-        sky = makeVerticalGradient(w, h, currentTop, currentBot);
-        skyLayer.addChildAt(sky, 0);
+      function treeTexture(){
+        const c=new PIXI.Container();
+        const trunk=new PIXI.Graphics(); trunk.beginFill(0x5c3d2e).drawRoundedRect(-6,16,12,32,3).endFill();
+        c.addChild(trunk);
+        // layered foliage
+        const colors=[0x0f6a3b,0x147a45,0x199951,0x25a35c,0x30b168,0x3bc174,0x45cf80];
+        let y=16, r=28;
+        colors.forEach((col,i)=>{ const g=new PIXI.Graphics(); g.beginFill(col).drawEllipse(0,y-(i*10), r-(i*3), 12).endFill(); c.addChild(g); });
+        return app.renderer.generateTexture(c,{resolution:DPR});
       }
-      window.addEventListener('resize', layout);
-      layout();
+      function rockTexture(){
+        const g=new PIXI.Graphics();
+        g.beginFill(0x7d7065).drawRoundedRect(-24,-12,48,24,10).endFill();
+        g.beginFill(0x8a7e73,0.7).drawRoundedRect(-18,-10,36,20,8).endFill();
+        g.lineStyle(2,0x6a5e54,0.6).moveTo(-10,-4).lineTo(2,-1).lineTo(14,-6);
+        g.lineStyle(2,0x6a5e54,0.4).moveTo(-14,6).lineTo(6,4);
+        return app.renderer.generateTexture(g,{resolution:DPR});
+      }
+      const treeTex = treeTexture();
+      const rockTex = rockTexture();
 
-      // Idle scene tick
-      let t = 0;
-      app.ticker.add((delta) => {
+      const terrainObjects = [];
+      for(let i=0;i<40;i++){
+        const isTree = Math.random()>0.35;
+        const spr = new PIXI.Sprite(isTree?treeTex:rockTex);
+        spr.anchor.set(0.5,1);
+        // distribute along world height, and fan across slope width
+        const wy = (i/40) * worldHeight + Math.random()*150;
+        const baseX = app.renderer.width*0.5 + (Math.random()*300 - 150); // near center line
+        spr.position.set(baseX, H*0.46 - wy); // place in world coords (y negative upward)
+        spr.alpha = 0.9;
+        spr.zIndex = 3;
+        objects.addChild(spr);
+        terrainObjects.push({spr, worldY: wy});
+      }
+
+      // ---------- World scroll & parallax ----------
+      let worldOffset = 0; // how far we’ve climbed (visual)
+      function applyWorldOffset(){
+        worldLayer.y = worldOffset;
+      }
+
+      // subtle idle parallax
+      let t=0;
+      app.ticker.add((delta)=>{
         t += delta/60;
+        far.x   = Math.sin(t*0.07) * 40;
+        mid.x   = Math.sin(t*0.11) * 70;
+        close.x = Math.sin(t*0.16) * 110;
 
-        for (const f of flakes) {
+        // snow drift
+        flakes.forEach(f=>{
           f.spr.y += f.vy * delta;
           f.spr.x += Math.sin((f.spr.y + t*20) * 0.01) * f.sway * 0.3;
           if (f.spr.y > app.renderer.height) { f.spr.y = -10; f.spr.x = Math.random()*app.renderer.width; }
-        }
+        });
 
-        groundFar.x  = (Math.sin(t*0.07) * 40);
-        groundMid.x  = (Math.sin(t*0.11) * 70);
-        groundNear.x = (Math.sin(t*0.16) * 110);
+        // perspective scaling for terrain objects
+        const h = app.renderer.height;
+        for (const o of terrainObjects){
+          const screenY = (H*0.46 - o.worldY) + worldOffset; // where it lands on screen
+          const depth = Math.min(1, Math.max(0, (screenY - h*0.25) / (h*0.65))); // 0 top → 1 bottom
+          const s = 0.55 + depth * 0.75; // scale factor
+          o.spr.scale.set(s);
+          o.spr.alpha = 0.3 + depth * 0.8;
+          o.spr.x = app.renderer.width*0.5 + (o.spr.x - app.renderer.width*0.5) * (0.92 + depth*0.16); // slight spread
+        }
       });
 
-      // Public API for HUD
-      const VivifyMountainAPI = {
-        climbBy: (pixels, duration=1.05) => {
-          gsap.to(groundFar,  { y: groundFar.y  + pixels*0.22, duration, ease:'power2.out' });
-          gsap.to(groundMid,  { y: groundMid.y  + pixels*0.42, duration, ease:'power2.out' });
-          gsap.to(groundNear, { y: groundNear.y + pixels*0.72, duration, ease:'power2.out' });
-          gsap.fromTo(avatar, { y: avatar.y+4 }, { y: avatar.y, duration:0.35, ease:'power1.out' });
-        },
-        setSkyGradient: (top, bottom) => {
-          currentTop = top; currentBot = bottom;
-          skyLayer.removeChild(sky);
-          sky = makeVerticalGradient(app.renderer.width, app.renderer.height, top, bottom);
-          skyLayer.addChildAt(sky,0);
-        },
-        setSnowVisible: (visible) => { snow.visible = !!visible; }
-      };
-      window.VivifyMountainAPI = VivifyMountainAPI;
+      // ---------- Step animation (legs/poles) ----------
+      function stepCycle(duration=1.05){
+        const tl = gsap.timeline({defaults:{ease:'power2.inOut'}, onComplete(){ /* no loop; triggered per climb */ }});
+        // Left step forward (right pole down)
+        tl.to(legL, { y: 22, duration: duration*0.25 }, 0)
+          .to(legR, { y: 30, duration: duration*0.25 }, 0)
+          .to(bootL, { y: 38, duration: duration*0.25 }, 0)
+          .to(bootR, { y: 44, duration: duration*0.25 }, 0)
+          .to(poleR, { alpha: 1, duration: duration*0.20 }, 0)
+          .to(poleL, { alpha: 0, duration: duration*0.20 }, 0)
+        // Right step forward (left pole down)
+          .to(legL, { y: 30, duration: duration*0.25 }, duration*0.25)
+          .to(legR, { y: 22, duration: duration*0.25 }, duration*0.25)
+          .to(bootL,{ y: 44, duration: duration*0.25 }, duration*0.25)
+          .to(bootR,{ y: 38, duration: duration*0.25 }, duration*0.25)
+          .to(poleR,{ alpha: 0, duration: duration*0.20 }, duration*0.25)
+          .to(poleL,{ alpha: 1, duration: duration*0.20 }, duration*0.25)
+        // settle neutral
+          .to([legL,legR,bootL,bootR], { y: "+=0", duration: duration*0.25 }, duration*0.5)
+          .to([poleL,poleR], { alpha: 0.6, duration: duration*0.25 }, duration*0.5);
+      }
 
-      // Mount HUD only after Pixi is ready & API exposed
-      ReactDOM.createRoot(document.getElementById('hud')).render(<Hud />);
+      // ---------- Layout ----------
+      function layout(){
+        const w=app.renderer.width,h=app.renderer.height;
+        skyLayer.removeChild(sky); sky = gradientSprite(w,h,currentTop,currentBot); skyLayer.addChildAt(sky,0);
+        fog.clear().beginFill(0xFFFFFF,0.10).drawRect(0,0,w,h).endFill();
+
+        slope.clear().beginFill(hex('#8c8075')).moveTo(-600,h*0.65).lineTo(w+600,h*0.45).lineTo(w+600,h+600).lineTo(-600,h+600).closePath().endFill();
+
+        far.y = h*0.20; mid.y = h*0.30; close.y = h*0.42;
+
+        placeAvatar();
+      }
+      window.addEventListener('resize', layout);
+      layout();
+      applyWorldOffset();
+
+      // ---------- Public API for HUD ----------
+      const MountainAPI = {
+        climbBy(pixels, duration=1.05){
+          stepCycle(duration);
+          gsap.to({off:worldOffset}, {
+            off: worldOffset - pixels,
+            duration,
+            ease: 'power2.out',
+            onUpdate:function(){
+              worldOffset = this.targets()[0].off;
+              applyWorldOffset();
+            }
+          });
+          // tiny avatar bounce
+          gsap.fromTo(avatar, {y: avatar.y+4}, {y: avatar.y, duration:0.35, ease:'power1.out'});
+        },
+        setSkyGradient(top,bottom){
+          currentTop=top; currentBot=bottom; layout();
+        },
+        setSnowVisible(v){ snow.visible = !!v; }
+      };
+      window.MountainAPI = MountainAPI;
+
+      // Mount HUD after API is ready
+      ReactDOM.createRoot(document.getElementById('hud')).render(React.createElement(Hud));
     })();
   </script>
 </body>
