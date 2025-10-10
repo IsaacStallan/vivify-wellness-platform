@@ -265,6 +265,7 @@
 
         // clouds
         clouds = new PIXI.Container();
+        gsap.killTweensOf(clouds.children);
         skyLayer.addChild(clouds);
         spawnCloud(h * 0.18, 1.2, 22);
         spawnCloud(h * 0.28, 1.0, 28);
@@ -333,9 +334,11 @@
         return g;
     }
     
-    const farBand  = band(4000,200,'#8a7e73',-4, H*0.20,0.35,0);
-    const midBand  = band(4000,260,'#7a6e64',-6, H*0.30,0.45,1);
-    const nearBand = band(4000,340,'#6b5f55',-8, H*0.42,0.55,2);
+    // replace these 3 lines
+    const farBand  = band(4000,200,'#8a7e73',-4, app.renderer.height * 0.20,0.35,0);
+    const midBand  = band(4000,260,'#7a6e64',-6, app.renderer.height * 0.30,0.45,1);
+    const nearBand = band(4000,340,'#6b5f55',-8, app.renderer.height * 0.42,0.55,2);
+
       
     const ridge = new PIXI.Graphics(); 
     slopeContainer.addChild(ridge);
@@ -549,7 +552,6 @@
         farBand.y=h*0.20; midBand.y=h*0.30; nearBand.y=h*0.42;
 
         // after drawSlopeShape() in both initial setup and layout():
-        drawSlopeLine?.(); // ignore if old
         drawRidgeLine();
 
         layoutFX();
