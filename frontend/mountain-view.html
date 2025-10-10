@@ -254,21 +254,27 @@
       fog.blendMode = 'screen';
       fxLayer.addChild(fog);
 
-      // Snow particles
-      const snow = new PIXI.ParticleContainer(300, {scale:true, alpha:true, position:true});
-      fxLayer.addChild(snow);
-      const snowTex = PIXI.Texture.from('data:image/svg+xml;charset=utf8,\
-        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white" /></svg>');
-      const flakes = [];
-      for (let i=0;i<180;i++){
-        const s = new PIXI.Sprite(snowTex);
-        s.x = Math.random() * app.renderer.width;
-        s.y = Math.random() * app.renderer.height;
-        s.alpha = 0.5 + Math.random()*0.5;
-        s.scale.set(0.4 + Math.random()*0.9);
-        snow.addChild(s);
-        flakes.push({spr:s, vy: 0.4 + Math.random()*0.8, sway: Math.random()*1.2});
-      }
+      // --- Snow particles (v8) ---
+    const snow = new PIXI.ParticleContainer(300, { scale: true, alpha: true, position: true });
+    fxLayer.addChild(snow);
+
+    const snowTex = PIXI.Texture.from(
+    'data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="3" fill="white" /></svg>'
+    );
+
+    const flakes = [];
+    for (let i = 0; i < 180; i++) {
+    const s = new PIXI.Sprite(snowTex);
+    s.x = Math.random() * app.renderer.width;
+    s.y = Math.random() * app.renderer.height;
+    s.alpha = 0.5 + Math.random() * 0.5;
+    s.scale.set(0.4 + Math.random() * 0.9);
+
+    // v8: ParticleContainer requires addParticle, not addChild
+    snow.addParticle(s);
+    flakes.push({ spr: s, vy: 0.4 + Math.random() * 0.8, sway: Math.random() * 1.2 });
+    }
+
 
       // Avatar (placeholder sprite baked from vector)
       const avatarG = new PIXI.Graphics();
