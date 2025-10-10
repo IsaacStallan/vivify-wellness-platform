@@ -180,10 +180,13 @@
       app.stage.sortableChildren = true;
 
       // Layers: world scrolls, avatar fixed
-      const skyLayer   = new PIXI.Container(); app.stage.addChild(skyLayer);
-      const worldLayer = new PIXI.Container(); app.stage.addChild(worldLayer);
-      const actorLayer = new PIXI.Container(); app.stage.addChild(actorLayer = new PIXI.Container()); // fixed avatar
-      const fxLayer    = new PIXI.Container(); app.stage.addChild(fxLayer);
+    const skyLayer   = new PIXI.Container();
+    const worldLayer = new PIXI.Container();
+    const actorLayer = new PIXI.Container(); // fixed avatar lives here
+    const fxLayer    = new PIXI.Container();
+
+    app.stage.addChild(skyLayer, worldLayer, actorLayer, fxLayer);
+    app.stage.sortableChildren = true; // keep zIndex working
 
       // Gradient sky
       function gradientSprite(w,h,top,bottom){
