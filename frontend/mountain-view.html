@@ -317,14 +317,19 @@
       function drawSlopeShape(){
         const w=app.renderer.width, h=app.renderer.height;
         slopeShape.clear()
-          .beginFill(hex(currentGroundBase))  // USE PROPER GROUND COLOR
-          .moveTo(-600,h*0.65)
-          .lineTo(w+600,h*0.45)
-          .lineTo(w+600,h+600)
-          .lineTo(-600,h+600)
-          .closePath()
-          .endFill();
+            .beginFill(hex(currentGroundBase))  // Base fill
+            .moveTo(-600,h*0.65)
+            .lineTo(w+600,h*0.45)
+            .lineTo(w+600,h+600)
+            .lineTo(-600,h+600)
+            .closePath()
+            .endFill();
+        
+        // Add a strong border to make it visible
+        slopeShape.lineStyle(3, hex(currentGroundDark), 1);
+        slopeShape.moveTo(-600,h*0.65).lineTo(w+600,h*0.45);
       }
+      
       drawSlopeShape();
       slopeContainer.addChild(slopeShape);
 
@@ -358,7 +363,7 @@
 
       rockTex = makeRockTexture();
       const rockTS = new PIXI.TilingSprite({ texture: rockTex, width: app.renderer.width*2, height: app.renderer.height*2 });
-      rockTS.alpha = 0.6;
+      rockTS.alpha = 0.3;
       rockTS.blendMode = 'multiply';
       slopeContainer.addChild(rockTS);
       rockTS.mask = slopeShape;
@@ -422,9 +427,9 @@
 
       function layoutFX(){
         const w=app.renderer.width,h=app.renderer.height;
-        fog.clear().beginFill(0xFFFFFF, 0.06).drawRect(0,0,w,h).endFill();
+        fog.clear();  // ← Don't draw fog over everything!
         rays.clear().beginFill(0xffffff,0.05)
-          .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
+            .moveTo(-200,-50).lineTo(250,-50).lineTo(w+200,h*0.5).lineTo(w-250,h*0.5).closePath().endFill();
       }
       layoutFX();
       gsap.to(rays,{alpha:0.02, duration:6, yoyo:true, repeat:-1, ease:'sine.inOut'});
@@ -442,7 +447,7 @@
         s.scale.set(0.4+Math.random()*0.9);
         snow.addParticle(s);  // ← CORRECT!
         flakes.push({spr:s, vy:0.4+Math.random()*0.8, sway:Math.random()*1.2});
-    }
+      }
 
       /* ---------- AVATAR ---------- */
       const avatar = new PIXI.Container(); 
