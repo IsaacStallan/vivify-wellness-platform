@@ -13,12 +13,15 @@
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
 
   <style>
-    html,body{height:100%;margin:0;overflow:hidden;background:#0a0e1a}
+    html,body{height:100%;margin:0;overflow:hidden;background:#87CEEB}
+    body{font-family:system-ui,-apple-system,sans-serif}
     .safe{padding-bottom:env(safe-area-inset-bottom)}
+    #scene{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+    #hud{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none}
   </style>
 </head>
 <body>
-  <div id="scene" class="w-screen h-screen"></div>
+  <div id="scene"></div>
   <div id="hud"></div>
 
   <script type="text/babel">
@@ -33,52 +36,64 @@ const hex = (c) => {
 };
 
 function envFromAltitude(alt){
-  if (alt < 1000) return { 
-    name:'Forest Base', 
-    skyTop:'#87CEEB', skyMid:'#B8D7F0', skyBot:'#E8F4F8',
+  if (alt < 800) return { 
+    name:'Base Village', 
+    skyTop:'#87CEEB', skyMid:'#A8D5F0', skyBot:'#C8E5F8',
     sunColor:'#FFE4B5', sunGlow:'#FFD700',
-    fujiPeak:'#E8F0F8', fujiMid:'#C8D8E8', fujiBase:'#A8B8C8',
-    farMtn1:'#B8C8D8', farMtn2:'#98A8B8', farMtn3:'#7888A8',
-    groundTop:'#8BA870', groundMid:'#658745', groundBot:'#4A6B30',
-    trailColor:'#8B7355', trailDark:'#6B5335',
+    fujiPeak:'#FFFFFF', fujiMid:'#E8F0F8', fujiBase:'#C8D8E8', fujiSize: 0.6,
+    farMtn:'#9AB5CA', midMtn:'#7A95B0', nearMtn:'#5A7590',
+    groundTop:'#8BA870', groundMid:'#6B8850', groundBot:'#4B6830',
+    trailColor:'#9B8B7B', trailDark:'#7B6B5B',
     treeTop:'#4A7C3B', treeMid:'#356428', treeDark:'#2D5420',
-    grassLight:'#7A9B5F', grassDark:'#5A7B3F',
+    showCity: true, showTrees: true, treeCount: 18,
     particles: 'leaves', particleColor: 0x8FBC8F
   };
-  if (alt < 2000) return { 
-    name:'Mountain Trail', 
-    skyTop:'#6FA8D1', skyMid:'#94C3E0', skyBot:'#C5E1F0',
+  if (alt < 1600) return { 
+    name:'Forest Trail', 
+    skyTop:'#78B8D8', skyMid:'#98C8E8', skyBot:'#B8D8F0',
     sunColor:'#FFE8C5', sunGlow:'#FFD700',
-    fujiPeak:'#F0F8FF', fujiMid:'#D8E8F8', fujiBase:'#B8C8D8',
-    farMtn1:'#A8B8C8', farMtn2:'#8898A8', farMtn3:'#687888',
-    groundTop:'#8B9B7A', groundMid:'#6B7B5A', groundBot:'#4B5B3A',
-    trailColor:'#9B8B7B', trailDark:'#7B6B5B',
-    treeTop:'#5A7C4B', treeMid:'#3A5C2B', treeDark:'#2A4C1B',
-    grassLight:'#8A9B6F', grassDark:'#6A7B4F',
+    fujiPeak:'#FFFFFF', fujiMid:'#E8F0F8', fujiBase:'#B8C8D8', fujiSize: 0.7,
+    farMtn:'#8AA5BA', midMtn:'#6A8595', nearMtn:'#4A6575',
+    groundTop:'#7A9860', groundMid:'#5A7840', groundBot:'#3A5820',
+    trailColor:'#8B7B6B', trailDark:'#6B5B4B',
+    treeTop:'#3A6C2B', treeMid:'#2A5420', treeDark:'#1A4410',
+    showCity: true, showTrees: true, treeCount: 14,
     particles: 'birds', particleColor: 0x4A4A4A
   };
-  if (alt < 3000) return { 
-    name:'Alpine Zone', 
-    skyTop:'#5A8CB4', skyMid:'#7FA8C8', skyBot:'#A8C8DC',
-    sunColor:'#FFF8DC', sunGlow:'#FFE4B5',
-    fujiPeak:'#FFFFFF', fujiMid:'#E8F0F8', fujiBase:'#C8D8E8',
-    farMtn1:'#98A8B8', farMtn2:'#788898', farMtn3:'#586878',
-    groundTop:'#9B9B9B', groundMid:'#7B7B7B', groundBot:'#5B5B5B',
-    trailColor:'#ABABAB', trailDark:'#8B8B8B',
-    treeTop:'#6A7A5A', treeMid:'#4A5A3A', treeDark:'#3A4A2A',
-    grassLight:'#8B8B8B', grassDark:'#6B6B6B',
+  if (alt < 2400) return { 
+    name:'Mountain Trail', 
+    skyTop:'#6AA8C8', skyMid:'#8AB8D8', skyBot:'#AAC8E8',
+    sunColor:'#FFF0D8', sunGlow:'#FFE4B5',
+    fujiPeak:'#FFFFFF', fujiMid:'#F0F8FF', fujiBase:'#C8D8E8', fujiSize: 0.8,
+    farMtn:'#7A95AA', midMtn:'#5A7585', nearMtn:'#3A5565',
+    groundTop:'#8A8A70', groundMid:'#6A6A50', groundBot:'#4A4A30',
+    trailColor:'#9B8B7B', trailDark:'#7B6B5B',
+    treeTop:'#5A6C4B', treeMid:'#3A4C2B', treeDark:'#2A3C1B',
+    showCity: false, showTrees: true, treeCount: 8,
     particles: 'wind', particleColor: 0xCCCCCC
+  };
+  if (alt < 3200) return { 
+    name:'Alpine Zone', 
+    skyTop:'#5A98B8', skyMid:'#7AA8C8', skyBot:'#9AB8D8',
+    sunColor:'#FFF8E8', sunGlow:'#FFEAC5',
+    fujiPeak:'#FFFFFF', fujiMid:'#F8F8FF', fujiBase:'#D8E8F8', fujiSize: 0.9,
+    farMtn:'#6A8595', midMtn:'#4A6575', nearMtn:'#2A4555',
+    groundTop:'#9A9A8A', groundMid:'#7A7A6A', groundBot:'#5A5A4A',
+    trailColor:'#ABABAB', trailDark:'#8B8B8B',
+    treeTop:'#6A6A5A', treeMid:'#4A4A3A', treeDark:'#3A3A2A',
+    showCity: false, showTrees: false, treeCount: 0,
+    particles: 'snow', particleColor: 0xFFFFFF
   };
   return { 
     name:'Summit Ridge', 
-    skyTop:'#4A7099', skyMid:'#6A8FB4', skyBot:'#8FADC8',
-    sunColor:'#FFFAF0', sunGlow:'#FFE4B5',
-    fujiPeak:'#FFFFFF', fujiMid:'#F8F8FF', fujiBase:'#E8E8F8',
-    farMtn1:'#8898A8', farMtn2:'#687888', farMtn3:'#485868',
-    groundTop:'#D8E4F0', groundMid:'#B8C8D8', groundBot:'#98A8B8',
+    skyTop:'#4A88A8', skyMid:'#6A98B8', skyBot:'#8AA8C8',
+    sunColor:'#FFFAF0', sunGlow:'#FFE4C8',
+    fujiPeak:'#FFFFFF', fujiMid:'#FAFAFF', fujiBase:'#E8F0F8', fujiSize: 1.0,
+    farMtn:'#5A7585', midMtn:'#3A5565', nearMtn:'#1A3545',
+    groundTop:'#D8E4F0', groundMid:'#B8C4D0', groundBot:'#98A4B0',
     trailColor:'#C8D5E0', trailDark:'#A8B5C0',
-    treeTop:'#E0F0FF', treeMid:'#C0D8F0', treeDark:'#A0C0E0',
-    grassLight:'#C8D8E8', grassDark:'#A8B8C8',
+    treeTop:'#E0F0FF', treeMid:'#C0D0E0', treeDark:'#A0B0C0',
+    showCity: false, showTrees: false, treeCount: 0,
     particles: 'snow', particleColor: 0xFFFFFF
   };
 }
@@ -139,9 +154,9 @@ function Hud(){
   }
 
   return (
-    <div className="pointer-events-none safe">
+    <div className="safe" style={{pointerEvents:'none'}}>
       <div className="absolute top-4 left-4 right-4 flex justify-between gap-3">
-        <div className="pointer-events-auto bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
+        <div style={{pointerEvents:'auto'}} className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
           <div className="flex items-center gap-2 mb-1">
             <IconMountain className="w-4 h-4 text-emerald-400"/>
             <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">{env.name}</span>
@@ -155,7 +170,7 @@ function Hud(){
           <div className="text-xs text-slate-400 mt-1">{Math.round(progress)}% to summit</div>
         </div>
 
-        <div className="pointer-events-auto bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
+        <div style={{pointerEvents:'auto'}} className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-2xl border border-white/10">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-3 h-3 rounded-full animate-pulse" style={{backgroundColor:oxyColor}}/>
             <span className="text-xs text-slate-300 font-semibold uppercase tracking-wider">Oxygen</span>
@@ -172,9 +187,8 @@ function Hud(){
         </div>
       </div>
 
-      <div className="absolute left-4 right-4"
-           style={{bottom: isPhone ? '16px' : '72px', transform: isPhone?'scale(0.92)':'scale(1)', transformOrigin:'center bottom'}}>
-        <div className="pointer-events-auto bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-5 border border-slate-200">
+      <div className="absolute left-4 right-4" style={{bottom: isPhone ? '16px' : '72px', transform: isPhone?'scale(0.92)':'scale(1)', transformOrigin:'center bottom'}}>
+        <div style={{pointerEvents:'auto'}} className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-5 border border-slate-200">
           <div className="grid grid-cols-4 gap-3">
             {habits.map((h,i)=>{
               const Icon = h.icon;
@@ -215,34 +229,34 @@ function Hud(){
 }
 
 /* ========== PIXI Scene ========== */
-const UI_PAD = 220;
-
 (async () => {
+  const sceneEl = document.getElementById('scene');
+  
   const app = new PIXI.Application();
   await app.init({ 
-    resizeTo: window, 
-    antialias:true, 
-    backgroundAlpha:1,
-    autoDensity:true,
+    background: '#87CEEB',
+    resizeTo: window,
+    antialias: true,
+    autoDensity: true,
     resolution: window.devicePixelRatio || 1
   });
-  document.getElementById('scene').appendChild(app.canvas);
+  
+  sceneEl.appendChild(app.canvas);
 
   let W = app.screen.width;
   let H = app.screen.height;
   let currentAlt = 200;
+  const TILE_WIDTH = W * 2;
 
-  // INFINITE SCROLLING SYSTEM
-  const TILE_WIDTH = W * 1.5;
-
-  // Layer containers
+  // Layers
   const skyContainer = new PIXI.Container();
   const sunContainer = new PIXI.Container();
   const cloudContainer = new PIXI.Container();
   const fujiContainer = new PIXI.Container();
-  const farMtn1Container = new PIXI.Container();
-  const farMtn2Container = new PIXI.Container();
-  const farMtn3Container = new PIXI.Container();
+  const cityContainer = new PIXI.Container();
+  const farMtnContainer = new PIXI.Container();
+  const midMtnContainer = new PIXI.Container();
+  const nearMtnContainer = new PIXI.Container();
   const groundContainer = new PIXI.Container();
   const trailContainer = new PIXI.Container();
   const foliageContainer = new PIXI.Container();
@@ -251,173 +265,194 @@ const UI_PAD = 220;
   const vfxContainer = new PIXI.Container();
   
   app.stage.addChild(
-    skyContainer, sunContainer, cloudContainer, fujiContainer,
-    farMtn1Container, farMtn2Container, farMtn3Container,
+    skyContainer, sunContainer, cloudContainer, fujiContainer, cityContainer,
+    farMtnContainer, midMtnContainer, nearMtnContainer,
     groundContainer, trailContainer, foliageContainer,
     actorContainer, particleContainer, vfxContainer
   );
 
   let env = envFromAltitude(currentAlt);
 
-  /* ===== GRADIENT TEXTURE CREATOR ===== */
-  function createGradientTexture(width, height, colors, stops){
+  /* ===== GRADIENT HELPER ===== */
+  function createGradient(width, height, colors, stops){
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d');
-    
     const gradient = ctx.createLinearGradient(0, 0, 0, height);
     stops.forEach((stop, i) => gradient.addColorStop(stop, colors[i]));
-    
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
-    
     return PIXI.Texture.from(canvas);
   }
 
   /* ===== SKY ===== */
   function createSky(){
     skyContainer.removeChildren();
-    
-    const texture = createGradientTexture(W, H * 0.75, 
-      [env.skyTop, env.skyMid, env.skyBot], 
-      [0, 0.4, 1]
-    );
+    const texture = createGradient(W, H * 0.7, [env.skyTop, env.skyMid, env.skyBot], [0, 0.5, 1]);
     const sprite = new PIXI.Sprite(texture);
     skyContainer.addChild(sprite);
   }
 
-  /* ===== SUN WITH GLOW ===== */
+  /* ===== SUN ===== */
   function createSun(){
     sunContainer.removeChildren();
-    
-    // Outer glow
     const glow = new PIXI.Graphics();
-    glow.beginFill(hex(env.sunGlow), 0.15);
-    glow.drawCircle(0, 0, 120);
+    glow.beginFill(hex(env.sunGlow), 0.12);
+    glow.drawCircle(0, 0, 110);
     glow.endFill();
-    glow.filters = [new PIXI.BlurFilter(12)];
+    glow.filters = [new PIXI.BlurFilter(10)];
     
-    // Sun
     const sun = new PIXI.Graphics();
-    sun.beginFill(hex(env.sunColor), 0.95);
-    sun.drawCircle(0, 0, 65);
+    sun.beginFill(hex(env.sunColor), 0.92);
+    sun.drawCircle(0, 0, 60);
     sun.endFill();
-    sun.filters = [new PIXI.BlurFilter(3)];
+    sun.filters = [new PIXI.BlurFilter(2)];
     
-    const container = new PIXI.Container();
-    container.addChild(glow, sun);
-    container.x = W * 0.78;
-    container.y = H * 0.16;
-    sunContainer.addChild(container);
+    const cont = new PIXI.Container();
+    cont.addChild(glow, sun);
+    cont.x = W * 0.75;
+    cont.y = H * 0.18;
+    sunContainer.addChild(cont);
     
-    // Gentle pulse
-    gsap.to(container.scale, {
-      x: 1.05, y: 1.05,
-      duration: 3,
-      yoyo: true,
-      repeat: -1,
-      ease: 'sine.inOut'
-    });
+    gsap.to(cont.scale, {x:1.04, y:1.04, duration:3, yoyo:true, repeat:-1, ease:'sine.inOut'});
   }
 
-  /* ===== CLOUDS (LOOPING) ===== */
+  /* ===== CLOUDS ===== */
   function createClouds(){
     cloudContainer.removeChildren();
     
-    function makeCloudShape(){
+    function makeCloud(){
       const g = new PIXI.Graphics();
-      g.beginFill(0xFFFFFF, 0.45);
-      g.drawCircle(0, 0, 32);
-      g.drawCircle(28, -6, 26);
-      g.drawCircle(-28, -6, 26);
-      g.drawCircle(50, 6, 22);
-      g.drawCircle(-50, 6, 22);
-      g.drawCircle(0, -12, 24);
+      g.beginFill(0xFFFFFF, 0.4);
+      g.drawCircle(0, 0, 30);
+      g.drawCircle(26, -5, 24);
+      g.drawCircle(-26, -5, 24);
+      g.drawCircle(45, 5, 20);
+      g.drawCircle(-45, 5, 20);
       g.endFill();
-      g.filters = [new PIXI.BlurFilter(2.5)];
+      g.filters = [new PIXI.BlurFilter(2)];
       return g;
     }
     
     for(let i = 0; i < 4; i++){
-      const cloud = makeCloudShape();
+      const cloud = makeCloud();
       cloud.x = Math.random() * W;
-      cloud.y = (H * 0.12) + (i * 40);
-      cloud.scale.set(0.9 + Math.random() * 0.3);
+      cloud.y = (H * 0.10) + (i * 35);
+      cloud.scale.set(0.85 + Math.random() * 0.4);
       cloudContainer.addChild(cloud);
       
-      const speed = 80 + Math.random() * 40;
       gsap.to(cloud, {
-        x: cloud.x + W + 300,
-        duration: speed,
+        x: '+=3000',
+        duration: 80 + Math.random() * 40,
         ease: 'none',
         repeat: -1,
-        modifiers: {
-          x: (x) => parseFloat(x) > W + 200 ? -200 : x
-        }
+        modifiers: { x: (x) => parseFloat(x) > W + 150 ? -150 : x }
       });
     }
   }
 
-  /* ===== MT. FUJI (ICONIC CONE SHAPE) ===== */
+  /* ===== MT. FUJI (Gets closer as you climb) ===== */
   function createFuji(){
     fujiContainer.removeChildren();
     
+    const scale = env.fujiSize;
     const fuji = new PIXI.Graphics();
     
-    // Snow cap (top)
+    const centerX = W * 0.5;
+    const baseY = H * (0.60 - scale * 0.1);
+    const width = 400 * scale;
+    const height = 280 * scale;
+    
+    // Snow cap
     fuji.beginFill(hex(env.fujiPeak));
-    fuji.moveTo(W * 0.5, H * 0.20);
-    fuji.lineTo(W * 0.35, H * 0.42);
-    fuji.lineTo(W * 0.65, H * 0.42);
+    fuji.moveTo(centerX, baseY - height);
+    fuji.lineTo(centerX - width * 0.38, baseY - height * 0.25);
+    fuji.lineTo(centerX + width * 0.38, baseY - height * 0.25);
     fuji.closePath();
     fuji.endFill();
     
-    // Mid section
-    fuji.beginFill(hex(env.fujiMid), 0.95);
-    fuji.moveTo(W * 0.5, H * 0.25);
-    fuji.lineTo(W * 0.32, H * 0.50);
-    fuji.lineTo(W * 0.68, H * 0.50);
+    // Mid slope
+    fuji.beginFill(hex(env.fujiMid), 0.93);
+    fuji.moveTo(centerX, baseY - height * 0.75);
+    fuji.lineTo(centerX - width * 0.45, baseY);
+    fuji.lineTo(centerX + width * 0.45, baseY);
     fuji.closePath();
     fuji.endFill();
     
-    // Base (darker)
-    fuji.beginFill(hex(env.fujiBase), 0.9);
-    fuji.moveTo(W * 0.5, H * 0.30);
-    fuji.lineTo(W * 0.28, H * 0.56);
-    fuji.lineTo(W * 0.72, H * 0.56);
+    // Base
+    fuji.beginFill(hex(env.fujiBase), 0.88);
+    fuji.moveTo(centerX, baseY - height * 0.5);
+    fuji.lineTo(centerX - width * 0.5, baseY + 20);
+    fuji.lineTo(centerX + width * 0.5, baseY + 20);
     fuji.closePath();
     fuji.endFill();
     
-    fuji.filters = [new PIXI.BlurFilter(1.5)];
+    fuji.filters = [new PIXI.BlurFilter(1.8)];
     fujiContainer.addChild(fuji);
   }
 
-  /* ===== BACKGROUND MOUNTAINS (TILING FOR INFINITE SCROLL) ===== */
-  function createMountainTiles(container, color, baseY, amp, freq, blur, tileCount = 3){
+  /* ===== TOKYO CITY SKYLINE (Low altitude only) ===== */
+  function createCity(){
+    cityContainer.removeChildren();
+    if(!env.showCity) return;
+    
+    for(let t = 0; t < 3; t++){
+      const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
+      
+      for(let i = 0; i < 15; i++){
+        const building = new PIXI.Graphics();
+        const x = startX + (i * 120) + Math.random() * 30;
+        const width = 25 + Math.random() * 35;
+        const height = 40 + Math.random() * 80;
+        const y = H * 0.60;
+        
+        building.beginFill(0x4A5A6A, 0.4);
+        building.drawRect(x - width/2, y - height, width, height);
+        building.endFill();
+        
+        // Windows
+        building.beginFill(0xFFE4B5, 0.3);
+        for(let row = 0; row < Math.floor(height / 8); row++){
+          for(let col = 0; col < 3; col++){
+            if(Math.random() > 0.3){
+              building.drawRect(x - width/2 + col * (width/4) + 3, y - height + row * 8 + 2, 4, 4);
+            }
+          }
+        }
+        building.endFill();
+        
+        building.filters = [new PIXI.BlurFilter(3)];
+        cityContainer.addChild(building);
+      }
+    }
+  }
+
+  /* ===== MOUNTAINS (TILING) ===== */
+  function createMountainTiles(container, color, baseY, amp, freq, blur){
     container.removeChildren();
     
-    for(let t = 0; t < tileCount; t++){
+    for(let t = 0; t < 3; t++){
       const g = new PIXI.Graphics();
       g.beginFill(hex(color));
       
       const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
-      const segments = 80;
+      const segments = 70;
       
       g.moveTo(startX, H);
       g.lineTo(startX, baseY);
       
       for(let i = 0; i <= segments; i++){
         const x = startX + (TILE_WIDTH / segments) * i;
-        const wave = Math.sin((i + t * segments * 0.7) * freq) * amp;
-        const y = baseY - amp * 0.4 + wave;
+        const wave = Math.sin((i + t * segments * 0.6) * freq) * amp;
+        const y = baseY - amp * 0.3 + wave;
         
         if(i === 0){
           g.lineTo(x, y);
         } else {
           const prevX = startX + (TILE_WIDTH / segments) * (i - 1);
-          const prevWave = Math.sin((i - 1 + t * segments * 0.7) * freq) * amp;
-          const prevY = baseY - amp * 0.4 + prevWave;
+          const prevWave = Math.sin((i - 1 + t * segments * 0.6) * freq) * amp;
+          const prevY = baseY - amp * 0.3 + prevWave;
           const cpX = (prevX + x) / 2;
           const cpY = (prevY + y) / 2;
           g.quadraticCurveTo(cpX, cpY, x, y);
@@ -438,27 +473,11 @@ const UI_PAD = 220;
     groundContainer.removeChildren();
     
     for(let t = 0; t < 3; t++){
-      const texture = createGradientTexture(TILE_WIDTH, H * 0.35,
-        [env.groundTop, env.groundMid, env.groundBot],
-        [0, 0.5, 1]
-      );
-      
+      const texture = createGradient(TILE_WIDTH, H * 0.35, [env.groundTop, env.groundMid, env.groundBot], [0, 0.6, 1]);
       const sprite = new PIXI.Sprite(texture);
       sprite.x = t * TILE_WIDTH - TILE_WIDTH * 0.5;
       sprite.y = H * 0.65;
-      
-      // Add grass texture
-      const grass = new PIXI.Graphics();
-      for(let i = 0; i < 1500; i++){
-        const x = Math.random() * TILE_WIDTH;
-        const y = Math.random() * H * 0.15;
-        const isLight = Math.random() > 0.5;
-        grass.beginFill(hex(isLight ? env.grassLight : env.grassDark), 0.3);
-        grass.drawRect(sprite.x + x, sprite.y + y, 2, Math.random() * 4 + 2);
-        grass.endFill();
-      }
-      
-      groundContainer.addChild(sprite, grass);
+      groundContainer.addChild(sprite);
     }
   }
 
@@ -467,82 +486,62 @@ const UI_PAD = 220;
     trailContainer.removeChildren();
     
     for(let t = 0; t < 3; t++){
-      const trail = new PIXI.Graphics();
       const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
       
-      // Trail base
-      const texture = createGradientTexture(10, 90,
-        [env.trailColor, env.trailDark],
-        [0, 1]
-      );
-      
-      const sprite = new PIXI.TilingSprite(texture, TILE_WIDTH, 90);
+      const trail = new PIXI.Graphics();
+      const texture = createGradient(10, 85, [env.trailColor, env.trailDark], [0, 1]);
+      const sprite = new PIXI.TilingSprite(texture, TILE_WIDTH, 85);
       sprite.x = startX;
-      sprite.y = H * 0.70;
+      sprite.y = H * 0.705;
       trailContainer.addChild(sprite);
       
-      // Trail edges
-      trail.lineStyle(4, hex(env.trailDark), 0.4);
-      trail.moveTo(startX, H * 0.70 + 5);
-      trail.lineTo(startX + TILE_WIDTH, H * 0.70 + 5);
-      trail.moveTo(startX, H * 0.70 + 85);
-      trail.lineTo(startX + TILE_WIDTH, H * 0.70 + 85);
-      
-      // Trail lines (path markers)
-      for(let i = 0; i < 8; i++){
-        const x = startX + (i * TILE_WIDTH / 8);
-        trail.lineStyle(3, 0xFFFFFF, 0.15);
-        trail.moveTo(x, H * 0.70 + 42);
-        trail.lineTo(x + 30, H * 0.70 + 42);
-      }
-      
+      trail.lineStyle(3, hex(env.trailDark), 0.35);
+      trail.moveTo(startX, sprite.y + 4);
+      trail.lineTo(startX + TILE_WIDTH, sprite.y + 4);
+      trail.moveTo(startX, sprite.y + 81);
+      trail.lineTo(startX + TILE_WIDTH, sprite.y + 81);
       trailContainer.addChild(trail);
     }
   }
 
-  /* ===== TREES (TILING) ===== */
+  /* ===== TREES ===== */
   function createTree(scale, x, y){
     const tree = new PIXI.Container();
     
-    // Trunk with texture
     const trunk = new PIXI.Graphics();
-    trunk.beginFill(hex(env.treeDark));
-    trunk.drawRoundedRect(-7 * scale, 0, 14 * scale, 55 * scale, 4 * scale);
+    trunk.beginFill(0x4A3828);
+    trunk.drawRoundedRect(-6 * scale, 0, 12 * scale, 50 * scale, 3 * scale);
     trunk.endFill();
-    
-    // Trunk highlights
-    trunk.beginFill(0xFFFFFF, 0.1);
-    trunk.drawRoundedRect(-6 * scale, 0, 4 * scale, 55 * scale, 2 * scale);
+    trunk.beginFill(0xFFFFFF, 0.08);
+    trunk.drawRoundedRect(-5 * scale, 0, 3 * scale, 50 * scale, 2 * scale);
     trunk.endFill();
-    
     tree.addChild(trunk);
-    
-    // Layered foliage for depth
     const foliage = new PIXI.Graphics();
     
-    // Back layer (darker)
+    // Back layer (dark)
     foliage.beginFill(hex(env.treeDark), 0.85);
-    foliage.drawCircle(-18 * scale, -28 * scale, 26 * scale);
-    foliage.drawCircle(18 * scale, -28 * scale, 26 * scale);
+    foliage.drawCircle(-16 * scale, -26 * scale, 24 * scale);
+    foliage.drawCircle(16 * scale, -26 * scale, 24 * scale);
     foliage.endFill();
     
     // Mid layer
     foliage.beginFill(hex(env.treeMid), 0.9);
-    foliage.drawCircle(0, -45 * scale, 28 * scale);
-    foliage.drawCircle(-15 * scale, -32 * scale, 24 * scale);
-    foliage.drawCircle(15 * scale, -32 * scale, 24 * scale);
+    foliage.drawCircle(0, -42 * scale, 26 * scale);
+    foliage.drawCircle(-13 * scale, -30 * scale, 22 * scale);
+    foliage.drawCircle(13 * scale, -30 * scale, 22 * scale);
     foliage.endFill();
     
-    // Front layer (lightest)
+    // Front layer (light)
     foliage.beginFill(hex(env.treeTop));
-    foliage.drawCircle(0, -38 * scale, 32 * scale);
-    foliage.drawCircle(-12 * scale, -25 * scale, 22 * scale);
-    foliage.drawCircle(12 * scale, -25 * scale, 22 * scale);
+    foliage.drawCircle(0, -36 * scale, 30 * scale);
+    foliage.drawCircle(-10 * scale, -23 * scale, 20 * scale);
+    foliage.drawCircle(10 * scale, -23 * scale, 20 * scale);
     foliage.endFill();
     
     // Highlights
     foliage.beginFill(0xFFFFFF, 0.15);
-    foliage.drawCircle(10 * scale, -40 * scale, 10 * scale);
+    foliage.drawCircle(-7 * scale, -40 * scale, 11 * scale);
+    foliage.drawCircle(9 * scale, -38 * scale, 9 * scale);
     foliage.endFill();
     
     tree.addChild(foliage);
@@ -555,86 +554,21 @@ const UI_PAD = 220;
   function populateFoliage(){
     foliageContainer.removeChildren();
     
-    const zone = env.name;
+    if(!env.showTrees || env.treeCount === 0) return;
     
-    if(zone === 'Forest Base'){
-      // Dense forest with tiling
-      for(let t = 0; t < 3; t++){
-        const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
-        for(let i = 0; i < 12; i++){
-          const x = startX + (i * 130) + Math.random() * 30;
-          const y = H * 0.68;
-          const scale = 0.75 + Math.random() * 0.45;
-          const tree = createTree(scale, x, y);
-          foliageContainer.addChild(tree);
-        }
-      }
-    } else if(zone === 'Mountain Trail'){
-      // Scattered trees
-      for(let t = 0; t < 3; t++){
-        const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
-        for(let i = 0; i < 8; i++){
-          const x = startX + (i * 180) + Math.random() * 40;
-          const y = H * 0.68;
-          
-          if(i % 2 === 0){
-            const scale = 0.6 + Math.random() * 0.35;
-            const tree = createTree(scale, x, y);
-            foliageContainer.addChild(tree);
-          } else {
-            // Rocks
-            const rock = new PIXI.Graphics();
-            rock.beginFill(0x6a6a6a);
-            const size = 18 + Math.random() * 16;
-            rock.drawRoundedRect(x - size/2, y - size, size, size, 6);
-            rock.endFill();
-            rock.beginFill(0x8a8a8a, 0.3);
-            rock.drawRoundedRect(x - size/2, y - size, size/3, size/2, 4);
-            rock.endFill();
-            foliageContainer.addChild(rock);
-          }
-        }
-      }
-    } else if(zone === 'Alpine Zone'){
-      // Sparse rocks
-      for(let t = 0; t < 3; t++){
-        const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
-        for(let i = 0; i < 6; i++){
-          const x = startX + (i * 240) + Math.random() * 50;
-          const y = H * 0.68;
-          const rock = new PIXI.Graphics();
-          rock.beginFill(0x808080);
-          const size = 22 + Math.random() * 18;
-          rock.drawRoundedRect(x - size/2, y - size, size, size, 7);
-          rock.endFill();
-          rock.beginFill(0xA0A0A0, 0.4);
-          rock.drawRoundedRect(x - size/2, y - size, size/2, size/3, 5);
-          rock.endFill();
-          foliageContainer.addChild(rock);
-        }
-      }
-    } else {
-      // Snow/ice patches
-      for(let t = 0; t < 3; t++){
-        const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
-        for(let i = 0; i < 5; i++){
-          const x = startX + (i * 280) + Math.random() * 60;
-          const y = H * 0.68;
-          const ice = new PIXI.Graphics();
-          ice.beginFill(0xE8F4F8, 0.8);
-          ice.drawEllipse(x, y - 12, 45, 14);
-          ice.endFill();
-          ice.beginFill(0xFFFFFF, 0.5);
-          ice.drawEllipse(x - 10, y - 12, 15, 6);
-          ice.endFill();
-          ice.filters = [new PIXI.BlurFilter(0.5)];
-          foliageContainer.addChild(ice);
-        }
+    for(let t = 0; t < 3; t++){
+      const startX = t * TILE_WIDTH - TILE_WIDTH * 0.5;
+      for(let i = 0; i < env.treeCount; i++){
+        const x = startX + (i * (TILE_WIDTH / env.treeCount)) + Math.random() * 40;
+        const y = H * 0.68;
+        const scale = 0.7 + Math.random() * 0.5;
+        const tree = createTree(scale, x, y);
+        foliageContainer.addChild(tree);
       }
     }
   }
 
-  /* ===== PARTICLES (WEATHER EFFECTS) ===== */
+  /* ===== PARTICLES ===== */
   const particles = [];
   
   function createParticles(){
@@ -645,7 +579,7 @@ const UI_PAD = 220;
     particles.length = 0;
     
     const type = env.particles;
-    const count = 20;
+    const count = 18;
     
     for(let i = 0; i < count; i++){
       const p = new PIXI.Graphics();
@@ -678,7 +612,7 @@ const UI_PAD = 220;
       particleContainer.addChild(p);
       particles.push(p);
       
-      const speed = type === 'birds' ? 35 : type === 'snow' ? 80 : 55;
+      const speed = type === 'birds' ? 35 : type === 'snow' ? 75 : 55;
       const verticalMove = type === 'snow' ? 50 : (Math.random() - 0.5) * 20;
       
       gsap.to(p, {
@@ -696,7 +630,7 @@ const UI_PAD = 220;
     }
   }
 
-  /* ===== CLIMBER (DETAILED) ===== */
+  /* ===== CLIMBER (POSITIONED ABOVE HABIT TRAY) ===== */
   const climberBody = new PIXI.Container();
   let climberShadow, climberLegs, climberTorso, climberArms, climberHead;
   
@@ -809,13 +743,14 @@ const UI_PAD = 220;
     climberHead.addChild(head, beanie);
     climberBody.addChild(climberHead);
     
+    // Position climber ABOVE the habit tray (around 55% of screen height)
     climberBody.x = W * 0.25;
-    climberBody.y = H * 0.70 + 48;
+    climberBody.y = H * 0.55;
     actorContainer.addChild(climberBody);
   }
 
-  /* ===== TILE WRAPPING SYSTEM ===== */
-  function wrapTiles(container, speed){
+  /* ===== TILE WRAPPING ===== */
+  function wrapTiles(container){
     container.children.forEach(child => {
       if(child.x < -TILE_WIDTH){
         child.x += TILE_WIDTH * 3;
@@ -832,10 +767,11 @@ const UI_PAD = 220;
     createSun();
     createClouds();
     createFuji();
+    createCity();
     
-    createMountainTiles(farMtn1Container, env.farMtn1, H * 0.48, 95, 0.16, 5);
-    createMountainTiles(farMtn2Container, env.farMtn2, H * 0.53, 105, 0.20, 3.5);
-    createMountainTiles(farMtn3Container, env.farMtn3, H * 0.58, 115, 0.24, 2);
+    createMountainTiles(farMtnContainer, env.farMtn, H * 0.50, 90, 0.18, 4.5);
+    createMountainTiles(midMtnContainer, env.midMtn, H * 0.56, 100, 0.22, 2.5);
+    createMountainTiles(nearMtnContainer, env.nearMtn, H * 0.62, 110, 0.26, 1);
     
     createGround();
     createTrail();
@@ -856,12 +792,13 @@ const UI_PAD = 220;
     const distance = meters * 3;
     const duration = 1.4;
     
-    // Parallax scrolling with tile wrapping
+    // Parallax scrolling with wrapping
     const layers = [
-      { container: fujiContainer, speed: 0.03 },
-      { container: farMtn1Container, speed: 0.06 },
-      { container: farMtn2Container, speed: 0.12 },
-      { container: farMtn3Container, speed: 0.22 },
+      { container: fujiContainer, speed: 0.02 },
+      { container: cityContainer, speed: 0.05 },
+      { container: farMtnContainer, speed: 0.08 },
+      { container: midMtnContainer, speed: 0.15 },
+      { container: nearMtnContainer, speed: 0.25 },
       { container: groundContainer, speed: 0.85 },
       { container: trailContainer, speed: 1.0 },
       { container: foliageContainer, speed: 0.65 }
@@ -872,7 +809,7 @@ const UI_PAD = 220;
         x: container.x - distance * speed,
         duration,
         ease: 'power2.out',
-        onUpdate: () => wrapTiles(container, speed)
+        onUpdate: () => wrapTiles(container)
       });
     });
     
@@ -902,7 +839,7 @@ const UI_PAD = 220;
     }, 0);
     
     tl.to(climberBody, {
-      y: climberBody.y,
+      y: H * 0.55,
       duration: duration * 0.58,
       ease: 'bounce.out'
     }, duration * 0.42);
