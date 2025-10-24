@@ -77,9 +77,11 @@ app.get('/api/health', (req, res) => {
 
 const authRoutes = require('./routes/auth');
 const fitnessRoutes = require('./routes/fitness');
+const mountainRoutes = require('./routes/mountain');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/fitness', fitnessRoutes);
+app.use('/api/mountain', mountainRoutes);
 
 // User API Routes (simplified - move these to routes/User.js later)
 app.post('/api/register', async (req, res) => {
