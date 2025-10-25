@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGame } from '../contexts/GameContext';
 import HabitCards from './HabitCards';
 import OxygenGauge from './OxygenGauge';
+import TestControls from './TestControls';
 import './TrainingGrounds.css';
 
 function TrainingGrounds({ onComplete }) {
@@ -115,6 +116,9 @@ function TrainingGrounds({ onComplete }) {
                     onClose={() => setShowCustomHabitSelector(false)}
                 />
             )}
+
+            {/* Test Controls (Dev Mode) */}
+            <TestControls />
         </div>
     );
 }
