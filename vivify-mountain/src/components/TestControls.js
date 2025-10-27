@@ -37,7 +37,7 @@ function TestControls() {
     }
 
     async function resetProgress() {
-        if (!confirm('Reset all mountain progress?')) return;
+        if (!window.confirm('Reset all mountain progress?')) return;
         try {
             const response = await fetch('http://localhost:3001/api/test/reset-user', {
                 method: 'POST',
