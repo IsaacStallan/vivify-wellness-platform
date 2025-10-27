@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { MountainPeak, PlayerCharacter } from '../visuals/Characters';
+import { WorldMapBackground } from '../visuals/WorldMapBackground';
 import './WorldMap.css';
 
 // Mountain configurations with geographically accurate positions
@@ -70,6 +71,9 @@ function WorldMap({ onSelectMountain, onReturnHome }) {
 
     return (
         <div className="world-map">
+            {/* Beautiful World Map Background */}
+            <WorldMapBackground />
+
             {/* Map Background */}
             <div className="map-background">
                 <div className="map-title">
