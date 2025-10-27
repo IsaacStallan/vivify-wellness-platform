@@ -38,6 +38,8 @@ function TrainingHouse({ onComplete }) {
         if (!selectedHabit) return;
 
         try {
+            console.log('🎯 Logging habit:', selectedHabit.id, 'with value:', value);
+
             // Log the habit
             const habits = {
                 hydration: selectedHabit.id === 'hydration' ? value : 0,
@@ -46,7 +48,8 @@ function TrainingHouse({ onComplete }) {
                 focus: selectedHabit.id === 'focus' ? value : 0
             };
 
-            await logHabits(habits);
+            const result = await logHabits(habits);
+            console.log('✅ Habit logged successfully:', result);
 
             // Update local status
             setHabitStatus(prev => ({
@@ -54,10 +57,13 @@ function TrainingHouse({ onComplete }) {
                 [selectedHabit.id]: true
             }));
 
-            setTrainerMessage(`Great job on ${selectedHabit.name}! Keep it up!`);
+            const oxygenGain = result?.oxygenGained || result?.newOxygen - (mountainData?.oxygen || 0) || 0;
+            setTrainerMessage(`Great job on ${selectedHabit.name}! Oxygen: ${Math.round(result?.newOxygen || mountainData?.oxygen || 0)}% (+${Math.round(oxygenGain)}%)`);
             setSelectedHabit(null);
         } catch (error) {
-            console.error('Failed to log habit:', error);
+            console.error('❌ Failed to log habit:', error);
+            setTrainerMessage(`Error: ${error.message}. Check console and try again.`);
+            setSelectedHabit(null);
         }
     };
 

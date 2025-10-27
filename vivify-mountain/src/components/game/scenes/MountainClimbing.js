@@ -68,6 +68,8 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
         if (!selectedHabit) return;
 
         try {
+            console.log('🎯 Logging habit:', selectedHabit, 'with value:', value);
+
             const habits = {
                 hydration: selectedHabit === 'hydration' ? value : 0,
                 sleep: selectedHabit === 'sleep' ? value : 0,
@@ -75,7 +77,10 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
                 focus: selectedHabit === 'focus' ? value : 0
             };
 
-            await logHabits(habits);
+            const result = await logHabits(habits);
+            console.log('✅ Habit logged successfully:', result);
+            console.log('📊 Oxygen before:', oxygen, '→ after:', result?.newOxygen);
+            console.log('⛰️ Altitude before:', currentAltitude, '→ after:', result?.newAltitude);
 
             setTodayHabits(prev => ({
                 ...prev,
@@ -83,8 +88,10 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
             }));
 
             setSelectedHabit(null);
+            alert(`Habit logged! Oxygen: ${Math.round(result?.newOxygen || 0)}% | Altitude: ${Math.round(result?.newAltitude || 0)}m`);
         } catch (error) {
-            console.error('Failed to log habit:', error);
+            console.error('❌ Failed to log habit:', error);
+            alert(`Error: ${error.message}. Check browser console for details.`);
         }
     };
 
