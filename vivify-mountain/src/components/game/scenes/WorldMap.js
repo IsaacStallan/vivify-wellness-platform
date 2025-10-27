@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { MountainPeak, PlayerCharacter } from '../visuals/Characters';
 import './WorldMap.css';
 
-// Mountain configurations matching backend
+// Mountain configurations with geographically accurate positions
 const MOUNTAINS = [
-    { id: 'fuji', name: 'Mt. Fuji', emoji: '🗻', elevation: 3776, region: 'Japan', position: { x: '75%', y: '35%' }, unlocked: true },
-    { id: 'kilimanjaro', name: 'Kilimanjaro', emoji: '⛰️', elevation: 5895, region: 'Tanzania', position: { x: '45%', y: '55%' }, unlocked: true },
-    { id: 'elbrus', name: 'Mt. Elbrus', emoji: '🏔️', elevation: 5642, region: 'Russia', position: { x: '55%', y: '25%' }, unlocked: false },
-    { id: 'denali', name: 'Denali', emoji: '🏔️', elevation: 6190, region: 'Alaska', position: { x: '15%', y: '20%' }, unlocked: false },
-    { id: 'aconcagua', name: 'Aconcagua', emoji: '⛰️', elevation: 6961, region: 'Argentina', position: { x: '25%', y: '70%' }, unlocked: false },
-    { id: 'vinson', name: 'Vinson Massif', emoji: '🏔️', elevation: 4892, region: 'Antarctica', position: { x: '40%', y: '85%' }, unlocked: false },
-    { id: 'everest', name: 'Mt. Everest', emoji: '⛰️', elevation: 8849, region: 'Nepal', position: { x: '70%', y: '30%' }, unlocked: false }
+    { id: 'fuji', name: 'Mt. Fuji', type: 'volcano', elevation: 3776, region: 'Japan', position: { x: '78%', y: '36%' }, unlocked: true },
+    { id: 'kilimanjaro', name: 'Kilimanjaro', type: 'snow', elevation: 5895, region: 'Tanzania', position: { x: '54%', y: '58%' }, unlocked: true },
+    { id: 'elbrus', name: 'Mt. Elbrus', type: 'snow', elevation: 5642, region: 'Russia', position: { x: '57%', y: '28%' }, unlocked: false },
+    { id: 'denali', name: 'Denali', type: 'snow', elevation: 6190, region: 'Alaska', position: { x: '12%', y: '24%' }, unlocked: false },
+    { id: 'aconcagua', name: 'Aconcagua', type: 'rock', elevation: 6961, region: 'Argentina', position: { x: '22%', y: '73%' }, unlocked: false },
+    { id: 'vinson', name: 'Vinson Massif', type: 'snow', elevation: 4892, region: 'Antarctica', position: { x: '26%', y: '90%' }, unlocked: false },
+    { id: 'everest', name: 'Mt. Everest', type: 'snow', elevation: 8849, region: 'Nepal', position: { x: '70%', y: '40%' }, unlocked: false }
 ];
 
 function WorldMap({ onSelectMountain, onReturnHome }) {
@@ -91,18 +92,33 @@ function WorldMap({ onSelectMountain, onReturnHome }) {
                         }}
                         onClick={() => handleMountainClick(mountain)}
                     >
-                        <div className="marker-icon">{mountain.emoji}</div>
+                        <div className="marker-icon">
+                            <MountainPeak type={mountain.type} size={50} />
+                        </div>
                         <div className="marker-name">{mountain.name}</div>
                         {mountainData?.summitsBadges?.includes(mountain.id) && (
-                            <div className="completion-badge">✓</div>
+                            <div className="completion-badge">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="10" r="9" fill="#fbbf24" stroke="#fff" strokeWidth="2"/>
+                                    <path d="M 6 10 L 9 13 L 14 7" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                                </svg>
+                            </div>
                         )}
-                        {!mountain.unlocked && <div className="lock-icon">🔒</div>}
+                        {!mountain.unlocked && (
+                            <div className="lock-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <rect x="6" y="9" width="8" height="8" rx="1" fill="#6b7280" stroke="#333" strokeWidth="1"/>
+                                    <path d="M 8 9 V 6 Q 8 4 10 4 Q 12 4 12 6 V 9" stroke="#6b7280" strokeWidth="2" fill="none"/>
+                                    <circle cx="10" cy="13" r="1.5" fill="#333"/>
+                                </svg>
+                            </div>
+                        )}
                     </div>
                 ))}
 
                 {/* Player Icon (current location) */}
                 <div className="player-marker" style={{ left: '50%', top: '50%' }}>
-                    <div className="player-icon">🧍</div>
+                    <PlayerCharacter size={50} />
                 </div>
 
                 {/* Home Button */}
@@ -116,7 +132,9 @@ function WorldMap({ onSelectMountain, onReturnHome }) {
                 <div className="mountain-info-overlay" onClick={() => setShowInfo(false)}>
                     <div className="mountain-info-panel" onClick={(e) => e.stopPropagation()}>
                         <div className="info-header">
-                            <div className="info-emoji">{selectedMountain.emoji}</div>
+                            <div className="info-mountain-visual">
+                                <MountainPeak type={selectedMountain.type} size={80} />
+                            </div>
                             <div className="info-title">
                                 <h2>{selectedMountain.name}</h2>
                                 <div className="info-region">{selectedMountain.region}</div>
@@ -172,7 +190,11 @@ function WorldMap({ onSelectMountain, onReturnHome }) {
                             }`}
                             title={mountain.name}
                         >
-                            {mountainData?.summitsBadges?.includes(mountain.id) ? mountain.emoji : '?'}
+                            {mountainData?.summitsBadges?.includes(mountain.id) ? (
+                                <MountainPeak type={mountain.type} size={30} />
+                            ) : (
+                                <span className="badge-unknown">?</span>
+                            )}
                         </div>
                     ))}
                 </div>

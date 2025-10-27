@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { PlayerCharacter, TrainerCharacter, DumbbellIcon, YogaMatIcon, WaterBottleIcon, BedIcon } from '../visuals/Characters';
 import './TrainingHouse.css';
 
 function TrainingHouse({ onComplete }) {
@@ -96,7 +97,7 @@ function TrainingHouse({ onComplete }) {
                     className={`equipment dumbbells ${habitStatus.movement ? 'completed' : ''}`}
                     onClick={() => handleHabitClick('movement', 'Movement')}
                 >
-                    <div className="equipment-icon">🏋️</div>
+                    <DumbbellIcon size={60} />
                     <div className="equipment-label">Movement</div>
                 </div>
 
@@ -104,7 +105,7 @@ function TrainingHouse({ onComplete }) {
                     className={`equipment yoga-mat ${habitStatus.focus ? 'completed' : ''}`}
                     onClick={() => handleHabitClick('focus', 'Focus')}
                 >
-                    <div className="equipment-icon">🧘</div>
+                    <YogaMatIcon size={60} />
                     <div className="equipment-label">Focus</div>
                 </div>
 
@@ -112,7 +113,7 @@ function TrainingHouse({ onComplete }) {
                     className={`equipment water-station ${habitStatus.hydration ? 'completed' : ''}`}
                     onClick={() => handleHabitClick('hydration', 'Hydration')}
                 >
-                    <div className="equipment-icon">💧</div>
+                    <WaterBottleIcon size={60} />
                     <div className="equipment-label">Water</div>
                 </div>
 
@@ -120,20 +121,20 @@ function TrainingHouse({ onComplete }) {
                     className={`equipment bed ${habitStatus.sleep ? 'completed' : ''}`}
                     onClick={() => handleHabitClick('sleep', 'Sleep')}
                 >
-                    <div className="equipment-icon">🛏️</div>
+                    <BedIcon size={100} />
                     <div className="equipment-label">Sleep Log</div>
                 </div>
 
                 {/* Player Character */}
                 <div className="player-character">
-                    <div className="character-sprite">🧍</div>
+                    <PlayerCharacter size={60} />
                     <div className="character-shadow"></div>
                 </div>
 
                 {/* NPC Trainer */}
                 {showTrainer && (
                     <div className="npc-trainer">
-                        <div className="npc-sprite">👨‍🏫</div>
+                        <TrainerCharacter size={60} />
                         <div className="npc-shadow"></div>
                     </div>
                 )}
@@ -142,7 +143,9 @@ function TrainingHouse({ onComplete }) {
             {/* Trainer Dialogue Box */}
             {trainerMessage && (
                 <div className="dialogue-box">
-                    <div className="dialogue-avatar">👨‍🏫</div>
+                    <div className="dialogue-avatar">
+                        <TrainerCharacter size={50} />
+                    </div>
                     <div className="dialogue-content">
                         <div className="dialogue-name">Coach Summit</div>
                         <div className="dialogue-text">{trainerMessage}</div>
@@ -151,7 +154,9 @@ function TrainingHouse({ onComplete }) {
                         className="dialogue-close"
                         onClick={() => setTrainerMessage('')}
                     >
-                        ✓
+                        <svg width="16" height="16" viewBox="0 0 16 16">
+                            <path d="M 4 7 L 7 10 L 12 4" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                        </svg>
                     </button>
                 </div>
             )}

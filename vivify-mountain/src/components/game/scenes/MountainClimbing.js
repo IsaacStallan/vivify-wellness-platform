@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { ClimbingCharacter, MountainPeak } from '../visuals/Characters';
 import './MountainClimbing.css';
 
 // Mountain data matching backend config
 const MOUNTAIN_DATA = {
-    fuji: { name: 'Mt. Fuji', elevation: 3776, duration: 14, emoji: '🗻' },
-    kilimanjaro: { name: 'Kilimanjaro', elevation: 5895, duration: 21, emoji: '⛰️' },
-    elbrus: { name: 'Mt. Elbrus', elevation: 5642, duration: 18, emoji: '🏔️' },
-    denali: { name: 'Denali', elevation: 6190, duration: 21, emoji: '🏔️' },
-    aconcagua: { name: 'Aconcagua', elevation: 6961, duration: 21, emoji: '⛰️' },
-    vinson: { name: 'Vinson Massif', elevation: 4892, duration: 21, emoji: '🏔️' },
-    everest: { name: 'Mt. Everest', elevation: 8849, duration: 30, emoji: '⛰️' }
+    fuji: { name: 'Mt. Fuji', elevation: 3776, duration: 14, type: 'volcano' },
+    kilimanjaro: { name: 'Kilimanjaro', elevation: 5895, duration: 21, type: 'snow' },
+    elbrus: { name: 'Mt. Elbrus', elevation: 5642, duration: 18, type: 'snow' },
+    denali: { name: 'Denali', elevation: 6190, duration: 21, type: 'snow' },
+    aconcagua: { name: 'Aconcagua', elevation: 6961, duration: 21, type: 'rock' },
+    vinson: { name: 'Vinson Massif', elevation: 4892, duration: 21, type: 'snow' },
+    everest: { name: 'Mt. Everest', elevation: 8849, duration: 30, type: 'snow' }
 };
 
 function MountainClimbing({ mountainId, onReturnToMap }) {
@@ -110,21 +111,43 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
                 <div className="mountain-slope">
                     {/* Trail markers every 25% */}
                     <div className="trail-marker" style={{ bottom: '25%' }}>
-                        <div className="marker-flag">🚩</div>
+                        <div className="marker-flag">
+                            <svg width="30" height="30" viewBox="0 0 30 30">
+                                <line x1="2" y1="0" x2="2" y2="30" stroke="#654321" strokeWidth="2"/>
+                                <path d="M 2 2 L 28 10 L 2 18 Z" fill="#dc2626"/>
+                            </svg>
+                        </div>
                         <div className="marker-label">Camp 1</div>
                     </div>
                     <div className="trail-marker" style={{ bottom: '50%' }}>
-                        <div className="marker-flag">🚩</div>
+                        <div className="marker-flag">
+                            <svg width="30" height="30" viewBox="0 0 30 30">
+                                <line x1="2" y1="0" x2="2" y2="30" stroke="#654321" strokeWidth="2"/>
+                                <path d="M 2 2 L 28 10 L 2 18 Z" fill="#dc2626"/>
+                            </svg>
+                        </div>
                         <div className="marker-label">Camp 2</div>
                     </div>
                     <div className="trail-marker" style={{ bottom: '75%' }}>
-                        <div className="marker-flag">🚩</div>
+                        <div className="marker-flag">
+                            <svg width="30" height="30" viewBox="0 0 30 30">
+                                <line x1="2" y1="0" x2="2" y2="30" stroke="#654321" strokeWidth="2"/>
+                                <path d="M 2 2 L 28 10 L 2 18 Z" fill="#dc2626"/>
+                            </svg>
+                        </div>
                         <div className="marker-label">Camp 3</div>
                     </div>
 
                     {/* Summit Flag */}
                     <div className="summit-marker">
-                        <div className="summit-flag">🏁</div>
+                        <div className="summit-flag">
+                            <svg width="40" height="40" viewBox="0 0 40 40">
+                                <line x1="3" y1="0" x2="3" y2="40" stroke="#654321" strokeWidth="3"/>
+                                <rect x="3" y="5" width="32" height="10" fill="#fbbf24"/>
+                                <rect x="3" y="15" width="32" height="10" fill="#fff"/>
+                                <rect x="3" y="25" width="32" height="10" fill="#fbbf24"/>
+                            </svg>
+                        </div>
                         <div className="summit-label">{mountain.name}</div>
                     </div>
 
@@ -136,7 +159,7 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
                             left: `${30 + (characterPosition * 0.3)}%` // Slight horizontal movement
                         }}
                     >
-                        <div className="climber-sprite">🧗</div>
+                        <ClimbingCharacter size={55} />
                         <div className="climber-shadow"></div>
                     </div>
 
@@ -301,7 +324,9 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
             {showSummit && (
                 <div className="summit-celebration">
                     <div className="celebration-content">
-                        <div className="celebration-emoji">{mountain.emoji}</div>
+                        <div className="celebration-visual">
+                            <MountainPeak type={mountain.type} size={120} />
+                        </div>
                         <h2>Summit Reached!</h2>
                         <p>Congratulations! You've conquered {mountain.name}!</p>
                         <div className="celebration-stats">
