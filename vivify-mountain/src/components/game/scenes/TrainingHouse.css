@@ -1,0 +1,504 @@
+/* Training House - Pokemon Style Interior */
+
+.training-house {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #87ceeb 0%, #b0d9f0 100%);
+}
+
+/* Room Structure */
+.room-background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    perspective: 800px;
+}
+
+.floor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(180deg, #d4a574 0%, #c19566 100%);
+    border-top: 4px solid #8b6f47;
+    /* Wooden floor pattern */
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 80px,
+            rgba(0, 0, 0, 0.05) 80px,
+            rgba(0, 0, 0, 0.05) 82px
+        );
+}
+
+.back-wall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: linear-gradient(180deg, #e8dcc8 0%, #d4c5b0 100%);
+    border-bottom: 4px solid #8b6f47;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.window {
+    width: 80px;
+    height: 60px;
+    background: linear-gradient(135deg, #87ceeb 0%, #4a9fd8 100%);
+    border: 6px solid #654321;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.window::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #654321;
+    transform: translateY(-50%);
+}
+
+.window::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #654321;
+    transform: translateX(-50%);
+}
+
+.poster {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border: 3px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Door (Exit) */
+.door {
+    position: absolute;
+    top: 15%;
+    right: 10%;
+    width: 70px;
+    height: 100px;
+    background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+    border: 4px solid #4a2a0f;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.door::before {
+    content: '';
+    position: absolute;
+    top: 45%;
+    right: 15px;
+    width: 8px;
+    height: 8px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.door.locked {
+    filter: brightness(0.7);
+    cursor: not-allowed;
+}
+
+.door.unlocked {
+    animation: door-pulse 2s ease-in-out infinite;
+}
+
+.door.unlocked:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4);
+}
+
+@keyframes door-pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6); }
+}
+
+.door-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Training Equipment - Interactive Zones */
+.equipment {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px solid #333;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.equipment:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.equipment:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.equipment.completed {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-color: #2f855a;
+}
+
+.equipment.completed .equipment-icon {
+    filter: brightness(1.2);
+}
+
+.equipment-icon {
+    font-size: 36px;
+    margin-bottom: 4px;
+}
+
+.equipment-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+/* Equipment Positions */
+.dumbbells {
+    bottom: 35%;
+    left: 15%;
+}
+
+.yoga-mat {
+    bottom: 35%;
+    right: 15%;
+}
+
+.water-station {
+    bottom: 20%;
+    left: 30%;
+}
+
+.bed {
+    top: 30%;
+    left: 10%;
+    width: 100px;
+    height: 70px;
+}
+
+/* Characters */
+.player-character,
+.npc-trainer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-character {
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: character-idle 3s ease-in-out infinite;
+}
+
+.npc-trainer {
+    bottom: 45%;
+    right: 25%;
+}
+
+@keyframes character-idle {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+.character-sprite,
+.npc-sprite {
+    font-size: 48px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    z-index: 10;
+}
+
+.character-shadow,
+.npc-shadow {
+    width: 40px;
+    height: 12px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+    margin-top: -8px;
+}
+
+/* Dialogue Box */
+.dialogue-box {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 360px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 4px solid #333;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    z-index: 200;
+    animation: dialogue-appear 0.3s ease-out;
+}
+
+@keyframes dialogue-appear {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.dialogue-avatar {
+    font-size: 36px;
+    flex-shrink: 0;
+}
+
+.dialogue-content {
+    flex: 1;
+}
+
+.dialogue-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 4px;
+}
+
+.dialogue-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1f2937;
+}
+
+.dialogue-close {
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.dialogue-close:hover {
+    background: #5568d3;
+    transform: scale(1.1);
+}
+
+.dialogue-close:active {
+    transform: scale(0.95);
+}
+
+/* Habit Input Modal */
+.habit-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    animation: modal-appear 0.3s ease-out;
+}
+
+@keyframes modal-appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 90%;
+    max-width: 320px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    animation: modal-slide 0.3s ease-out;
+}
+
+@keyframes modal-slide {
+    from {
+        transform: translateY(40px) scale(0.9);
+    }
+    to {
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content h3 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    color: #1f2937;
+    text-align: center;
+}
+
+.habit-input p {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.quick-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.quick-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.quick-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.quick-btn:active {
+    transform: translateY(0);
+}
+
+.cancel-btn {
+    background: #e5e7eb;
+    color: #1f2937;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+    background: #d1d5db;
+}
+
+/* Training Progress Indicator */
+.training-progress {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #333;
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+}
+
+.progress-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.progress-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #d1d5db;
+    border: 2px solid #9ca3af;
+    transition: all 0.3s;
+}
+
+.dot.completed {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-color: #2f855a;
+    box-shadow: 0 0 8px rgba(72, 187, 120, 0.6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+    .equipment {
+        width: 70px;
+        height: 70px;
+    }
+
+    .equipment-icon {
+        font-size: 32px;
+    }
+
+    .character-sprite,
+    .npc-sprite {
+        font-size: 40px;
+    }
+}
