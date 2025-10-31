@@ -6,7 +6,6 @@ import './TrainingHouse.css';
 function TrainingHouse({ onComplete }) {
     const { mountainData, logHabits, user } = useGame();
     const [selectedHabit, setSelectedHabit] = useState(null);
-    const [showTrainer, setShowTrainer] = useState(true);
     const [trainerMessage, setTrainerMessage] = useState('');
     const [habitStatus, setHabitStatus] = useState({
         hydration: false,
@@ -194,12 +193,9 @@ function TrainingHouse({ onComplete }) {
                 </div>
             </button>
 
-            {/* Trainer Dialogue Box */}
+            {/* Trainer Dialogue Box - Modern Minimalist */}
             {trainerMessage && (
                 <div className="dialogue-box">
-                    <div className="dialogue-avatar">
-                        <TrainerCharacter size={50} />
-                    </div>
                     <div className="dialogue-content">
                         <div className="dialogue-name">Coach Summit</div>
                         <div className="dialogue-text">{trainerMessage}</div>
@@ -208,8 +204,8 @@ function TrainingHouse({ onComplete }) {
                         className="dialogue-close"
                         onClick={() => setTrainerMessage('')}
                     >
-                        <svg width="16" height="16" viewBox="0 0 16 16">
-                            <path d="M 4 7 L 7 10 L 12 4" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M 4 4 L 16 16 M 16 4 L 4 16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
                     </button>
                 </div>
