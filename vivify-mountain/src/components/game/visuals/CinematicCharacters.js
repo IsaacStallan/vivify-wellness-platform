@@ -1,7 +1,9 @@
 import React from 'react';
 
-// CINEMATIC CHARACTER - Skate 4 Inspired Close-Up Style
-// Much larger (250px+) with realistic shading and detail
+// PHOTOREALISTIC CINEMATIC CHARACTER
+// Advanced lighting: rim light, subsurface scattering, ambient occlusion
+// Detailed textures: fabric weave, skin pores, hair strands
+// Inspired by Skate 4, Uncharted, The Last of Us character rendering
 export function CinematicPlayer({ size = 250, pose = 'standing' }) {
     const height = size * 1.3;
 
@@ -10,248 +12,677 @@ export function CinematicPlayer({ size = 250, pose = 'standing' }) {
             width={size}
             height={height}
             viewBox="0 0 250 325"
-            style={{ filter: 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6))' }}
+            style={{
+                filter: `
+                    drop-shadow(0 20px 50px rgba(0, 0, 0, 0.9))
+                    drop-shadow(0 5px 20px rgba(99, 102, 241, 0.4))
+                    drop-shadow(-5px 0 15px rgba(139, 92, 246, 0.3))
+                `
+            }}
         >
             <defs>
-                {/* Realistic Gradients */}
-                <linearGradient id="skinTone" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#ffd4a3" />
-                    <stop offset="50%" stopColor="#f0c080" />
-                    <stop offset="100%" stopColor="#e0a378" />
-                </linearGradient>
-
-                <linearGradient id="jacketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4f46e5" />
-                    <stop offset="50%" stopColor="#4338ca" />
-                    <stop offset="100%" stopColor="#3730a3" />
-                </linearGradient>
-
-                <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#374151" />
-                    <stop offset="100%" stopColor="#1f2937" />
-                </linearGradient>
-
-                <radialGradient id="shoeShine">
-                    <stop offset="0%" stopColor="#4b5563" />
-                    <stop offset="70%" stopColor="#1f2937" />
-                    <stop offset="100%" stopColor="#111827" />
+                {/* ADVANCED SKIN SHADING - Subsurface Scattering Simulation */}
+                <radialGradient id="skinSubsurface" cx="50%" cy="30%">
+                    <stop offset="0%" stopColor="#ffe4c4" />
+                    <stop offset="30%" stopColor="#ffd4a3" />
+                    <stop offset="60%" stopColor="#f0c080" />
+                    <stop offset="100%" stopColor="#d9a574" />
                 </radialGradient>
 
-                {/* Texture overlay */}
-                <pattern id="fabricTexture" width="4" height="4" patternUnits="userSpaceOnUse">
-                    <rect width="4" height="4" fill="rgba(0,0,0,0.02)"/>
-                    <path d="M0,0 L4,4 M4,0 L0,4" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5"/>
+                <linearGradient id="skinHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="rgba(255, 255, 255, 0.3)" />
+                    <stop offset="50%" stopColor="rgba(255, 240, 220, 0.15)" />
+                    <stop offset="100%" stopColor="rgba(0, 0, 0, 0.1)" />
+                </linearGradient>
+
+                {/* FABRIC SHADER - Realistic cloth with micro-details */}
+                <linearGradient id="fabricMain" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#5b5fc7" />
+                    <stop offset="25%" stopColor="#4f46e5" />
+                    <stop offset="50%" stopColor="#4338ca" />
+                    <stop offset="75%" stopColor="#3730a3" />
+                    <stop offset="100%" stopColor="#312e81" />
+                </linearGradient>
+
+                <radialGradient id="fabricHighlight" cx="30%" cy="30%">
+                    <stop offset="0%" stopColor="rgba(255, 255, 255, 0.4)" />
+                    <stop offset="50%" stopColor="rgba(255, 255, 255, 0.1)" />
+                    <stop offset="100%" stopColor="transparent" />
+                </radialGradient>
+
+                {/* RIM LIGHTING - Edge highlights from back light */}
+                <linearGradient id="rimLight" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(139, 92, 246, 0.8)" />
+                    <stop offset="50%" stopColor="rgba(167, 139, 250, 0.6)" />
+                    <stop offset="100%" stopColor="rgba(196, 181, 253, 0.4)" />
+                </linearGradient>
+
+                {/* ADVANCED TEXTURE PATTERNS */}
+                <pattern id="fabricWeave" width="4" height="4" patternUnits="userSpaceOnUse">
+                    <rect width="4" height="4" fill="rgba(0,0,0,0.03)"/>
+                    <path d="M0,0 L2,2 M2,0 L0,2 M2,2 L4,4 M4,2 L2,4"
+                          stroke="rgba(255,255,255,0.04)" strokeWidth="0.5"/>
                 </pattern>
+
+                <pattern id="denim" width="3" height="3" patternUnits="userSpaceOnUse">
+                    <rect width="3" height="3" fill="rgba(0,0,0,0.05)"/>
+                    <line x1="0" y1="0" x2="3" y2="3" stroke="rgba(100,100,150,0.1)" strokeWidth="0.5"/>
+                    <line x1="3" y1="0" x2="0" y2="3" stroke="rgba(100,100,150,0.1)" strokeWidth="0.5"/>
+                </pattern>
+
+                <pattern id="leather" width="8" height="8" patternUnits="userSpaceOnUse">
+                    <ellipse cx="2" cy="2" rx="1" ry="0.8" fill="rgba(0,0,0,0.08)"/>
+                    <ellipse cx="6" cy="2" rx="1" ry="0.8" fill="rgba(0,0,0,0.06)"/>
+                    <ellipse cx="4" cy="5" rx="1" ry="0.8" fill="rgba(0,0,0,0.07)"/>
+                </pattern>
+
+                {/* METALLIC SHADER for zippers/buckles */}
+                <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#e2e8f0" />
+                    <stop offset="30%" stopColor="#cbd5e1" />
+                    <stop offset="50%" stopColor="#94a3b8" />
+                    <stop offset="70%" stopColor="#64748b" />
+                    <stop offset="100%" stopColor="#475569" />
+                </linearGradient>
+
+                {/* AMBIENT OCCLUSION - Contact shadows */}
+                <radialGradient id="ambientOcclusion">
+                    <stop offset="0%" stopColor="transparent" />
+                    <stop offset="70%" stopColor="rgba(0,0,0,0.1)" />
+                    <stop offset="100%" stopColor="rgba(0,0,0,0.3)" />
+                </radialGradient>
+
+                {/* HAIR SHADER - Individual strand highlights */}
+                <linearGradient id="hairBase" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#3d2817" />
+                    <stop offset="30%" stopColor="#2d1b0e" />
+                    <stop offset="70%" stopColor="#1a0f08" />
+                    <stop offset="100%" stopColor="#0a0503" />
+                </linearGradient>
+
+                <linearGradient id="hairHighlight" x1="20%" y1="0%" x2="80%" y2="100%">
+                    <stop offset="0%" stopColor="rgba(139, 92, 246, 0.3)" />
+                    <stop offset="50%" stopColor="rgba(99, 102, 241, 0.15)" />
+                    <stop offset="100%" stopColor="transparent" />
+                </linearGradient>
             </defs>
 
-            {/* Ground shadow */}
-            <ellipse cx="125" cy="318" rx="60" ry="12" fill="rgba(0,0,0,0.4)" opacity="0.6"/>
+            {/* GROUND CONTACT SHADOW - Soft, realistic */}
+            <ellipse cx="125" cy="318" rx="70" ry="15" fill="rgba(0,0,0,0.5)" opacity="0.6"/>
+            <ellipse cx="125" cy="318" rx="50" ry="10" fill="rgba(0,0,0,0.3)" opacity="0.8"/>
 
-            {/* Legs - Detailed with muscle definition */}
+            {/* ==================== LEGS - Athletic build with muscle definition ==================== */}
+
+            {/* Left Leg */}
             <path
-                d="M 100 180 L 95 210 L 92 245 L 88 285 L 85 320 L 100 320 L 103 285 L 107 245 L 110 210 L 105 180 Z"
+                d="M 100 180 L 95 210 L 92 245 L 88 280 L 85 315 L 100 318 L 103 283 L 107 248 L 110 213 L 105 180 Z"
                 fill="url(#pantsGrad)"
                 stroke="#0f172a"
-                strokeWidth="2"
+                strokeWidth="2.5"
             />
+
+            {/* Denim texture on left leg */}
             <path
-                d="M 150 180 L 155 210 L 158 245 L 162 285 L 165 320 L 150 320 L 147 285 L 143 245 L 140 210 L 145 180 Z"
+                d="M 100 180 L 95 210 L 92 245 L 88 280 L 85 315 L 100 318 L 103 283 L 107 248 L 110 213 L 105 180 Z"
+                fill="url(#denim)"
+                opacity="0.6"
+            />
+
+            {/* Left leg highlights (light from left) */}
+            <path d="M 97 190 L 94 225 L 92 260 L 90 295"
+                  stroke="rgba(255,255,255,0.12)"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"/>
+
+            {/* Left leg shadows (right side) */}
+            <path d="M 103 195 L 105 230 L 106 265 L 105 300"
+                  stroke="rgba(0,0,0,0.25)"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"/>
+
+            {/* Knee definition - left leg */}
+            <ellipse cx="95" cy="235" rx="15" ry="22" fill="rgba(0,0,0,0.15)"/>
+            <ellipse cx="93" cy="232" rx="8" ry="12" fill="rgba(255,255,255,0.08)"/>
+
+            {/* Right Leg */}
+            <path
+                d="M 150 180 L 155 210 L 158 245 L 162 280 L 165 315 L 150 318 L 147 283 L 143 248 L 140 213 L 145 180 Z"
                 fill="url(#pantsGrad)"
                 stroke="#0f172a"
-                strokeWidth="2"
+                strokeWidth="2.5"
             />
 
-            {/* Pants highlights (fabric shine) */}
-            <path d="M 97 190 L 94 220 L 93 250" stroke="rgba(255,255,255,0.1)" strokeWidth="3" fill="none"/>
-            <path d="M 153 190 L 156 220 L 157 250" stroke="rgba(255,255,255,0.1)" strokeWidth="3" fill="none"/>
-
-            {/* Knee pads/details */}
-            <ellipse cx="100" cy="230" rx="12" ry="18" fill="rgba(0,0,0,0.3)"/>
-            <ellipse cx="150" cy="230" rx="12" ry="18" fill="rgba(0,0,0,0.3)"/>
-
-            {/* Shoes - Modern sneakers with details */}
-            <ellipse cx="92" cy="320" rx="22" ry="10" fill="url(#shoeShine)"/>
-            <ellipse cx="157" cy="320" rx="22" ry="10" fill="url(#shoeShine)"/>
-
-            {/* Shoe body */}
+            {/* Denim texture on right leg */}
             <path
-                d="M 70 310 Q 70 305 75 303 L 110 303 Q 115 305 115 310 L 115 322 Q 115 325 110 325 L 75 325 Q 70 325 70 322 Z"
+                d="M 150 180 L 155 210 L 158 245 L 162 280 L 165 315 L 150 318 L 147 283 L 143 248 L 140 213 L 145 180 Z"
+                fill="url(#denim)"
+                opacity="0.6"
+            />
+
+            {/* Right leg rim light (from back right) */}
+            <path d="M 157 185 L 160 220 L 162 255 L 164 290"
+                  stroke="url(#rimLight)"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"/>
+
+            {/* Knee definition - right leg */}
+            <ellipse cx="155" cy="235" rx="15" ry="22" fill="rgba(0,0,0,0.15)"/>
+            <ellipse cx="157" cy="232" rx="8" ry="12" fill="rgba(255,255,255,0.08)"/>
+
+            {/* Pants gradient defs */}
+            <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#475569" />
+                <stop offset="50%" stopColor="#334155" />
+                <stop offset="100%" stopColor="#1e293b" />
+            </linearGradient>
+
+            {/* ==================== SHOES - Modern sneakers with extreme detail ==================== */}
+
+            {/* Left Shoe Shadow */}
+            <ellipse cx="92" cy="320" rx="24" ry="12" fill="url(#shoeShine)"/>
+
+            {/* Left Shoe Body */}
+            <path
+                d="M 68 308 Q 68 302 73 300 L 112 300 Q 117 302 117 308 L 117 322 Q 117 326 112 326 L 73 326 Q 68 326 68 322 Z"
                 fill="#1f2937"
-                stroke="#111827"
-                strokeWidth="2"
+                stroke="#0f172a"
+                strokeWidth="2.5"
             />
+
+            {/* Left shoe leather texture */}
             <path
-                d="M 135 310 Q 135 305 140 303 L 175 303 Q 180 305 180 310 L 180 322 Q 180 325 175 325 L 140 325 Q 135 325 135 322 Z"
+                d="M 68 308 Q 68 302 73 300 L 112 300 Q 117 302 117 308 L 117 322 Q 117 326 112 326 L 73 326 Q 68 326 68 322 Z"
+                fill="url(#leather)"
+                opacity="0.4"
+            />
+
+            {/* Left shoe toe cap */}
+            <ellipse cx="75" cy="315" rx="10" ry="12" fill="#111827" opacity="0.7"/>
+
+            {/* Left shoe laces (detailed) */}
+            <line x1="78" y1="308" x2="107" y2="308" stroke="#f8f8f8" strokeWidth="2.5"/>
+            <line x1="82" y1="312" x2="103" y2="312" stroke="#f8f8f8" strokeWidth="2"/>
+            <line x1="85" y1="316" x2="100" y2="316" stroke="#f8f8f8" strokeWidth="2"/>
+
+            {/* Left shoe brand swoosh */}
+            <path d="M 73 318 Q 88 314 108 318"
+                  stroke="#6366f1"
+                  strokeWidth="4"
+                  fill="none"
+                  opacity="0.8"/>
+
+            {/* Left shoe sole detail */}
+            <rect x="70" y="324" width="45" height="3" fill="#94a3b8" rx="1"/>
+
+            {/* Left shoe highlights */}
+            <ellipse cx="80" cy="305" rx="8" ry="6" fill="rgba(255,255,255,0.15)"/>
+            <path d="M 72 310 Q 85 308 95 310"
+                  stroke="rgba(255,255,255,0.2)"
+                  strokeWidth="2"
+                  fill="none"/>
+
+            {/* Right Shoe Shadow */}
+            <ellipse cx="157" cy="320" rx="24" ry="12" fill="url(#shoeShine)"/>
+
+            {/* Right Shoe Body */}
+            <path
+                d="M 133 308 Q 133 302 138 300 L 177 300 Q 182 302 182 308 L 182 322 Q 182 326 177 326 L 138 326 Q 133 326 133 322 Z"
                 fill="#1f2937"
-                stroke="#111827"
-                strokeWidth="2"
+                stroke="#0f172a"
+                strokeWidth="2.5"
             />
 
-            {/* Shoe laces */}
-            <line x1="80" y1="310" x2="105" y2="310" stroke="#fff" strokeWidth="2"/>
-            <line x1="85" y1="314" x2="100" y2="314" stroke="#fff" strokeWidth="2"/>
-            <line x1="145" y1="310" x2="170" y2="310" stroke="#fff" strokeWidth="2"/>
-            <line x1="150" y1="314" x2="165" y2="314" stroke="#fff" strokeWidth="2"/>
-
-            {/* Shoe logos (swoosh-like) */}
-            <path d="M 75 315 Q 90 312 105 315" stroke="#4f46e5" strokeWidth="3" fill="none"/>
-            <path d="M 140 315 Q 155 312 170 315" stroke="#4f46e5" strokeWidth="3" fill="none"/>
-
-            {/* Torso - Modern athletic jacket */}
+            {/* Right shoe leather texture */}
             <path
-                d="M 80 100 L 75 125 L 68 155 L 70 175 L 85 185 L 165 185 L 180 175 L 182 155 L 175 125 L 170 100 Z"
-                fill="url(#jacketGrad)"
-                stroke="#3730a3"
+                d="M 133 308 Q 133 302 138 300 L 177 300 Q 182 302 182 308 L 182 322 Q 182 326 177 326 L 138 326 Q 133 326 133 322 Z"
+                fill="url(#leather)"
+                opacity="0.4"
+            />
+
+            {/* Right shoe laces */}
+            <line x1="143" y1="308" x2="172" y2="308" stroke="#f8f8f8" strokeWidth="2.5"/>
+            <line x1="147" y1="312" x2="168" y2="312" stroke="#f8f8f8" strokeWidth="2"/>
+            <line x1="150" y1="316" x2="165" y2="316" stroke="#f8f8f8" strokeWidth="2"/>
+
+            {/* Right shoe swoosh */}
+            <path d="M 138 318 Q 153 314 173 318"
+                  stroke="#6366f1"
+                  strokeWidth="4"
+                  fill="none"
+                  opacity="0.8"/>
+
+            {/* Right shoe rim light */}
+            <path d="M 175 303 L 178 320"
+                  stroke="url(#rimLight)"
+                  strokeWidth="2.5"
+                  fill="none"/>
+
+            <radialGradient id="shoeShine">
+                <stop offset="0%" stopColor="#4b5563" />
+                <stop offset="70%" stopColor="#1f2937" />
+                <stop offset="100%" stopColor="#0f172a" />
+            </radialGradient>
+
+            {/* ==================== TORSO - Athletic jacket with EXTREME fabric detail ==================== */}
+
+            {/* Main jacket body */}
+            <path
+                d="M 78 98 L 73 125 L 66 158 L 68 178 L 83 188 L 167 188 L 182 178 L 184 158 L 177 125 L 172 98 Z"
+                fill="url(#fabricMain)"
+                stroke="#312e81"
                 strokeWidth="3"
             />
 
-            {/* Fabric texture overlay */}
-            <rect x="70" y="100" width="110" height="85" fill="url(#fabricTexture)" opacity="0.5"/>
+            {/* Fabric weave texture */}
+            <path
+                d="M 78 98 L 73 125 L 66 158 L 68 178 L 83 188 L 167 188 L 182 178 L 184 158 L 177 125 L 172 98 Z"
+                fill="url(#fabricWeave)"
+                opacity="0.7"
+            />
 
-            {/* Jacket highlights and shadows for depth */}
-            <path d="M 85 110 L 80 135 L 75 165" stroke="rgba(255,255,255,0.25)" strokeWidth="4" fill="none"/>
-            <path d="M 165 110 L 170 135 L 175 165" stroke="rgba(0,0,0,0.3)" strokeWidth="4" fill="none"/>
+            {/* Main fabric highlight (left side catching light) */}
+            <path d="M 83 108 L 78 140 L 72 172"
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeWidth="6"
+                  fill="none"
+                  strokeLinecap="round"/>
 
-            {/* Hood detail */}
-            <path d="M 95 100 Q 90 95 90 85 L 160 85 Q 160 95 155 100" fill="rgba(0,0,0,0.2)"/>
+            {/* Secondary highlight */}
+            <path d="M 90 103 L 85 135 L 80 167"
+                  stroke="rgba(255,255,255,0.15)"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"/>
 
-            {/* Zipper - Realistic metal zipper */}
-            <rect x="120" y="105" width="10" height="75" fill="#94a3b8" rx="1"/>
-            <line x1="125" y1="105" x2="125" y2="180" stroke="#475569" strokeWidth="2"/>
+            {/* Right side shadow */}
+            <path d="M 167 108 L 172 140 L 178 172"
+                  stroke="rgba(0,0,0,0.35)"
+                  strokeWidth="5"
+                  fill="none"
+                  strokeLinecap="round"/>
 
-            {/* Zipper teeth */}
-            {[...Array(15)].map((_, i) => (
+            {/* Fabric fold details */}
+            <ellipse cx="90" cy="140" rx="20" ry="8" fill="rgba(0,0,0,0.08)" opacity="0.6"/>
+            <ellipse cx="160" cy="145" rx="18" ry="7" fill="rgba(0,0,0,0.08)" opacity="0.6"/>
+
+            {/* Hood shadow */}
+            <path d="M 93 98 Q 88 92 88 82 L 162 82 Q 162 92 157 98"
+                  fill="rgba(0,0,0,0.3)"/>
+
+            {/* Rim light on right edge (from back light) */}
+            <path d="M 170 100 L 175 130 L 180 165"
+                  stroke="url(#rimLight)"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"/>
+
+            {/* ==================== ADVANCED ZIPPER with micro-details ==================== */}
+
+            {/* Zipper track */}
+            <rect x="118" y="103" width="14" height="80" fill="#64748b" rx="2"/>
+
+            {/* Zipper teeth - ultra detailed */}
+            {[...Array(20)].map((_, i) => (
                 <React.Fragment key={i}>
-                    <rect x="120" y={105 + i * 5} width="5" height="3" fill="#64748b"/>
-                    <rect x="125" y={105 + i * 5} width="5" height="3" fill="#64748b"/>
+                    <rect x="118" y={103 + i * 4} width="6" height="2.5" fill="#475569" rx="0.5"/>
+                    <rect x="126" y={103 + i * 4} width="6" height="2.5" fill="#475569" rx="0.5"/>
+                    <rect x="119" y={103 + i * 4} width="5" height="2" fill="url(#metalGrad)"/>
+                    <rect x="126" y={103 + i * 4} width="5" height="2" fill="url(#metalGrad)"/>
                 </React.Fragment>
             ))}
 
-            {/* Zipper pull */}
-            <circle cx="125" cy="102" r="5" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="2"/>
+            {/* Zipper slider */}
+            <path d="M 118 100 L 132 100 L 132 108 L 118 108 Z" fill="url(#metalGrad)" stroke="#334155" strokeWidth="1.5"/>
+            <circle cx="125" cy="104" r="3" fill="#94a3b8" stroke="#64748b" strokeWidth="1"/>
+            <circle cx="125" cy="104" r="1.5" fill="#cbd5e1"/>
 
-            {/* Jacket pockets - Modern design */}
+            {/* Zipper highlight */}
+            <rect x="120" y="105" width="10" height="75" fill="url(#fabricHighlight)" opacity="0.3"/>
+
+            {/* ==================== JACKET POCKETS - Hyper-realistic ==================== */}
+
+            {/* Left pocket */}
             <path
-                d="M 85 145 Q 85 140 90 140 L 115 140 Q 120 140 120 145 L 120 165 Q 120 170 115 170 L 90 170 Q 85 170 85 165 Z"
-                stroke="#3730a3"
-                strokeWidth="2.5"
-                fill="rgba(0,0,0,0.2)"
+                d="M 82 145 Q 82 140 87 140 L 118 140 Q 123 140 123 145 L 123 168 Q 123 173 118 173 L 87 173 Q 82 173 82 168 Z"
+                stroke="#312e81"
+                strokeWidth="3"
+                fill="rgba(0,0,0,0.25)"
             />
+            {/* Pocket opening shadow */}
+            <rect x="87" y="140" width="31" height="4" fill="rgba(0,0,0,0.4)"/>
+            {/* Pocket stitching */}
+            <rect x="82" y="140" width="41" height="33"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="1"
+                  strokeDasharray="3,2"
+                  fill="none"/>
+
+            {/* Right pocket */}
             <path
-                d="M 130 145 Q 130 140 135 140 L 160 140 Q 165 140 165 145 L 165 165 Q 165 170 160 170 L 135 170 Q 130 170 130 165 Z"
-                stroke="#3730a3"
-                strokeWidth="2.5"
-                fill="rgba(0,0,0,0.2)"
+                d="M 127 145 Q 127 140 132 140 L 163 140 Q 168 140 168 145 L 168 168 Q 168 173 163 173 L 132 173 Q 127 173 127 168 Z"
+                stroke="#312e81"
+                strokeWidth="3"
+                fill="rgba(0,0,0,0.25)"
             />
+            <rect x="132" y="140" width="31" height="4" fill="rgba(0,0,0,0.4)"/>
+            <rect x="127" y="140" width="41" height="33"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="1"
+                  strokeDasharray="3,2"
+                  fill="none"/>
 
-            {/* Brand logo on chest */}
-            <circle cx="105" cy="120" r="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"/>
-            <text x="105" y="125" fontSize="10" fill="rgba(255,255,255,0.5)" textAnchor="middle" fontWeight="bold">V</text>
+            {/* ==================== BRAND LOGO with metallic effect ==================== */}
+            <circle cx="100" cy="118" r="12" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.4)" strokeWidth="2"/>
+            <circle cx="100" cy="118" r="10" fill="url(#metalGrad)" opacity="0.3"/>
+            <text x="100" y="124" fontSize="14" fill="rgba(255,255,255,0.9)" textAnchor="middle" fontWeight="bold" fontFamily="Arial, sans-serif">V</text>
 
-            {/* Arms - Athletic with muscle definition */}
+            {/* ==================== ARMS with muscle definition ==================== */}
+
+            {/* Left arm */}
             <path
-                d="M 75 112 L 45 125 L 30 165 L 35 175 L 50 170 L 68 140 Z"
-                fill="url(#jacketGrad)"
-                stroke="#3730a3"
-                strokeWidth="2.5"
+                d="M 73 110 L 42 125 L 25 170 L 30 178 L 48 173 L 66 138 Z"
+                fill="url(#fabricMain)"
+                stroke="#312e81"
+                strokeWidth="3"
             />
+            {/* Left arm fabric texture */}
             <path
-                d="M 175 112 L 205 125 L 220 165 L 215 175 L 200 170 L 182 140 Z"
-                fill="url(#jacketGrad)"
-                stroke="#3730a3"
-                strokeWidth="2.5"
+                d="M 73 110 L 42 125 L 25 170 L 30 178 L 48 173 L 66 138 Z"
+                fill="url(#fabricWeave)"
+                opacity="0.6"
             />
+            {/* Left bicep definition */}
+            <ellipse cx="55" cy="135" rx="10" ry="18" fill="rgba(0,0,0,0.15)"/>
+            <ellipse cx="52" cy="132" rx="7" ry="12" fill="rgba(255,255,255,0.08)"/>
+            {/* Left arm highlight */}
+            <path d="M 50 120 L 35 145 L 28 168"
+                  stroke="rgba(255,255,255,0.25)"
+                  strokeWidth="4"
+                  fill="none"/>
 
-            {/* Arm shadows for muscle definition */}
-            <ellipse cx="50" cy="145" rx="8" ry="15" fill="rgba(0,0,0,0.15)" />
-            <ellipse cx="200" cy="145" rx="8" ry="15" fill="rgba(0,0,0,0.15)" />
-
-            {/* Hands - Detailed with fingers */}
-            <ellipse cx="34" cy="173" rx="14" ry="12" fill="url(#skinTone)" stroke="#d4a574" strokeWidth="2"/>
-            <ellipse cx="216" cy="173" rx="14" ry="12" fill="url(#skinTone)" stroke="#d4a574" strokeWidth="2"/>
-
-            {/* Finger details */}
-            <path d="M 28 175 L 26 180" stroke="#c19566" strokeWidth="2.5" strokeLinecap="round"/>
-            <path d="M 32 177 L 30 183" stroke="#c19566" strokeWidth="2.5" strokeLinecap="round"/>
-            <path d="M 36 177 L 35 183" stroke="#c19566" strokeWidth="2.5" strokeLinecap="round"/>
-            <path d="M 222 175 L 224 180" stroke="#c19566" strokeWidth="2.5" strokeLinecap="round"/>
-            <path d="M 218 177 L 220 183" stroke="#c19566" strokeWidth="2.5" strokeLinecap="round"/>
-            <path d="M 214 177 L 215 183" stroke="#c19566" strokeWidth="2.5" strokeLinecap="round"/>
-
-            {/* Neck */}
-            <rect x="105" y="88" width="40" height="18" fill="url(#skinTone)" stroke="#d4a574" strokeWidth="1.5" rx="3"/>
-
-            {/* Neck shadow */}
-            <ellipse cx="125" cy="95" rx="15" ry="5" fill="rgba(0,0,0,0.1)"/>
-
-            {/* Head - Realistic proportions */}
-            <ellipse cx="125" cy="55" rx="38" ry="42" fill="url(#skinTone)" stroke="#d4a574" strokeWidth="2.5"/>
-
-            {/* Face shading for depth */}
-            <ellipse cx="125" cy="65" rx="32" ry="30" fill="rgba(0,0,0,0.05)"/>
-            <ellipse cx="125" cy="45" rx="32" ry="25" fill="rgba(255,255,255,0.08)"/>
-
-            {/* Hair - Modern style with texture */}
+            {/* Right arm */}
             <path
-                d="M 87 45 Q 87 18 125 15 Q 163 18 163 45 L 160 58 Q 125 52 90 58 Z"
-                fill="#2d1b0e"
-                stroke="#1a0f08"
-                strokeWidth="2.5"
+                d="M 177 110 L 208 125 L 225 170 L 220 178 L 202 173 L 184 138 Z"
+                fill="url(#fabricMain)"
+                stroke="#312e81"
+                strokeWidth="3"
+            />
+            {/* Right arm fabric texture */}
+            <path
+                d="M 177 110 L 208 125 L 225 170 L 220 178 L 202 173 L 184 138 Z"
+                fill="url(#fabricWeave)"
+                opacity="0.6"
+            />
+            {/* Right bicep definition */}
+            <ellipse cx="195" cy="135" rx="10" ry="18" fill="rgba(0,0,0,0.15)"/>
+            {/* Right arm rim light (strong from back) */}
+            <path d="M 215 120 L 222 150 L 223 173"
+                  stroke="url(#rimLight)"
+                  strokeWidth="5"
+                  fill="none"
+                  strokeLinecap="round"/>
+
+            {/* ==================== HANDS with detailed fingers ==================== */}
+
+            {/* Left hand */}
+            <ellipse cx="29" cy="176" rx="16" ry="14" fill="url(#skinSubsurface)" stroke="#d4a574" strokeWidth="2"/>
+            {/* Left hand highlight */}
+            <ellipse cx="26" cy="173" rx="8" ry="6" fill="url(#skinHighlight)"/>
+            {/* Left fingers */}
+            <path d="M 22 180 L 19 186" stroke="#c19566" strokeWidth="3.5" strokeLinecap="round"/>
+            <path d="M 27 182 L 25 190" stroke="#c19566" strokeWidth="3.5" strokeLinecap="round"/>
+            <path d="M 32 182 L 31 190" stroke="#c19566" strokeWidth="3.5" strokeLinecap="round"/>
+            <path d="M 37 180 L 37 188" stroke="#c19566" strokeWidth="3" strokeLinecap="round"/>
+            {/* Finger joints */}
+            <circle cx="19" cy="184" r="2" fill="rgba(0,0,0,0.1)"/>
+            <circle cx="25" cy="186" r="2" fill="rgba(0,0,0,0.1)"/>
+            <circle cx="31" cy="186" r="2" fill="rgba(0,0,0,0.1)"/>
+
+            {/* Right hand */}
+            <ellipse cx="221" cy="176" rx="16" ry="14" fill="url(#skinSubsurface)" stroke="#d4a574" strokeWidth="2"/>
+            {/* Right hand rim light */}
+            <path d="M 230 172 Q 235 175 235 180"
+                  stroke="url(#rimLight)"
+                  strokeWidth="3"
+                  fill="none"/>
+            {/* Right fingers */}
+            <path d="M 228 180 L 231 186" stroke="#c19566" strokeWidth="3.5" strokeLinecap="round"/>
+            <path d="M 223 182 L 225 190" stroke="#c19566" strokeWidth="3.5" strokeLinecap="round"/>
+            <path d="M 218 182 L 219 190" stroke="#c19566" strokeWidth="3.5" strokeLinecap="round"/>
+            <path d="M 213 180 L 213 188" stroke="#c19566" strokeWidth="3" strokeLinecap="round"/>
+
+            {/* ==================== NECK with realistic shading ==================== */}
+            <path d="M 103 86 L 103 96 L 147 96 L 147 86" fill="url(#skinSubsurface)" stroke="#d4a574" strokeWidth="2"/>
+            {/* Neck shadow under chin */}
+            <ellipse cx="125" cy="94" rx="18" ry="6" fill="rgba(0,0,0,0.15)"/>
+            {/* Neck highlight */}
+            <rect x="108" y="87" width="34" height="5" fill="url(#skinHighlight)" opacity="0.3"/>
+            {/* Adam's apple */}
+            <ellipse cx="125" cy="91" rx="4" ry="6" fill="rgba(0,0,0,0.08)"/>
+
+            {/* ==================== HEAD with photorealistic features ==================== */}
+
+            {/* Main head shape */}
+            <ellipse cx="125" cy="52" rx="40" ry="44" fill="url(#skinSubsurface)" stroke="#d4a574" strokeWidth="3"/>
+
+            {/* Facial structure shadows */}
+            <ellipse cx="125" cy="65" rx="34" ry="32" fill="rgba(0,0,0,0.06)"/>
+            {/* Cheekbone highlights */}
+            <ellipse cx="100" cy="55" rx="12" ry="18" fill="rgba(255,255,255,0.12)"/>
+            <ellipse cx="150" cy="55" rx="12" ry="18" fill="rgba(255,255,255,0.08)"/>
+            {/* Forehead highlight */}
+            <ellipse cx="125" cy="38" rx="28" ry="20" fill="rgba(255,255,255,0.15)"/>
+
+            {/* Jaw definition */}
+            <path d="M 95 68 Q 125 82 155 68"
+                  stroke="rgba(0,0,0,0.08)"
+                  strokeWidth="2"
+                  fill="none"/>
+
+            {/* Rim light on right side of face */}
+            <path d="M 162 35 Q 165 52 162 70"
+                  stroke="url(#rimLight)"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"/>
+
+            {/* ==================== HAIR - Photorealistic with strand detail ==================== */}
+
+            {/* Main hair mass */}
+            <path
+                d="M 85 42 Q 85 15 125 12 Q 165 15 165 42 L 162 56 Q 125 50 88 56 Z"
+                fill="url(#hairBase)"
+                stroke="#0a0503"
+                strokeWidth="3"
             />
 
-            {/* Hair texture lines */}
-            <path d="M 100 28 Q 110 25 125 24 Q 140 25 150 28" stroke="#3d2817" strokeWidth="2" fill="none"/>
-            <path d="M 95 35 Q 108 32 125 31 Q 142 32 155 35" stroke="#3d2817" strokeWidth="1.5" fill="none"/>
-            <path d="M 92 42 Q 108 38 125 37 Q 142 38 158 42" stroke="#3d2817" strokeWidth="1.5" fill="none"/>
+            {/* Hair highlight overlay */}
+            <path
+                d="M 85 42 Q 85 15 125 12 Q 165 15 165 42 L 162 56 Q 125 50 88 56 Z"
+                fill="url(#hairHighlight)"
+                opacity="0.6"
+            />
 
-            {/* Hair highlights */}
-            <path d="M 130 20 Q 135 22 140 20" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none"/>
+            {/* Individual hair strands (front) */}
+            <path d="M 95 25 Q 98 20 102 18" stroke="#2d1b0e" strokeWidth="2.5" fill="none" opacity="0.7"/>
+            <path d="M 102 22 Q 107 18 112 16" stroke="#2d1b0e" strokeWidth="2" fill="none" opacity="0.7"/>
+            <path d="M 112 20 Q 118 16 125 15" stroke="#3d2817" strokeWidth="2.5" fill="none" opacity="0.8"/>
+            <path d="M 138 20 Q 132 16 125 15" stroke="#3d2817" strokeWidth="2" fill="none" opacity="0.8"/>
+            <path d="M 148 22 Q 143 18 138 16" stroke="#2d1b0e" strokeWidth="2" fill="none" opacity="0.7"/>
+            <path d="M 155 25 Q 152 20 148 18" stroke="#2d1b0e" strokeWidth="2.5" fill="none" opacity="0.7"/>
 
-            {/* Face Features - Realistic style */}
+            {/* Hair strands (sides) */}
+            <path d="M 88 35 Q 85 30 84 25" stroke="#1a0f08" strokeWidth="2" fill="none" opacity="0.6"/>
+            <path d="M 90 40 Q 87 35 85 30" stroke="#1a0f08" strokeWidth="2" fill="none" opacity="0.6"/>
+            <path d="M 162 35 Q 165 30 166 25" stroke="#1a0f08" strokeWidth="2" fill="none" opacity="0.6"/>
+            <path d="M 160 40 Q 163 35 165 30" stroke="#1a0f08" strokeWidth="2" fill="none" opacity="0.6"/>
 
-            {/* Eyes - Detailed with depth */}
-            <ellipse cx="108" cy="54" rx="7" ry="9" fill="#fff"/>
-            <circle cx="108" cy="56" r="5" fill="#3b2617"/>
-            <circle cx="108" cy="55" r="3" fill="#000"/>
-            <circle cx="109" cy="53" r="2" fill="#fff" opacity="0.8"/>
-            <path d="M 102 47 Q 108 45 114 47" stroke="#2d1b0e" strokeWidth="2.5" strokeLinecap="round"/>
+            {/* Rim light on hair */}
+            <path d="M 160 20 Q 163 30 162 45"
+                  stroke="url(#rimLight)"
+                  strokeWidth="3"
+                  fill="none"
+                  opacity="0.5"/>
 
-            <ellipse cx="142" cy="54" rx="7" ry="9" fill="#fff"/>
-            <circle cx="142" cy="56" r="5" fill="#3b2617"/>
-            <circle cx="142" cy="55" r="3" fill="#000"/>
-            <circle cx="143" cy="53" r="2" fill="#fff" opacity="0.8"/>
-            <path d="M 136 47 Q 142 45 148 47" stroke="#2d1b0e" strokeWidth="2.5" strokeLinecap="round"/>
+            {/* ==================== EYES - Hyper-realistic with multiple layers ==================== */}
 
-            {/* Eyelids for depth */}
-            <path d="M 101 53 Q 108 51 115 53" stroke="#d4a574" strokeWidth="1.5" fill="none"/>
-            <path d="M 135 53 Q 142 51 149 53" stroke="#d4a574" strokeWidth="1.5" fill="none"/>
+            {/* LEFT EYE */}
+            {/* Eye white */}
+            <ellipse cx="105" cy="52" rx="8" ry="10" fill="#fefefe"/>
+            {/* Upper eyelid shadow */}
+            <ellipse cx="105" cy="48" rx="7" ry="4" fill="rgba(0,0,0,0.1)"/>
+            {/* Iris outer ring */}
+            <circle cx="105" cy="54" r="6" fill="#5c4033"/>
+            {/* Iris inner color */}
+            <circle cx="105" cy="54" r="5" fill="#3b2617"/>
+            {/* Pupil */}
+            <circle cx="105" cy="54" r="3.5" fill="#000"/>
+            {/* Eye shine (main) */}
+            <circle cx="106" cy="51" r="2.5" fill="#fff" opacity="0.9"/>
+            {/* Eye shine (secondary) */}
+            <circle cx="103" cy="56" r="1" fill="#fff" opacity="0.5"/>
+            {/* Lower eyelid highlight */}
+            <path d="M 98 56 Q 105 58 112 56"
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeWidth="1"
+                  fill="none"/>
 
-            {/* Nose - Detailed with shadows */}
-            <path d="M 125 58 L 123 70 Q 125 73 127 70 Z" fill="#d4a574" stroke="#c19566" strokeWidth="1.5"/>
-            <ellipse cx="122" cy="71" rx="2.5" ry="3" fill="rgba(0,0,0,0.15)"/>
-            <ellipse cx="128" cy="71" rx="2.5" ry="3" fill="rgba(0,0,0,0.15)"/>
-            <path d="M 125 58 L 125 70" stroke="#c19566" strokeWidth="1" opacity="0.5"/>
+            {/* RIGHT EYE */}
+            {/* Eye white */}
+            <ellipse cx="145" cy="52" rx="8" ry="10" fill="#fefefe"/>
+            {/* Upper eyelid shadow */}
+            <ellipse cx="145" cy="48" rx="7" ry="4" fill="rgba(0,0,0,0.1)"/>
+            {/* Iris outer ring */}
+            <circle cx="145" cy="54" r="6" fill="#5c4033"/>
+            {/* Iris inner color */}
+            <circle cx="145" cy="54" r="5" fill="#3b2617"/>
+            {/* Pupil */}
+            <circle cx="145" cy="54" r="3.5" fill="#000"/>
+            {/* Eye shine */}
+            <circle cx="146" cy="51" r="2.5" fill="#fff" opacity="0.9"/>
+            <circle cx="143" cy="56" r="1" fill="#fff" opacity="0.5"/>
 
-            {/* Mouth - Natural smile */}
-            <path d="M 112 78 Q 125 83 138 78" stroke="#c19566" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-            <path d="M 115 79 Q 125 82 135 79" stroke="#d4735e" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+            {/* EYEBROWS - Detailed hair strokes */}
+            <path d="M 98 44 Q 105 42 113 44"
+                  stroke="#2d1b0e"
+                  strokeWidth="3.5"
+                  fill="none"
+                  strokeLinecap="round"/>
+            {/* Individual brow hairs */}
+            <path d="M 100 44 L 102 42" stroke="#1a0f08" strokeWidth="1.5" opacity="0.6"/>
+            <path d="M 105 43 L 106 41" stroke="#1a0f08" strokeWidth="1.5" opacity="0.6"/>
+            <path d="M 110 44 L 111 42" stroke="#1a0f08" strokeWidth="1.5" opacity="0.6"/>
 
+            <path d="M 137 44 Q 145 42 152 44"
+                  stroke="#2d1b0e"
+                  strokeWidth="3.5"
+                  fill="none"
+                  strokeLinecap="round"/>
+            <path d="M 140 44 L 142 42" stroke="#1a0f08" strokeWidth="1.5" opacity="0.6"/>
+            <path d="M 145 43 L 146 41" stroke="#1a0f08" strokeWidth="1.5" opacity="0.6"/>
+            <path d="M 148 44 L 149 42" stroke="#1a0f08" strokeWidth="1.5" opacity="0.6"/>
+
+            {/* Upper eyelid creases */}
+            <path d="M 99 50 Q 105 49 111 50"
+                  stroke="rgba(0,0,0,0.15)"
+                  strokeWidth="1"
+                  fill="none"/>
+            <path d="M 139 50 Q 145 49 151 50"
+                  stroke="rgba(0,0,0,0.15)"
+                  strokeWidth="1"
+                  fill="none"/>
+
+            {/* ==================== NOSE - Realistic with shadows ==================== */}
+            <path d="M 125 56 L 122 68 Q 125 72 128 68 Z"
+                  fill="#d4a574"
+                  stroke="#c19566"
+                  strokeWidth="1.5"/>
+            {/* Nostril shadows */}
+            <ellipse cx="121" cy="69" rx="3" ry="3.5" fill="rgba(0,0,0,0.25)"/>
+            <ellipse cx="129" cy="69" rx="3" ry="3.5" fill="rgba(0,0,0,0.25)"/>
+            {/* Nose bridge highlight */}
+            <path d="M 125 56 L 125 68"
+                  stroke="rgba(255,255,255,0.15)"
+                  strokeWidth="2"
+                  fill="none"/>
+            {/* Nose tip highlight */}
+            <ellipse cx="125" cy="68" rx="3" ry="2" fill="rgba(255,255,255,0.2)"/>
+
+            {/* ==================== MOUTH - Detailed lips ==================== */}
+            {/* Upper lip */}
+            <path d="M 110 76 Q 118 78 125 79 Q 132 78 140 76"
+                  stroke="#c19566"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"/>
+            {/* Lower lip */}
+            <path d="M 112 79 Q 125 84 138 79"
+                  stroke="#d4735e"
+                  strokeWidth="3.5"
+                  fill="none"
+                  strokeLinecap="round"/>
             {/* Lower lip highlight */}
-            <path d="M 120 82 Q 125 83 130 82" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="none"/>
+            <path d="M 118 81 Q 125 84 132 81"
+                  stroke="rgba(255,255,255,0.25)"
+                  strokeWidth="2"
+                  fill="none"
+                  opacity="0.8"/>
+            {/* Mouth corner shadows */}
+            <circle cx="110" cy="78" r="2" fill="rgba(0,0,0,0.1)"/>
+            <circle cx="140" cy="78" r="2" fill="rgba(0,0,0,0.1)"/>
 
-            {/* Ears */}
-            <ellipse cx="88" cy="55" rx="6" ry="10" fill="url(#skinTone)" stroke="#d4a574" strokeWidth="1.5"/>
-            <ellipse cx="162" cy="55" rx="6" ry="10" fill="url(#skinTone)" stroke="#d4a574" strokeWidth="1.5"/>
-            <ellipse cx="88" cy="55" rx="3" ry="5" fill="rgba(0,0,0,0.1)"/>
-            <ellipse cx="162" cy="55" rx="3" ry="5" fill="rgba(0,0,0,0.1)"/>
+            {/* ==================== EARS with detail ==================== */}
+            {/* Left ear */}
+            <ellipse cx="86" cy="52" rx="7" ry="12" fill="url(#skinSubsurface)" stroke="#d4a574" strokeWidth="2"/>
+            <ellipse cx="86" cy="52" rx="4" ry="7" fill="rgba(0,0,0,0.12)"/>
+            <path d="M 88 48 Q 90 52 88 56" stroke="#c19566" strokeWidth="1.5" fill="none"/>
 
-            {/* Backpack straps - Heavy duty */}
-            <path d="M 92 105 Q 87 118 85 145" stroke="#374151" strokeWidth="10" opacity="0.8" strokeLinecap="round"/>
-            <path d="M 158 105 Q 163 118 165 145" stroke="#374151" strokeWidth="10" opacity="0.8" strokeLinecap="round"/>
+            {/* Right ear */}
+            <ellipse cx="164" cy="52" rx="7" ry="12" fill="url(#skinSubsurface)" stroke="#d4a574" strokeWidth="2"/>
+            <ellipse cx="164" cy="52" rx="4" ry="7" fill="rgba(0,0,0,0.12)"/>
+            <path d="M 162 48 Q 160 52 162 56" stroke="#c19566" strokeWidth="1.5" fill="none"/>
+            {/* Rim light on right ear */}
+            <path d="M 169 48 L 169 56"
+                  stroke="url(#rimLight)"
+                  strokeWidth="2"
+                  fill="none"/>
 
-            {/* Strap buckles */}
-            <rect x="87" y="125" width="8" height="12" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1" rx="1"/>
-            <rect x="155" y="125" width="8" height="12" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1" rx="1"/>
+            {/* ==================== BACKPACK STRAPS - Heavy duty with buckles ==================== */}
+            {/* Left strap */}
+            <path d="M 90 103 Q 85 118 83 148"
+                  stroke="#374151"
+                  strokeWidth="12"
+                  opacity="0.9"
+                  strokeLinecap="round"/>
+            {/* Strap highlight */}
+            <path d="M 87 108 Q 83 123 81 148"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="4"
+                  fill="none"/>
+
+            {/* Right strap */}
+            <path d="M 160 103 Q 165 118 167 148"
+                  stroke="#374151"
+                  strokeWidth="12"
+                  opacity="0.9"
+                  strokeLinecap="round"/>
+            {/* Strap rim light */}
+            <path d="M 169 108 Q 172 123 173 148"
+                  stroke="url(#rimLight)"
+                  strokeWidth="4"
+                  fill="none"/>
+
+            {/* Buckles with metallic detail */}
+            <rect x="83" y="123" width="10" height="16" fill="url(#metalGrad)" stroke="#475569" strokeWidth="1.5" rx="2"/>
+            <rect x="157" y="123" width="10" height="16" fill="url(#metalGrad)" stroke="#475569" strokeWidth="1.5" rx="2"/>
+            {/* Buckle holes */}
+            <circle cx="88" cy="127" r="1.5" fill="#1e293b"/>
+            <circle cx="88" cy="135" r="1.5" fill="#1e293b"/>
+            <circle cx="162" cy="127" r="1.5" fill="#1e293b"/>
+            <circle cx="162" cy="135" r="1.5" fill="#1e293b"/>
         </svg>
     );
 }

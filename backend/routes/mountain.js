@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+// Use in-memory DB for development (no MongoDB required)
+const User = require('../in-memory-db');
 const HabitLog = require('../models/HabitLog');
 const BasecampPost = require('../models/BasecampPost');
 const {
