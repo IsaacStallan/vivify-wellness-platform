@@ -133,10 +133,27 @@ router.post('/habits/log', async (req, res) => {
         }
 
         if (!user.mountainGameData) {
-            user.mountainGameData = {};
+            user.mountainGameData = {
+                oxygen: 0,
+                currentMountain: 'training',
+                altitude: 0,
+                totalElevation: 0,
+                summitsBadges: [],
+                customHabits: [],
+                trainingComplete: false,
+                consecutiveDaysAbove70: 0
+            };
         }
 
         const mountainData = user.mountainGameData;
+
+        // Ensure arrays exist
+        if (!mountainData.summitsBadges) {
+            mountainData.summitsBadges = [];
+        }
+        if (!mountainData.customHabits) {
+            mountainData.customHabits = [];
+        }
         const currentMountain = getMountain(mountainData.currentMountain || 'training');
 
         // Calculate oxygen gained from completed habits
@@ -244,6 +261,8 @@ router.post('/habits/log', async (req, res) => {
 
         res.json({
             success: true,
+            newOxygen: mountainData.oxygen,
+            newAltitude: mountainData.altitude,
             oxygen: mountainData.oxygen,
             oxygenChange: netOxygenChange,
             oxygenGained,
