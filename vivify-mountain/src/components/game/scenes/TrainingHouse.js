@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../../../contexts/GameContext';
-import {
-    PlayerCharacter, TrainerCharacter,
-    DumbbellIcon, YogaMatIcon, WaterBottleIcon, BedIcon,
-    Bookshelf, TrophyCase, WallClock, MotivationalPoster, FloorRug
-} from '../visuals/Characters';
+import { CinematicPlayer } from '../visuals/CinematicCharacters';
 import './TrainingHouse.css';
 
 function TrainingHouse({ onComplete }) {
@@ -80,98 +76,123 @@ function TrainingHouse({ onComplete }) {
     };
 
     return (
-        <div className="training-house">
-            {/* Background Room */}
-            <div className="room-background">
-                {/* Floor */}
-                <div className="floor">
-                    {/* Floor Rug */}
-                    <div className="floor-rug">
-                        <FloorRug width={180} height={120} />
-                    </div>
-                </div>
+        <div className="training-house cinematic-view">
+            {/* Cinematic Background with Parallax */}
+            <div className="cinematic-background">
+                {/* Far background - Gym wall */}
+                <div className="bg-layer far-wall"></div>
 
-                {/* Back Wall */}
-                <div className="back-wall">
-                    {/* Left side - Bookshelf */}
-                    <div className="bookshelf">
-                        <Bookshelf size={80} />
-                    </div>
+                {/* Mid background - Equipment silhouettes */}
+                <div className="bg-layer equipment-silhouettes"></div>
 
-                    {/* Center - Window with clock above */}
-                    <div className="wall-clock">
-                        <WallClock size={40} />
-                    </div>
-                    <div className="window"></div>
+                {/* Ground with realistic texture */}
+                <div className="ground-layer"></div>
 
-                    {/* Right side - Trophy Case */}
-                    <div className="trophy-case">
-                        <TrophyCase size={70} />
-                    </div>
-                </div>
-
-                {/* Side Wall Decorations */}
-                <div className="motivational-poster">
-                    <MotivationalPoster size={50} />
-                </div>
-
-                {/* Door (Exit) */}
-                <div
-                    className={`door ${canLeave ? 'unlocked' : 'locked'}`}
-                    onClick={handleDoorClick}
-                >
-                    <div className="door-label">
-                        {canLeave ? '🚪 Exit' : '🔒 Locked'}
-                    </div>
-                </div>
-
-                {/* Training Equipment - Interactive Habit Zones */}
-                <div
-                    className={`equipment dumbbells ${habitStatus.movement ? 'completed' : ''}`}
-                    onClick={() => handleHabitClick('movement', 'Movement')}
-                >
-                    <DumbbellIcon size={60} />
-                    <div className="equipment-label">Movement</div>
-                </div>
-
-                <div
-                    className={`equipment yoga-mat ${habitStatus.focus ? 'completed' : ''}`}
-                    onClick={() => handleHabitClick('focus', 'Focus')}
-                >
-                    <YogaMatIcon size={60} />
-                    <div className="equipment-label">Focus</div>
-                </div>
-
-                <div
-                    className={`equipment water-station ${habitStatus.hydration ? 'completed' : ''}`}
-                    onClick={() => handleHabitClick('hydration', 'Hydration')}
-                >
-                    <WaterBottleIcon size={60} />
-                    <div className="equipment-label">Water</div>
-                </div>
-
-                <div
-                    className={`equipment bed ${habitStatus.sleep ? 'completed' : ''}`}
-                    onClick={() => handleHabitClick('sleep', 'Sleep')}
-                >
-                    <BedIcon size={100} />
-                    <div className="equipment-label">Sleep Log</div>
-                </div>
-
-                {/* Player Character */}
-                <div className="player-character">
-                    <PlayerCharacter size={60} />
-                    <div className="character-shadow"></div>
-                </div>
-
-                {/* NPC Trainer */}
-                {showTrainer && (
-                    <div className="npc-trainer">
-                        <TrainerCharacter size={60} />
-                        <div className="npc-shadow"></div>
-                    </div>
-                )}
+                {/* Atmospheric lighting overlay */}
+                <div className="lighting-overlay"></div>
             </div>
+
+            {/* Cinematic Character - Large and close */}
+            <div className="cinematic-character">
+                <CinematicPlayer size={300} />
+            </div>
+
+            {/* Modern UI Overlay - Top HUD */}
+            <div className="top-hud">
+                <div className="progress-bar-container">
+                    <div className="progress-label">
+                        <span className="icon">🎯</span>
+                        <span>TRAINING PROGRESS</span>
+                    </div>
+                    <div className="progress-bar-track">
+                        <div
+                            className="progress-bar-fill"
+                            style={{ width: `${(daysCompleted / 3) * 100}%` }}
+                        ></div>
+                        <div className="progress-text">{daysCompleted}/3 DAYS</div>
+                    </div>
+                </div>
+
+                <div className="oxygen-display">
+                    <div className="stat-value">{Math.round(mountainData?.oxygen || 100)}%</div>
+                    <div className="stat-label">OXYGEN</div>
+                </div>
+            </div>
+
+            {/* Modern UI Overlay - Habit Selection */}
+            <div className="habit-selection-panel">
+                <div className="panel-title">TODAY'S TRAINING</div>
+                <div className="habit-grid-modern">
+                    <button
+                        className={`habit-card ${habitStatus.movement ? 'completed' : ''}`}
+                        onClick={() => handleHabitClick('movement', 'Movement')}
+                    >
+                        <div className="habit-icon-modern">
+                            <svg width="40" height="40" viewBox="0 0 40 40">
+                                <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" fill="none"/>
+                                <path d="M 12 20 L 18 26 L 28 14" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
+                        <div className="habit-title">MOVEMENT</div>
+                        <div className="habit-subtitle">Exercise</div>
+                    </button>
+
+                    <button
+                        className={`habit-card ${habitStatus.hydration ? 'completed' : ''}`}
+                        onClick={() => handleHabitClick('hydration', 'Hydration')}
+                    >
+                        <div className="habit-icon-modern">
+                            <svg width="40" height="40" viewBox="0 0 40 40">
+                                <path d="M 20 5 L 28 15 Q 30 20 30 25 Q 30 32 20 35 Q 10 32 10 25 Q 10 20 12 15 Z" stroke="currentColor" strokeWidth="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <div className="habit-title">HYDRATION</div>
+                        <div className="habit-subtitle">Water Intake</div>
+                    </button>
+
+                    <button
+                        className={`habit-card ${habitStatus.sleep ? 'completed' : ''}`}
+                        onClick={() => handleHabitClick('sleep', 'Sleep')}
+                    >
+                        <div className="habit-icon-modern">
+                            <svg width="40" height="40" viewBox="0 0 40 40">
+                                <circle cx="15" cy="20" r="8" fill="currentColor"/>
+                                <path d="M 25 12 Q 35 20 25 28" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div className="habit-title">SLEEP</div>
+                        <div className="habit-subtitle">Rest Hours</div>
+                    </button>
+
+                    <button
+                        className={`habit-card ${habitStatus.focus ? 'completed' : ''}`}
+                        onClick={() => handleHabitClick('focus', 'Focus')}
+                    >
+                        <div className="habit-icon-modern">
+                            <svg width="40" height="40" viewBox="0 0 40 40">
+                                <circle cx="20" cy="20" r="4" fill="currentColor"/>
+                                <circle cx="20" cy="20" r="10" stroke="currentColor" strokeWidth="2" fill="none"/>
+                                <circle cx="20" cy="20" r="16" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div className="habit-title">FOCUS</div>
+                        <div className="habit-subtitle">Concentration</div>
+                    </button>
+                </div>
+            </div>
+
+            {/* Action button */}
+            <button
+                className={`action-button ${canLeave ? 'ready' : 'locked'}`}
+                onClick={handleDoorClick}
+            >
+                <div className="button-content">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 5 L15 12 L 9 19" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>{canLeave ? 'START EXPEDITION' : `LOCKED - ${3 - daysCompleted} DAYS LEFT`}</span>
+                </div>
+            </button>
 
             {/* Trainer Dialogue Box */}
             {trainerMessage && (
