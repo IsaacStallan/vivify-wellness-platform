@@ -578,3 +578,193 @@ export function MountainPeak({ type = 'snow', size = 60 }) {
         </svg>
     );
 }
+
+// FURNITURE AND DECORATIONS FOR TRAINING HOUSE
+
+// Bookshelf with books
+export function Bookshelf({ size = 100 }) {
+    return (
+        <svg width={size} height={size * 1.2} viewBox="0 0 100 120">
+            {/* Shelf frame */}
+            <rect x="10" y="10" width="80" height="100" fill="#654321" stroke="#4a2a0f" strokeWidth="2"/>
+            <rect x="12" y="12" width="76" height="96" fill="#8b4513"/>
+
+            {/* Shelves */}
+            <rect x="10" y="35" width="80" height="4" fill="#4a2a0f"/>
+            <rect x="10" y="60" width="80" height="4" fill="#4a2a0f"/>
+            <rect x="10" y="85" width="80" height="4" fill="#4a2a0f"/>
+
+            {/* Books - Top shelf */}
+            <rect x="15" y="15" width="8" height="18" fill="#dc2626" stroke="#991b1b" strokeWidth="0.5"/>
+            <rect x="24" y="16" width="7" height="17" fill="#2563eb" stroke="#1e40af" strokeWidth="0.5"/>
+            <rect x="32" y="14" width="9" height="19" fill="#16a34a" stroke="#15803d" strokeWidth="0.5"/>
+            <rect x="42" y="15" width="8" height="18" fill="#9333ea" stroke="#7c3aed" strokeWidth="0.5"/>
+            <rect x="51" y="16" width="7" height="17" fill="#ea580c" stroke="#c2410c" strokeWidth="0.5"/>
+            <rect x="59" y="15" width="9" height="18" fill="#0891b2" stroke="#0e7490" strokeWidth="0.5"/>
+            <rect x="69" y="17" width="8" height="16" fill="#be123c" stroke="#9f1239" strokeWidth="0.5"/>
+            <rect x="78" y="16" width="7" height="17" fill="#4f46e5" stroke="#4338ca" strokeWidth="0.5"/>
+
+            {/* Books - Middle shelf */}
+            <rect x="15" y="42" width="9" height="16" fill="#f59e0b" stroke="#d97706" strokeWidth="0.5"/>
+            <rect x="25" y="40" width="8" height="18" fill="#10b981" stroke="#059669" strokeWidth="0.5"/>
+            <rect x="34" y="41" width="10" height="17" fill="#6366f1" stroke="#4f46e5" strokeWidth="0.5"/>
+            <rect x="45" y="42" width="7" height="16" fill="#dc2626" stroke="#991b1b" strokeWidth="0.5"/>
+            <rect x="53" y="40" width="9" height="18" fill="#7c3aed" stroke="#6d28d9" strokeWidth="0.5"/>
+            <rect x="63" y="41" width="8" height="17" fill="#0d9488" stroke="#0f766e" strokeWidth="0.5"/>
+            <rect x="72" y="42" width="13" height="16" fill="#8b5cf6" stroke="#7c3aed" strokeWidth="0.5"/>
+
+            {/* Books - Bottom shelf */}
+            <rect x="15" y="67" width="12" height="16" fill="#2563eb" stroke="#1e40af" strokeWidth="0.5"/>
+            <rect x="28" y="68" width="9" height="15" fill="#dc2626" stroke="#991b1b" strokeWidth="0.5"/>
+            <rect x="38" y="66" width="11" height="17" fill="#16a34a" stroke="#15803d" strokeWidth="0.5"/>
+            <rect x="50" y="67" width="8" height="16" fill="#ea580c" stroke="#c2410c" strokeWidth="0.5"/>
+            <rect x="59" y="68" width="10" height="15" fill="#9333ea" stroke="#7c3aed" strokeWidth="0.5"/>
+            <rect x="70" y="67" width="15" height="16" fill="#0891b2" stroke="#0e7490" strokeWidth="0.5"/>
+
+            {/* Trophy on top shelf */}
+            <path d="M 55 92 L 50 95 L 45 92 L 45 100 Q 45 102 47 102 L 53 102 Q 55 102 55 100 Z" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1"/>
+            <ellipse cx="50" cy="92" rx="6" ry="4" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1"/>
+            <path d="M 44 95 Q 42 93 42 90 L 44 92" fill="#f59e0b"/>
+            <path d="M 56 95 Q 58 93 58 90 L 56 92" fill="#f59e0b"/>
+
+            {/* Plant pot */}
+            <path d="M 20 92 L 18 105 Q 18 107 20 107 L 30 107 Q 32 107 32 105 L 30 92 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="1"/>
+            <ellipse cx="25" cy="92" rx="6" ry="3" fill="#b91c1c"/>
+            {/* Plant */}
+            <path d="M 25 92 Q 22 88 20 85 M 25 92 Q 25 86 25 82 M 25 92 Q 28 88 30 85" stroke="#16a34a" strokeWidth="2" fill="none"/>
+            <circle cx="20" cy="85" r="2" fill="#22c55e"/>
+            <circle cx="25" cy="82" r="2" fill="#22c55e"/>
+            <circle cx="30" cy="85" r="2" fill="#22c55e"/>
+        </svg>
+    );
+}
+
+// Trophy Case
+export function TrophyCase({ size = 80 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 100 100">
+            {/* Glass case */}
+            <rect x="15" y="20" width="70" height="70" fill="rgba(200, 220, 255, 0.3)" stroke="#2563eb" strokeWidth="2"/>
+            <rect x="17" y="22" width="66" height="66" fill="rgba(240, 250, 255, 0.2)"/>
+
+            {/* Shelf */}
+            <rect x="15" y="55" width="70" height="3" fill="#8b4513"/>
+
+            {/* Trophies */}
+            {/* Trophy 1 */}
+            <path d="M 30 45 L 27 48 L 27 52 Q 27 53 28 53 L 32 53 Q 33 53 33 52 L 33 48 Z" fill="#fbbf24"/>
+            <ellipse cx="30" cy="45" rx="4" ry="3" fill="#fbbf24"/>
+            <path d="M 26 48 Q 24 47 24 44 L 26 46" fill="#f59e0b"/>
+            <path d="M 34 48 Q 36 47 36 44 L 34 46" fill="#f59e0b"/>
+
+            {/* Trophy 2 - Bigger (center) */}
+            <path d="M 50 38 L 46 42 L 46 48 Q 46 49 48 49 L 52 49 Q 54 49 54 48 L 54 42 Z" fill="#fbbf24"/>
+            <ellipse cx="50" cy="38" rx="5" ry="4" fill="#fbbf24"/>
+            <path d="M 45 42 Q 42 40 42 36 L 45 39" fill="#f59e0b"/>
+            <path d="M 55 42 Q 58 40 58 36 L 55 39" fill="#f59e0b"/>
+            <circle cx="50" cy="35" r="2" fill="#dc2626"/>
+
+            {/* Trophy 3 */}
+            <path d="M 70 45 L 67 48 L 67 52 Q 67 53 68 53 L 72 53 Q 73 53 73 52 L 73 48 Z" fill="#fbbf24"/>
+            <ellipse cx="70" cy="45" rx="4" ry="3" fill="#fbbf24"/>
+            <path d="M 66 48 Q 64 47 64 44 L 66 46" fill="#f59e0b"/>
+            <path d="M 74 48 Q 76 47 76 44 L 74 46" fill="#f59e0b"/>
+
+            {/* Medals */}
+            <circle cx="30" cy="70" r="4" fill="#c0c0c0" stroke="#8b8b8b" strokeWidth="1"/>
+            <circle cx="45" cy="68" r="5" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1"/>
+            <circle cx="60" cy="70" r="4" fill="#cd7f32" stroke="#8b4513" strokeWidth="1"/>
+            <circle cx="75" cy="69" r="4" fill="#c0c0c0" stroke="#8b8b8b" strokeWidth="1"/>
+
+            {/* Base */}
+            <rect x="10" y="88" width="80" height="8" fill="#654321" stroke="#4a2a0f" strokeWidth="2"/>
+        </svg>
+    );
+}
+
+// Wall Clock
+export function WallClock({ size = 50 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 100 100">
+            {/* Clock frame */}
+            <circle cx="50" cy="50" r="45" fill="#654321" stroke="#4a2a0f" strokeWidth="3"/>
+            <circle cx="50" cy="50" r="40" fill="#f8f8f8" stroke="#ddd" strokeWidth="2"/>
+
+            {/* Numbers */}
+            <text x="50" y="25" fontSize="10" fill="#333" textAnchor="middle" fontWeight="bold">12</text>
+            <text x="75" y="55" fontSize="10" fill="#333" textAnchor="middle" fontWeight="bold">3</text>
+            <text x="50" y="80" fontSize="10" fill="#333" textAnchor="middle" fontWeight="bold">6</text>
+            <text x="25" y="55" fontSize="10" fill="#333" textAnchor="middle" fontWeight="bold">9</text>
+
+            {/* Hour hand */}
+            <line x1="50" y1="50" x2="50" y2="35" stroke="#333" strokeWidth="4" strokeLinecap="round"/>
+
+            {/* Minute hand */}
+            <line x1="50" y1="50" x2="65" y2="50" stroke="#333" strokeWidth="3" strokeLinecap="round"/>
+
+            {/* Center dot */}
+            <circle cx="50" cy="50" r="4" fill="#dc2626"/>
+
+            {/* Tick marks */}
+            <line x1="50" y1="15" x2="50" y2="20" stroke="#666" strokeWidth="2"/>
+            <line x1="85" y1="50" x2="80" y2="50" stroke="#666" strokeWidth="2"/>
+            <line x1="50" y1="85" x2="50" y2="80" stroke="#666" strokeWidth="2"/>
+            <line x1="15" y1="50" x2="20" y2="50" stroke="#666" strokeWidth="2"/>
+        </svg>
+    );
+}
+
+// Motivational Poster
+export function MotivationalPoster({ size = 60 }) {
+    return (
+        <svg width={size} height={size * 1.4} viewBox="0 0 100 140">
+            {/* Frame */}
+            <rect x="10" y="10" width="80" height="120" fill="#fff" stroke="#333" strokeWidth="3"/>
+            <rect x="15" y="15" width="70" height="110" fill="#f0f9ff"/>
+
+            {/* Mountain silhouette */}
+            <path d="M 20 90 L 40 50 L 50 65 L 65 40 L 80 90 Z" fill="#1e3a8a"/>
+            <path d="M 40 50 L 45 42 L 50 50 Z" fill="#fff"/>
+            <path d="M 65 40 L 68 35 L 71 40 Z" fill="#fff"/>
+
+            {/* Sun */}
+            <circle cx="70" cy="30" r="8" fill="#fbbf24"/>
+
+            {/* Text */}
+            <text x="50" y="110" fontSize="8" fill="#1e3a8a" textAnchor="middle" fontWeight="bold">SUMMIT</text>
+            <text x="50" y="120" fontSize="8" fill="#1e3a8a" textAnchor="middle" fontWeight="bold">YOUR GOALS</text>
+        </svg>
+    );
+}
+
+// Floor Rug
+export function FloorRug({ width = 120, height = 80 }) {
+    return (
+        <svg width={width} height={height} viewBox="0 0 120 80">
+            <defs>
+                <pattern id="rugPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <rect width="20" height="20" fill="#7c3aed"/>
+                    <circle cx="10" cy="10" r="3" fill="#9333ea"/>
+                </pattern>
+            </defs>
+
+            {/* Rug body */}
+            <rect x="10" y="10" width="100" height="60" fill="url(#rugPattern)" stroke="#5b21b6" strokeWidth="3"/>
+
+            {/* Fringe */}
+            <line x1="10" y1="10" x2="10" y2="5" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="30" y1="10" x2="30" y2="5" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="50" y1="10" x2="50" y2="5" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="70" y1="10" x2="70" y2="5" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="90" y1="10" x2="90" y2="5" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="110" y1="10" x2="110" y2="5" stroke="#5b21b6" strokeWidth="2"/>
+
+            <line x1="10" y1="70" x2="10" y2="75" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="30" y1="70" x2="30" y2="75" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="50" y1="70" x2="50" y2="75" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="70" y1="70" x2="70" y2="75" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="90" y1="70" x2="90" y2="75" stroke="#5b21b6" strokeWidth="2"/>
+            <line x1="110" y1="70" x2="110" y2="75" stroke="#5b21b6" strokeWidth="2"/>
+        </svg>
+    );
+}

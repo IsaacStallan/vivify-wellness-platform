@@ -112,7 +112,46 @@ function MountainClimbing({ mountainId, onReturnToMap }) {
                             ? 'linear-gradient(180deg, #5b9bd5 0%, #87ceeb 100%)'
                             : 'linear-gradient(180deg, #2c5f8d 0%, #4a7ba7 100%)'
                     }}
-                />
+                >
+                    {/* Drifting Clouds */}
+                    <div className="cloud cloud-1"></div>
+                    <div className="cloud cloud-2"></div>
+                    <div className="cloud cloud-3"></div>
+
+                    {/* Stars appear at high altitude */}
+                    {progress > 70 && (
+                        <div className="stars">
+                            <div className="star" style={{ top: '10%', left: '20%' }}></div>
+                            <div className="star" style={{ top: '15%', left: '80%' }}></div>
+                            <div className="star" style={{ top: '8%', left: '50%' }}></div>
+                            <div className="star" style={{ top: '20%', left: '30%' }}></div>
+                            <div className="star" style={{ top: '12%', left: '70%' }}></div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Snow Particles (intensity increases with altitude) */}
+                {progress > 20 && (
+                    <div className="snow-particles">
+                        {Array.from({ length: progress > 60 ? 30 : 15 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="snowflake"
+                                style={{
+                                    left: `${Math.random() * 100}%`,
+                                    animationDelay: `${Math.random() * 5}s`,
+                                    animationDuration: `${5 + Math.random() * 5}s`,
+                                    opacity: progress > 60 ? 0.8 : 0.5
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {/* Fog/Mist Layer (stronger at mid-altitude) */}
+                {progress > 40 && progress < 80 && (
+                    <div className="fog-layer" style={{ opacity: 0.3 }}></div>
+                )}
 
                 {/* Mountain Slope */}
                 <div className="mountain-slope">

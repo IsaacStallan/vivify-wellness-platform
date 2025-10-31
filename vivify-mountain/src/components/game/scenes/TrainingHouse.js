@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../../../contexts/GameContext';
-import { PlayerCharacter, TrainerCharacter, DumbbellIcon, YogaMatIcon, WaterBottleIcon, BedIcon } from '../visuals/Characters';
+import {
+    PlayerCharacter, TrainerCharacter,
+    DumbbellIcon, YogaMatIcon, WaterBottleIcon, BedIcon,
+    Bookshelf, TrophyCase, WallClock, MotivationalPoster, FloorRug
+} from '../visuals/Characters';
 import './TrainingHouse.css';
 
 function TrainingHouse({ onComplete }) {
@@ -80,12 +84,35 @@ function TrainingHouse({ onComplete }) {
             {/* Background Room */}
             <div className="room-background">
                 {/* Floor */}
-                <div className="floor"></div>
+                <div className="floor">
+                    {/* Floor Rug */}
+                    <div className="floor-rug">
+                        <FloorRug width={180} height={120} />
+                    </div>
+                </div>
 
                 {/* Back Wall */}
                 <div className="back-wall">
+                    {/* Left side - Bookshelf */}
+                    <div className="bookshelf">
+                        <Bookshelf size={80} />
+                    </div>
+
+                    {/* Center - Window with clock above */}
+                    <div className="wall-clock">
+                        <WallClock size={40} />
+                    </div>
                     <div className="window"></div>
-                    <div className="poster">📊</div>
+
+                    {/* Right side - Trophy Case */}
+                    <div className="trophy-case">
+                        <TrophyCase size={70} />
+                    </div>
+                </div>
+
+                {/* Side Wall Decorations */}
+                <div className="motivational-poster">
+                    <MotivationalPoster size={50} />
                 </div>
 
                 {/* Door (Exit) */}
