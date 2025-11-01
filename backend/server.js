@@ -40,12 +40,17 @@ app.use('/api/leaderboard', leaderboardRoutes);
 // Build MongoDB URI from env vars
 const uri = process.env.MONGODB_URI;
 
-mongoose.connect(uri)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => {
-    console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+// MongoDB is optional - we use in-memory DB for development
+if (uri && uri !== 'mongodb://localhost:27017/vivify') {
+  mongoose.connect(uri)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch(err => {
+      console.error('⚠️ MongoDB connection failed:', err.message);
+      console.log('📝 Using in-memory database for development');
+    });
+} else {
+  console.log('📝 MongoDB not configured - using in-memory database');
+}
 
 const User = require('./models/User');
 const Card = require('./models/Card'); // NEW

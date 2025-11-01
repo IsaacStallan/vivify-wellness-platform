@@ -44,6 +44,17 @@ export function GameProvider({ children }) {
             setError(null);
         } catch (err) {
             console.error('Error loading user data:', err);
+
+            // If user not found, clear localStorage to allow fresh login/signup
+            if (err.message && err.message.includes('User not found')) {
+                console.log('⚠️ User not found - clearing localStorage');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+                setUser(null);
+                setMountainData(null);
+                setCurrentMountain(null);
+            }
+
             setError(err.message);
         } finally {
             setLoading(false);
