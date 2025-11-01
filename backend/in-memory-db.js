@@ -5,10 +5,18 @@ const users = new Map();
 // User class that mimics MongoDB User model
 class UserDocument {
     constructor(data) {
+        // Auto-generate ID if not provided
+        if (!data._id) {
+            data._id = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
         Object.assign(this, data);
     }
 
     async save() {
+        // Hash password if it's not already hashed
+        if (this.password && !this.password.startsWith('$2a$')) {
+            this.password = await bcrypt.hash(this.password, 10);
+        }
         users.set(this._id, this);
         return this;
     }

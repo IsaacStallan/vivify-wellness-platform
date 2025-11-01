@@ -42,9 +42,11 @@ class ApiService {
 
         if (data.token) {
             this.token = data.token;
-            this.userId = data.user._id;
+            // Backend returns user.id (not user._id)
+            const userId = data.user.id || data.user._id;
+            this.userId = userId;
             localStorage.setItem('authToken', data.token);
-            localStorage.setItem('userId', data.user._id);
+            localStorage.setItem('userId', userId);
             localStorage.setItem('username', data.user.username);
         }
 
@@ -59,9 +61,11 @@ class ApiService {
 
         if (data.token) {
             this.token = data.token;
-            this.userId = data.user._id;
+            // Backend returns user.id (not user._id)
+            const userId = data.user.id || data.user._id;
+            this.userId = userId;
             localStorage.setItem('authToken', data.token);
-            localStorage.setItem('userId', data.user._id);
+            localStorage.setItem('userId', userId);
             localStorage.setItem('username', data.user.username);
         }
 
