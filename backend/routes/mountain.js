@@ -22,12 +22,15 @@ const {
     validateCustomHabits
 } = require('../config/habits');
 
-// Helper function to find user
+// Helper function to find user (works with in-memory DB)
 async function findUser(identifier) {
-    const mongoose = require('mongoose');
+    // Try to find by ID first
+    let user = await User.findById(identifier);
+    if (user) return user;
+
+    // Try to find by username or email
     return await User.findOne({
         $or: [
-            { _id: mongoose.Types.ObjectId.isValid(identifier) ? identifier : null },
             { username: identifier },
             { email: identifier }
         ]
