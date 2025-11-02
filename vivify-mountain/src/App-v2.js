@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GameProvider, useGame } from './contexts/GameContext';
 import Auth from './components/Auth';
 import GameContainer from './components/game/GameContainer';

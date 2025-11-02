@@ -1,0 +1,35 @@
+#!/bin/bash
+echo "🔍 Verifying Vivify Mountain Setup..."
+echo ""
+
+echo "✅ BACKEND FILES:"
+[ -f "backend/config/habits.js" ] && echo "  ✓ habits.js" || echo "  ✗ habits.js MISSING"
+[ -f "backend/config/mountains.js" ] && echo "  ✓ mountains.js" || echo "  ✗ mountains.js MISSING"
+[ -f "backend/models/HabitLog.js" ] && echo "  ✓ HabitLog.js" || echo "  ✗ HabitLog.js MISSING"
+[ -f "backend/models/BasecampPost.js" ] && echo "  ✓ BasecampPost.js" || echo "  ✗ BasecampPost.js MISSING"
+[ -f "backend/routes/mountain.js" ] && echo "  ✓ mountain.js routes" || echo "  ✗ mountain.js MISSING"
+
+echo ""
+echo "✅ VIVIFY-MOUNTAIN FRONTEND:"
+[ -f "vivify-mountain/src/components/Auth.js" ] && echo "  ✓ Auth component" || echo "  ✗ Auth MISSING"
+[ -f "vivify-mountain/src/components/HabitCards.js" ] && echo "  ✓ HabitCards component" || echo "  ✗ HabitCards MISSING"
+[ -f "vivify-mountain/src/components/MountainView.js" ] && echo "  ✓ MountainView component" || echo "  ✗ MountainView MISSING"
+[ -f "vivify-mountain/src/components/TrainingGrounds.js" ] && echo "  ✓ TrainingGrounds component" || echo "  ✗ TrainingGrounds MISSING"
+[ -f "vivify-mountain/src/components/OxygenGauge.js" ] && echo "  ✓ OxygenGauge component" || echo "  ✗ OxygenGauge MISSING"
+[ -f "vivify-mountain/src/components/Navigation.js" ] && echo "  ✓ Navigation component" || echo "  ✗ Navigation MISSING"
+[ -f "vivify-mountain/src/contexts/GameContext.js" ] && echo "  ✓ GameContext" || echo "  ✗ GameContext MISSING"
+[ -f "vivify-mountain/src/services/api.js" ] && echo "  ✓ API service" || echo "  ✗ API service MISSING"
+
+echo ""
+echo "✅ DOCUMENTATION:"
+[ -f "DUAL_APP_SETUP.md" ] && echo "  ✓ Setup guide" || echo "  ✗ Setup guide MISSING"
+
+echo ""
+echo "📊 File Count:"
+echo "  Backend config files: $(find backend/config -name "*.js" 2>/dev/null | wc -l)"
+echo "  Backend models (new): $(ls backend/models/HabitLog.js backend/models/BasecampPost.js 2>/dev/null | wc -l)/2"
+echo "  Mountain components: $(find vivify-mountain/src/components -name "*.js" 2>/dev/null | wc -l)"
+
+echo ""
+echo "🎯 Current branch: $(git branch --show-current)"
+echo ""

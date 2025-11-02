@@ -1,0 +1,437 @@
+/* World Map - Pokemon Style Map View */
+
+.world-map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* World Map Background SVG */
+.world-map-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* Map Background */
+.map-background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.map-title {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: 16px;
+    border: 3px solid #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.map-title h1 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: #1f2937;
+    font-weight: 800;
+}
+
+.summit-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+/* Mountain Markers */
+.mountain-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s;
+}
+
+.mountain-marker:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.mountain-marker:active {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.marker-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    position: relative;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.mountain-marker.unlocked .marker-icon {
+    animation: marker-pulse 2s ease-in-out infinite;
+}
+
+.mountain-marker.completed .marker-icon {
+    filter: drop-shadow(0 4px 12px rgba(72, 187, 120, 0.6));
+}
+
+.mountain-marker.locked .marker-icon {
+    filter: grayscale(1) opacity(0.5);
+}
+
+@keyframes marker-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 6px 16px rgba(102, 126, 234, 0.8));
+    }
+}
+
+.marker-name {
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1f2937;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 2px solid #333;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.completion-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.lock-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    background: #6b7280;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Player Marker */
+.player-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    animation: player-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes player-bounce {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-8px);
+    }
+}
+
+/* Player icon - no additional styling needed, handled by SVG component */
+
+/* Home Button */
+.home-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.home-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.home-btn:active {
+    transform: scale(0.98);
+}
+
+/* Mountain Info Overlay */
+.mountain-info-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: overlay-appear 0.3s ease-out;
+}
+
+@keyframes overlay-appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.mountain-info-panel {
+    background: white;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 360px;
+    padding: 24px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    animation: panel-slide 0.3s ease-out;
+}
+
+@keyframes panel-slide {
+    from {
+        transform: translateY(40px) scale(0.9);
+    }
+    to {
+        transform: translateY(0) scale(1);
+    }
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.info-mountain-visual {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-title h2 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    color: #1f2937;
+}
+
+.info-region {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.info-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 16px;
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.locked-message {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.locked-message p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #92400e;
+    font-weight: 600;
+}
+
+.info-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.climb-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.climb-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.climb-btn:active {
+    transform: translateY(0);
+}
+
+.close-btn {
+    background: #e5e7eb;
+    color: #1f2937;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: #d1d5db;
+}
+
+/* Progress Overview (Badge List) */
+.progress-overview {
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #333;
+    border-radius: 16px;
+    padding: 10px 14px;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.badge-list {
+    display: flex;
+    gap: 8px;
+}
+
+.badge {
+    width: 40px;
+    height: 40px;
+    background: #e5e7eb;
+    border: 2px solid #9ca3af;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.3s;
+}
+
+.badge.earned {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-color: #d97706;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
+    animation: badge-shine 2s ease-in-out infinite;
+}
+
+@keyframes badge-shine {
+    0%, 100% {
+        box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
+    }
+    50% {
+        box-shadow: 0 2px 16px rgba(251, 191, 36, 0.8);
+    }
+}
+
+.badge.unearned {
+    color: #9ca3af;
+    filter: grayscale(1);
+}
+
+.badge-unknown {
+    font-size: 24px;
+    font-weight: 700;
+    color: #9ca3af;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+    .map-title h1 {
+        font-size: 18px;
+    }
+
+    .marker-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+    }
+
+    .player-icon {
+        font-size: 40px;
+    }
+
+    .badge {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+}

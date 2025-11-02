@@ -38,7 +38,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'student'
     },
-    
+    parentEmail: {
+        type: String,
+        lowercase: true,
+        trim: true
+    },
+
     // PROFILE FIELDS
     displayName: { type: String },
     location: { type: String },
@@ -163,12 +168,40 @@ const userSchema = new mongoose.Schema({
         default: {}
     },
 
+    // MOUNTAIN GAME SYSTEM
+    mountainGameData: {
+        oxygen: { type: Number, default: 0, min: 0, max: 100 },
+        currentMountain: {
+            type: String,
+            enum: ['training', 'fuji', 'kilimanjaro', 'elbrus', 'denali', 'aconcagua', 'vinson', 'everest'],
+            default: 'training'
+        },
+        altitude: { type: Number, default: 0 },
+        totalElevation: { type: Number, default: 0 },
+        currentDay: { type: Number, default: 0 },
+        summitsBadges: [{
+            type: String,
+            enum: ['fuji', 'kilimanjaro', 'elbrus', 'denali', 'aconcagua', 'vinson', 'everest']
+        }],
+        customHabits: [{ type: String }],
+        lastOxygenUpdate: { type: Date, default: Date.now },
+        lastHabitLog: { type: Date },
+        trainingComplete: { type: Boolean, default: false },
+        consecutiveDaysAbove70: { type: Number, default: 0 },
+        sicknessShelterDays: { type: Number, default: 2 },
+        emergencySwapsAvailable: { type: Number, default: 1 },
+        avatarCustomization: {
+            skin: { type: String, default: 'default' },
+            gear: [{ type: String }]
+        }
+    },
+
     // CARD BATTLE SYSTEM
     cardBattleData: {
         battleXP: { type: Number, default: 0 },
         battleLevel: { type: Number, default: 1 },
         battleTrophies: { type: Number, default: 0 },
-        
+
         totalBattles: { type: Number, default: 0 },
         battlesWon: { type: Number, default: 0 },
         battlesLost: { type: Number, default: 0 },

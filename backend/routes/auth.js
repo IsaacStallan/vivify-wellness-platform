@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+// Use in-memory DB for development (no MongoDB required)
+const User = require('../in-memory-db');
 const jwt = require('jsonwebtoken');
 
 // POST /api/auth/signup - Register new user (with enhanced debugging)
@@ -90,6 +91,101 @@ router.post('/signup', async (req, res) => {
         console.error('Error stack:', error.stack);
         
         res.status(500).json({ 
+            success: false,
+            error: 'Failed to create account',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        });
+    }
+});
+
+// POST /api/auth/register - Alias for /signup for frontend compatibility
+router.post('/register', async (req, res) => {
+    try {
+        console.log('=== REGISTER REQUEST (alias for signup) ===');
+        console.log('Request body:', req.body);
+
+        const { username, email, password, school, yearLevel } = req.body;
+
+        // Validate required fields
+        if (!username || !email || !password || !school || !yearLevel) {
+            console.log('❌ Validation failed - missing fields');
+            return res.status(400).json({
+                success: false,
+                error: 'All fields are required: username, email, password, school, yearLevel',
+                received: { username: !!username, email: !!email, password: !!password, school: !!school, yearLevel: !!yearLevel }
+            });
+        }
+
+        // Check if user already exists
+        console.log('🔍 Checking for existing user...');
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username }]
+        });
+
+        if (existingUser) {
+            console.log('❌ User already exists:', existingUser.email === email ? 'email' : 'username');
+            return res.status(400).json({
+                success: false,
+                error: existingUser.email === email ? 'Email already registered' : 'Username already taken'
+            });
+        }
+
+        console.log('✅ No existing user found');
+
+        // Create new user
+        console.log('👤 Creating new user...');
+        const user = new User({
+            username,
+            email,
+            password, // Will be hashed by in-memory DB
+            school,
+            yearLevel,
+            role: 'student',
+            mountainGameData: {
+                oxygen: 100,
+                currentMountain: 'training',
+                altitude: 0,
+                totalElevation: 0,
+                summitsBadges: [],
+                customHabits: [],
+                trainingComplete: false,
+                consecutiveDaysAbove70: 0
+            }
+        });
+
+        console.log('💾 Saving user...');
+        await user.save();
+        console.log('✅ User saved successfully with ID:', user._id);
+
+        // Generate JWT token
+        console.log('🔑 Generating JWT token...');
+        const token = jwt.sign(
+            { userId: user._id, username: user.username },
+            process.env.JWT_SECRET || 'fallback-secret-key',
+            { expiresIn: '7d' }
+        );
+        console.log('✅ JWT token generated');
+
+        res.status(201).json({
+            success: true,
+            message: 'Account created successfully',
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                school: user.school,
+                yearLevel: user.yearLevel
+            }
+        });
+
+        console.log('=== REGISTER REQUEST SUCCESS ===');
+
+    } catch (error) {
+        console.log('=== REGISTER REQUEST ERROR ===');
+        console.error('❌ Register error:', error);
+
+        res.status(500).json({
             success: false,
             error: 'Failed to create account',
             details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'

@@ -1,0 +1,635 @@
+/* CINEMATIC TRAINING HOUSE - Skate 4 Inspired */
+
+.training-house.cinematic-view {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #0a0a0a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* ========== CINEMATIC BACKGROUND ========== */
+
+.cinematic-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Far wall - Gym environment */
+.far-wall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(180deg,
+        #1a1a1a 0%,
+        #2a2a2a 50%,
+        #1f1f1f 100%
+    );
+    box-shadow: inset 0 -100px 100px rgba(0, 0, 0, 0.5);
+}
+
+/* Equipment silhouettes in background */
+.equipment-silhouettes {
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    right: 10%;
+    height: 30%;
+    opacity: 0.15;
+    background-image:
+        radial-gradient(ellipse at 20% 70%, rgba(100, 100, 100, 0.3) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 60%, rgba(100, 100, 100, 0.3) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(100, 100, 100, 0.2) 0%, transparent 30%);
+}
+
+/* Ground layer - Gym floor */
+.ground-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+        #252525 0%,
+        #1a1a1a 100%
+    );
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 100px,
+            rgba(255, 255, 255, 0.02) 100px,
+            rgba(255, 255, 255, 0.02) 101px
+        );
+    box-shadow: 0 -50px 100px rgba(0, 0, 0, 0.8);
+}
+
+/* Atmospheric lighting */
+.lighting-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
+        radial-gradient(ellipse at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+    pointer-events: none;
+}
+
+/* ========== CINEMATIC CHARACTER ========== */
+
+.cinematic-character {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    animation: character-breathing 4s ease-in-out infinite;
+}
+
+@keyframes character-breathing {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-8px) scale(1.01);
+    }
+}
+
+/* ========== MODERN UI OVERLAY ========== */
+
+/* Top HUD */
+.top-hud {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    gap: 20px;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+    flex: 1;
+    max-width: 400px;
+}
+
+.progress-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+}
+
+.progress-label .icon {
+    font-size: 16px;
+}
+
+.progress-bar-track {
+    position: relative;
+    width: 100%;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.progress-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg,
+        #6366f1 0%,
+        #8b5cf6 50%,
+        #a855f7 100%
+    );
+    border-radius: 14px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 0 20px rgba(99, 102, 241, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    letter-spacing: 1px;
+}
+
+/* Oxygen Display */
+.oxygen-display {
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    min-width: 120px;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: #3b82f6;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
+    text-transform: uppercase;
+}
+
+/* ========== HABIT SELECTION PANEL ========== */
+
+.habit-selection-panel {
+    position: absolute;
+    bottom: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    z-index: 100;
+}
+
+.panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.habit-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.habit-card {
+    position: relative;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.habit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0) 0%,
+        rgba(139, 92, 246, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.habit-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow:
+        0 8px 32px rgba(99, 102, 241, 0.3),
+        0 0 40px rgba(99, 102, 241, 0.2);
+}
+
+.habit-card:hover::before {
+    opacity: 0.1;
+}
+
+.habit-card:active {
+    transform: translateY(-2px);
+}
+
+.habit-card.completed {
+    background: linear-gradient(135deg,
+        rgba(34, 197, 94, 0.2) 0%,
+        rgba(22, 163, 74, 0.2) 100%
+    );
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow:
+        0 4px 20px rgba(34, 197, 94, 0.3),
+        inset 0 0 30px rgba(34, 197, 94, 0.1);
+}
+
+.habit-icon-modern {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.habit-card:hover .habit-icon-modern {
+    color: #6366f1;
+    transform: scale(1.1);
+}
+
+.habit-card.completed .habit-icon-modern {
+    color: #22c55e;
+}
+
+.habit-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.habit-subtitle {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ========== ACTION BUTTON ========== */
+
+.action-button {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 18px 40px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 8px 32px rgba(99, 102, 241, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    z-index: 100;
+}
+
+.action-button:hover {
+    transform: translateX(-50%) translateY(-4px) scale(1.05);
+    box-shadow:
+        0 12px 40px rgba(99, 102, 241, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.action-button:active {
+    transform: translateX(-50%) translateY(-2px) scale(1.02);
+}
+
+.action-button.locked {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    cursor: not-allowed;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.action-button.locked:hover {
+    transform: translateX(-50%);
+}
+
+.action-button.ready {
+    animation: button-pulse 2s ease-in-out infinite;
+}
+
+@keyframes button-pulse {
+    0%, 100% {
+        box-shadow:
+            0 8px 32px rgba(99, 102, 241, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 8px 40px rgba(99, 102, 241, 0.7),
+            0 0 60px rgba(99, 102, 241, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+}
+
+.button-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.button-content svg {
+    transition: transform 0.3s ease;
+}
+
+.action-button:hover .button-content svg {
+    transform: translateX(4px);
+}
+
+/* ========== DIALOGUE BOX (Modernized) ========== */
+
+.dialogue-box {
+    position: absolute;
+    bottom: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    border-radius: 20px;
+    padding: 20px 24px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+    z-index: 200;
+    animation: dialogue-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dialogue-slide-up {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.dialogue-avatar {
+    display: none; /* Hidden for modern minimalist design */
+}
+
+.dialogue-content {
+    width: 100%;
+}
+
+.dialogue-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #6366f1;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.dialogue-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.dialogue-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dialogue-close:hover {
+    background: rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+/* ========== HABIT INPUT MODAL (Modernized) ========== */
+
+.habit-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: modal-fade-in 0.3s ease;
+}
+
+@keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    border-radius: 24px;
+    padding: 32px;
+    width: 90%;
+    max-width: 380px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+    animation: modal-scale-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modal-scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-content h3 {
+    margin: 0 0 24px 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.habit-input p {
+    margin: 0 0 24px 0;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.quick-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.quick-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.quick-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+}
+
+.quick-btn:active {
+    transform: translateY(-1px);
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 768px) {
+    .top-hud {
+        flex-direction: column;
+        align-items: stretch;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .progress-bar-container {
+        max-width: none;
+    }
+
+    .habit-grid-modern {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .habit-card {
+        padding: 16px 10px;
+    }
+
+    .cinematic-character {
+        bottom: 20%;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-button {
+        width: 90%;
+        max-width: 320px;
+    }
+
+    .button-content {
+        font-size: 12px;
+    }
+}

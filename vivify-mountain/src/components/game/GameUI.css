@@ -1,0 +1,171 @@
+/* Game UI Overlay - Pokemon Go Style */
+
+.game-ui-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+}
+
+.game-ui-top > * {
+    pointer-events: auto;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 6px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.player-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-name {
+    font-weight: 700;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.oxygen-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 6px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    min-width: 140px;
+}
+
+.oxygen-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bar-container {
+    flex: 1;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease, background 0.3s ease;
+}
+
+.bar-fill.oxygen {
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+}
+
+.bar-fill.oxygen[style*="width: 0"],
+.bar-fill.oxygen[style*="width: 1"],
+.bar-fill.oxygen[style*="width: 2"] {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.bar-fill.oxygen[style*="width: 3"],
+.bar-fill.oxygen[style*="width: 4"],
+.bar-fill.oxygen[style*="width: 5"] {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.stat-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1f2937;
+    min-width: 35px;
+    text-align: right;
+}
+
+/* Bottom Navigation - Pokemon Style */
+.game-ui-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.98);
+    border-top: 2px solid #e5e7eb;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 8px;
+    z-index: 1000;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+}
+
+.nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 12px;
+    min-width: 60px;
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.nav-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    margin-bottom: 20px;
+}
+
+.nav-btn.primary .nav-icon {
+    font-size: 32px;
+}
+
+.nav-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.nav-btn.primary .nav-label {
+    display: none;
+}
+
+/* Safe area for iPhone notch */
+@supports (padding: max(0px)) {
+    .game-ui-top {
+        padding-top: max(12px, env(safe-area-inset-top));
+    }
+
+    .game-ui-bottom {
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+        height: calc(80px + env(safe-area-inset-bottom));
+    }
+}

@@ -1,0 +1,863 @@
+/* Mountain Climbing Scene - Side-scrolling View */
+
+.mountain-climbing {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Mountain View */
+.mountain-view {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.sky-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: background 1s ease;
+    overflow: hidden;
+}
+
+/* Animated clouds */
+.sky-layer::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: -100px;
+    width: 100px;
+    height: 40px;
+    background:
+        radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 50%),
+        radial-gradient(circle at 60% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 50%);
+    border-radius: 50%;
+    animation: cloud-drift 30s linear infinite;
+}
+
+.sky-layer::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: -150px;
+    width: 120px;
+    height: 50px;
+    background:
+        radial-gradient(circle at 40% 50%, rgba(255, 255, 255, 0.7) 0%, transparent 50%),
+        radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.5) 0%, transparent 50%);
+    border-radius: 50%;
+    animation: cloud-drift 40s linear infinite;
+    animation-delay: -10s;
+}
+
+@keyframes cloud-drift {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100vw + 200px));
+    }
+}
+
+/* Mountain Slope */
+.mountain-slope {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background:
+        /* Rock texture */
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(0, 0, 0, 0.03) 10px,
+            rgba(0, 0, 0, 0.03) 20px
+        ),
+        /* Main gradient - brown at bottom, gray/white at top */
+        linear-gradient(180deg,
+            #e0e0e0 0%,     /* Snow cap */
+            #a8a29e 20%,    /* Upper rocks */
+            #78716c 40%,    /* Mid rocks */
+            #8b7355 70%,    /* Lower rocks */
+            #5d4a2d 100%    /* Base */
+        );
+    clip-path: polygon(0 100%, 0 40%, 100% 10%, 100% 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add rock details */
+.mountain-slope::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(101, 67, 33, 0.5) 0%, transparent 10%),
+        radial-gradient(circle at 50% 70%, rgba(101, 67, 33, 0.5) 0%, transparent 8%),
+        radial-gradient(circle at 80% 85%, rgba(101, 67, 33, 0.5) 0%, transparent 12%);
+    pointer-events: none;
+}
+
+/* Add snow effect at top */
+.mountain-slope::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 25%;
+    background:
+        radial-gradient(circle at 30% 10%, rgba(255, 255, 255, 0.4) 0%, transparent 15%),
+        radial-gradient(circle at 70% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 12%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Progress Trail */
+.progress-trail {
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    width: 4px;
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    transition: height 1s ease;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    z-index: 5;
+}
+
+/* Trail Markers (Camps) */
+.trail-marker {
+    position: absolute;
+    left: 35%;
+    transform: translate(-50%, 50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 6;
+}
+
+.marker-flag {
+    font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    animation: flag-wave 3s ease-in-out infinite;
+}
+
+@keyframes flag-wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+.marker-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border-radius: 8px;
+    margin-top: 4px;
+    white-space: nowrap;
+}
+
+/* Summit Marker */
+.summit-marker {
+    position: absolute;
+    top: 5%;
+    right: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 6;
+}
+
+.summit-flag {
+    font-size: 32px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+    animation: summit-glow 2s ease-in-out infinite;
+}
+
+@keyframes summit-glow {
+    0%, 100% {
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+    }
+    50% {
+        filter: drop-shadow(0 4px 16px rgba(255, 215, 0, 0.8));
+    }
+}
+
+.summit-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 6px 12px;
+    border-radius: 12px;
+    margin-top: 4px;
+    border: 2px solid #ffd700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Climbing Character */
+.climber {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: bottom 1s ease, left 1s ease;
+    z-index: 10;
+    animation: climber-motion 2s ease-in-out infinite;
+}
+
+@keyframes climber-motion {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.climber-sprite {
+    font-size: 40px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+.climber-shadow {
+    width: 30px;
+    height: 8px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+    margin-top: -5px;
+}
+
+/* Climbing Stats Panel */
+.climbing-stats {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 50;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 140px;
+}
+
+.stat-icon {
+    font-size: 20px;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+.stat-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+}
+
+.back-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn:active {
+    transform: scale(0.98);
+}
+
+/* Daily Habits Panel */
+.daily-habits-panel {
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 380px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 4px solid #333;
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.habits-completed {
+    font-size: 14px;
+    font-weight: 700;
+    color: #667eea;
+    background: #e0e7ff;
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.habit-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.habit-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.habit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.habit-btn:active {
+    transform: translateY(0);
+}
+
+.habit-btn.completed {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-color: #2f855a;
+}
+
+.habit-icon {
+    font-size: 28px;
+}
+
+.habit-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Habit Input Modal */
+.habit-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: modal-appear 0.3s ease-out;
+}
+
+@keyframes modal-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 90%;
+    max-width: 320px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    animation: modal-slide 0.3s ease-out;
+}
+
+@keyframes modal-slide {
+    from {
+        transform: translateY(40px) scale(0.9);
+    }
+    to {
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content h3 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    color: #1f2937;
+    text-align: center;
+}
+
+.habit-input p {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.quick-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.quick-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.quick-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.quick-btn:active {
+    transform: translateY(0);
+}
+
+.cancel-btn {
+    background: #e5e7eb;
+    color: #1f2937;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+    background: #d1d5db;
+}
+
+/* Summit Celebration */
+.summit-celebration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4000;
+    animation: celebration-appear 0.5s ease-out;
+}
+
+@keyframes celebration-appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.celebration-content {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    animation: celebration-bounce 0.6s ease-out;
+}
+
+@keyframes celebration-bounce {
+    0% {
+        transform: scale(0.5) translateY(100px);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
+.celebration-visual {
+    margin-bottom: 16px;
+    animation: visual-bounce 1s ease-out;
+}
+
+@keyframes visual-bounce {
+    0% {
+        transform: scale(0) translateY(100px);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.celebration-content h2 {
+    margin: 0 0 12px 0;
+    font-size: 28px;
+    color: #1f2937;
+    font-weight: 800;
+}
+
+.celebration-content p {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.celebration-stats {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.celebration-stats div {
+    margin: 4px 0;
+}
+
+.continue-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.continue-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+.continue-btn:active {
+    transform: translateY(0);
+}
+
+/* Oxygen Warning */
+.oxygen-warning {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(239, 68, 68, 0.95);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.5);
+    z-index: 250;
+    animation: warning-pulse 2s ease-in-out infinite;
+}
+
+@keyframes warning-pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 8px 24px rgba(239, 68, 68, 0.5);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        box-shadow: 0 12px 32px rgba(239, 68, 68, 0.8);
+    }
+}
+
+/* Additional Atmospheric Effects */
+
+/* Extra Clouds (beyond ::before and ::after) */
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 100px;
+    opacity: 0.7;
+}
+
+.cloud::before,
+.cloud::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 100px;
+}
+
+.cloud-1 {
+    width: 100px;
+    height: 30px;
+    top: 15%;
+    left: -100px;
+    animation: cloud-drift 25s linear infinite;
+}
+
+.cloud-1::before {
+    width: 50px;
+    height: 40px;
+    top: -15px;
+    left: 15px;
+}
+
+.cloud-1::after {
+    width: 60px;
+    height: 35px;
+    top: -10px;
+    right: 15px;
+}
+
+.cloud-2 {
+    width: 80px;
+    height: 25px;
+    top: 35%;
+    left: -80px;
+    animation: cloud-drift 28s linear infinite;
+    animation-delay: 7s;
+}
+
+.cloud-2::before {
+    width: 40px;
+    height: 30px;
+    top: -12px;
+    left: 10px;
+}
+
+.cloud-2::after {
+    width: 45px;
+    height: 28px;
+    top: -8px;
+    right: 10px;
+}
+
+.cloud-3 {
+    width: 90px;
+    height: 28px;
+    top: 55%;
+    left: -90px;
+    animation: cloud-drift 32s linear infinite;
+    animation-delay: 14s;
+}
+
+.cloud-3::before {
+    width: 45px;
+    height: 35px;
+    top: -14px;
+    left: 12px;
+}
+
+.cloud-3::after {
+    width: 48px;
+    height: 32px;
+    top: -10px;
+    right: 12px;
+}
+
+/* Stars (high altitude only) */
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+    animation: star-twinkle 3s ease-in-out infinite;
+}
+
+.star:nth-child(1) { animation-delay: 0s; }
+.star:nth-child(2) { animation-delay: 0.6s; }
+.star:nth-child(3) { animation-delay: 1.2s; }
+.star:nth-child(4) { animation-delay: 1.8s; }
+.star:nth-child(5) { animation-delay: 2.4s; }
+
+@keyframes star-twinkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+}
+
+/* Snow Particles */
+.snow-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 15;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    animation: snowfall linear infinite;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-10px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) translateX(50px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Fog/Mist Layer */
+.fog-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 30% 40%, rgba(200, 200, 220, 0.3) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 60%, rgba(220, 220, 235, 0.4) 0%, transparent 40%),
+        linear-gradient(180deg,
+            transparent 0%,
+            rgba(200, 200, 220, 0.3) 30%,
+            rgba(220, 220, 235, 0.5) 50%,
+            rgba(200, 200, 220, 0.3) 70%,
+            transparent 100%
+        );
+    animation: fog-drift 15s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 12;
+}
+
+@keyframes fog-drift {
+    0%, 100% {
+        transform: translateX(0);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateX(30px);
+        opacity: 0.5;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+    .climbing-stats {
+        top: 15px;
+        left: 15px;
+    }
+
+    .stat-card {
+        min-width: 120px;
+        padding: 6px 10px;
+    }
+
+    .stat-icon {
+        font-size: 18px;
+    }
+
+    .habit-btn {
+        padding: 10px 6px;
+    }
+
+    .habit-icon {
+        font-size: 24px;
+    }
+
+    .habit-name {
+        font-size: 10px;
+    }
+}

@@ -40,12 +40,17 @@ app.use('/api/leaderboard', leaderboardRoutes);
 // Build MongoDB URI from env vars
 const uri = process.env.MONGODB_URI;
 
-mongoose.connect(uri)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => {
-    console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+// MongoDB is optional - we use in-memory DB for development
+if (uri && uri !== 'mongodb://localhost:27017/vivify') {
+  mongoose.connect(uri)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch(err => {
+      console.error('⚠️ MongoDB connection failed:', err.message);
+      console.log('📝 Using in-memory database for development');
+    });
+} else {
+  console.log('📝 MongoDB not configured - using in-memory database');
+}
 
 const User = require('./models/User');
 const Card = require('./models/Card'); // NEW
@@ -77,9 +82,18 @@ app.get('/api/health', (req, res) => {
 
 const authRoutes = require('./routes/auth');
 const fitnessRoutes = require('./routes/fitness');
+const mountainRoutes = require('./routes/mountain');
+const testHelperRoutes = require('./routes/test-helpers');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/fitness', fitnessRoutes);
+app.use('/api/mountain', mountainRoutes);
+
+// Test helpers (only in development)
+if (process.env.NODE_ENV === 'development') {
+    app.use('/api/test', testHelperRoutes);
+    console.log('🧪 Test helper routes enabled');
+}
 
 // User API Routes (simplified - move these to routes/User.js later)
 app.post('/api/register', async (req, res) => {
